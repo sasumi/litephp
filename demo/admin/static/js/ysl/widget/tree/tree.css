@@ -1,0 +1,17 @@
+.tree-list, .tree-list * {margin:0; padding:0; list-style:none}
+.tree-list li {padding-left:20px; background:url("img/vline.gif") repeat-y 0 1px;}
+.tree-list li.tree-node-last {background-image:none}
+.tree-list .tree-root-node,
+.tree-list .tree-node-prefix,
+.tree-list .tree-last-node-prefix {background-repeat:no-repeat; background-position:0 0; display:inline-block; margin-top:-2px; width:18px; height:18px; margin-left:-20px; vertical-align:middle}
+
+.tree-list .tree-root-node {background-image:url("img/pt.png")}
+.tree-list .tree-node-prefix {background-image:url("img/crossline.gif")}
+.tree-list .tree-last-node-prefix{background-image:url("img/btmline.gif");}
+
+.tree-list .tree-root-node-collapse-prefix {background-image:url("img/nolines_plus.gif")}
+.tree-list .tree-node-collapse-prefix{background-image:url("img/plus.gif")}
+.tree-list .tree-last-node-collapse-prefix {background-image:url("img/plusbottom.gif")}
+.tree-list .tree-root-node-expand-prefix {background-image:url("img/nolines_minus.gif")}
+.tree-list .tree-node-expand-prefix {background-image:url("img/minus.gif")}
+.tree-list .tree-last-node-expand-prefix {background-image:url("img/minusbottom.gif")}

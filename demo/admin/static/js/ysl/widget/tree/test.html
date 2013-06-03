@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>hello</title>
+	<style type="text/css">
+		body {padding:10px; font-size:12px; font-family:Tahoma}
+	</style>
+	<link rel="stylesheet" type="text/css" href="tree-icon.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="tree.css" media="all" />
+
+	<script type="text/javascript" src="../../ysl.base.js"></script>
+	<script type="text/javascript">
+		YSL.ready(function(){
+			var r = function(){
+				return Math.random();
+			};
+			YSL.use('widget.Tree', function(Y){
+				var data = {
+						title: '我的电脑'+r(),
+						className: 'tree-icon tree-icon-home',
+						children: [
+							{
+								title: '<a href="">tree root title</a>' + r(),
+								className: 'tree-icon tree-icon-folder',
+								value: r(),
+								children: [
+									{
+										title: 'tree item 1',
+										className: 'tree-icon tree-icon-file',
+										value: '1xx'
+									},
+									{
+										title: 'tree item 2[link]',
+										className: 'tree-icon tree-icon-file',
+										value: r()
+									},
+									{
+										title: 'sub tree title',
+										className: 'tree-icon tree-icon-folder',
+										value: r(),
+										children: [
+											{
+												title:'sub tree item 1',
+												className: 'tree-icon tree-icon-file',
+												value: r()
+											},
+											{
+												title: 'sub tree item 2',
+												className: 'tree-icon tree-icon-file',
+												value: r()
+											}
+										]
+									},
+									{
+										title: 'sub tree title',
+										className: 'tree-icon tree-icon-folder',
+										value: r(),
+										children: [
+											{
+												title:'sub tree item 1',
+												className: 'tree-icon tree-icon-file',
+												value: r()
+											},
+											{
+												title: 'sub tree item 2',
+												className: 'tree-icon tree-icon-text',
+												value: r()
+											}
+										]
+									},
+									{
+										title: 'tree item xx3[link]',
+										className: 'tree-icon tree-icon-zip',
+										value: r()
+									},
+									{
+										title: 'subtree title',
+										value: r(),
+										children: [
+											{
+												title: 'sub tree item1[should be hidden]',
+												value: r()
+											},
+											{
+												title: 'sub tree item2[should be hidden]',
+												value: r()
+											},
+											{
+												title: 'sub tree item3[should be hidden]',
+												value: r()
+											}
+										]
+									}
+								]
+							},
+							{
+								title: 'tree root title',
+								children: [
+									{
+										title: 'sub tree item1',
+										value: r()
+									},
+									{
+										title: 'sub tree item2',
+										value: r()
+									},
+									{
+										title: 'sub tree item3',
+										value: r()
+									}
+								]
+							},
+						]
+					};
+				var tree = new Y.widget.Tree('#test-case', data);
+			});
+		});
+	</script>
+</head>
+<body>
+	<div id="test-case" style="margin:10px; border:20px solid gray">
+
+
+	</div>
+</body>
+</html>
