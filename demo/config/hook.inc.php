@@ -13,9 +13,9 @@ add_hook('BEFORE_APP_INIT', function(){
 });
 
 add_hook('ON_APP_EX', function($exception){
-	debug($exception, 1);
+	dump($exception, 1);
 });
 
 add_hook('ON_APP_ERR', function($code, $message, $file, $line, $context){
-	debug($code, $message, $file, $line, $context);
+	dump($code, $message, $file, $line, $context);
 });
