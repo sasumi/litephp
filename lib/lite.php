@@ -4,7 +4,6 @@ include 'string.php';
 include 'filte.php';
 include 'html.php';
 include 'hook.php';
-include 'db.php';
 include 'pager.class.php';
 include 'config.inc.php';
 
@@ -247,9 +246,14 @@ function this_url(){
 **/
 function lite(){
 	//import hook
-	if(file_exists(CONFIG_PATH.'hook.php')){
-		include CONFIG_PATH.'hook.php';
+	if(file_exists(CONFIG_PATH.'hook.inc.php')){
+		include CONFIG_PATH.'hook.inc.php';
 	}
+
+	if(file_exists(CONFIG_PATH.'database.inc.php')){
+		include LIB_PATH.'db/db.php';
+	}
+
 	fire_hook('BEFORE_APP_INIT');
 
 	//APP EXCEPTION
@@ -264,6 +268,16 @@ function lite(){
 		set_error_handler(function($code, $message, $file, $line, $context){
 			fire_hook('ON_APP_ERR', $code, $message, $file, $line, $context);
 		}, E_USER_ERROR | E_USER_WARNING);
+	}
+
+	//auto class loader
+	if(file_exists(INCLUDE_PATH)){
+		spl_autoload_register(function($class){
+			$file = INCLUDE_PATH.strtolower($class).'.class.php';
+			if(file_exists($file)){
+				include_once $file;
+			}
+		});
 	}
 
 	parser_get_request($M, $A, $gets);

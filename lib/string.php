@@ -233,7 +233,7 @@ function encodeURIComponentbycharacter($char) {
       "%FD" => "%C3%BD",
       "%FE" => "%C3%BE",
       "%FF" => "%C3%BF"
-   }
+   );
    return $map[$char] ?: $char;
 }
 

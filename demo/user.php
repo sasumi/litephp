@@ -1,5 +1,5 @@
 <?php
-include 'config/app.php';
+include 'config/app.inc.php';
 if(ACTION == 'index'){
 	$user_list = array(
 		array(

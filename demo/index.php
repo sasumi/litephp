@@ -1,3 +1,3 @@
 <?php
-include 'config/app.php';
+include 'config/app.inc.php';
 include tpl('index.php');

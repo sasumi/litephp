@@ -14,7 +14,7 @@
 		<a href="<?php echo url('guid', array('key'=>$i));?>">关键字<?php echo $i;?></a>
 		<?php endfor;?>
 	</dd>
-	
+
 	<dt>岗位级别</dt>
 	<dd>
 		<a href="">不限</a>
@@ -23,7 +23,7 @@
 		<a href="">临时工</a>
 		<a href="">正式</a>
 	</dd>
-	
+
 	<dt>简历长度</dt>
 	<dd>
 		<a href="">不限</a>
