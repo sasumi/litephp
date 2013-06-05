@@ -1,7 +1,7 @@
 <?php
-return;
-add_hook('AFTER_APP_SHUTDOWN', function(){
-	echo('<div style="font-size:12px; color:gray;">AFTER_APP_SHUTDOWN --> '.PAGE.'::'.ACTION.'</div>');
+add_hook('AFTER_APP_SHUTDOWN', function($time){
+	echo '<br/>AFTER_APP_SHUTDOWN --> '.PAGE.'::'.ACTION;
+	echo '<br/>use time:'.$time.'ms';
 });
 
 add_hook('AFTER_APP_INIT', function(){

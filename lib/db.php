@@ -32,7 +32,7 @@ function db_get_config($key=null){
  * @param string $message
 **/
 function db_exception($message, $param1=null, $param2=null){
-	die($message);
+	dump($message, 1);
 }
 
 /**
@@ -171,11 +171,11 @@ function db_get_page($sql, $pager=null, $conn=null){
 	} else {
 		$limit = $pager;
 	}
-	
+
 	if($limit){
 		$sql = db_set_sql_limit($sql, $limit);
 	}
-	
+
 	$rs = db_query($sql, $conn);
 	$result = array();
 	if($rs){
@@ -221,7 +221,7 @@ function db_get_one($sql){
  * @return boolean 操作成功
  **/
 function db_update_count($table, $field, $offset_count=1, $increase=true){
-	
+
 }
 
 /**
@@ -281,7 +281,7 @@ function db_insert($table, array $data){
  * @return DB_Query
  **/
 function db_sql($driver=''){
-	$driver = $driver ?: db_get_config('driver'); 
+	$driver = $driver ?: db_get_config('driver');
 	return new DB_Query($driver);
 }
 

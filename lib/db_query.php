@@ -10,11 +10,11 @@ class DB_Query {
 	private $limit;
 	private $data;
 	private $sql;
-	
+
 	public function __construct($driver='mysql'){
 		$this->driver = strtolower($driver);
 	}
-	
+
 	/**
 	 * 查询
 	 * @param string $str
@@ -25,7 +25,7 @@ class DB_Query {
 		$this->field($str);
 		return $this;
 	}
-	
+
 	/**
 	 * 更新
 	 * @param string $str
@@ -36,7 +36,7 @@ class DB_Query {
 		$this->from($str);
 		return $this;
 	}
-	
+
 	/**
 	 * 插入
 	 * @param string $str
@@ -47,7 +47,7 @@ class DB_Query {
 		$this->from($str);
 		return $this;
 	}
-	
+
 	/**
 	 * 删除
 	 * @param string $str
@@ -58,7 +58,7 @@ class DB_Query {
 		$this->from($str);
 		return $this;
 	}
-	
+
 	/**
 	 * 设置数据（仅对update, replace, insert有效)
 	 * @param string $str
@@ -68,7 +68,7 @@ class DB_Query {
 		$this->data = $data;
 		return $this;
 	}
-	
+
 	/**
 	 * 字段
 	 * @param string $str
@@ -78,7 +78,7 @@ class DB_Query {
 		$this->fields = explode(',', $str);
 		return $this;
 	}
-	
+
 	/**
 	 * 表
 	 * @param string $str
@@ -88,7 +88,7 @@ class DB_Query {
 		$this->tables = explode(',', $str);
 		return $this;
 	}
-	
+
 	/**
 	 * 条件
 	 * @param string $str
@@ -98,7 +98,7 @@ class DB_Query {
 		$this->where = $str;
 		return $this;
 	}
-	
+
 	/**
 	 * 排序
 	 * @param string $str
@@ -108,7 +108,7 @@ class DB_Query {
 		$this->order = explode(',', $str);
 		return $this;
 	}
-	
+
 	/**
 	 * 分组
 	 * @param string $str
@@ -118,7 +118,7 @@ class DB_Query {
 		$this->group = $str;
 		return $this;
 	}
-	
+
 	/**
 	 * 设置SQL语句
 	 * @param string $sql
@@ -128,7 +128,7 @@ class DB_Query {
 		$this->sql = $sql;
 		return $this;
 	}
-	
+
 	/**
 	 * 设置限定
 	 * @param number $p1
@@ -144,7 +144,7 @@ class DB_Query {
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * 输出字符串
 	 * @return string
@@ -162,7 +162,7 @@ class DB_Query {
 							($this->order ? ' ORDER BY '.$this->order : '').
 							($this->group ? ' GROUP BY '.$this->group : '');
 						break;
-					
+
 					//更新
 					case 'UPDATE':
 						if(!$this->data){
@@ -177,7 +177,7 @@ class DB_Query {
 								} else {
 									$sets[] = "$field_name = '$value'";
 								}
-									
+
 							}
 						}
 						$sql = 'UPDATE '.implode('`,`', $this->tables).' SET '.implode(',', $sets).
@@ -185,12 +185,12 @@ class DB_Query {
 							($this->order ? ' ORDER BY '.$this->order : '').
 							($this->group ? ' GROUP BY '.$this->group : '');
 						break;
-					
+
 					//删除
 					case 'DELETE':
 						$sql = "DELETE FROM ".implode('`,`', $this->tables).($this->where ? ' WHERE '.$this->where : '');
 						break;
-					
+
 					//插入
 					case 'INSERT':
 						if(!$this->data){
@@ -206,7 +206,7 @@ class DB_Query {
 							$comma = ',';
 						}
 						break;
-					
+
 					//替换
 					case 'REPLACE':
 						if(!$this->data){
@@ -221,16 +221,16 @@ class DB_Query {
 								} else {
 									$sets[] = "$field_name = '$value'";
 								}
-								
+
 							}
 						}
 						$sql = "REPLACE INTO ".implode('`,`', $this->tables)." SET ".implode(',', $sets).
 							($this->where ? ' WHERE '.$this->where : '');
 						break;
-					
+
 					default:
 						db_exception("NO DB OPERATE SETTED");
-						
+
 				}
 				$this->sql = $sql;
 			}
