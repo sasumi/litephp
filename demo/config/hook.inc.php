@@ -1,11 +1,11 @@
 <?php
 add_hook('AFTER_APP_SHUTDOWN', function($time){
-	echo '<br/>AFTER_APP_SHUTDOWN --> '.PAGE.'::'.ACTION;
+	echo "\r\n\r\n".'<br/>AFTER_APP_SHUTDOWN --> '.PAGE.'::'.ACTION;
 	echo '<br/>use time:'.$time.'ms';
 });
 
 add_hook('AFTER_APP_INIT', function(){
-	echo('<!--'.PAGE.'::'.ACTION." -->\r\n");
+	echo('<!--'.PAGE.'::'.ACTION." -->\r\n\r\n");
 });
 
 add_hook('BEFORE_APP_INIT', function(){
@@ -13,7 +13,7 @@ add_hook('BEFORE_APP_INIT', function(){
 });
 
 add_hook('ON_APP_EX', function($exception){
-	dump($exception, 1);
+	print_exception($exception);
 });
 
 add_hook('ON_APP_ERR', function($code, $message, $file, $line, $context){

@@ -19,7 +19,7 @@ function db_get_config($key=null){
 		'host' => 'localhost',
 		'user' => 'root',
 		'database' => '',
-		'charset' => 'utf-8',
+		'charset' => '',
 		'password' => '',
 		'pconnect' => false
 	), $config);
@@ -50,7 +50,7 @@ function db_connect($reconect=false, $config=null){
 	$conn = null;
 
 	$conn = new PDO(
-		"$config[driver]:dbname=$config[database];host=$config[host];charset=$config[charset]",
+		"$config[driver]:dbname=$config[database];host=$config[host]".($config['charset'] ? ";charset=$config[charset]":""),
 		$config['user'],
 		$config['password']
 	);
@@ -98,7 +98,7 @@ function db_set_sql_limit($sql, $limit){
  * @return array()
 **/
 function db_fetch_row($resource){
-	$resource->setFetchMode(PDO::FETCH_NUM)
+	$resource->setFetchMode(PDO::FETCH_NUM);
 	return $resource->fetch();
 }
 
@@ -153,9 +153,11 @@ function db_get_page($sql, $pager=null, $conn=null){
 	} else {
 		$limit = $pager;
 	}
+
 	if($limit){
 		$sql = db_set_sql_limit($sql, $limit);
 	}
+
 	$rs = db_query($sql, $conn);
 	if($rs){
 		return db_fetch_all($rs);

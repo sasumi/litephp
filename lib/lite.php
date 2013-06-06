@@ -97,7 +97,7 @@ function lite(){
 		include CONFIG_PATH.'hook.inc.php';
 	}
 
-	if(file_exists(CONFIG_PATH.'database.inc.php')){
+	if(file_exists(CONFIG_PATH.'db.inc.php')){
 		include LIB_PATH.'db/db.php';
 	}
 
@@ -106,7 +106,7 @@ function lite(){
 	//APP EXCEPTION
 	if(has_hook('ON_APP_EX')){
 		set_exception_handler(function($exception){
-			fire_hook('ON_APP_EX', exception);
+			fire_hook('ON_APP_EX', $exception);
 		});
 	}
 
