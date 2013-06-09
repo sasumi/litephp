@@ -32,6 +32,10 @@ class Pager {
 		return self::$instance_list[$identify];
 	}
 
+	public function setPageSize($num){
+		return $this->setConfig(array('page_size'=>$num));
+	}
+
 	public function setConfig($config){
 		$this->config = array_merge($this->config, $config);
 		return $this;
@@ -76,7 +80,7 @@ class Pager {
 	 * @return {string}
 	 */
 	private function getUrl($num){
-		parser_request($page, $action, $gets);
+		parser_get_request($page, $action, $gets);
 		if(!empty($gets)){
 			foreach($gets as $key=>$get){
 				if($key == $this->config['page_key']){

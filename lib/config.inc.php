@@ -52,6 +52,9 @@ if(!defined(IMG_URL)){
 if(!defined(CSS_URL)){
 	define(CSS_URL, STATIC_URL.'css/');
 }
+if(!defined(FLASH_URL)){
+	define(FLASH_URL, STATIC_URL.'flash/');
+}
 
 //路由配置初始化
 if(!defined(ROUTE_MODE)){

@@ -29,6 +29,14 @@ function is_post(){
 }
 
 /**
+ * 检测当前请求是否为GET
+ * @return boolean
+**/
+function is_get(){
+	return $_SERVER['REQUEST_METHOD'] == 'GET';
+}
+
+/**
  * 测试
  **/
 function dump(){
@@ -97,8 +105,19 @@ function lite(){
 		include CONFIG_PATH.'hook.inc.php';
 	}
 
+	//load db library
 	if(file_exists(CONFIG_PATH.'db.inc.php')){
 		include LIB_PATH.'db/db.php';
+	}
+
+	//copy htaccess file
+	if(ROUTE_MODE == 'REWRITE' && !file_exists(APP_PATH.'.htaccess')){
+		$result = copy(LIB_PATH.'htaccess', APP_PATH.'.htaccess');
+		if(!$result){
+			throw new Exception('route file copy fail');
+		}
+		reload();
+		return;
 	}
 
 	fire_hook('BEFORE_APP_INIT');
@@ -138,6 +157,8 @@ function lite(){
 	}
 
 	fire_hook('AFTER_APP_INIT');
+
+	//stat app launch time
 	$GLOBALS['__init_time__'] = microtime(true);
 	register_shutdown_function(function(){
 		$fin_time = microtime(true);

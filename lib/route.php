@@ -118,7 +118,7 @@ function url($target='', $params=array()){
 			break;
 
 		case 'REWRITE':
-			$url = APP_URL.'/'.$page.(empty($params) && $action == ROUTE_DEFAUL_ACTION ? '' : '/'.$action);
+			$url = APP_URL.$page.(empty($params) && $action == ROUTE_DEFAUL_ACTION ? '' : '/'.$action);
 			foreach($params as $k=>$p){
 				$url .= "/".urlencode($k)."/".urlencode($p);
 			}
@@ -132,6 +132,13 @@ function url($target='', $params=array()){
 			}
 	}
 	return $url;
+}
+
+/**
+ * reload current page
+ */
+function reload(){
+	return header('Location:'.$_SERVER['PHP_SELF'], true, 302);
 }
 
 /**
