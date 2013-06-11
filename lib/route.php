@@ -1,4 +1,8 @@
 <?php
+define(ROUTE_MODE_NORMAL, 0);
+define(ROUTE_MODE_PATH, 1);
+define(ROUTE_MODE_REWRITE, 2);
+
 /**
  * 获取path信息
  * @return string
@@ -35,8 +39,8 @@ function parser_get_request(&$page='', &$action='', &$params=array()){
 	$page = $match[1];
 
 	switch(ROUTE_MODE){
-		case 'REWRITE':
-		case 'PATH':
+		case ROUTER_MODE_REWRITE:
+		case ROUTER_MODE_PATH:
 			$path_info = get_path_info();
 			preg_match('/(\w+)(\/|$)/', $path_info, $match);
 			$action = $match ? $match[1] : null;
@@ -53,7 +57,7 @@ function parser_get_request(&$page='', &$action='', &$params=array()){
 			$params = array_merge($_GET, $params);
 			break;
 
-		case 'NORMAL':
+		case ROUTE_MODE_NORMAL:
 		default:
 			$action = $_GET[ROUTE_ACTION_KEY];
 			unset($_GET[ROUTE_ACTION_KEY]);
@@ -110,27 +114,28 @@ function url($target='', $params=array()){
 	}
 
 	switch(ROUTE_MODE){
-		case 'PATH':
+		case ROUTE_MODE_PATH:
 			$url = APP_URL.$page.'.php'.(empty($params) && $action == ROUTE_DEFAUL_ACTION ? '' : '/'.$action);
 			foreach($params as $k=>$p){
 				$url .= "/".urlencode($k)."/".urlencode($p);
 			}
 			break;
 
-		case 'REWRITE':
+		case ROUTER_MODE_REWRITE:
 			$url = APP_URL.$page.(empty($params) && $action == ROUTE_DEFAUL_ACTION ? '' : '/'.$action);
 			foreach($params as $k=>$p){
 				$url .= "/".urlencode($k)."/".urlencode($p);
 			}
 			break;
 
-		case 'NORMAL':
+		case ROUTE_MODE_NORMAL:
 			default:
 			$url = APP_URL.$page.'.php?'.ROUTE_ACTION_KEY.'='.$action;
 			if($params){
 				$url .= http_build_query($params);
 			}
 	}
+
 	return $url;
 }
 

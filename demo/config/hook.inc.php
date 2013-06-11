@@ -19,3 +19,7 @@ add_hook('ON_APP_EX', function($exception){
 add_hook('ON_APP_ERR', function($code, $message, $file, $line, $context){
 	dump($code, $message, $file, $line, $context);
 });
+
+add_hook('BEFORE_DB_QUERY', function($sql, $conn){
+	echo '<!-- '.$sql.' -->';
+});

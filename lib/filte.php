@@ -12,7 +12,7 @@ function filte_array(array &$data, array $rules, $throwException=true){
 			$pass = true;
 			try {
 				filte_one($val, $rules[$key]);
-				} catch(Exception $e){
+			} catch(Exception $e){
 				$pass = false;
 				if(!$err_msgs[$key]){
 					$err_msgs[$key] = array();

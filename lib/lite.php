@@ -1,4 +1,5 @@
 <?php
+//REQUIRE php 5.3 or above
 if(version_compare(PHP_VERSION, '5.3.0') < 0){
 	throw new Exception("REQUIRE PHP 5.3 OR ABOVE", 1);
 }
@@ -10,6 +11,7 @@ include 'filte.php';
 include 'html.php';
 include 'hook.php';
 include 'route.php';
+include 'file.php';
 
 /**
  * 获取模版文件路径
@@ -76,24 +78,10 @@ function tick_dump($step_offset=1, $fun=dump){
 }
 
 /**
- * 获取模块文件夹列表
- * @param string $dir
- * @return array
-**/
-function get_file_list($dir) {
-    $file_list = array();
-    if(false != ($handle = opendir($dir))) {
-        $i=0;
-        while(false !== ($file = readdir($handle))) {
-            //去掉"“.”、“..”以及带“.xxx”后缀的文件
-            if ($file != "." && $file != ".."&&!strpos($file,".")) {
-                $file_list[$i]=$file;
-                $i++;
-            }
-        }
-        closedir ($handle);
-    }
-    return $file_list;
+ * [dump_as_html_comment description]
+ */
+function dump_as_html_comment(){
+
 }
 
 /**
@@ -111,7 +99,7 @@ function lite(){
 	}
 
 	//copy htaccess file
-	if(ROUTE_MODE == 'REWRITE' && !file_exists(APP_PATH.'.htaccess')){
+	if(ROUTE_MODE == ROUTE_MODE_REWRITE && !file_exists(APP_PATH.'.htaccess')){
 		$result = copy(LIB_PATH.'htaccess', APP_PATH.'.htaccess');
 		if(!$result){
 			throw new Exception('route file copy fail');
@@ -152,7 +140,7 @@ function lite(){
 	define('ACTION', $A);
 
 	//hack $_GET
-	if(ROUTE_MODE != 'NORMAL'){
+	if(ROUTE_MODE != ROUTE_MODE_NORMAL){
 		$_GET = $gets;
 	}
 
