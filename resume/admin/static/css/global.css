@@ -1,0 +1,68 @@
+body {font-family: Microsoft Yahei, verdana, helvetica, sans-serif; font-size:13px; overflow-y:scroll}
+a {text-decoration:none; color:green;}
+a:hover {text-decoration:underline;}
+
+select, input.chk, label{vertical-align:middle;}
+input.txt, textarea.txt {padding:2px; border:1px solid #aaa; border-bottom-color:#ddd; border-right-color:#ddd; vertical-align:middle; }
+input.btn {padding:4px 10px}
+
+.header {background-color:#ccc; padding-bottom:3px;}
+.page {}
+.sidebar {float:left; width:165px; padding:0 5px 10px 2px;}
+.container {padding:5px}
+.footer {clear:both; padding:10px 0; text-align:center; color:#aaa}
+
+.logo {float:right; margin-top:5px !important; margin:0 0 0 5px; height:20px; line-height:12px;}
+.logo a {font-size:18px;}
+.logo span {font-size:10px;}
+
+.main-nav {height:25px; background-color:#333}
+.main-nav li {float:left; position:relative; height:25px; line-height:25px;}
+.main-nav a:hover {background-color:#000; color:white; text-decoration:none;}
+.main-nav li.last {border:none}
+.main-nav li.current {}
+.main-nav li.hover {}
+.main-nav a {text-transform:capitalize; color:#ccc; padding:0 10px; display:block;}
+.main-nav ul {position:absolute; z-index:4; top:25px; left:0; width:120px; background-color:#333; display:none; box-shadow:2px 2px 3px #aaa}
+.main-nav ul li {float:none; padding:0; border-bottom:1px solid #222; border-top:1px solid #444}
+.main-nav ul a {display:block; padding:0 10px; line-height:25px; height:25px;}
+.main-nav .last ul {}
+
+.srch-frm .txt {border:none; padding:5px; font-size:14px;}
+.srch-frm {border:1px solid #ccc}
+.srch-frm .srch-btn {background:url("../img/srch_btn.png") no-repeat center; border:none; display:inline-block; width:28px; height:28px; text-indent:-9999px}
+
+.pagination {padding-top:5px; color:#bbb;}
+.pagination .page_first,
+.pagination .page_num a,
+.pagination .page_num em,
+.pagination .page_next,
+.pagination .page_last {display:inline-block; margin:0 5px; font-style:normal;}
+
+.ul li {display:list-item; list-style:inside disc}
+.ol li {display:list-item; list-style:inside decimal}
+
+.frm {margin-bottom:10px;}
+.frm fieldset {padding:10px; border:none}
+.frm legend {font-size:16px; font-weight:bold; margin:5px 0 -5px 0 !important; margin:0 0 0 -4px;}
+.frm dl {padding:3px;}
+.frm dt {float:left; padding:7px 0 0; width:120px; text-align:right;}
+.frm dd {padding:3px; margin-left:130px}
+.frm span.tip {color:#aaa; margin-left:0.5em}
+.frm span.warn {color:red; margin-left:0.5em; padding-left:18px; background:url("../img/warn.gif") no-repeat left center; }
+.frm span.required_star {color:red; font-weight:bold; font-size:18px; padding:0 5px; vertical-align:middle;}
+.submit-row {margin-left:145px}
+
+.tbl {border-collapse:collapse; border-spacing:0; border:1px solid #ccc; font-size:13px; margin-bottom:20px}
+.tbl caption {text-align:left; padding:3px;}
+.tbl thead tr {border-bottom:1px solid #ddd; border-top:1px solid #ccc}
+.tbl th {color:#555; background-color:#eee; padding:3px 7px; text-shadow:1px 1px 1px #eee; text-align:left; text-transform:capitalize;}
+.tbl tbody tr {border-bottom:1px dotted #ccc}
+.tbl td {padding:10px 7px;}
+
+.link-btn {background-color:green; color:white; padding:1px 4px; display:inline-block; border-radius:3px;}
+.link-btn:hover {text-decoration:none; background-color:orange;}
+.btn {padding:4px 12px; border-radius:3px; line-height:16px; display:inline-block; border:1px solid #b5b6b8; background:url("../img/btn_bg.png") repeat-x; font-weight:bold; text-align:center; color:black;}
+.btn:hover {text-decoration:none; background-position:0 -27px; border-top-color:#ccc; border-left-color:#ccc;}
+
+p.error_message {background-color:red; color:white; padding:.5em; font-weight:bold; border-radius:3px}

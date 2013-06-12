@@ -1,0 +1,1028 @@
+body {
+    margin: 0px;
+}
+
+div {
+    background-repeat: no-repeat;
+}
+
+.raw_image {
+    width: 100%;
+    height: 100%;
+}
+
+.preload {
+    display: none;
+}
+div.main_container {
+}
+
+.form_sketch {
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.u0_original {
+    background-image: url('../工作经历编辑_files/u0_original.png');
+}
+
+.u0_container {
+    position:absolute;
+    left:19px;
+    top:98px;
+    width:678px;
+    height:212px;
+}
+
+#u0_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:678px;
+    height:212px;
+}
+
+.u1 {
+    position:absolute;
+    left:2px;
+    top:98px;
+    width:674px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u0 {
+    position:absolute;
+    left:19px;
+    top:98px;
+    width:678px;
+    height:212px
+}
+
+.u2 {
+    position:absolute;
+    left:63px;
+    top:98px;
+    width:88px;
+    height:28px;
+    ;
+    ;
+    text-align: left;;
+    font-family:'宋体';
+    font-size: 18px;
+    color:#000000;
+    font-style:normal;
+    font-weight:bold;
+    text-decoration:none;
+    
+}
+
+.u3_original {
+    background-image: url('../工作经历编辑_files/u3_original.png');
+}
+
+.u3_container {
+    position:absolute;
+    left:724px;
+    top:100px;
+    width:250px;
+    height:420px;
+}
+
+#u3_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:256px;
+    height:426px;
+}
+
+.u4 {
+    position:absolute;
+    left:2px;
+    top:202px;
+    width:246px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u3 {
+    position:absolute;
+    left:724px;
+    top:100px;
+    width:250px;
+    height:420px
+}
+
+.u5_line {
+    background-image: url('../工作经历编辑_files/u5_line.png');
+}
+
+.u5_line {
+    position:absolute;
+    left:736px;
+    top:126px;
+    width:226px;
+    height:3px;
+}
+
+.u5 {
+    position:absolute;
+    left:736px;
+    top:126px;
+    width:226px;
+    height:3px
+}
+
+.u6 {
+    position:absolute;
+    left:744px;
+    top:104px;
+    width:188px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u7_line {
+    background-image: url('../工作经历编辑_files/u7_line.png');
+}
+
+.u7_line {
+    position:absolute;
+    left:724px;
+    top:344px;
+    width:250px;
+    height:3px;
+}
+
+.u7 {
+    position:absolute;
+    left:724px;
+    top:344px;
+    width:250px;
+    height:3px
+}
+
+.u8_line {
+    background-image: url('../工作经历编辑_files/u8_line.png');
+}
+
+.u8_line {
+    position:absolute;
+    left:732px;
+    top:368px;
+    width:224px;
+    height:3px;
+}
+
+.u8 {
+    position:absolute;
+    left:732px;
+    top:368px;
+    width:224px;
+    height:3px
+}
+
+.u9 {
+    position:absolute;
+    left:743px;
+    top:348px;
+    width:187px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u10 {
+    position:absolute;
+    left:732px;
+    top:374px;
+    width:237px;
+    height:38px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u11_original {
+    background-image: url('../工作经历编辑_files/u11_original.png');
+}
+
+.u11_container {
+    position:absolute;
+    left:29px;
+    top:110px;
+    width:19px;
+    height:20px;
+}
+
+#u11_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:19px;
+    height:20px;
+}
+
+.u12 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:15px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u11 {
+    position:absolute;
+    left:29px;
+    top:110px;
+    width:19px;
+    height:20px
+}
+
+.u13 {
+    position:absolute;
+    left:740px;
+    top:152px;
+    width:150px;
+    height:20px;
+    ;
+    ;
+    text-align: left;;
+    font-family:'宋体';
+    font-size: 13px;
+    color:#CCCCCC;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u14 {
+    position:absolute;
+    left:740px;
+    top:134px;
+    width:150px;
+    height:14px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u15 {
+    position:absolute;
+    left:900px;
+    top:152px;
+    width:60px;
+    height:20px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u16 {
+    position:absolute;
+    left:740px;
+    top:200px;
+    width:150px;
+    height:14px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u17 {
+    position:absolute;
+    left:740px;
+    top:218px;
+    width:45px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u18 {
+    position:absolute;
+    left:802px;
+    top:217px;
+    width:158px;
+    height:22px;
+    ;
+    ;
+    ;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u19 {
+    position:absolute;
+    left:740px;
+    top:246px;
+    width:45px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u20 {
+    position:absolute;
+    left:802px;
+    top:245px;
+    width:158px;
+    height:22px;
+    ;
+    ;
+    ;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u21 {
+    position:absolute;
+    left:740px;
+    top:276px;
+    width:45px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u22 {
+    position:absolute;
+    left:802px;
+    top:275px;
+    width:158px;
+    height:22px;
+    ;
+    ;
+    ;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u24_original {
+    background-image: url('../工作经历编辑_files/u24_original.png');
+}
+
+.u24_container {
+    position:absolute;
+    left:0px;
+    top:100px;
+    width:720px;
+    height:25px;
+}
+
+#u24_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:726px;
+    height:31px;
+}
+
+.u25 {
+    position:absolute;
+    left:2px;
+    top:4px;
+    width:716px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u24 {
+    position:absolute;
+    left:0px;
+    top:100px;
+    width:720px;
+    height:25px
+}
+
+.u26 {
+    position:absolute;
+    left:10px;
+    top:103px;
+    width:144px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u27_original {
+    background-image: url('../工作经历编辑_files/u27_original.png');
+}
+
+.u27_container {
+    position:absolute;
+    left:27px;
+    top:130px;
+    width:21px;
+    height:21px;
+}
+
+#u27_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:21px;
+    height:21px;
+}
+
+.u28 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:17px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u27 {
+    position:absolute;
+    left:27px;
+    top:130px;
+    width:21px;
+    height:21px
+}
+
+.u29 {
+    position:absolute;
+    left:67px;
+    top:130px;
+    width:547px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u30_line {
+    background-image: url('../工作经历编辑_files/u30_line.png');
+}
+
+.u30_line {
+    position:absolute;
+    left:10px;
+    top:222px;
+    width:681px;
+    height:3px;
+}
+
+.u30 {
+    position:absolute;
+    left:10px;
+    top:222px;
+    width:681px;
+    height:3px
+}
+
+.u31 {
+    position:absolute;
+    left:67px;
+    top:151px;
+    width:615px;
+    height:76px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u32_original {
+    background-image: url('../工作经历编辑_files/u27_original.png');
+}
+
+.u32_container {
+    position:absolute;
+    left:27px;
+    top:240px;
+    width:21px;
+    height:21px;
+}
+
+#u32_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:21px;
+    height:21px;
+}
+
+.u33 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:17px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u32 {
+    position:absolute;
+    left:27px;
+    top:240px;
+    width:21px;
+    height:21px
+}
+
+.u34 {
+    position:absolute;
+    left:67px;
+    top:240px;
+    width:547px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u35 {
+    position:absolute;
+    left:67px;
+    top:261px;
+    width:615px;
+    height:76px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u36_line {
+    background-image: url('../工作经历编辑_files/u36_line.png');
+}
+
+.u36_line {
+    position:absolute;
+    left:10px;
+    top:333px;
+    width:681px;
+    height:3px;
+}
+
+.u36 {
+    position:absolute;
+    left:10px;
+    top:333px;
+    width:681px;
+    height:3px
+}
+
+.u37_original {
+    background-image: url('../工作经历编辑_files/u27_original.png');
+}
+
+.u37_container {
+    position:absolute;
+    left:27px;
+    top:351px;
+    width:21px;
+    height:21px;
+}
+
+#u37_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:21px;
+    height:21px;
+}
+
+.u38 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:17px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u37 {
+    position:absolute;
+    left:27px;
+    top:351px;
+    width:21px;
+    height:21px
+}
+
+.u39 {
+    position:absolute;
+    left:67px;
+    top:351px;
+    width:547px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u40 {
+    position:absolute;
+    left:67px;
+    top:372px;
+    width:615px;
+    height:76px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u41_line {
+    background-image: url('../工作经历编辑_files/u41_line.png');
+}
+
+.u41_line {
+    position:absolute;
+    left:10px;
+    top:443px;
+    width:681px;
+    height:3px;
+}
+
+.u41 {
+    position:absolute;
+    left:10px;
+    top:443px;
+    width:681px;
+    height:3px
+}
+
+.u42_original {
+    background-image: url('../工作经历编辑_files/u27_original.png');
+}
+
+.u42_container {
+    position:absolute;
+    left:27px;
+    top:461px;
+    width:21px;
+    height:21px;
+}
+
+#u42_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:21px;
+    height:21px;
+}
+
+.u43 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:17px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u42 {
+    position:absolute;
+    left:27px;
+    top:461px;
+    width:21px;
+    height:21px
+}
+
+.u44 {
+    position:absolute;
+    left:67px;
+    top:461px;
+    width:547px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u45 {
+    position:absolute;
+    left:67px;
+    top:482px;
+    width:615px;
+    height:76px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u46_line {
+    background-image: url('../工作经历编辑_files/u46_line.png');
+}
+
+.u46_line {
+    position:absolute;
+    left:10px;
+    top:555px;
+    width:681px;
+    height:3px;
+}
+
+.u46 {
+    position:absolute;
+    left:10px;
+    top:555px;
+    width:681px;
+    height:3px
+}
+
+.u47_original {
+    background-image: url('../工作经历编辑_files/u27_original.png');
+}
+
+.u47_container {
+    position:absolute;
+    left:27px;
+    top:573px;
+    width:21px;
+    height:21px;
+}
+
+#u47_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:21px;
+    height:21px;
+}
+
+.u48 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:17px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u47 {
+    position:absolute;
+    left:27px;
+    top:573px;
+    width:21px;
+    height:21px
+}
+
+.u49 {
+    position:absolute;
+    left:67px;
+    top:573px;
+    width:547px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u50 {
+    position:absolute;
+    left:67px;
+    top:594px;
+    width:615px;
+    height:76px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u51 {
+    position:absolute;
+    left:23px;
+    top:158px;
+    width:29px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u52 {
+    position:absolute;
+    left:23px;
+    top:268px;
+    width:29px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u53 {
+    position:absolute;
+    left:23px;
+    top:381px;
+    width:29px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u54 {
+    position:absolute;
+    left:23px;
+    top:491px;
+    width:29px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u55 {
+    position:absolute;
+    left:23px;
+    top:602px;
+    width:29px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u56_original {
+    background-image: url('../工作经历编辑_files/u56_original.png');
+}
+
+.u56_container {
+    position:absolute;
+    left:697px;
+    top:103px;
+    width:18px;
+    height:18px;
+}
+
+#u56_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:18px;
+    height:18px;
+}
+
+.u57 {
+    position:absolute;
+    left:2px;
+    top:1px;
+    width:14px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u56 {
+    position:absolute;
+    left:697px;
+    top:103px;
+    width:18px;
+    height:18px
+}
+

@@ -1,0 +1,2570 @@
+body {
+    margin: 0px;
+}
+
+div {
+    background-repeat: no-repeat;
+}
+
+.raw_image {
+    width: 100%;
+    height: 100%;
+}
+
+.preload {
+    display: none;
+}
+div.main_container {
+}
+
+.form_sketch {
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.u1_original {
+    background-image: url('../后台－工作技能录入_files/u1_original.png');
+}
+
+.u1_container {
+    position:absolute;
+    left:140px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u1_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u2 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u1 {
+    position:absolute;
+    left:140px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u3_original {
+    background-image: url('../后台－工作技能录入_files/u3_original.png');
+}
+
+.u3_container {
+    position:absolute;
+    left:260px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u3_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u4 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u3 {
+    position:absolute;
+    left:260px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u5_original {
+    background-image: url('../后台－工作技能录入_files/u1_original.png');
+}
+
+.u5_container {
+    position:absolute;
+    left:20px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u5_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u6 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u5 {
+    position:absolute;
+    left:20px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u7_original {
+    background-image: url('../后台－工作技能录入_files/u7_original.png');
+}
+
+.u7_container {
+    position:absolute;
+    left:10px;
+    top:30px;
+    width:492px;
+    height:6px;
+}
+
+#u7_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:498px;
+    height:12px;
+}
+
+.u8 {
+    position:absolute;
+    left:2px;
+    top:-5px;
+    width:488px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u7 {
+    position:absolute;
+    left:10px;
+    top:30px;
+    width:492px;
+    height:6px
+}
+
+.u9_original {
+    background-image: url('../后台－工作技能录入_files/u9_original.png');
+}
+
+.u9_container {
+    position:absolute;
+    left:10px;
+    top:36px;
+    width:492px;
+    height:100px;
+}
+
+#u9_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:498px;
+    height:106px;
+}
+
+.u10 {
+    position:absolute;
+    left:2px;
+    top:42px;
+    width:488px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u9 {
+    position:absolute;
+    left:10px;
+    top:36px;
+    width:492px;
+    height:100px
+}
+
+.u11_original {
+    background-image: url('../后台－工作技能录入_files/u1_original.png');
+}
+
+.u11_container {
+    position:absolute;
+    left:20px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u11_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u12 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u11 {
+    position:absolute;
+    left:20px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u13_original {
+    background-image: url('../后台－工作技能录入_files/u3_original.png');
+}
+
+.u13_container {
+    position:absolute;
+    left:140px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u13_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u14 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u13 {
+    position:absolute;
+    left:140px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u15_original {
+    background-image: url('../后台－工作技能录入_files/u1_original.png');
+}
+
+.u15_container {
+    position:absolute;
+    left:260px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u15_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u16 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u15 {
+    position:absolute;
+    left:260px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u17_original {
+    background-image: url('../后台－工作技能录入_files/u7_original.png');
+}
+
+.u17_container {
+    position:absolute;
+    left:10px;
+    top:30px;
+    width:492px;
+    height:6px;
+}
+
+#u17_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:498px;
+    height:12px;
+}
+
+.u18 {
+    position:absolute;
+    left:2px;
+    top:-5px;
+    width:488px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u17 {
+    position:absolute;
+    left:10px;
+    top:30px;
+    width:492px;
+    height:6px
+}
+
+.u19_original {
+    background-image: url('../后台－工作技能录入_files/u9_original.png');
+}
+
+.u19_container {
+    position:absolute;
+    left:10px;
+    top:36px;
+    width:492px;
+    height:100px;
+}
+
+#u19_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:498px;
+    height:106px;
+}
+
+.u20 {
+    position:absolute;
+    left:2px;
+    top:42px;
+    width:488px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u19 {
+    position:absolute;
+    left:10px;
+    top:36px;
+    width:492px;
+    height:100px
+}
+
+.u21_original {
+    background-image: url('../后台－工作技能录入_files/u1_original.png');
+}
+
+.u21_container {
+    position:absolute;
+    left:10px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u21_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u22 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u21 {
+    position:absolute;
+    left:10px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u23_original {
+    background-image: url('../后台－工作技能录入_files/u1_original.png');
+}
+
+.u23_container {
+    position:absolute;
+    left:370px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u23_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u24 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u23 {
+    position:absolute;
+    left:370px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u25_original {
+    background-image: url('../后台－工作技能录入_files/u25_original.png');
+}
+
+.u25_container {
+    position:absolute;
+    left:10px;
+    top:36px;
+    width:880px;
+    height:724px;
+}
+
+#u25_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:886px;
+    height:730px;
+}
+
+.u26 {
+    position:absolute;
+    left:2px;
+    top:354px;
+    width:876px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u25 {
+    position:absolute;
+    left:10px;
+    top:36px;
+    width:880px;
+    height:724px
+}
+
+.u27_original {
+    background-image: url('../后台－工作技能录入_files/u1_original.png');
+}
+
+.u27_container {
+    position:absolute;
+    left:130px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u27_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u28 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u27 {
+    position:absolute;
+    left:130px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u29_original {
+    background-image: url('../后台－工作技能录入_files/u1_original.png');
+}
+
+.u29_container {
+    position:absolute;
+    left:490px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u29_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u30 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u29 {
+    position:absolute;
+    left:490px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u31_original {
+    background-image: url('../后台－工作技能录入_files/u1_original.png');
+}
+
+.u31_container {
+    position:absolute;
+    left:610px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u31_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u32 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u31 {
+    position:absolute;
+    left:610px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u33_original {
+    background-image: url('../后台－工作技能录入_files/u1_original.png');
+}
+
+.u33_container {
+    position:absolute;
+    left:730px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u33_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u34 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u33 {
+    position:absolute;
+    left:730px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u35_original {
+    background-image: url('../后台－工作技能录入_files/u35_original.png');
+}
+
+.u35_container {
+    position:absolute;
+    left:10px;
+    top:30px;
+    width:890px;
+    height:6px;
+}
+
+#u35_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:896px;
+    height:12px;
+}
+
+.u36 {
+    position:absolute;
+    left:2px;
+    top:-5px;
+    width:886px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u35 {
+    position:absolute;
+    left:10px;
+    top:30px;
+    width:890px;
+    height:6px
+}
+
+.u37_original {
+    background-image: url('../后台－工作技能录入_files/u3_original.png');
+}
+
+.u37_container {
+    position:absolute;
+    left:250px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u37_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u38 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u37 {
+    position:absolute;
+    left:250px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u39 {
+    position:absolute;
+    left:278px;
+    top:0px;
+    width:500px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u40 {
+    position:absolute;
+    left:885px;
+    top:1px;
+    width:80px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u41 {
+    position:absolute;
+    left:770px;
+    top:1px;
+    width:100px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u42 {
+    position:absolute;
+    left:30px;
+    top:82px;
+    width:100px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u43_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u43_container {
+    position:absolute;
+    left:30px;
+    top:140px;
+    width:60px;
+    height:20px;
+}
+
+#u43_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u44 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u43 {
+    position:absolute;
+    left:30px;
+    top:140px;
+    width:60px;
+    height:20px
+}
+
+.u45_original {
+    background-image: url('../后台－工作技能录入_files/u45_original.png');
+}
+
+.u45_container {
+    position:absolute;
+    left:100px;
+    top:140px;
+    width:60px;
+    height:20px;
+}
+
+#u45_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u46 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u45 {
+    position:absolute;
+    left:100px;
+    top:140px;
+    width:60px;
+    height:20px
+}
+
+.u47_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u47_container {
+    position:absolute;
+    left:170px;
+    top:140px;
+    width:60px;
+    height:20px;
+}
+
+#u47_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u48 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u47 {
+    position:absolute;
+    left:170px;
+    top:140px;
+    width:60px;
+    height:20px
+}
+
+.u49_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u49_container {
+    position:absolute;
+    left:240px;
+    top:140px;
+    width:60px;
+    height:20px;
+}
+
+#u49_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u50 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u49 {
+    position:absolute;
+    left:240px;
+    top:140px;
+    width:60px;
+    height:20px
+}
+
+.u51_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u51_container {
+    position:absolute;
+    left:310px;
+    top:140px;
+    width:60px;
+    height:20px;
+}
+
+#u51_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u52 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u51 {
+    position:absolute;
+    left:310px;
+    top:140px;
+    width:60px;
+    height:20px
+}
+
+.u53_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u53_container {
+    position:absolute;
+    left:380px;
+    top:140px;
+    width:60px;
+    height:20px;
+}
+
+#u53_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u54 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u53 {
+    position:absolute;
+    left:380px;
+    top:140px;
+    width:60px;
+    height:20px
+}
+
+.u55_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u55_container {
+    position:absolute;
+    left:450px;
+    top:140px;
+    width:60px;
+    height:20px;
+}
+
+#u55_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u56 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u55 {
+    position:absolute;
+    left:450px;
+    top:140px;
+    width:60px;
+    height:20px
+}
+
+.u57_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u57_container {
+    position:absolute;
+    left:520px;
+    top:140px;
+    width:60px;
+    height:20px;
+}
+
+#u57_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u58 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u57 {
+    position:absolute;
+    left:520px;
+    top:140px;
+    width:60px;
+    height:20px
+}
+
+.u59_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u59_container {
+    position:absolute;
+    left:590px;
+    top:140px;
+    width:60px;
+    height:20px;
+}
+
+#u59_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u60 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u59 {
+    position:absolute;
+    left:590px;
+    top:140px;
+    width:60px;
+    height:20px
+}
+
+.u61_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u61_container {
+    position:absolute;
+    left:660px;
+    top:140px;
+    width:60px;
+    height:20px;
+}
+
+#u61_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u62 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u61 {
+    position:absolute;
+    left:660px;
+    top:140px;
+    width:60px;
+    height:20px
+}
+
+.u63_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u63_container {
+    position:absolute;
+    left:730px;
+    top:140px;
+    width:60px;
+    height:20px;
+}
+
+#u63_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u64 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u63 {
+    position:absolute;
+    left:730px;
+    top:140px;
+    width:60px;
+    height:20px
+}
+
+.u65_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u65_container {
+    position:absolute;
+    left:800px;
+    top:140px;
+    width:60px;
+    height:20px;
+}
+
+#u65_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u66 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u65 {
+    position:absolute;
+    left:800px;
+    top:140px;
+    width:60px;
+    height:20px
+}
+
+.u67_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u67_container {
+    position:absolute;
+    left:30px;
+    top:170px;
+    width:60px;
+    height:20px;
+}
+
+#u67_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u68 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u67 {
+    position:absolute;
+    left:30px;
+    top:170px;
+    width:60px;
+    height:20px
+}
+
+.u69_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u69_container {
+    position:absolute;
+    left:100px;
+    top:170px;
+    width:60px;
+    height:20px;
+}
+
+#u69_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u70 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u69 {
+    position:absolute;
+    left:100px;
+    top:170px;
+    width:60px;
+    height:20px
+}
+
+.u71_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u71_container {
+    position:absolute;
+    left:170px;
+    top:170px;
+    width:60px;
+    height:20px;
+}
+
+#u71_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u72 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u71 {
+    position:absolute;
+    left:170px;
+    top:170px;
+    width:60px;
+    height:20px
+}
+
+.u73_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u73_container {
+    position:absolute;
+    left:240px;
+    top:170px;
+    width:60px;
+    height:20px;
+}
+
+#u73_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u74 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u73 {
+    position:absolute;
+    left:240px;
+    top:170px;
+    width:60px;
+    height:20px
+}
+
+.u75_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u75_container {
+    position:absolute;
+    left:310px;
+    top:170px;
+    width:60px;
+    height:20px;
+}
+
+#u75_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u76 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u75 {
+    position:absolute;
+    left:310px;
+    top:170px;
+    width:60px;
+    height:20px
+}
+
+.u77_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u77_container {
+    position:absolute;
+    left:380px;
+    top:170px;
+    width:60px;
+    height:20px;
+}
+
+#u77_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u78 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u77 {
+    position:absolute;
+    left:380px;
+    top:170px;
+    width:60px;
+    height:20px
+}
+
+.u79_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u79_container {
+    position:absolute;
+    left:450px;
+    top:170px;
+    width:60px;
+    height:20px;
+}
+
+#u79_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u80 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u79 {
+    position:absolute;
+    left:450px;
+    top:170px;
+    width:60px;
+    height:20px
+}
+
+.u81_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u81_container {
+    position:absolute;
+    left:520px;
+    top:170px;
+    width:60px;
+    height:20px;
+}
+
+#u81_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u82 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u81 {
+    position:absolute;
+    left:520px;
+    top:170px;
+    width:60px;
+    height:20px
+}
+
+.u83_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u83_container {
+    position:absolute;
+    left:590px;
+    top:170px;
+    width:60px;
+    height:20px;
+}
+
+#u83_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u84 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u83 {
+    position:absolute;
+    left:590px;
+    top:170px;
+    width:60px;
+    height:20px
+}
+
+.u85_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u85_container {
+    position:absolute;
+    left:660px;
+    top:170px;
+    width:60px;
+    height:20px;
+}
+
+#u85_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u86 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u85 {
+    position:absolute;
+    left:660px;
+    top:170px;
+    width:60px;
+    height:20px
+}
+
+.u87_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u87_container {
+    position:absolute;
+    left:730px;
+    top:170px;
+    width:60px;
+    height:20px;
+}
+
+#u87_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u88 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u87 {
+    position:absolute;
+    left:730px;
+    top:170px;
+    width:60px;
+    height:20px
+}
+
+.u89_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u89_container {
+    position:absolute;
+    left:800px;
+    top:170px;
+    width:60px;
+    height:20px;
+}
+
+#u89_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u90 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u89 {
+    position:absolute;
+    left:800px;
+    top:170px;
+    width:60px;
+    height:20px
+}
+
+.u91_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u91_container {
+    position:absolute;
+    left:30px;
+    top:200px;
+    width:60px;
+    height:20px;
+}
+
+#u91_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u92 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u91 {
+    position:absolute;
+    left:30px;
+    top:200px;
+    width:60px;
+    height:20px
+}
+
+.u93_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u93_container {
+    position:absolute;
+    left:100px;
+    top:200px;
+    width:60px;
+    height:20px;
+}
+
+#u93_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u94 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u93 {
+    position:absolute;
+    left:100px;
+    top:200px;
+    width:60px;
+    height:20px
+}
+
+.u95_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u95_container {
+    position:absolute;
+    left:170px;
+    top:200px;
+    width:60px;
+    height:20px;
+}
+
+#u95_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u96 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u95 {
+    position:absolute;
+    left:170px;
+    top:200px;
+    width:60px;
+    height:20px
+}
+
+.u97_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u97_container {
+    position:absolute;
+    left:240px;
+    top:200px;
+    width:60px;
+    height:20px;
+}
+
+#u97_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u98 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u97 {
+    position:absolute;
+    left:240px;
+    top:200px;
+    width:60px;
+    height:20px
+}
+
+.u99_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u99_container {
+    position:absolute;
+    left:310px;
+    top:200px;
+    width:60px;
+    height:20px;
+}
+
+#u99_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u100 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u99 {
+    position:absolute;
+    left:310px;
+    top:200px;
+    width:60px;
+    height:20px
+}
+
+.u101_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u101_container {
+    position:absolute;
+    left:380px;
+    top:200px;
+    width:60px;
+    height:20px;
+}
+
+#u101_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u102 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u101 {
+    position:absolute;
+    left:380px;
+    top:200px;
+    width:60px;
+    height:20px
+}
+
+.u103_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u103_container {
+    position:absolute;
+    left:450px;
+    top:200px;
+    width:60px;
+    height:20px;
+}
+
+#u103_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u104 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u103 {
+    position:absolute;
+    left:450px;
+    top:200px;
+    width:60px;
+    height:20px
+}
+
+.u105_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u105_container {
+    position:absolute;
+    left:520px;
+    top:200px;
+    width:60px;
+    height:20px;
+}
+
+#u105_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u106 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u105 {
+    position:absolute;
+    left:520px;
+    top:200px;
+    width:60px;
+    height:20px
+}
+
+.u107_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u107_container {
+    position:absolute;
+    left:590px;
+    top:200px;
+    width:60px;
+    height:20px;
+}
+
+#u107_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u108 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u107 {
+    position:absolute;
+    left:590px;
+    top:200px;
+    width:60px;
+    height:20px
+}
+
+.u109_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u109_container {
+    position:absolute;
+    left:660px;
+    top:200px;
+    width:60px;
+    height:20px;
+}
+
+#u109_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u110 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u109 {
+    position:absolute;
+    left:660px;
+    top:200px;
+    width:60px;
+    height:20px
+}
+
+.u111_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u111_container {
+    position:absolute;
+    left:730px;
+    top:200px;
+    width:60px;
+    height:20px;
+}
+
+#u111_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u112 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u111 {
+    position:absolute;
+    left:730px;
+    top:200px;
+    width:60px;
+    height:20px
+}
+
+.u113_original {
+    background-image: url('../后台－工作技能录入_files/u43_original.png');
+}
+
+.u113_container {
+    position:absolute;
+    left:800px;
+    top:200px;
+    width:60px;
+    height:20px;
+}
+
+#u113_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:66px;
+    height:26px;
+}
+
+.u114 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:56px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u113 {
+    position:absolute;
+    left:800px;
+    top:200px;
+    width:60px;
+    height:20px
+}
+
+.u115_original {
+    background-image: url('../后台－工作技能录入_files/u115_original.png');
+}
+
+.u115_container {
+    position:absolute;
+    left:30px;
+    top:265px;
+    width:178px;
+    height:25px;
+}
+
+#u115_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:178px;
+    height:25px;
+}
+
+.u116 {
+    position:absolute;
+    left:2px;
+    top:4px;
+    width:174px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u115 {
+    position:absolute;
+    left:30px;
+    top:265px;
+    width:178px;
+    height:25px
+}
+
+.u117 {
+    position:absolute;
+    left:30px;
+    top:290px;
+    width:850px;
+    height:170px;
+    ;
+    ;
+    text-align: left;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u118 {
+    position:absolute;
+    left:34px;
+    top:296px;
+    width:824px;
+    height:76px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u119_original {
+    background-image: url('../后台－工作技能录入_files/u119_original.png');
+}
+
+.u119_container {
+    position:absolute;
+    left:221px;
+    top:269px;
+    width:20px;
+    height:20px;
+}
+
+#u119_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:20px;
+    height:20px;
+}
+
+.u120 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:16px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u119 {
+    position:absolute;
+    left:221px;
+    top:269px;
+    width:20px;
+    height:20px
+}
+
+.u121 {
+    position:absolute;
+    left:250px;
+    top:266px;
+    width:120px;
+    height:24px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u122 {
+    position:absolute;
+    left:320px;
+    top:535px;
+    width:100px;
+    height:25px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u123 {
+    position:absolute;
+    left:130px;
+    top:80px;
+    width:180px;
+    height:25px;
+    ;
+    ;
+    text-align: left;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u124 {
+    position:absolute;
+    left:30px;
+    top:111px;
+    width:130px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+

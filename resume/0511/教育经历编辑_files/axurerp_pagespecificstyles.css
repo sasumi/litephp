@@ -1,0 +1,1076 @@
+body {
+    margin: 0px;
+}
+
+div {
+    background-repeat: no-repeat;
+}
+
+.raw_image {
+    width: 100%;
+    height: 100%;
+}
+
+.preload {
+    display: none;
+}
+div.main_container {
+}
+
+.form_sketch {
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.u0_original {
+    background-image: url('../教育经历编辑_files/u0_original.png');
+}
+
+.u0_container {
+    position:absolute;
+    left:0px;
+    top:105px;
+    width:717px;
+    height:187px;
+}
+
+#u0_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:717px;
+    height:187px;
+}
+
+.u1 {
+    position:absolute;
+    left:2px;
+    top:86px;
+    width:713px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u0 {
+    position:absolute;
+    left:0px;
+    top:105px;
+    width:717px;
+    height:187px
+}
+
+.u2 {
+    position:absolute;
+    left:57px;
+    top:106px;
+    width:91px;
+    height:28px;
+    ;
+    ;
+    text-align: left;;
+    font-family:'宋体';
+    font-size: 18px;
+    color:#000000;
+    font-style:normal;
+    font-weight:bold;
+    text-decoration:none;
+    
+}
+
+.u3_original {
+    background-image: url('../教育经历编辑_files/u3_original.png');
+}
+
+.u3_container {
+    position:absolute;
+    left:724px;
+    top:100px;
+    width:250px;
+    height:260px;
+}
+
+#u3_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:256px;
+    height:266px;
+}
+
+.u4 {
+    position:absolute;
+    left:2px;
+    top:122px;
+    width:246px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u3 {
+    position:absolute;
+    left:724px;
+    top:100px;
+    width:250px;
+    height:260px
+}
+
+.u5_line {
+    background-image: url('../教育经历编辑_files/u5_line.png');
+}
+
+.u5_line {
+    position:absolute;
+    left:736px;
+    top:126px;
+    width:226px;
+    height:3px;
+}
+
+.u5 {
+    position:absolute;
+    left:736px;
+    top:126px;
+    width:226px;
+    height:3px
+}
+
+.u6 {
+    position:absolute;
+    left:744px;
+    top:104px;
+    width:188px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u7_line {
+    background-image: url('../教育经历编辑_files/u7_line.png');
+}
+
+.u7_line {
+    position:absolute;
+    left:732px;
+    top:248px;
+    width:224px;
+    height:3px;
+}
+
+.u7 {
+    position:absolute;
+    left:732px;
+    top:248px;
+    width:224px;
+    height:3px
+}
+
+.u8 {
+    position:absolute;
+    left:743px;
+    top:228px;
+    width:187px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u9 {
+    position:absolute;
+    left:732px;
+    top:254px;
+    width:237px;
+    height:95px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u10_original {
+    background-image: url('../教育经历编辑_files/u10_original.png');
+}
+
+.u10_container {
+    position:absolute;
+    left:43px;
+    top:130px;
+    width:660px;
+    height:240px;
+}
+
+#u10_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:666px;
+    height:246px;
+}
+
+.u11 {
+    position:absolute;
+    left:2px;
+    top:112px;
+    width:656px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u10 {
+    position:absolute;
+    left:43px;
+    top:130px;
+    width:660px;
+    height:240px
+}
+
+.u12 {
+    position:absolute;
+    left:47px;
+    top:136px;
+    width:646px;
+    height:228px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u13_original {
+    background-image: url('../教育经历编辑_files/u13_original.png');
+}
+
+.u13_container {
+    position:absolute;
+    left:23px;
+    top:100px;
+    width:20px;
+    height:20px;
+}
+
+#u13_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:20px;
+    height:20px;
+}
+
+.u14 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:16px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u13 {
+    position:absolute;
+    left:23px;
+    top:100px;
+    width:20px;
+    height:20px
+}
+
+.u15 {
+    position:absolute;
+    left:746px;
+    top:152px;
+    width:150px;
+    height:20px;
+    ;
+    ;
+    text-align: left;;
+    font-family:'宋体';
+    font-size: 13px;
+    color:#CCCCCC;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u16 {
+    position:absolute;
+    left:742px;
+    top:134px;
+    width:150px;
+    height:14px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u17 {
+    position:absolute;
+    left:907px;
+    top:152px;
+    width:60px;
+    height:20px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u18_original {
+    background-image: url('../教育经历编辑_files/u18_original.png');
+}
+
+.u18_container {
+    position:absolute;
+    left:22px;
+    top:98px;
+    width:678px;
+    height:212px;
+}
+
+#u18_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:678px;
+    height:212px;
+}
+
+.u19 {
+    position:absolute;
+    left:2px;
+    top:98px;
+    width:674px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u18 {
+    position:absolute;
+    left:22px;
+    top:98px;
+    width:678px;
+    height:212px
+}
+
+.u20 {
+    position:absolute;
+    left:66px;
+    top:104px;
+    width:88px;
+    height:28px;
+    ;
+    ;
+    text-align: left;;
+    font-family:'宋体';
+    font-size: 18px;
+    color:#000000;
+    font-style:normal;
+    font-weight:bold;
+    text-decoration:none;
+    
+}
+
+.u21_original {
+    background-image: url('../教育经历编辑_files/u21_original.png');
+}
+
+.u21_container {
+    position:absolute;
+    left:32px;
+    top:110px;
+    width:19px;
+    height:20px;
+}
+
+#u21_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:19px;
+    height:20px;
+}
+
+.u22 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:15px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u21 {
+    position:absolute;
+    left:32px;
+    top:110px;
+    width:19px;
+    height:20px
+}
+
+.u24_original {
+    background-image: url('../教育经历编辑_files/u24_original.png');
+}
+
+.u24_container {
+    position:absolute;
+    left:3px;
+    top:100px;
+    width:720px;
+    height:25px;
+}
+
+#u24_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:726px;
+    height:31px;
+}
+
+.u25 {
+    position:absolute;
+    left:2px;
+    top:4px;
+    width:716px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u24 {
+    position:absolute;
+    left:3px;
+    top:100px;
+    width:720px;
+    height:25px
+}
+
+.u26 {
+    position:absolute;
+    left:10px;
+    top:103px;
+    width:144px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u27_original {
+    background-image: url('../教育经历编辑_files/u27_original.png');
+}
+
+.u27_container {
+    position:absolute;
+    left:30px;
+    top:130px;
+    width:21px;
+    height:21px;
+}
+
+#u27_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:21px;
+    height:21px;
+}
+
+.u28 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:17px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u27 {
+    position:absolute;
+    left:30px;
+    top:130px;
+    width:21px;
+    height:21px
+}
+
+.u29 {
+    position:absolute;
+    left:70px;
+    top:130px;
+    width:547px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u30_line {
+    background-image: url('../教育经历编辑_files/u30_line.png');
+}
+
+.u30_line {
+    position:absolute;
+    left:13px;
+    top:222px;
+    width:681px;
+    height:3px;
+}
+
+.u30 {
+    position:absolute;
+    left:13px;
+    top:222px;
+    width:681px;
+    height:3px
+}
+
+.u31 {
+    position:absolute;
+    left:73px;
+    top:154px;
+    width:615px;
+    height:57px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u32_original {
+    background-image: url('../教育经历编辑_files/u27_original.png');
+}
+
+.u32_container {
+    position:absolute;
+    left:30px;
+    top:240px;
+    width:21px;
+    height:21px;
+}
+
+#u32_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:21px;
+    height:21px;
+}
+
+.u33 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:17px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u32 {
+    position:absolute;
+    left:30px;
+    top:240px;
+    width:21px;
+    height:21px
+}
+
+.u34_line {
+    background-image: url('../教育经历编辑_files/u34_line.png');
+}
+
+.u34_line {
+    position:absolute;
+    left:13px;
+    top:333px;
+    width:681px;
+    height:3px;
+}
+
+.u34 {
+    position:absolute;
+    left:13px;
+    top:333px;
+    width:681px;
+    height:3px
+}
+
+.u35_original {
+    background-image: url('../教育经历编辑_files/u27_original.png');
+}
+
+.u35_container {
+    position:absolute;
+    left:30px;
+    top:351px;
+    width:21px;
+    height:21px;
+}
+
+#u35_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:21px;
+    height:21px;
+}
+
+.u36 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:17px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u35 {
+    position:absolute;
+    left:30px;
+    top:351px;
+    width:21px;
+    height:21px
+}
+
+.u37_line {
+    background-image: url('../教育经历编辑_files/u37_line.png');
+}
+
+.u37_line {
+    position:absolute;
+    left:13px;
+    top:443px;
+    width:681px;
+    height:3px;
+}
+
+.u37 {
+    position:absolute;
+    left:13px;
+    top:443px;
+    width:681px;
+    height:3px
+}
+
+.u38_original {
+    background-image: url('../教育经历编辑_files/u27_original.png');
+}
+
+.u38_container {
+    position:absolute;
+    left:30px;
+    top:461px;
+    width:21px;
+    height:21px;
+}
+
+#u38_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:21px;
+    height:21px;
+}
+
+.u39 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:17px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u38 {
+    position:absolute;
+    left:30px;
+    top:461px;
+    width:21px;
+    height:21px
+}
+
+.u40_line {
+    background-image: url('../教育经历编辑_files/u40_line.png');
+}
+
+.u40_line {
+    position:absolute;
+    left:13px;
+    top:555px;
+    width:681px;
+    height:3px;
+}
+
+.u40 {
+    position:absolute;
+    left:13px;
+    top:555px;
+    width:681px;
+    height:3px
+}
+
+.u41_original {
+    background-image: url('../教育经历编辑_files/u27_original.png');
+}
+
+.u41_container {
+    position:absolute;
+    left:30px;
+    top:573px;
+    width:21px;
+    height:21px;
+}
+
+#u41_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:21px;
+    height:21px;
+}
+
+.u42 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:17px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u41 {
+    position:absolute;
+    left:30px;
+    top:573px;
+    width:21px;
+    height:21px
+}
+
+.u43 {
+    position:absolute;
+    left:26px;
+    top:158px;
+    width:29px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u44 {
+    position:absolute;
+    left:26px;
+    top:268px;
+    width:29px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u45 {
+    position:absolute;
+    left:26px;
+    top:381px;
+    width:29px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u46 {
+    position:absolute;
+    left:26px;
+    top:491px;
+    width:29px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u47 {
+    position:absolute;
+    left:26px;
+    top:602px;
+    width:29px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u48_original {
+    background-image: url('../教育经历编辑_files/u48_original.png');
+}
+
+.u48_container {
+    position:absolute;
+    left:700px;
+    top:103px;
+    width:18px;
+    height:18px;
+}
+
+#u48_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:18px;
+    height:18px;
+}
+
+.u49 {
+    position:absolute;
+    left:2px;
+    top:1px;
+    width:14px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u48 {
+    position:absolute;
+    left:700px;
+    top:103px;
+    width:18px;
+    height:18px
+}
+
+.u50 {
+    position:absolute;
+    left:73px;
+    top:230px;
+    width:547px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u51 {
+    position:absolute;
+    left:76px;
+    top:254px;
+    width:615px;
+    height:57px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u52 {
+    position:absolute;
+    left:73px;
+    top:349px;
+    width:547px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u53 {
+    position:absolute;
+    left:76px;
+    top:373px;
+    width:615px;
+    height:57px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u54 {
+    position:absolute;
+    left:73px;
+    top:459px;
+    width:547px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u55 {
+    position:absolute;
+    left:76px;
+    top:483px;
+    width:615px;
+    height:57px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u56 {
+    position:absolute;
+    left:73px;
+    top:569px;
+    width:547px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u57 {
+    position:absolute;
+    left:76px;
+    top:593px;
+    width:615px;
+    height:57px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u58_line {
+    background-image: url('../教育经历编辑_files/u58_line.png');
+}
+
+.u58_line {
+    position:absolute;
+    left:724px;
+    top:210px;
+    width:250px;
+    height:3px;
+}
+
+.u58 {
+    position:absolute;
+    left:724px;
+    top:210px;
+    width:250px;
+    height:3px
+}
+

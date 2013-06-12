@@ -1,0 +1,2400 @@
+body {
+    margin: 0px;
+}
+
+div {
+    background-repeat: no-repeat;
+}
+
+.raw_image {
+    width: 100%;
+    height: 100%;
+}
+
+.preload {
+    display: none;
+}
+div.main_container {
+}
+
+.form_sketch {
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.u1_original {
+    background-image: url('../后台－资费设定_files/u1_original.png');
+}
+
+.u1_container {
+    position:absolute;
+    left:140px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u1_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u2 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u1 {
+    position:absolute;
+    left:140px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u3_original {
+    background-image: url('../后台－资费设定_files/u3_original.png');
+}
+
+.u3_container {
+    position:absolute;
+    left:260px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u3_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u4 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u3 {
+    position:absolute;
+    left:260px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u5_original {
+    background-image: url('../后台－资费设定_files/u1_original.png');
+}
+
+.u5_container {
+    position:absolute;
+    left:20px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u5_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u6 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u5 {
+    position:absolute;
+    left:20px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u7_original {
+    background-image: url('../后台－资费设定_files/u7_original.png');
+}
+
+.u7_container {
+    position:absolute;
+    left:10px;
+    top:30px;
+    width:492px;
+    height:6px;
+}
+
+#u7_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:498px;
+    height:12px;
+}
+
+.u8 {
+    position:absolute;
+    left:2px;
+    top:-5px;
+    width:488px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u7 {
+    position:absolute;
+    left:10px;
+    top:30px;
+    width:492px;
+    height:6px
+}
+
+.u9_original {
+    background-image: url('../后台－资费设定_files/u9_original.png');
+}
+
+.u9_container {
+    position:absolute;
+    left:10px;
+    top:36px;
+    width:492px;
+    height:100px;
+}
+
+#u9_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:498px;
+    height:106px;
+}
+
+.u10 {
+    position:absolute;
+    left:2px;
+    top:42px;
+    width:488px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u9 {
+    position:absolute;
+    left:10px;
+    top:36px;
+    width:492px;
+    height:100px
+}
+
+.u11_original {
+    background-image: url('../后台－资费设定_files/u1_original.png');
+}
+
+.u11_container {
+    position:absolute;
+    left:20px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u11_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u12 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u11 {
+    position:absolute;
+    left:20px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u13_original {
+    background-image: url('../后台－资费设定_files/u3_original.png');
+}
+
+.u13_container {
+    position:absolute;
+    left:140px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u13_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u14 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u13 {
+    position:absolute;
+    left:140px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u15_original {
+    background-image: url('../后台－资费设定_files/u1_original.png');
+}
+
+.u15_container {
+    position:absolute;
+    left:260px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u15_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u16 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u15 {
+    position:absolute;
+    left:260px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u17_original {
+    background-image: url('../后台－资费设定_files/u7_original.png');
+}
+
+.u17_container {
+    position:absolute;
+    left:10px;
+    top:30px;
+    width:492px;
+    height:6px;
+}
+
+#u17_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:498px;
+    height:12px;
+}
+
+.u18 {
+    position:absolute;
+    left:2px;
+    top:-5px;
+    width:488px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u17 {
+    position:absolute;
+    left:10px;
+    top:30px;
+    width:492px;
+    height:6px
+}
+
+.u19_original {
+    background-image: url('../后台－资费设定_files/u9_original.png');
+}
+
+.u19_container {
+    position:absolute;
+    left:10px;
+    top:36px;
+    width:492px;
+    height:100px;
+}
+
+#u19_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:498px;
+    height:106px;
+}
+
+.u20 {
+    position:absolute;
+    left:2px;
+    top:42px;
+    width:488px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u19 {
+    position:absolute;
+    left:10px;
+    top:36px;
+    width:492px;
+    height:100px
+}
+
+.u21_original {
+    background-image: url('../后台－资费设定_files/u1_original.png');
+}
+
+.u21_container {
+    position:absolute;
+    left:250px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u21_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u22 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u21 {
+    position:absolute;
+    left:250px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u23_original {
+    background-image: url('../后台－资费设定_files/u1_original.png');
+}
+
+.u23_container {
+    position:absolute;
+    left:10px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u23_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u24 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u23 {
+    position:absolute;
+    left:10px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u25_original {
+    background-image: url('../后台－资费设定_files/u25_original.png');
+}
+
+.u25_container {
+    position:absolute;
+    left:10px;
+    top:36px;
+    width:880px;
+    height:494px;
+}
+
+#u25_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:886px;
+    height:500px;
+}
+
+.u26 {
+    position:absolute;
+    left:2px;
+    top:239px;
+    width:876px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u25 {
+    position:absolute;
+    left:10px;
+    top:36px;
+    width:880px;
+    height:494px
+}
+
+.u27_original {
+    background-image: url('../后台－资费设定_files/u1_original.png');
+}
+
+.u27_container {
+    position:absolute;
+    left:130px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u27_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u28 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u27 {
+    position:absolute;
+    left:130px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u29_original {
+    background-image: url('../后台－资费设定_files/u1_original.png');
+}
+
+.u29_container {
+    position:absolute;
+    left:490px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u29_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u30 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u29 {
+    position:absolute;
+    left:490px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u31_original {
+    background-image: url('../后台－资费设定_files/u1_original.png');
+}
+
+.u31_container {
+    position:absolute;
+    left:610px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u31_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u32 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u31 {
+    position:absolute;
+    left:610px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u33_original {
+    background-image: url('../后台－资费设定_files/u1_original.png');
+}
+
+.u33_container {
+    position:absolute;
+    left:730px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u33_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u34 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u33 {
+    position:absolute;
+    left:730px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u35_original {
+    background-image: url('../后台－资费设定_files/u35_original.png');
+}
+
+.u35_container {
+    position:absolute;
+    left:10px;
+    top:30px;
+    width:890px;
+    height:6px;
+}
+
+#u35_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:896px;
+    height:12px;
+}
+
+.u36 {
+    position:absolute;
+    left:2px;
+    top:-5px;
+    width:886px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u35 {
+    position:absolute;
+    left:10px;
+    top:30px;
+    width:890px;
+    height:6px
+}
+
+.u37_original {
+    background-image: url('../后台－资费设定_files/u3_original.png');
+}
+
+.u37_container {
+    position:absolute;
+    left:370px;
+    top:10px;
+    width:115px;
+    height:20px;
+}
+
+#u37_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:121px;
+    height:26px;
+}
+
+.u38 {
+    position:absolute;
+    left:2px;
+    top:0px;
+    width:111px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u37 {
+    position:absolute;
+    left:370px;
+    top:10px;
+    width:115px;
+    height:20px
+}
+
+.u39 {
+    position:absolute;
+    left:278px;
+    top:0px;
+    width:500px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u40 {
+    position:absolute;
+    left:885px;
+    top:1px;
+    width:80px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u41 {
+    position:absolute;
+    left:770px;
+    top:1px;
+    width:100px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+#u42 {
+    position:absolute;
+    left:30px;
+    top:116px;
+    width:605px;
+    height:97px
+}
+
+.u42_table {
+    background-image: url('../后台－资费设定_files/u42_table.png');
+}
+
+.u42_table {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:609px;
+    height:101px;
+}
+
+.u43_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u43_container {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u44 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u43 {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u45_original {
+    background-image: url('../后台－资费设定_files/u45_original.png');
+}
+
+.u45_container {
+    position:absolute;
+    left:100px;
+    top:0px;
+    width:139px;
+    height:23px;
+}
+
+.u46 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:135px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u45 {
+    position:absolute;
+    left:100px;
+    top:0px;
+    width:139px;
+    height:23px
+}
+
+.u47_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u47_container {
+    position:absolute;
+    left:239px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u48 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u47 {
+    position:absolute;
+    left:239px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u49_original {
+    background-image: url('../后台－资费设定_files/u49_original.png');
+}
+
+.u49_container {
+    position:absolute;
+    left:339px;
+    top:0px;
+    width:161px;
+    height:23px;
+}
+
+.u50 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:157px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u49 {
+    position:absolute;
+    left:339px;
+    top:0px;
+    width:161px;
+    height:23px
+}
+
+.u51_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u51_container {
+    position:absolute;
+    left:500px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u52 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u51 {
+    position:absolute;
+    left:500px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u53_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u53_container {
+    position:absolute;
+    left:0px;
+    top:23px;
+    width:100px;
+    height:23px;
+}
+
+.u54 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u53 {
+    position:absolute;
+    left:0px;
+    top:23px;
+    width:100px;
+    height:23px
+}
+
+.u55_original {
+    background-image: url('../后台－资费设定_files/u45_original.png');
+}
+
+.u55_container {
+    position:absolute;
+    left:100px;
+    top:23px;
+    width:139px;
+    height:23px;
+}
+
+.u56 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:135px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u55 {
+    position:absolute;
+    left:100px;
+    top:23px;
+    width:139px;
+    height:23px
+}
+
+.u57_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u57_container {
+    position:absolute;
+    left:239px;
+    top:23px;
+    width:100px;
+    height:23px;
+}
+
+.u58 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u57 {
+    position:absolute;
+    left:239px;
+    top:23px;
+    width:100px;
+    height:23px
+}
+
+.u59_original {
+    background-image: url('../后台－资费设定_files/u49_original.png');
+}
+
+.u59_container {
+    position:absolute;
+    left:339px;
+    top:23px;
+    width:161px;
+    height:23px;
+}
+
+.u60 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:157px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u59 {
+    position:absolute;
+    left:339px;
+    top:23px;
+    width:161px;
+    height:23px
+}
+
+.u61_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u61_container {
+    position:absolute;
+    left:500px;
+    top:23px;
+    width:100px;
+    height:23px;
+}
+
+.u62 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u61 {
+    position:absolute;
+    left:500px;
+    top:23px;
+    width:100px;
+    height:23px
+}
+
+.u63_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u63_container {
+    position:absolute;
+    left:0px;
+    top:46px;
+    width:100px;
+    height:23px;
+}
+
+.u64 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u63 {
+    position:absolute;
+    left:0px;
+    top:46px;
+    width:100px;
+    height:23px
+}
+
+.u65_original {
+    background-image: url('../后台－资费设定_files/u45_original.png');
+}
+
+.u65_container {
+    position:absolute;
+    left:100px;
+    top:46px;
+    width:139px;
+    height:23px;
+}
+
+.u66 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:135px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u65 {
+    position:absolute;
+    left:100px;
+    top:46px;
+    width:139px;
+    height:23px
+}
+
+.u67_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u67_container {
+    position:absolute;
+    left:239px;
+    top:46px;
+    width:100px;
+    height:23px;
+}
+
+.u68 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u67 {
+    position:absolute;
+    left:239px;
+    top:46px;
+    width:100px;
+    height:23px
+}
+
+.u69_original {
+    background-image: url('../后台－资费设定_files/u49_original.png');
+}
+
+.u69_container {
+    position:absolute;
+    left:339px;
+    top:46px;
+    width:161px;
+    height:23px;
+}
+
+.u70 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:157px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u69 {
+    position:absolute;
+    left:339px;
+    top:46px;
+    width:161px;
+    height:23px
+}
+
+.u71_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u71_container {
+    position:absolute;
+    left:500px;
+    top:46px;
+    width:100px;
+    height:23px;
+}
+
+.u72 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u71 {
+    position:absolute;
+    left:500px;
+    top:46px;
+    width:100px;
+    height:23px
+}
+
+.u73_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u73_container {
+    position:absolute;
+    left:0px;
+    top:69px;
+    width:100px;
+    height:23px;
+}
+
+.u74 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u73 {
+    position:absolute;
+    left:0px;
+    top:69px;
+    width:100px;
+    height:23px
+}
+
+.u75_original {
+    background-image: url('../后台－资费设定_files/u45_original.png');
+}
+
+.u75_container {
+    position:absolute;
+    left:100px;
+    top:69px;
+    width:139px;
+    height:23px;
+}
+
+.u76 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:135px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u75 {
+    position:absolute;
+    left:100px;
+    top:69px;
+    width:139px;
+    height:23px
+}
+
+.u77_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u77_container {
+    position:absolute;
+    left:239px;
+    top:69px;
+    width:100px;
+    height:23px;
+}
+
+.u78 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u77 {
+    position:absolute;
+    left:239px;
+    top:69px;
+    width:100px;
+    height:23px
+}
+
+.u79_original {
+    background-image: url('../后台－资费设定_files/u49_original.png');
+}
+
+.u79_container {
+    position:absolute;
+    left:339px;
+    top:69px;
+    width:161px;
+    height:23px;
+}
+
+.u80 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:157px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u79 {
+    position:absolute;
+    left:339px;
+    top:69px;
+    width:161px;
+    height:23px
+}
+
+.u81_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u81_container {
+    position:absolute;
+    left:500px;
+    top:69px;
+    width:100px;
+    height:23px;
+}
+
+.u82 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u81 {
+    position:absolute;
+    left:500px;
+    top:69px;
+    width:100px;
+    height:23px
+}
+
+.u83 {
+    position:absolute;
+    left:30px;
+    top:90px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u84 {
+    position:absolute;
+    left:30px;
+    top:251px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+#u85 {
+    position:absolute;
+    left:30px;
+    top:280px;
+    width:604px;
+    height:97px
+}
+
+.u85_table {
+    background-image: url('../后台－资费设定_files/u85_table.png');
+}
+
+.u85_table {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:608px;
+    height:101px;
+}
+
+.u86_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u86_container {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u87 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u86 {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u88_original {
+    background-image: url('../后台－资费设定_files/u88_original.png');
+}
+
+.u88_container {
+    position:absolute;
+    left:100px;
+    top:0px;
+    width:141px;
+    height:23px;
+}
+
+.u89 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:137px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u88 {
+    position:absolute;
+    left:100px;
+    top:0px;
+    width:141px;
+    height:23px
+}
+
+.u90_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u90_container {
+    position:absolute;
+    left:241px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u91 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u90 {
+    position:absolute;
+    left:241px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u92_original {
+    background-image: url('../后台－资费设定_files/u92_original.png');
+}
+
+.u92_container {
+    position:absolute;
+    left:341px;
+    top:0px;
+    width:158px;
+    height:23px;
+}
+
+.u93 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:154px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u92 {
+    position:absolute;
+    left:341px;
+    top:0px;
+    width:158px;
+    height:23px
+}
+
+.u94_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u94_container {
+    position:absolute;
+    left:499px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u95 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u94 {
+    position:absolute;
+    left:499px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u96_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u96_container {
+    position:absolute;
+    left:0px;
+    top:23px;
+    width:100px;
+    height:23px;
+}
+
+.u97 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u96 {
+    position:absolute;
+    left:0px;
+    top:23px;
+    width:100px;
+    height:23px
+}
+
+.u98_original {
+    background-image: url('../后台－资费设定_files/u88_original.png');
+}
+
+.u98_container {
+    position:absolute;
+    left:100px;
+    top:23px;
+    width:141px;
+    height:23px;
+}
+
+.u99 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:137px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u98 {
+    position:absolute;
+    left:100px;
+    top:23px;
+    width:141px;
+    height:23px
+}
+
+.u100_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u100_container {
+    position:absolute;
+    left:241px;
+    top:23px;
+    width:100px;
+    height:23px;
+}
+
+.u101 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u100 {
+    position:absolute;
+    left:241px;
+    top:23px;
+    width:100px;
+    height:23px
+}
+
+.u102_original {
+    background-image: url('../后台－资费设定_files/u92_original.png');
+}
+
+.u102_container {
+    position:absolute;
+    left:341px;
+    top:23px;
+    width:158px;
+    height:23px;
+}
+
+.u103 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:154px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u102 {
+    position:absolute;
+    left:341px;
+    top:23px;
+    width:158px;
+    height:23px
+}
+
+.u104_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u104_container {
+    position:absolute;
+    left:499px;
+    top:23px;
+    width:100px;
+    height:23px;
+}
+
+.u105 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u104 {
+    position:absolute;
+    left:499px;
+    top:23px;
+    width:100px;
+    height:23px
+}
+
+.u106_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u106_container {
+    position:absolute;
+    left:0px;
+    top:46px;
+    width:100px;
+    height:23px;
+}
+
+.u107 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u106 {
+    position:absolute;
+    left:0px;
+    top:46px;
+    width:100px;
+    height:23px
+}
+
+.u108_original {
+    background-image: url('../后台－资费设定_files/u88_original.png');
+}
+
+.u108_container {
+    position:absolute;
+    left:100px;
+    top:46px;
+    width:141px;
+    height:23px;
+}
+
+.u109 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:137px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u108 {
+    position:absolute;
+    left:100px;
+    top:46px;
+    width:141px;
+    height:23px
+}
+
+.u110_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u110_container {
+    position:absolute;
+    left:241px;
+    top:46px;
+    width:100px;
+    height:23px;
+}
+
+.u111 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u110 {
+    position:absolute;
+    left:241px;
+    top:46px;
+    width:100px;
+    height:23px
+}
+
+.u112_original {
+    background-image: url('../后台－资费设定_files/u92_original.png');
+}
+
+.u112_container {
+    position:absolute;
+    left:341px;
+    top:46px;
+    width:158px;
+    height:23px;
+}
+
+.u113 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:154px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u112 {
+    position:absolute;
+    left:341px;
+    top:46px;
+    width:158px;
+    height:23px
+}
+
+.u114_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u114_container {
+    position:absolute;
+    left:499px;
+    top:46px;
+    width:100px;
+    height:23px;
+}
+
+.u115 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u114 {
+    position:absolute;
+    left:499px;
+    top:46px;
+    width:100px;
+    height:23px
+}
+
+.u116_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u116_container {
+    position:absolute;
+    left:0px;
+    top:69px;
+    width:100px;
+    height:23px;
+}
+
+.u117 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u116 {
+    position:absolute;
+    left:0px;
+    top:69px;
+    width:100px;
+    height:23px
+}
+
+.u118_original {
+    background-image: url('../后台－资费设定_files/u88_original.png');
+}
+
+.u118_container {
+    position:absolute;
+    left:100px;
+    top:69px;
+    width:141px;
+    height:23px;
+}
+
+.u119 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:137px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u118 {
+    position:absolute;
+    left:100px;
+    top:69px;
+    width:141px;
+    height:23px
+}
+
+.u120_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u120_container {
+    position:absolute;
+    left:241px;
+    top:69px;
+    width:100px;
+    height:23px;
+}
+
+.u121 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u120 {
+    position:absolute;
+    left:241px;
+    top:69px;
+    width:100px;
+    height:23px
+}
+
+.u122_original {
+    background-image: url('../后台－资费设定_files/u92_original.png');
+}
+
+.u122_container {
+    position:absolute;
+    left:341px;
+    top:69px;
+    width:158px;
+    height:23px;
+}
+
+.u123 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:154px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u122 {
+    position:absolute;
+    left:341px;
+    top:69px;
+    width:158px;
+    height:23px
+}
+
+.u124_original {
+    background-image: url('../后台－资费设定_files/u43_original.png');
+}
+
+.u124_container {
+    position:absolute;
+    left:499px;
+    top:69px;
+    width:100px;
+    height:23px;
+}
+
+.u125 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u124 {
+    position:absolute;
+    left:499px;
+    top:69px;
+    width:100px;
+    height:23px
+}
+
+.u126 {
+    position:absolute;
+    left:640px;
+    top:139px;
+    width:100px;
+    height:20px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 11px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u127 {
+    position:absolute;
+    left:640px;
+    top:163px;
+    width:100px;
+    height:20px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 11px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u128 {
+    position:absolute;
+    left:640px;
+    top:187px;
+    width:100px;
+    height:20px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 11px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u129 {
+    position:absolute;
+    left:633px;
+    top:303px;
+    width:100px;
+    height:20px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 11px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u130 {
+    position:absolute;
+    left:633px;
+    top:327px;
+    width:100px;
+    height:20px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 11px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u131 {
+    position:absolute;
+    left:633px;
+    top:351px;
+    width:100px;
+    height:20px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 11px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+

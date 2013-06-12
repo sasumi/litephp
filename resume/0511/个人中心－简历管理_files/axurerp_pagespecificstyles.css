@@ -1,0 +1,2010 @@
+body {
+    margin: 0px;
+}
+
+div {
+    background-repeat: no-repeat;
+}
+
+.raw_image {
+    width: 100%;
+    height: 100%;
+}
+
+.preload {
+    display: none;
+}
+div.main_container {
+}
+
+.form_sketch {
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.u0_original {
+    background-image: url('../个人中心－简历管理_files/u0_original.png');
+}
+
+.u0_container {
+    position:absolute;
+    left:60px;
+    top:173px;
+    width:500px;
+    height:150px;
+}
+
+#u0_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:506px;
+    height:156px;
+}
+
+.u1 {
+    position:absolute;
+    left:2px;
+    top:67px;
+    width:496px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u0 {
+    position:absolute;
+    left:60px;
+    top:173px;
+    width:500px;
+    height:150px
+}
+
+#u2 {
+    position:absolute;
+    left:60px;
+    top:93px;
+    width:605px;
+    height:30px
+}
+
+.u2_table {
+    background-image: url('../个人中心－简历管理_files/u2_table.png');
+}
+
+.u2_table {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:609px;
+    height:34px;
+}
+
+.u3_original {
+    background-image: url('../个人中心－简历管理_files/u3_original.png');
+}
+
+.u3_container {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:25px;
+}
+
+.u4 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u3 {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:25px
+}
+
+.u5_original {
+    background-image: url('../个人中心－简历管理_files/u3_original.png');
+}
+
+.u5_container {
+    position:absolute;
+    left:100px;
+    top:0px;
+    width:100px;
+    height:25px;
+}
+
+.u6 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u5 {
+    position:absolute;
+    left:100px;
+    top:0px;
+    width:100px;
+    height:25px
+}
+
+.u7_original {
+    background-image: url('../个人中心－简历管理_files/u3_original.png');
+}
+
+.u7_container {
+    position:absolute;
+    left:200px;
+    top:0px;
+    width:100px;
+    height:25px;
+}
+
+.u8 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u7 {
+    position:absolute;
+    left:200px;
+    top:0px;
+    width:100px;
+    height:25px
+}
+
+.u9_original {
+    background-image: url('../个人中心－简历管理_files/u3_original.png');
+}
+
+.u9_container {
+    position:absolute;
+    left:300px;
+    top:0px;
+    width:100px;
+    height:25px;
+}
+
+.u10 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u9 {
+    position:absolute;
+    left:300px;
+    top:0px;
+    width:100px;
+    height:25px
+}
+
+.u11_original {
+    background-image: url('../个人中心－简历管理_files/u3_original.png');
+}
+
+.u11_container {
+    position:absolute;
+    left:400px;
+    top:0px;
+    width:100px;
+    height:25px;
+}
+
+.u12 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u11 {
+    position:absolute;
+    left:400px;
+    top:0px;
+    width:100px;
+    height:25px
+}
+
+.u13_original {
+    background-image: url('../个人中心－简历管理_files/u3_original.png');
+}
+
+.u13_container {
+    position:absolute;
+    left:500px;
+    top:0px;
+    width:100px;
+    height:25px;
+}
+
+.u14 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u13 {
+    position:absolute;
+    left:500px;
+    top:0px;
+    width:100px;
+    height:25px
+}
+
+.u15_original {
+    background-image: url('../个人中心－简历管理_files/u15_original.png');
+}
+
+.u15_container {
+    position:absolute;
+    left:68px;
+    top:180px;
+    width:100px;
+    height:141px;
+}
+
+#u15_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:141px;
+}
+
+.u16 {
+    position:absolute;
+    left:2px;
+    top:62px;
+    width:96px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u15 {
+    position:absolute;
+    left:68px;
+    top:180px;
+    width:100px;
+    height:141px
+}
+
+.u17 {
+    position:absolute;
+    left:190px;
+    top:181px;
+    width:360px;
+    height:21px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u18 {
+    position:absolute;
+    left:190px;
+    top:243px;
+    width:120px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u19_text {
+    position:absolute;
+    left:190px;
+    top:301px;
+    width:30px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u19 {
+    position:absolute;
+    left:190px;
+    top:301px;
+    width:30px;
+    height:19px
+}
+
+.u21 {
+    position:absolute;
+    left:16px;
+    top:0px;
+    width:42px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u23 {
+    position:absolute;
+    left:16px;
+    top:0px;
+    width:42px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u24 {
+    position:absolute;
+    left:190px;
+    top:261px;
+    width:360px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u25 {
+    position:absolute;
+    left:590px;
+    top:172px;
+    width:360px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u26_original {
+    background-image: url('../个人中心－简历管理_files/u26_original.png');
+}
+
+.u26_container {
+    position:absolute;
+    left:610px;
+    top:173px;
+    width:220px;
+    height:150px;
+}
+
+#u26_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:226px;
+    height:156px;
+}
+
+.u27 {
+    position:absolute;
+    left:2px;
+    top:46px;
+    width:216px;
+    height:57px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u26 {
+    position:absolute;
+    left:610px;
+    top:173px;
+    width:220px;
+    height:150px
+}
+
+.u28 {
+    position:absolute;
+    left:360px;
+    top:210px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u29 {
+    position:absolute;
+    left:192px;
+    top:210px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u30_original {
+    background-image: url('../个人中心－简历管理_files/u0_original.png');
+}
+
+.u30_container {
+    position:absolute;
+    left:60px;
+    top:351px;
+    width:500px;
+    height:150px;
+}
+
+#u30_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:506px;
+    height:156px;
+}
+
+.u31 {
+    position:absolute;
+    left:2px;
+    top:67px;
+    width:496px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u30 {
+    position:absolute;
+    left:60px;
+    top:351px;
+    width:500px;
+    height:150px
+}
+
+.u32_original {
+    background-image: url('../个人中心－简历管理_files/u15_original.png');
+}
+
+.u32_container {
+    position:absolute;
+    left:68px;
+    top:358px;
+    width:100px;
+    height:141px;
+}
+
+#u32_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:141px;
+}
+
+.u33 {
+    position:absolute;
+    left:2px;
+    top:62px;
+    width:96px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u32 {
+    position:absolute;
+    left:68px;
+    top:358px;
+    width:100px;
+    height:141px
+}
+
+.u34 {
+    position:absolute;
+    left:190px;
+    top:359px;
+    width:360px;
+    height:21px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u35 {
+    position:absolute;
+    left:190px;
+    top:421px;
+    width:120px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u36 {
+    position:absolute;
+    left:190px;
+    top:479px;
+    width:200px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u38 {
+    position:absolute;
+    left:16px;
+    top:0px;
+    width:42px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u40 {
+    position:absolute;
+    left:16px;
+    top:0px;
+    width:42px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u41 {
+    position:absolute;
+    left:190px;
+    top:439px;
+    width:360px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u42_original {
+    background-image: url('../个人中心－简历管理_files/u26_original.png');
+}
+
+.u42_container {
+    position:absolute;
+    left:610px;
+    top:351px;
+    width:220px;
+    height:150px;
+}
+
+#u42_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:226px;
+    height:156px;
+}
+
+.u43 {
+    position:absolute;
+    left:2px;
+    top:66px;
+    width:216px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u42 {
+    position:absolute;
+    left:610px;
+    top:351px;
+    width:220px;
+    height:150px
+}
+
+.u44 {
+    position:absolute;
+    left:360px;
+    top:388px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u45 {
+    position:absolute;
+    left:192px;
+    top:388px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u46_original {
+    background-image: url('../个人中心－简历管理_files/u0_original.png');
+}
+
+.u46_container {
+    position:absolute;
+    left:60px;
+    top:530px;
+    width:500px;
+    height:150px;
+}
+
+#u46_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:506px;
+    height:156px;
+}
+
+.u47 {
+    position:absolute;
+    left:2px;
+    top:67px;
+    width:496px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u46 {
+    position:absolute;
+    left:60px;
+    top:530px;
+    width:500px;
+    height:150px
+}
+
+.u48_original {
+    background-image: url('../个人中心－简历管理_files/u15_original.png');
+}
+
+.u48_container {
+    position:absolute;
+    left:68px;
+    top:537px;
+    width:100px;
+    height:141px;
+}
+
+#u48_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:141px;
+}
+
+.u49 {
+    position:absolute;
+    left:2px;
+    top:62px;
+    width:96px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u48 {
+    position:absolute;
+    left:68px;
+    top:537px;
+    width:100px;
+    height:141px
+}
+
+.u50 {
+    position:absolute;
+    left:190px;
+    top:538px;
+    width:360px;
+    height:21px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u51 {
+    position:absolute;
+    left:190px;
+    top:600px;
+    width:120px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u52 {
+    position:absolute;
+    left:190px;
+    top:658px;
+    width:200px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u54 {
+    position:absolute;
+    left:16px;
+    top:0px;
+    width:42px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u56 {
+    position:absolute;
+    left:16px;
+    top:0px;
+    width:42px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u57 {
+    position:absolute;
+    left:190px;
+    top:618px;
+    width:360px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u58_original {
+    background-image: url('../个人中心－简历管理_files/u26_original.png');
+}
+
+.u58_container {
+    position:absolute;
+    left:610px;
+    top:530px;
+    width:220px;
+    height:150px;
+}
+
+#u58_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:226px;
+    height:156px;
+}
+
+.u59 {
+    position:absolute;
+    left:2px;
+    top:46px;
+    width:216px;
+    height:57px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u58 {
+    position:absolute;
+    left:610px;
+    top:530px;
+    width:220px;
+    height:150px
+}
+
+.u60 {
+    position:absolute;
+    left:360px;
+    top:567px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u61 {
+    position:absolute;
+    left:192px;
+    top:567px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u62 {
+    position:absolute;
+    left:225px;
+    top:720px;
+    width:100px;
+    height:25px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u63 {
+    position:absolute;
+    left:384px;
+    top:720px;
+    width:100px;
+    height:25px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+#u64 {
+    position:absolute;
+    left:60px;
+    top:782px;
+    width:805px;
+    height:28px
+}
+
+.u64_table {
+    background-image: url('../个人中心－简历管理_files/u64_table.png');
+}
+
+.u64_table {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:809px;
+    height:32px;
+}
+
+.u65_original {
+    background-image: url('../个人中心－简历管理_files/u65_original.png');
+}
+
+.u65_container {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u66 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u65 {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u67_original {
+    background-image: url('../个人中心－简历管理_files/u65_original.png');
+}
+
+.u67_container {
+    position:absolute;
+    left:100px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u68 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u67 {
+    position:absolute;
+    left:100px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u69_original {
+    background-image: url('../个人中心－简历管理_files/u65_original.png');
+}
+
+.u69_container {
+    position:absolute;
+    left:200px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u70 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u69 {
+    position:absolute;
+    left:200px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u71_original {
+    background-image: url('../个人中心－简历管理_files/u65_original.png');
+}
+
+.u71_container {
+    position:absolute;
+    left:300px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u72 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u71 {
+    position:absolute;
+    left:300px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u73_original {
+    background-image: url('../个人中心－简历管理_files/u65_original.png');
+}
+
+.u73_container {
+    position:absolute;
+    left:400px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u74 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u73 {
+    position:absolute;
+    left:400px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u75_original {
+    background-image: url('../个人中心－简历管理_files/u65_original.png');
+}
+
+.u75_container {
+    position:absolute;
+    left:500px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u76 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u75 {
+    position:absolute;
+    left:500px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u77_original {
+    background-image: url('../个人中心－简历管理_files/u65_original.png');
+}
+
+.u77_container {
+    position:absolute;
+    left:600px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u78 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u77 {
+    position:absolute;
+    left:600px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u79_original {
+    background-image: url('../个人中心－简历管理_files/u65_original.png');
+}
+
+.u79_container {
+    position:absolute;
+    left:700px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u80 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u79 {
+    position:absolute;
+    left:700px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u81 {
+    position:absolute;
+    left:309px;
+    top:822px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u82 {
+    position:absolute;
+    left:449px;
+    top:822px;
+    width:200px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u83_text {
+    position:absolute;
+    left:50px;
+    top:11px;
+    width:220px;
+    height:49px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u83 {
+    position:absolute;
+    left:50px;
+    top:11px;
+    width:220px;
+    height:49px
+}
+
+.u84 {
+    position:absolute;
+    left:260px;
+    top:11px;
+    width:220px;
+    height:20px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u85 {
+    position:absolute;
+    left:710px;
+    top:15px;
+    width:100px;
+    height:45px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u86 {
+    position:absolute;
+    left:260px;
+    top:40px;
+    width:150px;
+    height:15px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u87_line {
+    background-image: url('../个人中心－简历管理_files/u87_line.png');
+}
+
+.u87_line {
+    position:absolute;
+    left:60px;
+    top:64px;
+    width:750px;
+    height:3px;
+}
+
+.u87 {
+    position:absolute;
+    left:60px;
+    top:64px;
+    width:750px;
+    height:3px
+}
+
+.u88 {
+    position:absolute;
+    left:550px;
+    top:14px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u89_text {
+    position:absolute;
+    left:550px;
+    top:40px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u89 {
+    position:absolute;
+    left:550px;
+    top:40px;
+    width:150px;
+    height:19px
+}
+
+.u90 {
+    position:absolute;
+    left:60px;
+    top:910px;
+    width:640px;
+    height:95px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u91 {
+    position:absolute;
+    left:121px;
+    top:1260px;
+    width:370px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u92 {
+    position:absolute;
+    left:210px;
+    top:1345px;
+    width:100px;
+    height:25px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u93 {
+    position:absolute;
+    left:369px;
+    top:1345px;
+    width:100px;
+    height:25px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u94 {
+    position:absolute;
+    left:224px;
+    top:302px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u95_original {
+    background-image: url('../个人中心－简历管理_files/u95_original.png');
+}
+
+.u95_container {
+    position:absolute;
+    left:63px;
+    top:136px;
+    width:180px;
+    height:30px;
+}
+
+#u95_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:186px;
+    height:36px;
+}
+
+.u96 {
+    position:absolute;
+    left:2px;
+    top:6px;
+    width:176px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u95 {
+    position:absolute;
+    left:63px;
+    top:136px;
+    width:180px;
+    height:30px
+}
+
+.u97 {
+    position:absolute;
+    left:460px;
+    top:137px;
+    width:100px;
+    height:30px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u98_original {
+    background-image: url('../个人中心－简历管理_files/u95_original.png');
+}
+
+.u98_container {
+    position:absolute;
+    left:74px;
+    top:1199px;
+    width:180px;
+    height:30px;
+}
+
+#u98_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:186px;
+    height:36px;
+}
+
+.u99 {
+    position:absolute;
+    left:2px;
+    top:6px;
+    width:176px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u98 {
+    position:absolute;
+    left:74px;
+    top:1199px;
+    width:180px;
+    height:30px
+}
+
+.u100 {
+    position:absolute;
+    left:471px;
+    top:1200px;
+    width:100px;
+    height:30px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+#u101 {
+    position:absolute;
+    left:70px;
+    top:1133px;
+    width:605px;
+    height:30px
+}
+
+.u101_table {
+    background-image: url('../个人中心－简历管理_files/u101_table.png');
+}
+
+.u101_table {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:609px;
+    height:34px;
+}
+
+.u102_original {
+    background-image: url('../个人中心－简历管理_files/u3_original.png');
+}
+
+.u102_container {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:25px;
+}
+
+.u103 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u102 {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:25px
+}
+
+.u104_original {
+    background-image: url('../个人中心－简历管理_files/u3_original.png');
+}
+
+.u104_container {
+    position:absolute;
+    left:100px;
+    top:0px;
+    width:100px;
+    height:25px;
+}
+
+.u105 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u104 {
+    position:absolute;
+    left:100px;
+    top:0px;
+    width:100px;
+    height:25px
+}
+
+.u106_original {
+    background-image: url('../个人中心－简历管理_files/u3_original.png');
+}
+
+.u106_container {
+    position:absolute;
+    left:200px;
+    top:0px;
+    width:100px;
+    height:25px;
+}
+
+.u107 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u106 {
+    position:absolute;
+    left:200px;
+    top:0px;
+    width:100px;
+    height:25px
+}
+
+.u108_original {
+    background-image: url('../个人中心－简历管理_files/u3_original.png');
+}
+
+.u108_container {
+    position:absolute;
+    left:300px;
+    top:0px;
+    width:100px;
+    height:25px;
+}
+
+.u109 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u108 {
+    position:absolute;
+    left:300px;
+    top:0px;
+    width:100px;
+    height:25px
+}
+
+.u110_original {
+    background-image: url('../个人中心－简历管理_files/u3_original.png');
+}
+
+.u110_container {
+    position:absolute;
+    left:400px;
+    top:0px;
+    width:100px;
+    height:25px;
+}
+
+.u111 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u110 {
+    position:absolute;
+    left:400px;
+    top:0px;
+    width:100px;
+    height:25px
+}
+
+.u112_original {
+    background-image: url('../个人中心－简历管理_files/u3_original.png');
+}
+
+.u112_container {
+    position:absolute;
+    left:500px;
+    top:0px;
+    width:100px;
+    height:25px;
+}
+
+.u113 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u112 {
+    position:absolute;
+    left:500px;
+    top:0px;
+    width:100px;
+    height:25px
+}
+
+.u114_text {
+    position:absolute;
+    left:60px;
+    top:1051px;
+    width:220px;
+    height:49px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u114 {
+    position:absolute;
+    left:60px;
+    top:1051px;
+    width:220px;
+    height:49px
+}
+
+.u115 {
+    position:absolute;
+    left:270px;
+    top:1051px;
+    width:220px;
+    height:20px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u116 {
+    position:absolute;
+    left:720px;
+    top:1055px;
+    width:100px;
+    height:45px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u117 {
+    position:absolute;
+    left:270px;
+    top:1080px;
+    width:150px;
+    height:15px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u118_line {
+    background-image: url('../个人中心－简历管理_files/u118_line.png');
+}
+
+.u118_line {
+    position:absolute;
+    left:70px;
+    top:1104px;
+    width:750px;
+    height:3px;
+}
+
+.u118 {
+    position:absolute;
+    left:70px;
+    top:1104px;
+    width:750px;
+    height:3px
+}
+
+.u119 {
+    position:absolute;
+    left:560px;
+    top:1054px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u120_text {
+    position:absolute;
+    left:560px;
+    top:1080px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u120 {
+    position:absolute;
+    left:560px;
+    top:1080px;
+    width:150px;
+    height:19px
+}
+
