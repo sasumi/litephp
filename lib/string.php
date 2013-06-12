@@ -18,6 +18,14 @@ function is_utf8($string) {
 	return $is_utf8;
 }
 
+function rand_string($len=6, $source='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ23456789'){
+   $randCode = '';
+   for ( $i = 0; $i < $len; $i++ ){
+      $randCode .= substr($source, mt_rand(0, strlen($source) - 1), 1);
+   }
+   return $randCode;
+}
+
 /**
  * 中文字符截断（不含HTML标记处理）
  * @param string $str 要截断的字符串

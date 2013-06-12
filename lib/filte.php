@@ -11,7 +11,8 @@ $GLOBALS['__DEF_REG_RULES__'] = array(
 	'QQ' => "/^\d{5,13}$/",
 	'NUMBER' => '/^\d+$/',
 	'KEY' => '/^\w+$/',
-	'TRIM' => "/^\s+|\s+$/g",
+	'TRIM' => "/^\s+|\s+$/",
+	'ID' => "/^\w+$/",
 	'DATE' => ''
 );
 
@@ -36,6 +37,8 @@ function filte_array(array &$data, array $rules, $throwException=true){
 				if(!$err_msgs[$key]){
 					$err_msgs[$key] = array();
 				}
+				$curr_msg = $e->getMsgList();
+				dump($curr_msg, $err_msgs);
 				$err_msgs[$key] = array_merge($err_msgs[$key], $e->getMsgList());
 			}
 
@@ -81,10 +84,9 @@ function filte_one(&$data, $rules, $throwException=true){
 			if(!preg_match($key, $data)){
 				return $msg;
 			}
-		} else {
-			if(!call_user_func($key, $data)){
-				return $msg;
-			}
+		} else if(is_callable($msg)){
+			$_msg = call_user_func($msg, $data);
+			return $_msg;
 		}
 		return null;
 	};
@@ -115,7 +117,7 @@ function filte_one(&$data, $rules, $throwException=true){
  * 过滤器异常类
 **/
 class FilteException extends Exception {
-	private $msg_arr;
+	protected $msg_arr;
 	private $data;
 	protected $rules;
 	private $trace_info;
@@ -125,7 +127,8 @@ class FilteException extends Exception {
 		$this->msg_arr = $msg_arr;
 		$this->data = $data;
 		$this->rules = $rules;
-		$this->trace_info = debug_backtrace();
+		//$this->trace_info = debug_backtrace();
+		dump($this->msg_arr);
 		$this->message = $this->getOneMsg();
 	}
 
