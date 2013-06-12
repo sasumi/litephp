@@ -4,6 +4,7 @@ if(version_compare(PHP_VERSION, '5.3.0') < 0){
 	throw new Exception("REQUIRE PHP 5.3 OR ABOVE", 1);
 }
 
+session_start();
 include 'config.inc.php';
 include 'function.php';
 include 'string.php';
@@ -18,7 +19,11 @@ include 'file.php';
  * @param string $template_path
  * @return string
 **/
-function tpl($file_name){
+function tpl($file_name=null){
+	if(!$file_name){
+		$file_name = ACTION == 'index' ? PAGE.'.php' : PAGE.'_'.ACTION.'.php';
+		return TPL_PATH.$file_name;
+	}
 	return TPL_PATH.$file_name;
 }
 
@@ -136,6 +141,7 @@ function lite(){
 	});
 
 	parser_get_request($M, $A, $gets);
+
 	define('PAGE', $M);
 	define('ACTION', $A);
 

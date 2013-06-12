@@ -1,10 +1,29 @@
 <?php
+$GLOBALS['__DEF_REG_RULES__'] = array(
+	'REQUIRE' => "/^.+$/",										//必填
+	'CHINESE_ID' => "/^\d{14}(\d{1}|\d{4}|(\d{3}[xX]))$/",		//身份证
+	'PHONE' => "/^[0-9]{7,13}$/",								//手机+固话
+	'EMAIL' => "/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/",		//emali
+	'POSTCODE' => "/^[0-9]{6}$/",								//邮编
+	'AREACODE' => "/^0[1-2][0-9]$|^0[1-9][0-9]{2}$/",			//区号
+	'CT_PASSPORT' => "/^[0-9a-zA-Z]{5,40}$/",					//电信账号
+	'CT_MOBILE' => "/^(13|15|18)[0-9]{9}$/",					//中国电信号码
+	'QQ' => "/^\d{5,13}$/",
+	'NUMBER' => '/^\d+$/',
+	'KEY' => '/^\w+$/',
+	'TRIM' => "/^\s+|\s+$/g",
+	'DATE' => ''
+);
+
 /**
  * 过滤数据
  * @param array &$data
  * @param array $rules
 **/
 function filte_array(array &$data, array $rules, $throwException=true){
+	if(empty($rules)){
+		return $data;
+	}
 	$err_msgs = array();
 	$filted_data = array();
 	foreach($data as $key=>$val){
@@ -37,24 +56,12 @@ function filte_array(array &$data, array $rules, $throwException=true){
  * @param string||array $rules
 **/
 function filte_one(&$data, $rules, $throwException=true){
-	$__DEF_REG_RULES__ = array(
-		'REQUIRE' => "/^.+$/",										//必填
-		'CHINESE_ID' => "/^\d{14}(\d{1}|\d{4}|(\d{3}[xX]))$/",		//身份证
-		'PHONE' => "/^[0-9]{7,13}$/",								//手机+固话
-		'EMAIL' => "/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/",		//emali
-		'POSTCODE' => "/^[0-9]{6}$/",								//邮编
-		'AREACODE' => "/^0[1-2][0-9]$|^0[1-9][0-9]{2}$/",			//区号
-		'CT_PASSPORT' => "/^[0-9a-zA-Z]{5,40}$/",					//电信账号
-		'CT_MOBILE' => "/^(13|15|18)[0-9]{9}$/",					//中国电信号码
-		'QQ' => "/^\d{5,13}$/",
-		'NUMBER' => '/^\d+$/',
-		'KEY' => '/^\w+$/',
-		'TRIM' => "/^\s+|\s+$/g",
-		'DATE' => ''
-	);
+	if(empty($rules)){
+		return $data;
+	}
 	$check = function($data, $key, $msg){
 		$err_msgs = array();
-		$def_reg = $__DEF_REG_RULES__[strtoupper($key)];	//内置正则规则命中
+		$def_reg = $GLOBALS['__DEF_REG_RULES__'][strtoupper($key)];	//内置正则规则命中
 
 		if($def_reg){
 			if(!preg_match($def_reg, $data)){
@@ -83,8 +90,8 @@ function filte_one(&$data, $rules, $throwException=true){
 	};
 
 	$err_msgs = array();
-	if(is_string($rules) && $__DEF_REG_RULES__[$rules]){
-		$def_reg = $__DEF_REG_RULES__[$rules];
+	if(is_string($rules) && $GLOBALS['__DEF_REG_RULES__'][$rules]){
+		$def_reg = $GLOBALS['__DEF_REG_RULES__'][$rules];
 		if(!preg_match($def_reg, $data)){
 			$err_msgs = array($rules);
 		}
@@ -112,12 +119,14 @@ class FilteException extends Exception {
 	private $data;
 	protected $rules;
 	private $trace_info;
+	protected $message;
 
 	public function __construct($msg_arr=array(), $data=array(), $rules=array()){
 		$this->msg_arr = $msg_arr;
 		$this->data = $data;
 		$this->rules = $rules;
 		$this->trace_info = debug_backtrace();
+		$this->message = $this->getOneMsg();
 	}
 
 	public function getMsgList(){

@@ -61,7 +61,7 @@ class Pager {
 	}
 
 	private function loadPageInfo(){
-		$page_index = (int)one_get_request($this->config['page_key'], 'id');
+		$page_index = (int)gets($this->config['page_key'], 'id');
 		$page_index = $page_index > 0 ? $page_index : 1;
 		$page_size = $this->getConfig('page_size');
 		$item_total = (int)$this->getInfo('item_total');

@@ -39,8 +39,8 @@ function parser_get_request(&$page='', &$action='', &$params=array()){
 	$page = $match[1];
 
 	switch(ROUTE_MODE){
-		case ROUTER_MODE_REWRITE:
-		case ROUTER_MODE_PATH:
+		case ROUTE_MODE_REWRITE:
+		case ROUTE_MODE_PATH:
 			$path_info = get_path_info();
 			preg_match('/(\w+)(\/|$)/', $path_info, $match);
 			$action = $match ? $match[1] : null;
@@ -70,30 +70,37 @@ function parser_get_request(&$page='', &$action='', &$params=array()){
 }
 
 /**
- * 从$_GET中获取一个参数
+ * 从$_GET中获取参数
  * @param string $key
  * @param string||array $rules
  * @param boolean $throwException
  * @return mix
  **/
-function one_get_request($key, $rules, $throwException=true){
+function gets($key=null, $rules, $throwException=true){
 	parser_get_request($p, $a, $data);
 
-	$data = $data ? $data[$key] : null;
-	filte_one($data, $rules, $throwException);
+	if($key){
+		filte_one($data[$key], $rules, $throwException);
+	} else {
+		filte_array($data, $rules, $throwException);
+	}
 	return $data;
 }
 
 /**
- * 从$_POST中获取一个参数
+ * 从$_POST中获取参数
  * @param string $key
  * @param string||array $rules
  * @param boolean $throwException
  * @return mix
  **/
-function one_post_request($key, $rules, $throwException=true){
-	$data = $_POST ? $_POST[$key] : null;
-	filte_one($data, $rules, $throwException);
+function posts($key=null, $rules, $throwException=true){
+	$data = $_POST;
+	if($key){
+		filte_one($data[$key], $rules, $throwException);
+	} else {
+		filte_array($data, $rules, $throwException);
+	}
 	return $data;
 }
 
@@ -121,7 +128,7 @@ function url($target='', $params=array()){
 			}
 			break;
 
-		case ROUTER_MODE_REWRITE:
+		case ROUTE_MODE_REWRITE:
 			$url = APP_URL.$page.(empty($params) && $action == ROUTE_DEFAUL_ACTION ? '' : '/'.$action);
 			foreach($params as $k=>$p){
 				$url .= "/".urlencode($k)."/".urlencode($p);
