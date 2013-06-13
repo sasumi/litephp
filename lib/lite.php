@@ -47,7 +47,7 @@ function is_get(){
  * 测试
  **/
 function dump(){
-	echo '<pre>';
+	echo '<pre style="background-color:#ddd; font-size:12px">';
 	$args = func_get_args();
 	$last = array_slice($args, -1, 1);
 	$die = $last[0] === 1;
@@ -58,7 +58,7 @@ function dump(){
 		call_user_func_array('var_dump', $args);
 	}
 	$info = debug_backtrace();
-	echo $info[0]['file'].' ['.$info[0][line].'] ';
+	echo $info[0]['file'].' ['.$info[0][line].'] </pre>';
 	if($die){
 		die;
 	}

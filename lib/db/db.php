@@ -1,5 +1,6 @@
 <?php
 include 'db_query.php';
+include 'dborm.class.php';
 $__DB_CONNECTION__;
 $__DB_QUERY_CACHE__;
 
@@ -251,10 +252,8 @@ function db_insert($table, array $data){
 
 /**
  * 产生sql语句
- * @param string $driver
  * @return DB_Query
  **/
-function db_sql($driver=''){
-	$driver = $driver ?: db_get_config('driver');
-	return new DB_Query($driver);
+function db_sql(){
+	return new DB_Query();
 }

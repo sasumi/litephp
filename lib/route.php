@@ -78,9 +78,10 @@ function parser_get_request(&$page='', &$action='', &$params=array()){
  **/
 function gets($key=null, $rules, $throwException=true){
 	parser_get_request($p, $a, $data);
+	$data = $key ? $data[$key] : $data;
 
 	if($key){
-		filte_one($data[$key], $rules, $throwException);
+		filte_one($data, $rules, $throwException);
 	} else {
 		filte_array($data, $rules, $throwException);
 	}
@@ -95,9 +96,9 @@ function gets($key=null, $rules, $throwException=true){
  * @return mix
  **/
 function posts($key=null, $rules, $throwException=true){
-	$data = $_POST;
+	$data = $key ? $_POST[$key] : $_POST;
 	if($key){
-		filte_one($data[$key], $rules, $throwException);
+		filte_one($data, $rules, $throwException);
 	} else {
 		filte_array($data, $rules, $throwException);
 	}

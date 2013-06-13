@@ -38,7 +38,6 @@ function filte_array(array &$data, array $rules, $throwException=true){
 					$err_msgs[$key] = array();
 				}
 				$curr_msg = $e->getMsgList();
-				dump($curr_msg, $err_msgs);
 				$err_msgs[$key] = array_merge($err_msgs[$key], $e->getMsgList());
 			}
 
@@ -47,9 +46,14 @@ function filte_array(array &$data, array $rules, $throwException=true){
 			}
 		}
 	}
+
 	$data = $filted_data;
 	if(!empty($err_msgs) && $throwException){
-		throw new FilteException($err_msgs,  $data, $rules);
+		$ex = new FilteException();
+		$ex->setMsgArr($err_msgs);
+		$ex->setData($data);
+		$ex->setRules($rules);
+		throw $ex;
 	}
 }
 
@@ -63,7 +67,6 @@ function filte_one(&$data, $rules, $throwException=true){
 		return $data;
 	}
 	$check = function($data, $key, $msg){
-		$err_msgs = array();
 		$def_reg = $GLOBALS['__DEF_REG_RULES__'][strtoupper($key)];	//内置正则规则命中
 
 		if($def_reg){
@@ -85,8 +88,7 @@ function filte_one(&$data, $rules, $throwException=true){
 				return $msg;
 			}
 		} else if(is_callable($msg)){
-			$_msg = call_user_func($msg, $data);
-			return $_msg;
+			return call_user_func($msg, $data);
 		}
 		return null;
 	};
@@ -108,8 +110,12 @@ function filte_one(&$data, $rules, $throwException=true){
 	}
 
 	if(!empty($err_msgs) && $throwException){
+		$ex = new FilteException();
+		$ex->setMsgArr($err_msgs);
+		$ex->setData($data);
+		$ex->setRules($rules);
 		$data = null;
-		throw new FilteException($err_msgs, $data, $rules);
+		throw $ex;
 	}
 }
 
@@ -123,13 +129,22 @@ class FilteException extends Exception {
 	private $trace_info;
 	protected $message;
 
-	public function __construct($msg_arr=array(), $data=array(), $rules=array()){
-		$this->msg_arr = $msg_arr;
-		$this->data = $data;
-		$this->rules = $rules;
-		//$this->trace_info = debug_backtrace();
-		dump($this->msg_arr);
+	public function __construct($message=null, $code=0){
+		parent::__construct($message, $code);
+		$this->trace_info = debug_backtrace();
 		$this->message = $this->getOneMsg();
+	}
+
+	public function setMsgArr($msg_arr){
+		$this->msg_arr = $msg_arr;
+	}
+
+	public function setData($data){
+		$this->data = $data;
+	}
+
+	public function setRules($rules){
+		$this->rules = $rules;
 	}
 
 	public function getMsgList(){
@@ -137,16 +152,19 @@ class FilteException extends Exception {
 	}
 
 	public function getOneMsg(){
-		$tmp = array_pop($this->msg_arr);
-		return is_array($tmp) ? array_shift($tmp) : $tmp;
+		if(!empty($this->msg_arr)){
+			$tmp = array_pop($this->msg_arr);
+			return is_array($tmp) ? array_shift($tmp) : $tmp;
+		}
+		return null;
 	}
 
-	public function dump(){
-		$html .= '<b>Errors:</b><br/>';
-		$html .= '<b>'.var_dump($this->msg_arr).'</b>';
+	public function __toString(){
+		$html .= '<br/><b>Errors:</b><br/>';
+		$html .= '<b>'.print_r($this->msg_arr, true).'</b>';
 		$html .= '<ul>';
 		foreach($this->trace_info as $t){
-			$html .= '<li>'.$t['file'].' -- &lt;'.$t['line'].'&gt;</li>';
+			$html .= '<li>'.$t['file'].' ['.$t['line'].']</li>';
 		}
 		$html .= '</ul>';
 		echo $html;
