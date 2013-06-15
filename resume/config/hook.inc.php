@@ -5,6 +5,7 @@ add_hook('AFTER_APP_SHUTDOWN', function($time){
 });
 
 add_hook('AFTER_APP_INIT', function(){
+	return;
 	if(!Access::init()->checkLogin() && (PAGE != 'index' && PAGE != 'user')){
 		jump_to();
 	}

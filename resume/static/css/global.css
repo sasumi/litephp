@@ -1,0 +1,41 @@
+html {background:url('../img/body-bg.jpg') repeat 0 0 }
+body {font-family:Microsoft Yahei; font-size:12px; color:#333; backgroundx:url('../img/header_bg.png') repeat-x 0 -35px;}
+a {text-decoration:none; color:#567;}
+a:hover {text-decoration:underline}
+.page {width:960px; margin:0 auto;}
+.header {height:70px; clear:both; overflow: hidden; position: relative;}
+.container {background-color:white; border:1px solid #ddd; border-radius:8px; box-shadow:1px 1px 1px #ddd;}
+.logo {font-size:32px; float:left; margin:10px 20px 0 0; text-shadow:-1px -1px 1px #fff;}
+.logo a:hover {text-decoration:none}
+.site-desc {margin-top:16px; font-size:13px; color:#666; text-shadow:1px 1px 1px white}
+.site-shortcut {position: absolute; bottom:5px; right:5px;}
+.footer {clear:both; padding:15px 0; color:gray;}
+.site-nav {padding:5px 0;}
+.site-nav a {margin-right:10px}
+
+input.txt {border:1px solid #eee; border-top-color:#ddd; border-left-color:#ddd; font-size:14px; padding:2px 2px; border-radius:3px}
+input.btn {border:1px solid #ccc; border-top-color:#ddd; border-left-color:#ddd; font-size:14px; padding:5px 10px; text-shadow:1px 1px 1px white; border-radius:3px; cursor:pointer}
+
+.frm {margin-bottom:10px;}
+.frm fieldset {padding:10px; border:none}
+.frm legend {font-size:16px; font-weight:bold; margin:5px 0 -5px 0 !important; margin:0 0 0 -4px;}
+.frm dl {padding:3px;}
+.frm dt {float:left; padding:7px 0 0; width:120px; text-align:right;}
+.frm dd {padding:3px; margin-left:130px}
+.frm span.tip {color:#aaa; margin-left:0.5em}
+.frm span.warn {color:red; margin-left:0.5em; padding-left:18px; background:url("../img/warn.gif") no-repeat left center; }
+.frm span.required_star {color:red; font-weight:bold; font-size:18px; padding:0 5px; vertical-align:middle;}
+
+.tbl {border-collapse:collapse; border-spacing:0; border:1px solid #ccc; font-size:13px; margin-bottom:20px}
+.tbl caption {text-align:left; padding:3px;}
+.tbl thead tr {border-bottom:1px solid #ddd; border-top:1px solid #ccc}
+.tbl th {color:#555; background-color:#eee; padding:3px 7px; text-shadow:1px 1px 1px #eee; text-align:left; text-transform:capitalize;}
+.tbl tbody tr {border-bottom:1px dotted #ccc}
+.tbl td {padding:10px 7px;}
+
+.user-register-frm {margin:10px 20px}
+.user-register-frm legend {padding:10px; font-size:20px; text-shadow:2px 2px 2px #eee}
+.user-register-frm fieldset {border-top:1px solid #ddd}
+.user-register-frm dt {font-size:14px; color:#444}
+.user-register-frm dl {margin:10px 0}
+.user-register-frm input.txt {width:200px}
