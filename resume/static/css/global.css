@@ -12,9 +12,12 @@ a:hover {text-decoration:underline}
 .footer {clear:both; padding:15px 0; color:gray;}
 .site-nav {padding:5px 0;}
 .site-nav a {margin-right:10px}
+.left-col {float:left; width:610px;}
+.right-col {float:right; width:300px}
+
 
 input.txt, textarea.txt {border:1px solid #eee; border-top-color:#ddd; border-left-color:#ddd; font-size:14px; padding:2px 2px; border-radius:3px}
-input.btn {border:1px solid #ccc; border-top-color:#ddd; border-left-color:#ddd; font-size:14px; padding:5px 10px; text-shadow:1px 1px 1px white; border-radius:3px; cursor:pointer}
+input.btn, a.btn {border:1px solid #ccc; border-top-color:#ddd; border-left-color:#ddd; font-size:14px; padding:5px 10px; text-shadow:1px 1px 1px white; border-radius:3px; cursor:pointer; background-color:#eee; box-shadow:1px 1px 1px #ddd;}
 
 .frm {margin-bottom:10px;}
 .frm fieldset {padding:10px; border:none}

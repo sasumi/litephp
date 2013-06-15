@@ -1,4 +1,5 @@
 <?php include 'header.inc.php'?>
+<?php echo css('index.css')?>
 <div class="page-index">
 	<div class="left-col">
 		<ul>

@@ -68,20 +68,42 @@ else if(ACTION == 'login'){
 				)
 			));
 		} catch(Exception $ex){
-			dump($ex);
+			//dump($ex);
 		}
-		$user = (new User())->findByName($data['name']);
+		$u = new User();
+		//$user = $u->findByName($data['name']);
 		if($user && $user['password'] == md5($data['password'])){
 			Access::init()->login($user);
 			jump_to('index');
 		}
 	}
-	include tpl('index.php');
+	include tpl();
 }
 
 else if(ACTION == 'index'){
+	jump_to('user/myresume');
+}
+
+else if(ACTION == 'list'){
 	$page = Pager::instance();
 	$page->setPageSize(3);
-	$data = (new User())->getByPage(null, $page);
+	$u = new User();
+	$data = $u->getByPage(null, $page);
 	include tpl('user_list.php');
+}
+
+else if(ACTION == 'myresume'){
+	include tpl();
+}
+
+else if(ACTION == 'info'){
+	include tpl();
+}
+
+else if(ACTION == 'payment'){
+	include tpl();
+}
+
+else if(ACTION == 'invite'){
+	include tpl();
 }

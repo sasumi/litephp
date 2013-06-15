@@ -4,9 +4,6 @@
 .page-index ol {padding:0 20px}
 .page-index ol li {list-style:decimal outside; margin-bottom:10px}
 .page-index p {padding:0.5em}
-.left-col {float:left; width:610px;}
-.right-col {float:right; width:320px}
-
 .page-index h2 {margin:1em 0}
 
 .quick-login-frm {border:5px solid #eee; border-radius:5px; margin-top:10px; padding:10px; width:80%}
