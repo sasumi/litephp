@@ -1,5 +1,5 @@
 html {background:url('../img/body-bg.jpg') repeat 0 0 }
-body {font-family:Microsoft Yahei; font-size:12px; color:#333; backgroundx:url('../img/header_bg.png') repeat-x 0 -35px;}
+body {font-family:Microsoft Yahei; font-size:12px; color:#333; backgroundx:url('../img/header_bg.png') repeat-x 0 -35px; overflow-y:scroll}
 a {text-decoration:none; color:#567;}
 a:hover {text-decoration:underline}
 .page {width:960px; margin:0 auto;}
@@ -13,7 +13,7 @@ a:hover {text-decoration:underline}
 .site-nav {padding:5px 0;}
 .site-nav a {margin-right:10px}
 
-input.txt {border:1px solid #eee; border-top-color:#ddd; border-left-color:#ddd; font-size:14px; padding:2px 2px; border-radius:3px}
+input.txt, textarea.txt {border:1px solid #eee; border-top-color:#ddd; border-left-color:#ddd; font-size:14px; padding:2px 2px; border-radius:3px}
 input.btn {border:1px solid #ccc; border-top-color:#ddd; border-left-color:#ddd; font-size:14px; padding:5px 10px; text-shadow:1px 1px 1px white; border-radius:3px; cursor:pointer}
 
 .frm {margin-bottom:10px;}
@@ -32,10 +32,3 @@ input.btn {border:1px solid #ccc; border-top-color:#ddd; border-left-color:#ddd;
 .tbl th {color:#555; background-color:#eee; padding:3px 7px; text-shadow:1px 1px 1px #eee; text-align:left; text-transform:capitalize;}
 .tbl tbody tr {border-bottom:1px dotted #ccc}
 .tbl td {padding:10px 7px;}
-
-.user-register-frm {margin:10px 20px}
-.user-register-frm legend {padding:10px; font-size:20px; text-shadow:2px 2px 2px #eee}
-.user-register-frm fieldset {border-top:1px solid #ddd}
-.user-register-frm dt {font-size:14px; color:#444}
-.user-register-frm dl {margin:10px 0}
-.user-register-frm input.txt {width:200px}

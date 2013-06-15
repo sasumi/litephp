@@ -156,7 +156,7 @@ function lite(){
 	$GLOBALS['__init_time__'] = microtime(true);
 	register_shutdown_function(function(){
 		$fin_time = microtime(true);
-		$run_time = ($fin_time - $GLOBALS['__init_time__'])*1000;
+		$run_time = round(($fin_time - $GLOBALS['__init_time__'])*1000, 2);
 		fire_hook('AFTER_APP_SHUTDOWN', $run_time);
 	});
 }

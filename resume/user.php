@@ -79,7 +79,6 @@ else if(ACTION == 'login'){
 	include tpl('index.php');
 }
 
-
 else if(ACTION == 'index'){
 	$page = Pager::instance();
 	$page->setPageSize(3);

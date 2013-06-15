@@ -8,3 +8,11 @@ li{list-style:none;}
 caption,th{text-align:left;}
 input,textarea,select {font-family:inherit;font-size:inherit;font-weight:inherit;}
 input,textarea,select{*font-size:100%;}
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+.clearfix {display: inline-block;}  /* for IE/Mac */

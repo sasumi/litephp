@@ -1,4 +1,5 @@
 <?php include 'header.inc.php';?>
+<?php echo css('register.css');?>
 <?php
 if(is_post()){
 	echo '<h1>'.($add_result ? 'success' : 'error').'</h1>';

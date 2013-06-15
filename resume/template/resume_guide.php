@@ -3,8 +3,8 @@
 <div class="page-resume-guide">
 	<h2>查阅参考简历库</h2>
 	<form action="?">
-		<input type="text" name="" value="" placeholder="请输入关键字"/>
-		<input type="submit" value="过滤"/>
+		<input type="text" name="" value="" class="txt" placeholder="请输入关键字"/>
+		<input type="submit" class="btn" value="过滤"/>
 	</form>
 
 	<form action="?">
@@ -124,7 +124,6 @@
 		</li>
 	</ul>
 
-	<form action="http://dashiwang.taobao.com.taobao.com/"><input type="submit" value="找专业作家代写（需要付费）"/></form>
-
+	<form action="http://dashiwang.taobao.com.taobao.com/"><input type="submit" class="btn" value="找专业作家代写（需要付费）"/></form>
 </div>
 <?php include 'footer.inc.php'?>
