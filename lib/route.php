@@ -168,6 +168,7 @@ function this_url(){
 
 /**
  * 页面302跳转
+ * @deprecate 调用了url函数功能，所以参数跟url函数的参数一致
  **/
 function jump_to(){
 	$args = func_get_args();

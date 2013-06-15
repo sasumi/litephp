@@ -1,7 +1,6 @@
 <?php
 add_hook('AFTER_APP_SHUTDOWN', function($time){
-	echo "\r\n\r\n".'<br/>AFTER_APP_SHUTDOWN --> '.PAGE.'::'.ACTION;
-	echo '<br/>use time:'.$time.'ms';
+	echo '<center style="color:#ccc">耗时 '.$time.'ms</center>';
 });
 
 add_hook('AFTER_APP_INIT', function(){

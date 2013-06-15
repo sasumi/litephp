@@ -9,6 +9,7 @@
 					<a href="<?php echo url('page/shop');?>">官方旗舰店</a>
 					<a href="<?php echo url('page/tweet');?>">简历大师微博</a>
 					<a href="<?php echo url('page/link');?>">友情链接</a>
+					<a href="<?php echo ADMIN_URL?>">管理后台</a>
 				</p>
 				<p>
 					ICP证粤B2-20130191 &copy; 2013 All rights reserved

@@ -17,6 +17,7 @@
 					<li>
 						<a href="<?php echo url()?>">导航</a>
 						<ul>
+							<li><a href="<?php echo SITE_URL?>">网站首页</a></li>
 							<li><a href="<?php echo url('access/logout')?>">退出登录</a></li>
 						</ul>
 					</li>
