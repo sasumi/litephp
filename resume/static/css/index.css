@@ -1,4 +1,4 @@
-.page-index {padding:20px 0; font-size:14px; overflow:hidden; padding:15px 10px}
+.page-index {font-size:14px; overflow:hidden}
 .page-index ul {padding-bottom:10px;}
 .page-index ul li {list-style:disc inside; padding:2px 0}
 .page-index ol {padding:0 20px}
@@ -6,6 +6,6 @@
 .page-index p {padding:0.5em}
 .page-index h2 {margin:1em 0}
 
-.quick-login-frm {border:5px solid #eee; border-radius:5px; margin-top:10px; padding:10px; width:80%}
+.quick-login-frm {border:5px solid #eee; border-radius:5px; margin-top:10px; padding:10px}
 .quick-login-frm dt {width:50px; padding-left:10px; text-align:left;}
 .quick-login-frm dd {margin-left:60px}

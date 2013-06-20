@@ -172,7 +172,14 @@ function this_url(){
  **/
 function jump_to(){
 	$args = func_get_args();
+
+	//ignore normal url parameter
+	if(stripos($args[0], '://') > 0){
+		header('Location:'.$args[0]);
+	}
+
 	$url = call_user_func_array('url', $args);
 	header('Location:'.$url);
 	die;
 }
+

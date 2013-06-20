@@ -3,15 +3,12 @@
 <div class="page-resume-create clearfix">
 	<div class="left-col">
 		<form action="?" method="POST" class="frm">
-			<fieldset>
-				<input type="submit" value="保存简历" class="btn" />
-				<input type="button" value="下载打印" class="btn" />
-			</fieldset>
-			<fieldset>
-				<input class="txt" type="text" name="" length="30" placeholder="给你的简历起个标题...例如“北京大学_张三_应聘电信市场部市场专员“"/>
+			<fieldset class="field-title">
+				<label for="title">标题</label>
+				<input class="txt" type="text" name="title" id="title" length="" placeholder="给你的简历起个标题...例如“北京大学_张三_应聘电信市场部市场专员“"/>
 			</fieldset>
 
-			<fieldset>
+			<fieldset class="field-user-info">
 				<p style="text-align:right"><a href="">删除</a> <a href="" class="tpl_lnk">模版&darr;</a></p>
 				<p><input class="txt" type="text" name="" value="基本资料"/></p>
 				<ul>

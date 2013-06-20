@@ -1,8 +1,8 @@
 <?php include 'header.inc.php';?>
 <?php echo css('register.css');?>
 <?php
-if(is_post()){
-	echo '<h1>'.($add_result ? 'success' : 'error').'</h1>';
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
+	//echo '<h1>'.($add_result ? 'success' : 'error').'</h1>';
 }
 echo form(url('user/login'), array(
 	'name' => array(

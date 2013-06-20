@@ -33,9 +33,11 @@
 			),
 			'edu' => array(
 				'label' => '最高学历',
+				'value' => 'bk',
 				'type' => 'select',
 				'options' => array(
-					'xx' => '本科'
+					'xx' => 'xiaoxue',
+					'bk' => '本科'
 				)
 			),
 			'height' => array(
@@ -56,6 +58,7 @@
 			'marry' => array(
 				'label' => '婚姻状况',
 				'type' => 'radio',
+				'class' => 'radio',
 				'options' => array(
 					'asdf' => '已婚',
 					'asdxf' => '未婚',
@@ -75,7 +78,12 @@
 		?>
 	</div>
 	<div class="right-col">
-		dd
+		<div class="avatar">
+			<a href="<?php echo img_url('demo-avatar.jpg')?>" target="_blank"><?php echo img('demo-avatar.jpg')?></a>
+			<p>
+				<input type="button" value="重设头像" class="btn" />
+			</p>
+		</div>
 	</div>
 </div>
 <?php include 'footer.inc.php'?>

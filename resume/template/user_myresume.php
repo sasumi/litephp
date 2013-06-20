@@ -18,8 +18,8 @@
 					<span class="size">文件长度：2页以上</span>
 				</p>
 				<p class="op">
-					<a href="<?php echo url('resume/detail', array('id'=>'xxdac'))?>">阅读(232次)</a>
-					<a href="<?php echo url('resume/modify', array('id'=>'xxdac'))?>">修改</a>
+					<a href="<?php echo url('resume/detail', array('id'=>'xxdac'))?>">阅读(232次)</a> |
+					<a href="<?php echo url('resume/modify', array('id'=>'xxdac'))?>">修改</a> |
 					<a href="<?php echo url('resume/delete', array('id'=>'xxdac'))?>">删除</a>
 				</p>
 			</li>
@@ -27,7 +27,10 @@
 		</ul>
 	</div>
 	<div class="right-col">
-		dd
+		<div class="page-tip">
+			除了在这里创建您的简历之外, 您还可以通过上传文件,或者发送您的简历信息到我们的邮箱:
+			<a href="mailto:xxa@a.com">xxa@a.com</a>
+		</div>
 	</div>
 </div>
 <?php include 'footer.inc.php'?>
