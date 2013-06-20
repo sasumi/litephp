@@ -92,18 +92,6 @@ else if(ACTION == 'list'){
 	include tpl('user_list.php');
 }
 
-else if(ACTION == 'myresume'){
-	include tpl();
-}
-
-else if(ACTION == 'info'){
-	include tpl();
-}
-
-else if(ACTION == 'payment'){
-	include tpl();
-}
-
-else if(ACTION == 'invite'){
+else {
 	include tpl();
 }
