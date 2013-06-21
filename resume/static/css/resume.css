@@ -1,5 +1,39 @@
 .page-resume-create {font-size:14px;}
-.page-resume-create fieldset {border:1px dashed #ddd; margin:10px 0; padding:10px}
-.page-resume-create .field-title label {margin-right:10px}
-.page-resume-create .field-title .txt {width:500px}
-..page-resume-create .field-user-info {}
+
+.page-resume-create .create-frm fieldset {border:1px dashed #ddd; margin:10px 0; padding:10px}
+.page-resume-create .create-frm .field-title label {margin-right:10px}
+.page-resume-create .create-frm .field-title .txt {width:500px}
+.page-resume-create .create-frm .common-mod {}
+.page-resume-create .create-frm .mod-op {float:right;}
+.page-resume-create .create-frm .mod-ti {margin-bottom:5px; font-size:18px; font-weight:bold}
+.page-resume-create .create-frm .mod-ti input.txt {width:400px; border-width:0 0 1px 0; font-size:18px; }
+.page-resume-create .create-frm .mod-con {}
+.page-resume-create .create-frm .mod-con textarea {width:585px; max-width:585px; min-height:150px; padding:5px;}
+.page-resume-create .create-frm .add-more {text-align: center; margin-bottom:10px;}
+.page-resume-create .create-frm .add-more .btn {width:608px; height:40px;}
+
+.page-resume-create .create-frm .mod-userinfo dl {float:left; width:50%; overflow:hidden; margin:5px 0;}
+.page-resume-create .create-frm .mod-userinfo dt {float:left; width:90px;}
+
+.page-resume-create .cover-setting {overflow:hidden}
+.page-resume-create .cover-setting li {float:left; border:1px solid #eee; padding:15px 10px; margin:5px; border-radius:3px; cursor:pointer;}
+.page-resume-create .cover-setting li.current {background:url("../img/tick.png") no-repeat 100% 0 #F0F0F0;}
+
+.page-resume-create .side-mod {margin:10px 10px 15px; padding:5px; border:1px solid #eee; border-radius:3px; line-height:18px}
+.page-resume-create .side-mod h3 {font-size:14px; font-weight:normal; background-color:#eee; border-radius:3px; padding:5px 0.5em; margin-bottom:0.5em;}
+.page-resume-create .side-mod dl {margin-bottom:0.5em;}
+
+.page-resume-create .column-manager dd {padding-bottom:5px; margin-bottom:5px; border-bottom:1px solid #eee;}
+.page-resume-create .column-manager dd:hover {background-color:#eee;}
+.page-resume-create .column-manager .ti  {display:inline-block; width:187px; padding-left:3px;}
+.page-resume-create .column-manager .order-drag {padding:1px; border:2px dotted #ccc; border-top:none; border-bottom:none; height:12px; display: inline-block; cursor:pointer; vertical-align:bottom;}
+.page-resume-create .column-manager .op {text-align: right;}
+
+.page-resume-create .career-search dt {display: none}
+.page-resume-create .career-search dl {overflow:hidden}
+.page-resume-create .career-search dt {display:block; float:left; width:60px; padding-left:10px;}
+.page-resume-create .career-search .srch-kw {margin:10px 3px;}
+.page-resume-create .career-search .srch-kw .txt {width:207px;}
+.page-resume-create .career-search h4 {font-size:14px; font-weight: normal; margin:0 0 5px 10px;}
+
+.page-resume-create .page-tip strong {display:block; border-bottom:1px solid #ddd; margin-bottom:3px; padding-bottom:3px; }
