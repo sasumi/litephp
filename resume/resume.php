@@ -1,9 +1,5 @@
 <?php
 include 'config/app.inc.php';
-
-include 'mods/resumemods.class.php';
-die;
-
 include CONFIG_PATH.'mods/resumemods.class.php';
 
 $org_mods = ResumeMods::init()->getAllMods();
