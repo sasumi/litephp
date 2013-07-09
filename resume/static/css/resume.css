@@ -4,7 +4,15 @@
 .page-resume-create .create-frm .field-title label {margin-right:10px}
 .page-resume-create .create-frm .field-title .txt {width:500px}
 .page-resume-create .create-frm .common-mod {}
-.page-resume-create .create-frm .mod-op {float:right;}
+
+.page-resume-create .create-frm .mod-op {display:none; float:right; font-size:12px;}
+.page-resume-create .create-frm .common-mod-hover .mod-op {display:block;}
+.page-resume-create .create-frm .temp-sel {display:inline-block; padding:2px 10px; background-color:#789; color:white; border-radius:3px;}
+.page-resume-create .create-frm .temp-sel s {display:inline-block; border:5px solid white; border-width:5px 0 0;}
+.page-resume-create .create-frm .temp-sel:hover {background-color:#345; text-decoration:none;}
+.page-resume-create .create-frm .mod-del-btn {background-color:#f99; color:white; display: inline-block; padding:2px 10px; border-radius:3px;}
+.page-resume-create .create-frm .mod-del-btn:hover {background-color:#f55; text-decoration:none;}
+
 .page-resume-create .create-frm .mod-ti {margin-bottom:5px; font-size:18px; font-weight:bold}
 .page-resume-create .create-frm .mod-ti input.txt {width:400px; border-width:0 0 1px 0; font-size:18px; }
 .page-resume-create .create-frm .mod-con {}
@@ -12,8 +20,12 @@
 .page-resume-create .create-frm .add-more {text-align: center; margin-bottom:10px;}
 .page-resume-create .create-frm .add-more .btn {width:608px; height:40px;}
 
-.page-resume-create .create-frm .mod-userinfo dl {float:left; width:50%; overflow:hidden; margin:5px 0;}
+.mod-temp-list {position:absolute; display:none; overflow:hidden; box-shadow:5px 5px 5px #ddd; padding:5px; width:120px; background-color:white; border:1px solid #ddd; top:40px;}
+.mod-temp-list li {float:left; margin:0 3px;}
+
+.page-resume-create .create-frm .mod-userinfo dl {float:left; width:50%; overflow:hidden; height:28px; margin:5px 0;}
 .page-resume-create .create-frm .mod-userinfo dt {float:left; width:90px;}
+.page-resume-create .create-frm .mod-userinfo .mod-con input.txt {width:160px;}
 
 .page-resume-create .cover-setting {overflow:hidden}
 .page-resume-create .cover-setting li {float:left; border:1px solid #eee; padding:15px 10px; margin:5px; border-radius:3px; cursor:pointer;}

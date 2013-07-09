@@ -1,7 +1,10 @@
-<?php include 'header.inc.php'?>
-<?php echo css('user.css')?>
-<?php include 'usernav.inc.php'?>
-<div class="page-user-payment">
+<?php
+$PAGE_CLASS .= 'page-user-payment';
+$PAGE_HEAD .= css('user.css');
+include 'header.inc.php';
+include 'usernav.inc.php';
+?>
+<div class="con">
 	<dl>
 		<dt>账户余额</dt>
 		<dd>9元</dd>

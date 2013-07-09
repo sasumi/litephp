@@ -1,9 +1,18 @@
 <?php
 include 'config/app.inc.php';
-if(ACTION == 'guide'){
-	include tpl();
+
+include 'mods/resumemods.class.php';
+die;
+
+include CONFIG_PATH.'mods/resumemods.class.php';
+
+$org_mods = ResumeMods::init()->getAllMods();
+$mods = array();
+$ords = array('title', 'info', 'skill', 'career', 'education', 'intro');
+foreach($ords as $k){
+	$mods[$k] = $org_mods[$k];
 }
 
-else if(ACTION == 'create'){
-	include tpl();
-}
+$theme_css = ResumeMods::init()->getAllThemeCss();
+include tpl();
+include 'test.php';

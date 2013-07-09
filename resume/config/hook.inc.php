@@ -11,6 +11,7 @@ add_hook('AFTER_APP_INIT', function(){
 });
 
 add_hook('BEFORE_APP_INIT', function(){
+	return;
 	echo('<!-- BEFORE_APP_INIT:'.$_SERVER['REQUEST_URI']." -->\r\n");
 });
 

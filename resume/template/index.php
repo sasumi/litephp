@@ -26,27 +26,19 @@
 	</div>
 
 	<div class="right-col">
-		<form action="<?php echo url('user/register')?>"><input class="btn" type="submit" value="马上注册，创建简历"/></form>
-		<form action="<?php echo url('user/login')?>" method="post" class="frm quick-login-frm">
-			<dl>
-				<dt>用户名</dt>
-				<dd><input type="text" name="name" id="name" placeholder="邮箱或手机号" class="txt" /></dd>
-			</dl>
-			<dl>
-				<dt>密码</dt>
-				<dd><input type="text" name="password" placeholder="输入密码" class="txt"/></dd>
-			</dl>
-			<dl>
-				<dt></dt>
-				<dd>
-					<input type="checkbox" name="rem_psw" id="remeber"/><label for="remeber">记住登录状态</label>
-					<a href="<?php echo url('user/findpassword')?>">忘记密码</a><br/>
-				</dd>
-			</dl>
-			<dl>
-				<dt></dt>
-				<dd><input type="submit" value="登录" class="btn"/></dd>
-			</dl>
+		<form action="<?php echo url('user/register')?>" method="post" class="frm quick-register-frm">
+			<p>
+				<input type="text" name="name" placeholder="用户名" class="txt">
+			</p>
+			<p>
+				<input type="email" name="email" placeholder="保密邮箱" class="txt">
+			</p>
+			<p>
+				<input type="password" name="password" placeholder="登录密码" class="txt">
+			</p>
+			<p>
+				<input type="submit" value="马上注册" class="btn b-btn">
+			</p>
 		</form>
 
 		<p>

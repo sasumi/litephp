@@ -1,5 +1,7 @@
-<?php include 'header.inc.php';?>
-<?php echo css('register.css');?>
+<?php
+$PAGE_HEAD .= css('register.css');
+include 'header.inc.php';
+?>
 <form action="<?php echo url('user/register')?>" data-trans='async' class="frm user-register-frm" method="POST">
 	<fieldset>
 		<legend>用户注册</legend>

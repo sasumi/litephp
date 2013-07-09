@@ -1,6 +1,9 @@
-<?php include 'header.inc.php';?>
-<?php echo css('user.css')?>
-<div class="page-user-findpassword">
+<?php
+$PAGE_CLASS .= 'page-user-findpassword';
+$PAGE_HEAD .= css('user.css');
+include 'header.inc.php';
+?>
+<div>
 	<h2>找回密码</h2>
 	<form action="" class="frm">
 		<fieldset>

@@ -1,6 +1,8 @@
+				</div>
 			</div>
 			<div class="footer">
 				<ul class="site-links">
+					<li><a href="<?php echo url('page/help');?>">使用帮助</a></li>
 					<li><a href="<?php echo url('page/contact');?>">联系我们</a></li>
 					<li><a href="<?php echo url('page/feedback');?>">意见及建议</a></li>
 					<li><a href="<?php echo url('page/shop');?>">官方旗舰店</a></li>
@@ -13,6 +15,5 @@
 				</p>
 			</div>
 		</div>
-		<?php echo js('global.js')?>
 	</body>
 </html>

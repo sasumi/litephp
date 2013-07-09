@@ -1,33 +1,33 @@
-<?php include 'header.inc.php';?>
-<?php echo css('register.css');?>
+<?php
+$PAGE_HEAD .= css('login.css');
+include 'header.inc.php';
+?>
 <?php
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
-	//echo '<h1>'.($add_result ? 'success' : 'error').'</h1>';
+	$_SESSION['name'] = $_POST['name'];
+	header('Location:'.url('user/myresume'));
 }
-echo form(url('user/login'), array(
-	'name' => array(
-		'label' => '用户名',
-		'placeholder' => '请输入账号名称',
-		'class' => 'txt',
-		'value' => $ori_info['name']
-	),
-
-	'email' => array(
-		'label' => '密码',
-		'placeholder' => '密码',
-		'type' => 'password',
-		'class' => 'txt',
-		'value' => $ori_info['password']
-	),
-
-	'submit' => array(
-		'type' => 'submit',
-		'value' => '登录',
-		'class' => 'btn'
-	)
-), array(
-	'title' => '用户登录',
-	'class' => 'frm user-register-frm'
-));
 ?>
+
+<form action="" class="frm user-login-frm">
+	<h2>用户登录</h2>
+	<fieldset>
+		<dl>
+			<dt><label for="">用户名</label></dt>
+			<dd><input type="text" name="" id="" class="txt"></dd>
+		</dl>
+		<dl>
+			<dt><label for="">密码</label></dt>
+			<dd><input type="password" name="" id="" class="txt"></dd>
+		</dl>
+		<dl>
+			<dt></dt>
+			<dd>
+				<input type="submit" value="登 录" class="btn b-btn">
+			</dd>
+		</dl>
+
+	</fieldset>
+</form>
+
 <?php include 'footer.inc.php';?>

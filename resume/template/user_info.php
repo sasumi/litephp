@@ -1,7 +1,10 @@
-<?php include 'header.inc.php'?>
-<?php echo css('user.css')?>
-<?php include 'usernav.inc.php'?>
-<div class="page-user-info clearfix">
+<?php
+$PAGE_CLASS .= 'page-user-info';
+$PAGE_HEAD .= css('user.css');
+include 'header.inc.php';
+include 'usernav.inc.php';
+?>
+<div class="clearfix">
 	<div class="left-col">
 		<?php
 		echo form(url('user/modify'), array(

@@ -22,9 +22,8 @@ include 'file.php';
 function tpl($file_name=null){
 	if(!$file_name){
 		$file_name = ACTION == 'index' ? PAGE.'.php' : PAGE.'_'.ACTION.'.php';
-		return TPL_PATH.$file_name;
 	}
-	return TPL_PATH.$file_name;
+	return TPL_PATH.strtolower($file_name);
 }
 
 /**
@@ -90,6 +89,47 @@ function dump_as_html_comment(){
 }
 
 /**
+ * add more include path
+ * @param string $path
+ */
+function add_include_path($path){
+    foreach (func_get_args() AS $path){
+        if (!file_exists($path) OR (file_exists($path) && filetype($path) !== 'dir')){
+			trigger_error("Include path '{$path}' not exists", E_USER_WARNING);
+			continue;
+        }
+
+        $paths = explode(PATH_SEPARATOR, get_include_path());
+        if(array_search($path, $paths) === false){
+        	array_push($paths, $path);
+        }
+        set_include_path(implode(PATH_SEPARATOR, $paths));
+    }
+}
+
+/**
+ * remove include path from php setting
+ * @param  string $path
+ */
+function remove_include_path($path){
+    foreach (func_get_args() as $path){
+        $paths = explode(PATH_SEPARATOR, get_include_path());
+
+        if(($k = array_search($path, $paths)) !== false){
+        	unset($paths[$k]);
+        } else {
+        	continue;
+        }
+
+        if(!count($paths)){
+            trigger_error("Include path '{$path}' can not be removed because it is the only", E_USER_NOTICE);
+			continue;
+        }
+        set_include_path(implode(PATH_SEPARATOR, $paths));
+    }
+}
+
+/**
  * lite初始化
 **/
 function lite(){
@@ -129,10 +169,16 @@ function lite(){
 		}, E_USER_ERROR | E_USER_WARNING);
 	}
 
+	//bind include path
+	add_include_path(INCLUDE_PATH);
+
+	//bind lib com path
+	add_include_path(LIB_PATH.'com'.DS);
+
 	//auto class loader
 	spl_autoload_register(function($class){
 		$file = INCLUDE_PATH.strtolower($class).'.class.php';
-		$file2 = LIB_PATH.strtolower($class).'.class.php';
+		$file2 = LIB_PATH.'com'.DS.strtolower($class).'.class.php';
 		if(file_exists($file)){
 			include_once $file;
 		} else if(file_exists($file2)){

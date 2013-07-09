@@ -1,7 +1,10 @@
-<?php include 'header.inc.php'?>
-<?php echo css('user.css')?>
-<?php include 'usernav.inc.php'?>
-<div class="page-user-invite">
+<?php
+$PAGE_CLASS .= 'page-user-invite';
+$PAGE_HEAD .= css('user.css');
+include 'header.inc.php';
+include 'usernav.inc.php';
+?>
+<div>
 	<h3>邀请列表</h3>
 	<table class="tbl">
 		<thead>
