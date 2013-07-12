@@ -9,22 +9,21 @@
 	<form action="" class="frm">
 		<fieldset>
 			<dl>
-				<dt>标题：</dt>
-				<dd><input type="text" name="" class="txt" placeholder="默认为栏目类型"/></dd>
-			</dl>
-			<dl>
 				<dt>栏目类型：</dt>
 				<dd>
 					<select name="" id="">
-						<option value="">基本资料</option>
-						<option value="">工作技能</option>
-						<option value="">教育培训</option>
-						<option value="">语言能力</option>
-						<option value="">工作经历</option>
-						<option value="">自定义栏目</option>
-						<option value="">其他</option>
+						<?php foreach($all_mods as $mod_id=>$mod):?>
+						<option value="<?php echo $mod_id;?>" <?php if(in_array($mod_id, $cur_mods)):?>disabled="true"<?php endif;?>>
+							<?php echo $mod['title']?><?php if(in_array($mod_id, $cur_mods)):?> - [已添加]<?php endif;?>
+						</option>
+						<?php endforeach;?>
+						<option value="0">空白栏目</option>
 					</select>
 				</dd>
+			</dl>
+			<dl>
+				<dt>栏目标题：</dt>
+				<dd><input type="text" name="" class="txt" placeholder="默认为栏目类型"/></dd>
 			</dl>
 		</fieldset>
 	</form>

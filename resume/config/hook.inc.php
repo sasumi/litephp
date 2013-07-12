@@ -15,7 +15,7 @@ add_hook('BEFORE_APP_INIT', function(){
 	echo('<!-- BEFORE_APP_INIT:'.$_SERVER['REQUEST_URI']." -->\r\n");
 });
 
-add_hook('ON_APP_EX', function($exception){
+add_hook('xxxON_APP_EX', function($exception){
 	print_exception($exception);
 });
 

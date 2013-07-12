@@ -3,14 +3,12 @@
 .page-resume-create {font-size:14px;}
 .container-wrap {background:#ddd;}
 
-.resume-create {box-shadow:0 0 8px #bbb;}
-.resume-create-wrap {padding:60px; border-bottom:1px solid white;}
-.resume-create .btn {background-color:#eee;}
-.resume-create .resume-mod {margin-bottom:10px; position:relative; margin-bottom:30px;}
-.resume-create .resume-mod:hover {/*background:#F8F7F7;*/}
+.resume-create-frm .btn {background-color:#eee;}
+.resume-create-frm .resume-mod {margin-bottom:10px; position:relative; margin-bottom:30px;}
+.resume-create-frm .resume-mod:hover {/*background:#F8F7F7;*/}
 
 /** 模块操作菜单 **/
-.resume-create .resume-mod:hover .resume-mod-op-list {display:block;}
+.resume .resume-mod:hover .resume-mod-op-list {display:block;}
 .resume-mod-op-list {right:0; top:6px; z-index:2; font-size:12px; display:none; position:absolute}
 .resume-mod-op-list .ti {cursor:pointer;}
 .resume-mod-op-list a {text-decoration:none}
@@ -53,17 +51,18 @@
 
 .cover-setting {overflow:hidden}
 .cover-setting ul {padding:0 5px;}
-.cover-setting li {float:left; padding:6px; border-radius:3px; cursor:pointer;}
-.cover-setting li img {display:block;}
-.cover-setting li.current {background-color:#789;}
+.cover-setting li {float:left; padding:6px; cursor:pointer;}
+.cover-setting li img {display:block; width:32px; height:32px; border-radius:3px;  border:1px solid #fff; box-shadow:1px 1px 1px #ddd}
+.cover-setting li.current {background-color:#ddd;}
 
 .column-manager dd {padding-bottom:5px; margin-bottom:5px; border-bottom:1px solid #eee;}
 .column-manager dd:hover {background-color:#eee;}
+.column-manager .mod-invisible .ti {color:#ccc;}
 .column-manager .ti  {display:inline-block; width:100px; padding-left:3px;}
 .column-manager .order-drag {padding:1px; border:2px dotted #ccc; border-top:none; border-bottom:none; height:12px; display: inline-block; cursor:pointer; vertical-align:bottom;}
 .column-manager .op {text-align: right;}
-.column-manager dd a {font-size:12px; visibility:hidden}
-.column-manager dd:hover a {font-size:12px; visibility:visible;}
+.column-manager dd .vi, .column-manager dd .del {font-size:12px; cursor:pointer; color:#345; visibility:hidden}
+.column-manager dd:hover .vi, .column-manager dd:hover .del {visibility:visible;}
 
 .career-search .srch-kw {margin:10px 3px;}
 .career-search .srch-kw .txt {width:110px;}

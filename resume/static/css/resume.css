@@ -1,51 +1,9 @@
-.page-resume-create {font-size:14px;}
+.resume-main, .resume-conver {box-shadow:0 0 8px #bbb;}
+.resume-main-wrap {padding:60px; border-bottom:1px solid white;}
 
-.page-resume-create .create-frm fieldset {border:1px dashed #ddd; margin:10px 0; padding:10px}
-.page-resume-create .create-frm .field-title label {margin-right:10px}
-.page-resume-create .create-frm .field-title .txt {width:500px}
-.page-resume-create .create-frm .common-mod {}
-
-.page-resume-create .create-frm .mod-op {display:none; float:right; font-size:12px;}
-.page-resume-create .create-frm .common-mod-hover .mod-op {display:block;}
-.page-resume-create .create-frm .temp-sel {display:inline-block; padding:2px 10px; background-color:#789; color:white; border-radius:3px;}
-.page-resume-create .create-frm .temp-sel s {display:inline-block; border:5px solid white; border-width:5px 0 0;}
-.page-resume-create .create-frm .temp-sel:hover {background-color:#345; text-decoration:none;}
-.page-resume-create .create-frm .mod-del-btn {background-color:#f99; color:white; display: inline-block; padding:2px 10px; border-radius:3px;}
-.page-resume-create .create-frm .mod-del-btn:hover {background-color:#f55; text-decoration:none;}
-
-.page-resume-create .create-frm .mod-ti {margin-bottom:5px; font-size:18px; font-weight:bold}
-.page-resume-create .create-frm .mod-ti input.txt {width:400px; border-width:0 0 1px 0; font-size:18px; }
-.page-resume-create .create-frm .mod-con {}
-.page-resume-create .create-frm .mod-con textarea {width:585px; max-width:585px; min-height:150px; padding:5px;}
-.page-resume-create .create-frm .add-more {text-align: center; margin-bottom:10px;}
-.page-resume-create .create-frm .add-more .btn {width:608px; height:40px;}
-
-.mod-temp-list {position:absolute; display:none; overflow:hidden; box-shadow:5px 5px 5px #ddd; padding:5px; width:120px; background-color:white; border:1px solid #ddd; top:40px;}
-.mod-temp-list li {float:left; margin:0 3px;}
-
-.page-resume-create .create-frm .mod-userinfo dl {float:left; width:50%; overflow:hidden; height:28px; margin:5px 0;}
-.page-resume-create .create-frm .mod-userinfo dt {float:left; width:90px;}
-.page-resume-create .create-frm .mod-userinfo .mod-con input.txt {width:160px;}
-
-.page-resume-create .cover-setting {overflow:hidden}
-.page-resume-create .cover-setting li {float:left; border:1px solid #eee; padding:15px 10px; margin:5px; border-radius:3px; cursor:pointer;}
-.page-resume-create .cover-setting li.current {background:url("../img/tick.png") no-repeat 100% 0 #F0F0F0;}
-
-.page-resume-create .side-mod {margin:10px 10px 15px; padding:5px; border:1px solid #eee; border-radius:3px; line-height:18px}
-.page-resume-create .side-mod h3 {font-size:14px; font-weight:normal; background-color:#eee; border-radius:3px; padding:5px 0.5em; margin-bottom:0.5em;}
-.page-resume-create .side-mod dl {margin-bottom:0.5em;}
-
-.page-resume-create .column-manager dd {padding-bottom:5px; margin-bottom:5px; border-bottom:1px solid #eee;}
-.page-resume-create .column-manager dd:hover {background-color:#eee;}
-.page-resume-create .column-manager .ti  {display:inline-block; width:187px; padding-left:3px;}
-.page-resume-create .column-manager .order-drag {padding:1px; border:2px dotted #ccc; border-top:none; border-bottom:none; height:12px; display: inline-block; cursor:pointer; vertical-align:bottom;}
-.page-resume-create .column-manager .op {text-align: right;}
-
-.page-resume-create .career-search dt {display: none}
-.page-resume-create .career-search dl {overflow:hidden}
-.page-resume-create .career-search dt {display:block; float:left; width:60px; padding-left:10px;}
-.page-resume-create .career-search .srch-kw {margin:10px 3px;}
-.page-resume-create .career-search .srch-kw .txt {width:207px;}
-.page-resume-create .career-search h4 {font-size:14px; font-weight: normal; margin:0 0 5px 10px;}
-
-.page-resume-create .page-tip strong {display:block; border-bottom:1px solid #ddd; margin-bottom:3px; padding-bottom:3px; }
+.resume-conver {margin-bottom:20px; height:949px;}
+.resume-conver span {width:800px; position:absolute; display:block; text-align:center;}
+.resume-conver .resume-conver-title {font-size:64px;margin-top:130px;}
+.resume-conver .resume-conver-name {font-size:28px; margin-top:230px;}
+.resume-conver .resume-conver-email {font-size:20px; margin-top:280px;}
+.resume-conver .resume-conver-mobile {font-size:20px; margin-top:330px;}

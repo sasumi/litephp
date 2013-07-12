@@ -19,7 +19,6 @@ if(ACTION == 'login'){
 			$err_msg = 'login fail';
 		}
 	}
-
 	include tpl('login.php');
 }
 

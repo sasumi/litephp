@@ -1,156 +1,178 @@
 <?php
 $PAGE_CLASS .= 'page-resume-create';
-$PAGE_HEAD .= css('resume_create.css', 'theme.css');
-$PAGE_HEAD .= '<style>'.$theme_css.'</style>';
-
+$PAGE_HEAD .= css('resume.css','resume_create.css');
+$PAGE_HEAD .= '<style>'.$template_css.$theme_css.'</style>';
 include 'header.inc.php';
 ?>
 <script>
 	var ADD_COL_URL = '<?php echo url("resume/addCol");?>';
 	var ADD_CAREER_URL = '<?php echo url("resume/addCar");?>';
+	var CHANGE_AVA_URL = '<?php echo url("resume/changeAvatar");?>';
 </script>
 <div class="clearfix">
 	<div class="left-col">
-		<form action="<?php echo url('user/myresume')?>" method="POST" class="resume-create resume-theme resume-theme-c1">
-			<div class="resume-create-wrap resume-theme-wrap">
-				<input type="submit" value="保存简历" class="btn none" title="保存简历(ctrl+s)"/>
-				<?php foreach($mods as $mod_id=>$mod):?>
-				<fieldset class="resume-mod resume-mod-<?php echo $mod_id;?> resume-mod-<?php echo $mod_id;?>-base">
-					<ul class="resume-mod-op-list">
-						<?php if(count($mod['themes'])>1):?>
-						<li>
-							<span class="ti resume-mod-change-temp-btn">模版&#9660;</span>
-							<ul rel="theme-select">
-								<?php foreach($mod['themes'] as $k=>$theme):?>
-								<li <?php if($k=='base'):?>class="selected"<?php endif;?> rel="theme-select" data-class="resume-mod-<?php echo $mod_id;?>-<?php echo $k;?>">
-									<span class="tick">√</span>
-									<span class="item"><?php echo $theme['name']?></span>
-								</li>
-								<?php endforeach;?>
-							</ul>
-						</li>
-						<?php endif;?>
-						<li><a href="javascript:;" class="resume-mod-del-btn" rel="resume-mod-del-btn">删除栏目</a></li>
-					</ul>
-
-					<?php if($mod['title']):?>
-					<?php $placeholder = $mod['placeholder'] ?: '请输入标题';?>
-					<div class="resume-mod-ti">
-						<input class="txt" type="text" name="" value="<?php echo $mod['title'];?>" placeholder="<?php echo $placeholder;?>"/>
-					</div>
-					<?php endif;?>
-
-					<div class="resume-mod-con">
-						<div class="resume-mod-con-instance">
-							<?php
-							foreach($mod['data'] as $key=>$item){
-								$item_id = 'resume-mod-'.$mod_id.'-'.$key;
-								$html = '<dl class="'.$item_id.'-item resume-mod-item">';
-								$html .= $item['label'] ? '<dt><label for="'.$item_id.'">'.$item['label'].'</label></dt>' : '';
-								$html .= '<dd>';
-								switch($item['type']){
-									case 'yearmonth':
-										$html .= '<select size="1" id="'.$item_id.'">';
-										for($i=date('Y')-5; $i<=date('Y'); $i++){
-											$html .= '<option value="">'.$i.'年</option>';
-										}
-										$html .= '</select>';
-
-										$html .= '<select size="1" id="'.$item_id.'-month">';
-										for($i=1; $i<=12; $i++){
-											$html .= '<option value="">'.$i.'月</option>';
-										}
-										$html .= '</select>';
-										break;
-
-									case 'description':
-										$html .= '<textarea name="" id="'.$item_id.'" cols="30" rows="10" class="txt txt-description" ';
-										$html .= $item['placeholder'] ? 'placeholder="'.$item['placeholder'].'" ' : '';
-										$html .= '></textarea>';
-										break;
-
-									case 'html':
-										$html .= '<textarea name="" id="'.$item_id.'" cols="30" rows="10" class="txt" ';
-										$html .= $item['placeholder'] ? 'placeholder="'.$item['placeholder'].'" ' : '';
-										$html .= '></textarea>';
-										break;
-
-									case 'date':
-										$html .= '<select size="1" id="'.$item_id.'">';
-										for($i=date('Y')-5; $i<=date('Y'); $i++){
-											$html .= '<option value="">'.$i.'年</option>';
-										}
-										$html .= '</select>';
-
-										$html .= '<select size="1" id="'.$item_id.'-month">';
-										for($i=1; $i<=12; $i++){
-											$html .= '<option value="">'.$i.'月</option>';
-										}
-										$html .= '</select>';
-
-										$html .= '<select size="1" id="'.$item_id.'-date">';
-										for($i=1; $i<=31; $i++){
-											$html .= '<option value="">'.$i.'日</option>';
-										}
-										$html .= '</select>';
-										break;
-
-									case 'radio':
-										$name = $item_id;
-										foreach($item['options'] as $v=>$lbl){
-											$html .= '<label><input type="radio" name="'.$name.'" value="'.$k.'" class="radio" /> ';
-											$html .= $lbl.'</label> &nbsp;';
-										}
-										break;
-
-									case 'select':
-										$html .= '<select size="1" name="'.$name.'">';
-										foreach($item['options'] as $v=>$lbl){
-											$html .= '<option value="'.$v.'">'.$lbl.'</option>';
-										}
-										$html .= '</select>';
-										break;
-
-									case 'string':
-									default:
-										$html .= '<input type="text" name="'.$key.'" class="txt txt-string" id="'.$item_id.'" ';
-										$html .= $item['placeholder'] ? 'placeholder="'.$item['placeholder'].'" ' : '';
-										$html .= '/>';
-										break;
-								}
-								$html .= '</dd></dl>';
-								echo $html;
-							}
-							?>
-
-							<?php if($mod['multiInstance']):?>
-							<div class="resume-mod-instance-op">
-								<a href="" class="resume-mod-clone-instance-btn">复制</a>
-								<a href="" class="resume-mod-remove-instance-btn">删除</a>
-							</div>
+		<form action="<?php echo url('user/myresume')?>" method="POST" class="resume resume-create-frm resume-theme-<?php echo $current_theme;?>" data-theme-id="<?php echo $current_theme;?>">
+			<?php if($mods['conver']):?>
+			<div class="resume-conver" <?php echo $mods['conver']['invisible'] ? 'style="display:none"' : ''?>>
+				<span class="resume-conver-title">个人简历</span>
+				<span class="resume-conver-name">牛腩</span>
+				<span class="resume-conver-email">邮箱:asdf@ac.com</span>
+				<span class="resume-conver-mobile">电话:234234</span>
+			</div>
+			<?php endif;?>
+		
+			<!-- 简历主体 -->
+			<div class="resume-main">
+				<div class="resume-main-wrap">
+					<input type="submit" value="保存简历" class="btn none" title="保存简历(ctrl+s)"/>
+					<?php foreach($mods as $mod_id=>$mod):?>
+					<?php if($mod_id != 'conver'):?>
+					<fieldset class="resume-mod resume-mod-<?php echo $mod_id;?> resume-mod-<?php echo $mod_id;?>-base" <?php echo $mod['invisible'] ? 'style="display:none"' : ''?>>
+						<ul class="resume-mod-op-list">
+							<?php if(count($mod['templates'])>1):?>
+							<li>
+								<span class="ti resume-mod-change-temp-btn">模版&#9660;</span>
+								<ul rel="template-select">
+									<?php foreach($mod['templates'] as $k=>$template):?>
+									<li <?php if($k=='base'):?>class="selected"<?php endif;?> rel="template-select" data-class="resume-mod-<?php echo $mod_id;?>-<?php echo $k;?>">
+										<span class="tick">√</span>
+										<span class="item"><?php echo $template['name']?></span>
+									</li>
+									<?php endforeach;?>
+								</ul>
+							</li>
 							<?php endif;?>
+							<li><a href="javascript:;" class="resume-mod-del-btn" rel="resume-mod-del-btn" data-mod-id="<?php echo $mod_id;?>">删除栏目</a></li>
+						</ul>
+
+						<?php if($mod['title']):?>
+						<?php $placeholder = $mod['placeholder'] ?: '请输入标题';?>
+						<div class="resume-mod-ti">
+							<input class="txt" type="text" name="" value="<?php echo $mod['title'];?>" placeholder="<?php echo $placeholder;?>"/>
 						</div>
-					</div>
+						<?php endif;?>
 
-					<?php if($mod['multiInstance']):?>
-					<div class="resume-mod-append-instance">
-						<a href="" class="resume-mod-append-instance-btn">添加一项</a>
-					</div>
+						<div class="resume-mod-con">
+							<div class="resume-mod-con-instance">
+								<?php
+								foreach($mod['data'] as $key=>$item){
+									$item_id = 'resume-mod-'.$mod_id.'-'.$key;
+									$html = '<dl class="'.$item_id.'-item resume-mod-item">';
+									$html .= $item['label'] ? '<dt><label for="'.$item_id.'">'.$item['label'].'</label></dt>' : '';
+									$html .= '<dd>';
+									switch($item['type']){
+										case 'yearmonth':
+											$html .= '<select size="1" id="'.$item_id.'">';
+											for($i=date('Y')-5; $i<=date('Y'); $i++){
+												$html .= '<option value="">'.$i.'年</option>';
+											}
+											$html .= '</select>';
+
+											$html .= '<select size="1" id="'.$item_id.'-month">';
+											for($i=1; $i<=12; $i++){
+												$html .= '<option value="">'.$i.'月</option>';
+											}
+											$html .= '</select>';
+											break;
+
+										case 'description':
+											$html .= '<textarea name="" id="'.$item_id.'" cols="30" rows="10" class="txt txt-description" ';
+											$html .= $item['placeholder'] ? 'placeholder="'.$item['placeholder'].'" ' : '';
+											$html .= '></textarea>';
+											break;
+
+										case 'html':
+											$html .= '<textarea name="" id="'.$item_id.'" cols="30" rows="10" class="txt" ';
+											$html .= $item['placeholder'] ? 'placeholder="'.$item['placeholder'].'" ' : '';
+											$html .= '></textarea>';
+											break;
+
+										case 'date':
+											$html .= '<select size="1" id="'.$item_id.'">';
+											for($i=date('Y')-5; $i<=date('Y'); $i++){
+												$html .= '<option value="">'.$i.'年</option>';
+											}
+											$html .= '</select>';
+
+											$html .= '<select size="1" id="'.$item_id.'-month">';
+											for($i=1; $i<=12; $i++){
+												$html .= '<option value="">'.$i.'月</option>';
+											}
+											$html .= '</select>';
+
+											$html .= '<select size="1" id="'.$item_id.'-date">';
+											for($i=1; $i<=31; $i++){
+												$html .= '<option value="">'.$i.'日</option>';
+											}
+											$html .= '</select>';
+											break;
+
+										case 'radio':
+											$name = $item_id;
+											foreach($item['options'] as $v=>$lbl){
+												$html .= '<label><input type="radio" name="'.$name.'" value="'.$k.'" class="radio" /> ';
+												$html .= $lbl.'</label> &nbsp;';
+											}
+											break;
+
+										case 'select':
+											$html .= '<select size="1" name="'.$name.'">';
+											foreach($item['options'] as $v=>$lbl){
+												$html .= '<option value="'.$v.'">'.$lbl.'</option>';
+											}
+											$html .= '</select>';
+											break;
+
+										case 'image':
+											$html .= '<div class="resume-avatar">';
+											$html .= '<div class="resume-avatar-img">'.img('avatar.jpg').'</div>';
+											$html .= '<input type="button" value="上传照片" class="btn" />';
+											$html .= '</div>';
+											break;
+
+										case 'string':
+										default:
+											$html .= '<input type="text" name="'.$key.'" class="txt txt-string" id="'.$item_id.'" ';
+											$html .= $item['placeholder'] ? 'placeholder="'.$item['placeholder'].'" ' : '';
+											$html .= '/>';
+											break;
+									}
+									$html .= '</dd></dl>';
+									echo $html;
+								}
+								?>
+
+								<?php if($mod['multiInstance']):?>
+								<div class="resume-mod-instance-op">
+									<a href="" class="resume-mod-clone-instance-btn">复制</a>
+									<a href="" class="resume-mod-remove-instance-btn">删除</a>
+								</div>
+								<?php endif;?>
+							</div>
+						</div>
+
+						<?php if($mod['multiInstance']):?>
+						<div class="resume-mod-append-instance">
+							<a href="" class="resume-mod-append-instance-btn">添加一项</a>
+						</div>
+						<?php endif;?>
+					</fieldset>
 					<?php endif;?>
-				</fieldset>
-				<?php endforeach;?>
+					<?php endforeach;?>
 
-				<fieldset id="blank-catalog" class="resume-mod resume-mod-empty" style="display:none">
-					<ul class="resume-mod-op-list">
-						<li><a href="javascript:;" rel="resume-mod-del-btn">删除栏目</a></li>
-					</ul>
-					<div class="resume-mod-ti">
-						<input class="txt" type="text" name="" value="" placeholder="请输入标题"/>
-					</div>
-					<div class="resume-mod-con">
-						<textarea name="" class="txt" id="" cols="50" rows="5" placeholder="请输入内容"></textarea>
-					</div>
-				</fieldset>
+					<fieldset id="blank-catalog" class="resume-mod resume-mod-empty" style="display:none">
+						<ul class="resume-mod-op-list">
+							<li><a href="javascript:;" class="resume-mod-del-btn" rel="resume-mod-del-btn">删除栏目</a></li>
+						</ul>
+
+						<div class="resume-mod-ti">
+							<input class="txt" type="text" name="" value="" placeholder="请输入标题"/>
+						</div>
+						<div class="resume-mod-con">
+							<textarea name="" class="txt" id="" cols="50" rows="5" placeholder="请输入内容"></textarea>
+						</div>
+					</fieldset>
+				</div>
 			</div>
 
 			<div class="resume-op">
@@ -162,51 +184,30 @@ include 'header.inc.php';
 	</div>
 
 	<div class="right-col">
-		<form action="" class="side-mod column-manager">
-			<h3>栏目调整</h3>
-			<dl>
-				<dd>
-					<span class="order-drag"></span>
-					<span class="ti">基本资料</span>
-					<a href="<?php echo url('resume/column')?>">显示</a>
-					<a href="<?php echo url('resume/del')?>">删除</a>
-				</dd>
-				<dd>
-					<span class="order-drag"></span>
-					<span class="ti">工作技能</span>
-					<a href="<?php echo url('resume/column')?>">显示</a>
-					<a href="<?php echo url('resume/del')?>">删除</a>
-				</dd>
-				<dd>
-					<span class="order-drag"></span>
-					<span class="ti">教育培训</span>
-					<a href="<?php echo url('resume/column')?>">显示</a>
-					<a href="<?php echo url('resume/del')?>">删除</a>
-				</dd>
-				<dd>
-					<span class="order-drag"></span>
-					<span class="ti">语言能力</span>
-					<a href="<?php echo url('resume/column')?>">显示</a>
-					<a href="<?php echo url('resume/del')?>">删除</a>
-				</dd>
-				<dd>
-					<span class="order-drag"></span>
-					<span class="ti">其他</span>
-					<a href="<?php echo url('resume/column')?>">显示</a>
-					<a href="<?php echo url('resume/del')?>">删除</a>
-				</dd>
-			</dl>
-			<p class="op"><input type="button" value="+ 添加栏目" class="btn"></p>
-		</form>
-
 		<form action="" class="side-mod cover-setting">
 			<h3>封面设定</h3>
 			<ul>
-				<li class="current"><?php echo img('cover1.png')?></li>
-				<li><?php echo img('cover1.png')?></li>
-				<li><?php echo img('cover1.png')?></li>
-				<li><?php echo img('cover1.png')?></li>
+				<?php foreach($themes as $theme_id=>$theme):?>
+				<li class="<?php echo $theme_id == $current_theme ? 'current':''?>" data-theme-id="<?php echo $theme_id;?>" rel="resume-change-theme-btn">
+					<img src="<?php echo $theme['thumb'];?>">
+				</li>
+				<?php endforeach;?>
 			</ul>
+		</form>
+		
+		<form action="" class="side-mod column-manager">
+			<h3>栏目调整</h3>
+			<dl>
+				<?php foreach($mods as $mod_id=>$mod):?>
+				<dd class="<?php echo $mod['invisible'] ? 'mod-invisible' : '';?>">
+					<span class="order-drag"></span>
+					<span class="ti"><?php echo $mod['title']?></span>
+					<span class="vi" data-mod-id="<?php echo $mod_id;?>"><?php echo $mod['invisible'] ? '显示' : '隐藏'?></span>
+					<span class="del" data-mod-id="<?php echo $mod_id;?>" rel="resume-mod-del-btn">删除</span>
+				</dd>
+				<?php endforeach;?>
+			</dl>
+			<p class="op"><input type="button" value="+ 添加栏目" class="btn"></p>
 		</form>
 
 		<form action="?" class="side-mod career-search">

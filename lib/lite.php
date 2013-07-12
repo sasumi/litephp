@@ -5,6 +5,8 @@ if(version_compare(PHP_VERSION, '5.3.0') < 0){
 }
 
 session_start();
+$GLOBALS['__USER_INCLUDE_PATH__'] = array();
+
 include 'config.inc.php';
 include 'function.php';
 include 'string.php';
@@ -82,25 +84,19 @@ function tick_dump($step_offset=1, $fun=dump){
 }
 
 /**
- * [dump_as_html_comment description]
- */
-function dump_as_html_comment(){
-
-}
-
-/**
  * add more include path
  * @param string $path
  */
 function add_include_path($path){
-    foreach (func_get_args() AS $path){
-        if (!file_exists($path) OR (file_exists($path) && filetype($path) !== 'dir')){
+    foreach (func_get_args() as $path){
+        if (!file_exists($path) || (file_exists($path) && filetype($path) !== 'dir')){
 			trigger_error("Include path '{$path}' not exists", E_USER_WARNING);
 			continue;
         }
 
         $paths = explode(PATH_SEPARATOR, get_include_path());
         if(array_search($path, $paths) === false){
+        	array_push($GLOBALS['__USER_INCLUDE_PATH__'], $path);
         	array_push($paths, $path);
         }
         set_include_path(implode(PATH_SEPARATOR, $paths));
@@ -114,6 +110,10 @@ function add_include_path($path){
 function remove_include_path($path){
     foreach (func_get_args() as $path){
         $paths = explode(PATH_SEPARATOR, get_include_path());
+
+        if(($k = array_search($path, $GLOBALS['__USER_INCLUDE_PATH__'])) !== false){
+        	unset($GLOBALS['__USER_INCLUDE_PATH__'][$k]);
+        }
 
         if(($k = array_search($path, $paths)) !== false){
         	unset($paths[$k]);
@@ -177,12 +177,12 @@ function lite(){
 
 	//auto class loader
 	spl_autoload_register(function($class){
-		$file = INCLUDE_PATH.strtolower($class).'.class.php';
-		$file2 = LIB_PATH.'com'.DS.strtolower($class).'.class.php';
-		if(file_exists($file)){
-			include_once $file;
-		} else if(file_exists($file2)){
-			include_once $file2;
+		$paths = $GLOBALS['__USER_INCLUDE_PATH__'];
+		foreach($paths as $path){
+			$file = $path.strtolower($class).'.class.php';
+			if(file_exists($file)){
+				include $file;
+			}
 		}
 	});
 
