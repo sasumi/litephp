@@ -164,7 +164,6 @@ include 'header.inc.php';
 						<ul class="resume-mod-op-list">
 							<li><a href="javascript:;" class="resume-mod-del-btn" rel="resume-mod-del-btn">删除栏目</a></li>
 						</ul>
-
 						<div class="resume-mod-ti">
 							<input class="txt" type="text" name="" value="" placeholder="请输入标题"/>
 						</div>

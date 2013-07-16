@@ -149,8 +149,31 @@ YSL.use('widget.Popup,widget.Tip,widget.Dragdrop,widget.Animate', function(Y, PO
 		}
 	});
 
-	Y.dom.all('.order-drag').on('mousedown', function(){
-		DD.singleton(this.parent());
+	//column drag
+	Y.dom.all('.column-manager .order-drag').on('mousedown', function(){
+		var dobj = DD.singleton(this, {proxy: this.parent()});
+		dobj.start();
+	});
+
+	Y.dom.all('.column-manager .ti').on('mousedown', function(){
+		var dobj = DD.singleton(this, {proxy: this.parent()});
+		dobj.onMoving = function(e){
+			var x = e.clientX, y = e.clientY;
+			console.log('moving',x, y);
+		};
+		dobj.onStart = function(e){
+			var tag = Y.event.getTarget(e);
+			var parent = tag.parent('dd');
+			var next = parent.next();
+			var prev = parent.previous();
+			if(next){
+				next.setStyle('marginTop', 30);
+			}
+			else if(prev){
+				prev.setStyle('marginBottom', 30);
+			}
+		}
+		dobj.start();
 	});
 
 	Y.dom.one(document).on('mouseup', function(){
@@ -160,31 +183,33 @@ YSL.use('widget.Popup,widget.Tip,widget.Dragdrop,widget.Animate', function(Y, PO
 	});
 
 	//栏目
-	(function(){
-		Y.dom.all('.column-manager').delegate('span.vi', 'click', function(){
-			var mod_id = this.getAttr('data-mod-id');
-			var toHide = this.getHtml() == '隐藏';
-			toHide ? hideMod(mod_id) : showMod(mod_id);
-			this.setHtml(toHide ? '显示':'隐藏');
-			this.parent('dd')[toHide ? 'addClass' : 'removeClass']('mod-invisible')
-		});
+	Y.dom.all('.column-manager').delegate('span.vi', 'click', function(){
+		var mod_id = this.getAttr('data-mod-id');
+		var toHide = this.getHtml() == '隐藏';
+		toHide ? hideMod(mod_id) : showMod(mod_id);
+		this.setHtml(toHide ? '显示':'隐藏');
+		this.parent('dd')[toHide ? 'addClass' : 'removeClass']('mod-invisible')
+	});
 
-		Y.dom.all('.column-manager').delegate('span.del', 'click', function(){
-			var _this = this;
-			var mod_id = this.getAttr('data-mod-id');
-			delMod(mod_id);
-		});
-	})();
+	Y.dom.all('.column-manager').delegate('span.del', 'click', function(){
+		var _this = this;
+		var mod_id = this.getAttr('data-mod-id');
+		delMod(mod_id);
+	});
 
 	//主题
-	(function(){
-		Y.dom.one('.cover-setting').delegate('li[rel=resume-change-theme-btn]', 'click', function(){
-			Y.event.preventDefault();
-			var theme_id = this.getAttr('data-theme-id');
-			changeTheme(theme_id);
-			this.parent().all('li').removeClass('current');
-			this.addClass('current');
-		});
-		
-	})();
+	Y.dom.one('.cover-setting').delegate('li[rel=resume-change-theme-btn]', 'click', function(){
+		Y.event.preventDefault();
+		var theme_id = this.getAttr('data-theme-id');
+		changeTheme(theme_id);
+		this.parent().all('li').removeClass('current');
+		this.addClass('current');
+	});
+
+	//滚动
+	Y.dom.one(window).on('scroll', function(){
+		var scrollTop = document.body.scrollTop;
+		var offTop = 90;
+		//Y.dom.one('.right-col').setStyle('marginTop', Math.max(scrollTop-offTop, 0));
+	})
 });

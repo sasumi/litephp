@@ -55,11 +55,11 @@
 .cover-setting li img {display:block; width:32px; height:32px; border-radius:3px;  border:1px solid #fff; box-shadow:1px 1px 1px #ddd}
 .cover-setting li.current {background-color:#ddd;}
 
-.column-manager dd {padding-bottom:5px; margin-bottom:5px; border-bottom:1px solid #eee;}
+.column-manager dd {padding:5px 0; border-bottom:1px solid #eee;}
 .column-manager dd:hover {background-color:#eee;}
 .column-manager .mod-invisible .ti {color:#ccc;}
-.column-manager .ti  {display:inline-block; width:100px; padding-left:3px;}
-.column-manager .order-drag {padding:1px; border:2px dotted #ccc; border-top:none; border-bottom:none; height:12px; display: inline-block; cursor:pointer; vertical-align:bottom;}
+.column-manager .ti  {display:inline-block; width:100px; padding-left:3px; cursor:move; }
+.column-manager .order-drag {padding:1px; border:2px dotted #ccc; border-top:none; border-bottom:none; height:12px; display: inline-block; cursor:move; vertical-align:bottom;}
 .column-manager .op {text-align: right;}
 .column-manager dd .vi, .column-manager dd .del {font-size:12px; cursor:pointer; color:#345; visibility:hidden}
 .column-manager dd:hover .vi, .column-manager dd:hover .del {visibility:visible;}
