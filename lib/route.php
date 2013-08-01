@@ -32,9 +32,9 @@ function get_path_info(){
  * 解析GET请求
  * @param string &$page
  * @param string &$action
- * @param string &$params
+ * @param string &$request
 **/
-function parser_get_request(&$page='', &$action='', &$params=array()){
+function parser_get_request(&$page='', &$action='', &$request=array()){
 	preg_match('/(\w+)\.php$/i', $_SERVER['SCRIPT_FILENAME'], $match);
 	$page = $match[1];
 
@@ -48,20 +48,20 @@ function parser_get_request(&$page='', &$action='', &$params=array()){
 			$ps = explode('/', $path_info);
 			$tmp = count($ps) > 1 ? array_slice($ps, 1) : array();
 
-			$params = array();
+			$request = array();
 			for($i=0; $i<=count($tmp); $i+=2){
 				if($tmp[$i] !== NULL){
-					$params[$tmp[$i]] = $tmp[$i+1];
+					$request[$tmp[$i]] = $tmp[$i+1];
 				}
 			}
-			$params = array_merge($_GET, $params);
+			$request = array_merge($_REQUEST, $request);
 			break;
 
 		case ROUTE_MODE_NORMAL:
 		default:
 			$action = $_GET[ROUTE_ACTION_KEY];
-			unset($_GET[ROUTE_ACTION_KEY]);
-			$params = $_GET;
+			unset($_REQUEST[ROUTE_ACTION_KEY]);
+			$request = $_REQUEST;
 
 	}
 

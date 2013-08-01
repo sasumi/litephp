@@ -67,3 +67,20 @@ else if(ACTION == 'form'){
 else if(ACTION == 'index'){
 	include tpl('component.php');
 }
+
+else if(ACTION == 'upload'){
+	if(is_post()){
+		$upload_config = array(
+			'upload_dir'=> dirname(__FILE__).'/upload',
+			'file_type'=>'doc,ppt',
+			'file_name_converter' => function($name){return rand();},
+			'max_file_count'=>1
+		);
+		$up = new Uploader($upload_config);
+ 		$res = $up->upload();
+ 		if(!empty($res)){
+ 			echo '成功';
+ 		}
+	}
+	include tpl();
+}

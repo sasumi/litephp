@@ -22,7 +22,6 @@ if(ACTION == 'create'){
 }
 
 if(ACTION == 'addCol'){
-	//
 	$cur_mods = gets('cur_mods', '');
 	$cur_mods = explode(',', $cur_mods);
 }

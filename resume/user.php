@@ -45,7 +45,6 @@ if(ACTION == 'register'){
 			$err_msg = $ex->getOneMsg();
 		}
 	}
-	include tpl();
 }
 
 //退出登录
@@ -77,7 +76,6 @@ else if(ACTION == 'login'){
 			jump_to('index');
 		}
 	}
-	include tpl();
 }
 
 else if(ACTION == 'index'){
@@ -89,9 +87,5 @@ else if(ACTION == 'list'){
 	$page->setPageSize(3);
 	$u = new User();
 	$data = $u->getByPage(null, $page);
-	include tpl('user_list.php');
 }
-
-else {
-	include tpl();
-}
+include tpl();

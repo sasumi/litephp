@@ -21,10 +21,8 @@ include 'file.php';
  * @param string $template_path
  * @return string
 **/
-function tpl($file_name=null){
-	if(!$file_name){
-		$file_name = ACTION == 'index' ? PAGE.'.php' : PAGE.'_'.ACTION.'.php';
-	}
+function tpl($file_name=''){
+	$file_name = PAGE == 'index' ? PAGE.'.php' : PAGE.'_'.ACTION.'.php';
 	return TPL_PATH.strtolower($file_name);
 }
 
@@ -130,6 +128,35 @@ function remove_include_path($path){
 }
 
 /**
+ * handler page logic
+ * @param  array  $logic_config
+ */
+function handle_page_logic(array $logic_config){
+	parser_get_request($current_page, $current_action, $request);
+	foreach($logic_config as $logic){
+		list($route, $caller) = $logic;
+		$page = ROUTE_DEFAULT_PAGE;
+		$action = ROUTE_DEFAULT_ACTION;
+
+		if($route == '*'){
+			$page = '*';
+			$action = '*';
+		} else if(strpos('/', $route) > 0){
+			list($page, $action) = explode('/', $route);
+		} else {
+			$page = $route;
+			$action = '*';
+		}
+
+		if($page == '*' || $page == $current_page){
+			if($action == '*' || $action == $current_action){
+				call_user_func($caller, $request, $current_page, $current_action);
+			}
+		}
+	}
+}
+
+/**
  * lite初始化
 **/
 function lite(){
@@ -197,6 +224,12 @@ function lite(){
 	}
 
 	fire_hook('AFTER_APP_INIT');
+
+	//auto logic
+	if(file_exists(CONFIG_PATH.'logic.inc.php')){
+		$logic = include CONFIG_PATH.'logic.inc.php';
+		handle_page_logic($logic);
+	}
 
 	//stat app launch time
 	$GLOBALS['__init_time__'] = microtime(true);
