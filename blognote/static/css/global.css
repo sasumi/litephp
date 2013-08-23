@@ -1,0 +1,17 @@
+#logo {display:none;}
+html {background-color:white;}
+html, body, .page {height:100%;}
+body {font-family:Microsoft Yahei, Verdana,sans-serif}
+a {color:#444; text-decoration:none;}
+.header {height:26px; overflow:hidden; display:none; position:absolute;; width:100%; box-shadow:2px 1px 3px #ccc}
+.container {height:100%; overflow:hidden;}
+
+.sidebar, .data-list, .content {height:100%;}
+.sidebar {width:200px; float:left; background:url("../img/sbg.png"); box-shadow:2px 1px 4px #bbb; }
+.data-list {float:left; width:300px; border-left:1px solid #eee; border-right:1px solid #ccc;}
+.content {float:left; border-left:1px solid #eee;}
+
+.sidebar dt {height:22px; background:url("../img/nav_rpt.png") repeat-x; border-top:1px solid #E0E0E0; border-bottom:#bec0be; padding:2px 5px;}
+.sidebar dd {height:22px; border-top:1px solid white; border-bottom:1px solid #ddd; cursor:pointer; padding:2px 5px;}
+.sidebar dd:hover {background-color:#fefefe}
+.sidebar dd:last-child {border-bottom:none};
