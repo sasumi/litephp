@@ -1,4 +1,13 @@
 <?php
+
+// declare(ticks = 1);
+// register_tick_function(function(){
+// 	$debug_list = debug_backtrace();
+// 	echo "<hr/><PRE>";
+// 	var_dump($debug_list[1]);
+// });
+
+
 //REQUIRE php 5.3 or above
 if(version_compare(PHP_VERSION, '5.3.0') < 0){
 	throw new Exception("REQUIRE PHP 5.3 OR ABOVE", 1);
@@ -27,22 +36,6 @@ function tpl($file_name=''){
 }
 
 /**
- * 检测当前请求是否为POST
- * @return boolean
-**/
-function is_post(){
-	return $_SERVER['REQUEST_METHOD'] == 'POST';
-}
-
-/**
- * 检测当前请求是否为GET
- * @return boolean
-**/
-function is_get(){
-	return $_SERVER['REQUEST_METHOD'] == 'GET';
-}
-
-/**
  * 测试
  **/
 function dump(){
@@ -68,7 +61,7 @@ function dump(){
  * @param {Number} $step_offset
  * @param {Function} $fun
  */
-function tick_dump($step_offset=1, $fun=dump){
+function tick_dump($step_offset=1, $fun='dump'){
 	$step_offset = (string) $step_offset;
 	if(strstr($step_offset, ',') !== false){
 		list($start, $step) = array_map('intval', explode(',', $step_offset));
@@ -76,9 +69,21 @@ function tick_dump($step_offset=1, $fun=dump){
 		$start = 0;
 		$step = intval($step_offset);
 	}
-	$GLOBALS['TICK_DEBUG_START_INDEX'] = $start;
 	register_tick_function($fun);
 	eval("declare(ticks = $step);");
+}
+
+function pdog($fun, $handler){
+	declare(ticks = 1);
+	register_tick_function(function()use($fun, $handler){
+		$debug_list = debug_backtrace();
+		foreach($debug_list as $info){
+			if($info['function'] == $fun){
+				call_user_func($handler, $info['args']);
+
+			}
+		}
+	});
 }
 
 /**
@@ -197,7 +202,9 @@ function lite(){
 	}
 
 	//bind include path
-	add_include_path(INCLUDE_PATH);
+	if(defined(INCLUDE_PATH)){
+		add_include_path(INCLUDE_PATH);
+	}
 
 	//bind lib com path
 	add_include_path(LIB_PATH.'com'.DS);
@@ -240,3 +247,4 @@ function lite(){
 	});
 }
 lite();
+

@@ -106,6 +106,22 @@ function posts($key=null, $rules, $throwException=true){
 }
 
 /**
+ * 检测当前请求是否为POST
+ * @return boolean
+**/
+function is_post(){
+	return $_SERVER['REQUEST_METHOD'] == 'POST';
+}
+
+/**
+ * 检测当前请求是否为GET
+ * @return boolean
+**/
+function is_get(){
+	return $_SERVER['REQUEST_METHOD'] == 'GET';
+}
+
+/**
  * 路由
  * @param string $target
  * @param array $params
