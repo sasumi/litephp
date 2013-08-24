@@ -6,22 +6,51 @@ a {color:#444; text-decoration:none;}
 
 .txt {border:1px solid #ccc; border-left:1px solid #aaa; border-top:1px solid #aaa; padding:2px 3px; border-radius:3px; font-family:Microsoft Yahei, Verdana,sans-serif; font-size:12px;}
 
+.add-note-lnk {background:url("../img/icon.png") no-repeat -100px -20px; padding-left:25px; font-size:14px; font-weight:bold; text-shadow:1px 1px black;}
+
 .header {height:30px; color:white; overflow:hidden; position:absolute; width:100%; box-shadow:2px 1px 3px #A3A3A3; background:url("../img/hd_bg.png") repeat-x;}
 .header a {color:white;}
 
-.logo {float:right; margin-right:10px; line-height:30px; text-transform:uppercase;}
+.logo {float:right; margin:2px 10px 0 0; line-height:30px; text-transform:uppercase;}
 .logo a {color:#fff; background:url("../img/logo.png") no-repeat 0 2px; padding-left:24px; display:block; font-size:18px}
 .container {height:100%; overflow:hidden;}
 
-.sidebar, .data-list, .content {height:100%; padding-top:32px}
+.shortcut {padding:0 0 0 10px;}
+.shortcut li {float:left; line-height:30px;}
+
+.sidebar, .data-collection, .content {height:100%; padding-top:30px}
 .container {height:100%; overflow:hidden}
 .sidebar {width:200px; float:left; background:url("../img/sbg.png");}
-.data-list {float:left; width:300px; border-right:1px solid #ccc; box-shadow:-1px 0 4px #BBB}
-.data-list h2,
-.content h2 {background-color:#ECF1F3; font-size:18px; line-height:38px; padding:0 0.5em; color:#787A86; box-shadow:0px 1px 5px #ddd; border-bottom:1px solid white;}
-.content {float:left; border-left:1px solid #eee;}
+.data-collection {float:left; width:300px; border-right:1px solid #ccc; box-shadow:-1px 0 4px #BBB; background-color:#F7FAFC;}
+.data-collection .cap,
+.content .cap {border-bottom:1px solid #E6E6E6; height:40px; background-color:white}
+.content .cap {border-bottom:1px solid #eee;}
+.data-collection .cap h2,
+.content .cap h2 {font-size:14px; line-height:40px; color:#787A86; float:left; padding-left:1em;}
+.content .cap h2 {font-size:17px;}
+.data-collection .cap .ord-lst {margin:10px 10px 0 188px;}
 
-.search {padding:3px; margin-bottom:10px;}
+.content .cap .op-list {float:right; margin:10px 10px 0 10px;}
+.content .main {padding:10px; width:500px; font-size:14px; line-height:1.75em; color:#444}
+
+.data-collection .data-list li {padding:10px; border-bottom:1px solid #eee; cursor:pointer}
+.data-collection .data-list li:hover {background-color:white;}
+.data-collection .data-list .ti {font-size:14px; font-weight:bold; display:block;}
+.data-collection .data-list .con {display:block; color:gray; padding:5px 0;}
+.data-collection .data-list .date {display:block; text-align:right; color:#aaa}
+
+.ord-lst {color:gray; position:absolute;}
+.ord-lst dt {display:block; text-indent:-9999em; margin-left:71px; width:35px; height:20px; background:url("../img/icon2.png") no-repeat -78px -260px; cursor:pointer;}
+.ord-lst dd {display:block; background-color:white; border:1px solid #ddd; margin-top:-1px; width:80px; padding:0.5em 1em; clear:both; cursor:pointer;}
+.ord-lst dt:hover {background-position:-78px -280px; background-color:#ddd;}
+.ord-lst dd {display:none;}
+.ord-lst dd:hover {background-color:#eee;}
+.ord-lst:hover dd {display:block}
+.ord-lst:hover dt {background-color:#ddd;}
+
+.content {float:left}
+
+.search {padding:10px 3px 3px; margin-bottom:10px;}
 .search .txt {width:160px; background:url("../img/icon.png") -98px -81px white; border-radius:12px; padding:2px 5px 2px 20px;}
 .search .txt:focus {}
 .search .search-btn {display:none;}
@@ -30,9 +59,9 @@ a {color:#444; text-decoration:none;}
 .sidebar dd {height:22px; border-top:1px solid white; border-bottom:1px solid #ddd; cursor:pointer; padding:2px 5px; text-shadow:1px 1px white;}
 .sidebar dd:hover {background-color:#fefefe}
 
-.sidebar dd .add-btn {display:none;}
-.sidebar dd:hover .add-btn:hover {background-color:#345; color:white; text-shadow:none;}
-.sidebar dd:hover .add-btn {display:inline-block; float:right; background-color:#ccc; color:gray; padding:2px 5px; margin-top:3px; font-weight:normal; font-size:12px; line-height:12px; border-radius:10px;}
+.sidebar .add-btn {display:none;}
+.sidebar dt:hover .add-btn,
+.sidebar dd:hover .add-btn {display:inline-block; float:right; background-color:#345; color:white; padding:2px 5px; margin-top:3px; font-weight:normal; font-size:12px; line-height:12px; border-radius:10px; text-shadow:none;}
 
 .sidebar dd:last-child {border-bottom:none}
 .sidebar dd .cnt {display:inline-block; float:right; background-color:#ccc; color:gray; padding:2px 5px; margin-top:3px; font-weight:normal; font-size:12px; line-height:12px; border-radius:10px;}
