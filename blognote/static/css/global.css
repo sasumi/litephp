@@ -1,17 +1,44 @@
 #logo {display:none;}
 html {background-color:white;}
 html, body, .page {height:100%;}
-body {font-family:Microsoft Yahei, Verdana,sans-serif}
+body {font-family:Microsoft Yahei, Verdana,sans-serif; font-size;13px;}
 a {color:#444; text-decoration:none;}
-.header {height:26px; overflow:hidden; display:none; position:absolute;; width:100%; box-shadow:2px 1px 3px #ccc}
+
+.txt {border:1px solid #ccc; border-left:1px solid #aaa; border-top:1px solid #aaa; padding:2px 3px; border-radius:3px; font-family:Microsoft Yahei, Verdana,sans-serif; font-size:12px;}
+
+.header {height:30px; color:white; overflow:hidden; position:absolute; width:100%; box-shadow:2px 1px 3px #A3A3A3; background:url("../img/hd_bg.png") repeat-x;}
+.header a {color:white;}
+
+.logo {float:right; margin-right:10px; line-height:30px; text-transform:uppercase;}
+.logo a {color:#fff; background:url("../img/logo.png") no-repeat 0 2px; padding-left:24px; display:block; font-size:18px}
 .container {height:100%; overflow:hidden;}
 
-.sidebar, .data-list, .content {height:100%;}
-.sidebar {width:200px; float:left; background:url("../img/sbg.png"); box-shadow:2px 1px 4px #bbb; }
-.data-list {float:left; width:300px; border-left:1px solid #eee; border-right:1px solid #ccc;}
+.sidebar, .data-list, .content {height:100%; padding-top:32px}
+.container {height:100%; overflow:hidden}
+.sidebar {width:200px; float:left; background:url("../img/sbg.png");}
+.data-list {float:left; width:300px; border-right:1px solid #ccc; box-shadow:-1px 0 4px #BBB}
+.data-list h2,
+.content h2 {background-color:#ECF1F3; font-size:18px; line-height:38px; padding:0 0.5em; color:#787A86; box-shadow:0px 1px 5px #ddd; border-bottom:1px solid white;}
 .content {float:left; border-left:1px solid #eee;}
 
-.sidebar dt {height:22px; background:url("../img/nav_rpt.png") repeat-x; border-top:1px solid #E0E0E0; border-bottom:#bec0be; padding:2px 5px;}
-.sidebar dd {height:22px; border-top:1px solid white; border-bottom:1px solid #ddd; cursor:pointer; padding:2px 5px;}
+.search {padding:3px; margin-bottom:10px;}
+.search .txt {width:160px; background:url("../img/icon.png") -98px -81px white; border-radius:12px; padding:2px 5px 2px 20px;}
+.search .txt:focus {}
+.search .search-btn {display:none;}
+
+.sidebar dt {height:22px; background:url("../img/nav_rpt.png") repeat-x; border-top:1px solid #E0E0E0; border-bottom:#bec0be; padding:2px 5px; font-weight:bold; color:#aaa;}
+.sidebar dd {height:22px; border-top:1px solid white; border-bottom:1px solid #ddd; cursor:pointer; padding:2px 5px; text-shadow:1px 1px white;}
 .sidebar dd:hover {background-color:#fefefe}
-.sidebar dd:last-child {border-bottom:none};
+
+.sidebar dd .add-btn {display:none;}
+.sidebar dd:hover .add-btn:hover {background-color:#345; color:white; text-shadow:none;}
+.sidebar dd:hover .add-btn {display:inline-block; float:right; background-color:#ccc; color:gray; padding:2px 5px; margin-top:3px; font-weight:normal; font-size:12px; line-height:12px; border-radius:10px;}
+
+.sidebar dd:last-child {border-bottom:none}
+.sidebar dd .cnt {display:inline-block; float:right; background-color:#ccc; color:gray; padding:2px 5px; margin-top:3px; font-weight:normal; font-size:12px; line-height:12px; border-radius:10px;}
+.sidebar dd:hover .cnt {display:none;}
+
+.sidebar .all-catalog dd {border:none; font-weight:bold;}
+.sidebar .all-catalog a {color:#003a5f;}
+.sidebar .all-catalog i {display:inline-block; width:16px; height:16px; float:left; background:url("../img/icon.png") no-repeat -62px -42px; margin:1px 2px 0 0;}
+.sidebar .catalog .current {background-color:white;}
