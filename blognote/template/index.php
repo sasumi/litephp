@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-	<html>
-		<head>
-			<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-			<title>Note#</title>
-			<?php echo css('reset.css', 'global.css', 'index.css');?>
-		</head>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+		<title>Note#</title>
+		<?php echo css('reset.css', 'global.css');?>
+		<?php echo js('http://localhost/ysl/source/ysl.base.js');?>
+	</head>
 	<body>
 		<div class="page">
 		<div class="header">
@@ -27,42 +28,33 @@
 
 				<dl class="all-catalog">
 					<dd>
-						<a href=""><i></i>All Notes</a>
-						<span class="cnt">12</span>
+						<a href="<?php echo url();?>"><i></i>All Notes</a>
+						<span class="cnt"><?php echo count($note_list);?></span>
 					</dd>
 				</dl>
 
 				<dl class="catalog">
 					<dt>
 						<span>Catalog</span>
-						<a href="" class="add-btn">edit</a>
+						<a href="<?php echo url('catalog');?>" rel="pop" title="catalog" class="add-btn">edit</a>
 					</dt>
+					<?php foreach($catalog_list as $catalog):?>
 					<dd>
-						<a href="">Work</a>
-						<span class="cnt">0</span>
-						<a href="" class="add-btn">edit</a>
+						<a href="<?php echo url('catalog/edit', array('id'=>$catalog['id']));?>"><?php echo $catalog['name']?></a>
+						<span class="cnt"><?php echo $catalog['count']?></span>
+						<a href="<?php echo url('catalog/edit', array('id'=>$catalog['id']));?>" class="add-btn">edit</a>
 					</dd>
-					<dd class="current">
-						<a href="">Professional</a>
-						<span class="cnt">12</span>
-						<a href="" class="add-btn">edit</a>
-					</dd>
-					<dd>
-						<a href="">Javascript</a>
-						<span class="cnt">123</span>
-						<a href="" class="add-btn">edit</a>
-					</dd>
+					<?php endforeach;?>
 				</dl>
 
 				<dl class="todo-list">
-					<dt>
-						<span>Tag</span>
-						<a href="" class="add-btn">edit</a>
-					</dt>
-					<dd><a href="">Javascript</a></dd>
-					<dd><a href="">CSS</a></dd>
-					<dd><a href="">Image</a></dd>
-					<dd><a href="">Uploader</a></dd>
+					<dt><span>Tag</span></dt>
+					<?php foreach($tag_list as $tag=>$count):?>
+					<dd>
+						<a href="<?php echo url(null, array('tag'=>urlencode($tag)));?>"><?php echo $tag;?></a>
+						<span class="cnt"><?php echo $count;?></span>
+					</dd>
+					<?php endforeach;?>
 				</dl>
 
 				<dl class="other-fun">
@@ -108,5 +100,6 @@
 			</div>
 		</div>
 	</div>
+	<?php echo js('global.js');?>
 </body>
 </html>

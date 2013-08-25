@@ -56,16 +56,17 @@ a {color:#444; text-decoration:none;}
 .search .search-btn {display:none;}
 
 .sidebar dt {height:22px; background:url("../img/nav_rpt.png") repeat-x; border-top:1px solid #E0E0E0; border-bottom:#bec0be; padding:2px 5px; font-weight:bold; color:#aaa;}
-.sidebar dd {height:22px; border-top:1px solid white; border-bottom:1px solid #ddd; cursor:pointer; padding:2px 5px; text-shadow:1px 1px white;}
+.sidebar dd {height:22px; border-top:1px solid white; border-bottom:1px solid #ddd; padding:2px 5px; text-shadow:1px 1px white;}
+.sidebar a:hover {text-decoration:underline;}
 .sidebar dd:hover {background-color:#fefefe}
 
-.sidebar .add-btn {display:none;}
-.sidebar dt:hover .add-btn,
-.sidebar dd:hover .add-btn {display:inline-block; float:right; background-color:#345; color:white; padding:2px 5px; margin-top:3px; font-weight:normal; font-size:12px; line-height:12px; border-radius:10px; text-shadow:none;}
+.catalog .add-btn {display:none;}
+.catalog dt:hover .add-btn,
+.catalog dd:hover .add-btn {display:inline-block; float:right; background-color:#345; color:white; padding:2px 5px; margin-top:3px; font-weight:normal; font-size:12px; line-height:12px; border-radius:10px; text-shadow:none;}
 
 .sidebar dd:last-child {border-bottom:none}
 .sidebar dd .cnt {display:inline-block; float:right; background-color:#ccc; color:gray; padding:2px 5px; margin-top:3px; font-weight:normal; font-size:12px; line-height:12px; border-radius:10px;}
-.sidebar dd:hover .cnt {display:none;}
+.catalog dd:hover .cnt {display:none;}
 
 .sidebar .all-catalog dd {border:none; font-weight:bold;}
 .sidebar .all-catalog a {color:#003a5f;}
