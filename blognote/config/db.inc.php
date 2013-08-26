@@ -1,8 +1,9 @@
 <?php
 return array(
-	'host' => 'localhost',
-	'user' => 'root',
-	'password' => '123456',
+	'host' => dirname(__FILE__).'./../data/note.db',
+	'user' => '',
+	'password' => '',
 	'database' => 'blognote',
-	'charset' => 'utf8'
+	'charset' => 'utf8',
+	'driver' => 'sqlite'
 );

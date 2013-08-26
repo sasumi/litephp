@@ -1,17 +1,23 @@
 <?php
 include 'config/app.inc.php';
-$catalog_list = db_get_page('SELECT * FROM `catalog`');
-$catalog_list = array_group($catalog_list, 'id', true);
+$tmp = db_get_page('SELECT * FROM `catalog`');
+$catalog_list = array();
+foreach($tmp as $item){
+	$catalog_list[$item['name']] = 0;
+}
 
 $note_list = db_get_page('SELECT * FROM `note`');
 $note_list = array_group($note_list, 'id', true);
 
 $tag_list = array();
 foreach($note_list as $key=>$note){
-	$tags = explode(',',$note['tag']);
+	$tags = explode(',',$note['tags']);
 	foreach($tags as $tag){
-		$tag_list[trim($tag)] += 1;
+		if(trim($tag)){
+			$tag_list[trim($tag)] += 1;
+		}
 	}
-	$catalog_list[$note['catalog_id']]['count'] += 1;
+	$catalog_list[$note['catalog']] += 1;
 }
+
 include tpl('index.php');

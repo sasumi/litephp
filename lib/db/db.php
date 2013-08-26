@@ -50,14 +50,15 @@ function db_connect($reconect=false, $config=null){
 	$config = $config ?: db_get_config();
 	$conn = null;
 
-	$conn = new PDO(
-		"$config[driver]:dbname=$config[database];host=$config[host]".($config['charset'] ? ";charset=$config[charset]":""),
-		$config['user'],
-		$config['password']
-	);
+	if($config['driver'] == 'sqlite'){
+		$dns = 'sqlite:'.$config['host'];
+	} else {
+		$dns = "$config[driver]:dbname=$config[database];host=$config[host]";
+		$dns .= $config['charset'] ? ";charset=$config[charset]":"";
+	}
 
+	$conn = new PDO($dns, $config['user'], $config['password']);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 	$__DB_CONNECTION__ = $conn;
 	return $conn;
 }

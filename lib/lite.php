@@ -31,7 +31,7 @@ include 'file.php';
  * @return string
 **/
 function tpl($file_name=''){
-	$file_name = PAGE == 'index' ? PAGE.'.php' : PAGE.'_'.ACTION.'.php';
+	$file_name = $file_name ?: (PAGE == 'index' ? PAGE.'.php' : PAGE.'_'.ACTION.'.php');
 	return TPL_PATH.strtolower($file_name);
 }
 

@@ -38,11 +38,11 @@
 						<span>Catalog</span>
 						<a href="<?php echo url('catalog');?>" rel="pop" title="catalog" class="add-btn">edit</a>
 					</dt>
-					<?php foreach($catalog_list as $catalog):?>
+					<?php foreach($catalog_list as $name=>$count):?>
 					<dd>
-						<a href="<?php echo url('catalog/edit', array('id'=>$catalog['id']));?>"><?php echo $catalog['name']?></a>
-						<span class="cnt"><?php echo $catalog['count']?></span>
-						<a href="<?php echo url('catalog/edit', array('id'=>$catalog['id']));?>" class="add-btn">edit</a>
+						<a href="<?php echo url('index', array('catalog'=>$name));?>"><?php echo $name?></a>
+						<span class="cnt"><?php echo $count?></span>
+						<a href="<?php echo url('catalog/edit', array('catalog'=>$name));?>" class="add-btn">edit</a>
 					</dd>
 					<?php endforeach;?>
 				</dl>
