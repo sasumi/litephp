@@ -1,8 +1,8 @@
 <?php
 $PAGE_CLASS .= 'page-user-invite';
 $PAGE_HEAD .= css('user.css');
-include 'header.inc.php';
-include 'usernav.inc.php';
+include 'inc/header.inc.php';
+include 'inc/usernav.inc.php';
 ?>
 <div>
 	<h3>邀请列表</h3>
@@ -29,6 +29,6 @@ include 'usernav.inc.php';
 
 	<h3>邀请链接</h3>
 	<input type="text" value="http://resume.com/invite?id=2dadc3" id="" class="txt invite-link" readonly>
-	<input type="button" value="复制" class="btn">
+	<input type="button" value="复制" class="btn btn-strong">
 </div>
-<?php include 'footer.inc.php'?>
+<?php include 'inc/footer.inc.php'?>

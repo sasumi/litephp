@@ -12,6 +12,7 @@ if(ACTION == 'register'){
 
 	if(is_post()){
 		$ori_info = posts(null, array(), false);
+
 		try {
 			$data = posts(null, array(
 				'name' => array(
@@ -35,14 +36,21 @@ if(ACTION == 'register'){
 				)
 			));
 			unset($data['password2']);
-
-			$user = new User($data);
-			$add_result = $user->save();
+			$exists = DBM::instance('user')->find('name=?', $data['name']);
+			if($exists){
+				HtmlExt::showIframeMsg('用户名已存在，请重新输入');
+				die;
+			}
+			$add_result = DBM::instance('user')->create($data);
 			if($add_result){
 				Access::init()->setLoginInfo($data);
+				HtmlExt::showIframeMsg('用户注册成功', 'succ');
+			} else {
+				HtmlExt::showIframeMsg('系统正忙，请稍后重试', 'err');
 			}
 		} catch(FilteException $ex){
 			$err_msg = $ex->getOneMsg();
+			HtmlExt::showIframeMsg($err_msg, 'err');
 		}
 	}
 }

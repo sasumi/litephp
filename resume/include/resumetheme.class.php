@@ -3,10 +3,6 @@ if(!defined(DS)){
 	define(DS, DIRECTORY_SEPARATOR);
 }
 
-if(!defined(RESUME_CONFIG_PATH)){
-	define(RESUME_CONFIG_PATH, __DIR__.DS);
-}
-
 class ResumeTheme {
 	private static $instance;
 	private $themes_keys = array('green', 'base', 'simp');
@@ -17,9 +13,10 @@ class ResumeTheme {
 	}
 
 	private function loadThemes(){
-		$THEME_IMG_URL = 'http://localhost/litephp/resume/static/theme/';
+		$path = Q::ini('app_config/THEME_CONFIG_DIR');
+		$THEME_IMG_URL = Q::ini('app_config/THEME_IMG_URL');
 		foreach($this->themes_keys as $k){
-			$file = RESUME_CONFIG_PATH.'themes'.DS.$k.'.inc.php';
+			$file = $path.$k.'.inc.php';
 			if(file_exists($file)){
 				$theme = include $file;
 				$theme['css'] = str_replace('{$THEME_IMG_URL}', $THEME_IMG_URL, $theme['css']);

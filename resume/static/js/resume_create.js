@@ -1,4 +1,9 @@
 YSL.use('widget.Popup,widget.Tip,widget.Dragdrop,widget.Animate', function(Y, POP, Tip, DD, ANI){
+	/**
+	 * 删除模块
+	 * @param  {String} mod_id
+	 * @param  {Function} succCb 确认成功回调
+	 */
 	var delMod = function(mod_id, succCb){
 		succCb = succCb || Y.emptyFn;
 		var pop = new POP({
@@ -21,44 +26,55 @@ YSL.use('widget.Popup,widget.Tip,widget.Dragdrop,widget.Animate', function(Y, PO
 		pop.show();
 	};
 
+	/**
+	 * 隐藏模块
+	 * @param  {String} mod_id
+	 */
 	var hideMod = function(mod_id){
 		findModDom(mod_id).hide();
 	};
 
+	/**
+	 * 显示模块
+	 * @param  {String} mod_id
+	 */
 	var showMod = function(mod_id){
 		findModDom(mod_id).show();
 	};
 
+	/**
+	 * 查找模块
+	 * @param  {String} mod_id
+	 * @return {DOM}
+	 */
 	var findModDom = function(mod_id){
-		if(mod_id == 'conver'){
-			return Y.dom.one('.resume-conver');
+		if(mod_id == 'cover'){
+			return Y.dom.one('.resume-cover');
 		}
 		return Y.dom.one('.resume-mod-'+mod_id);
 	}
 
-	var changeTheme = function(theme_id){
+	/**
+	 * 设置主题
+	 * @param  {String} theme_id
+	 */
+	var setTheme = function(theme_id){
 		var resume = Y.dom.one('.resume');
 		var last_theme_id = resume.getAttr('data-theme-id');
 		resume.removeClass('resume-theme-'+last_theme_id);
 		resume.addClass('resume-theme-'+theme_id);
 		resume.setAttr('data-theme-id',theme_id);
+		Y.dom.one('input[name=theme]').setValue(theme_id);
 	}
 
-	var changeAvatar = function(orgSrc){
-		var url = Y.net.mergeCgiUri(CHANGE_AVA_URL, {org_src: orgSrc});
-		var p = new POP({
-			title: '设置头像',
-			content: {src: url},
-			buttons: [{name:'关闭'}],
-			width: 400,
-			height: 160
-		});
-		p.show();
-	};
-
 	//修改照片
+	Y.dom.one('.resume-avatar img').on('load', function(){
+		R.scaleAvaImg(this.getDomNode());
+	});
 	Y.dom.one('.resume').delegate('.resume-avatar .btn', 'click', function(){
-		changeAvatar(this.parent().one('img').getAttr('src'));
+		R.changeAvatar(function(src){
+			Y.dom.one('.resume-avatar img').setAttr('src', src);
+		});
 	});
 
 	//模版选择
@@ -128,8 +144,8 @@ YSL.use('widget.Popup,widget.Tip,widget.Dragdrop,widget.Animate', function(Y, PO
 	Y.dom.one('.resume').delegate('.resume-mod-append-instance-btn', 'click', function(){
 		Y.event.preventDefault();
 		var col = this.parent('fieldset');
-		var con = col.one('.resume-mod-con');
-		con.parent().getDomNode().insertBefore(con.getDomNode().cloneNode(true), con.getDomNode());
+		var last = col.one('.resume-mod-con').last();
+		last.clone(true).insertAfter(last);
 	});
 
 	//删除子栏目
@@ -149,6 +165,8 @@ YSL.use('widget.Popup,widget.Tip,widget.Dragdrop,widget.Animate', function(Y, PO
 		}
 	});
 
+	//自动增高textarea
+
 	//column drag
 	Y.dom.all('.column-manager .order-drag').on('mousedown', function(){
 		var dobj = DD.singleton(this, {proxy: this.parent()});
@@ -156,7 +174,8 @@ YSL.use('widget.Popup,widget.Tip,widget.Dragdrop,widget.Animate', function(Y, PO
 	});
 
 	Y.dom.all('.column-manager .ti').on('mousedown', function(){
-		var dobj = DD.singleton(this, {proxy: this.parent()});
+		Y.event.preventDefault();
+		var dobj = DD.singleton(this, {proxy: this.parent(), container:this.parent('form')});
 		dobj.onMoving = function(e){
 			var x = e.clientX, y = e.clientY;
 			console.log('moving',x, y);
@@ -201,7 +220,7 @@ YSL.use('widget.Popup,widget.Tip,widget.Dragdrop,widget.Animate', function(Y, PO
 	Y.dom.one('.cover-setting').delegate('li[rel=resume-change-theme-btn]', 'click', function(){
 		Y.event.preventDefault();
 		var theme_id = this.getAttr('data-theme-id');
-		changeTheme(theme_id);
+		setTheme(theme_id);
 		this.parent().all('li').removeClass('current');
 		this.addClass('current');
 	});

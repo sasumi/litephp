@@ -4,23 +4,24 @@
 .page-user-payment .container-wrap,
 .page-user-invite .container-wrap {border:none;}
 .container-wrap {background:none; box-shadow:none}
-.container {border:1px solid #ddd; border-radius:5px}
-.left-col {padding-left:10px;}
-.right-col {width:260px; padding-right:10px;}
+.container {}
+.left-col {padding-left:10px; float:left; width:200px;}
+.right-col {padding-right:10px; float:left; width:748px; border:1px solid #ddd; border-radius:5px; background-color:white; padding:15px}
+.right-col .cap {font-size:28px; padding:0px 0 10px 0; color:gray; border-bottom:1px solid #ddd;}
 
-.usernav {font-size:14px; width:100%; background-color:#F2F2F2; border-bottom:1px solid #ddd; border-radius:8px 8px 0 0; height:37px;}
-.usernav li {float:left}
-.usernav .current {background-color:white; border:1px solid #ddd; border-top:none; border-bottom:3px solid white}
-.usernav li:first-child {border-left:none; border-radius:8px 0 0 0}
-.usernav a {display:block; padding:8px 20px}
+.usernav {font-size:14px; border:1px solid #ddd; margin-bottom:10px; padding-bottom:10px; background-color:white; border-radius:5px; }
+.usernav dt {font-size:18px; padding:10px; color:#aaa;}
+.usernav dd {margin:0 10px;}
+.usernav dd a {display:block; padding:8px 0}
+.usernav .current {font-weight:bold;}
 
 .page-user-myresume {}
-.page-user-myresume .tb {line-height:30px}
+.page-user-myresume .tb {line-height:30px; float:right; margin-top:-43px;}
 .page-user-myresume .batch-tb {line-height:30px; margin-top:5px; padding:2px 0; background-color:#eee; display:none}
 .page-user-myresume .batch-tb a {margin-left:1em; text-decoration:underline}
 .myresume-list li {border-bottom:1px solid #eee; padding:10px 0; overflow:hidden;}
 .myresume-list li:last-child {border:none;}
-.myresume-list h2 {font-size:18px; margin-bottom:10px; text-shadow:1px 1px 1px #eee}
+.myresume-list h2 {font-size:18px; font-weight:normal; margin-bottom:10px; text-shadow:1px 1px 1px #eee}
 .myresume-list .info {color:gray; float:left}
 .myresume-list .abs {line-height:20px; font-size:14px; padding-bottom:10px}
 .myresume-list .op {float:right; color:#ccc; }
@@ -29,18 +30,18 @@
 .page-user-myresume-batch-mode .batch-tb {display:block}
 .page-user-myresume-batch-mode h2 input {display:inline-block;}
 
-.user-info-frm {font-size:14px}
-.user-info-frm dl {margin:10px 0}
-.user-info-frm dt {width:80px}
-.user-info-frm dd {margin-left:90px;}
-.user-info-frm input.txt {width:300px}
-.user-info-frm input.s-txt {width:80px;}
+.user-common-frm {font-size:14px}
+.user-common-frm dl {margin:10px 0}
+.user-common-frm dt {width:80px}
+.user-common-frm dd {margin-left:90px;}
+.user-common-frm input.txt {width:300px}
+.user-common-frm input.s-txt {width:80px;}
 
-.page-user-info .avatar {padding:10px; width:150px; text-align:center}
-.page-user-info .avatar a {display:block; margin-bottom:10px}
+.page-user-info .avatar {padding:10px; width:120px; text-align:center; float:right;}
+.page-user-info .avatar a {display:block; margin-bottom:10px; border-radius:5px;}
 
-.page-user-payment .con {padding:10px;}
-.page-user-payment .con dl {margin:3px 0 5px 0; padding:7px 0; background-color:#F2F2F2;}
+.page-user-payment .con {padding:10px; font-size:14px;}
+.page-user-payment .con dl {margin:3px 0 5px 0; padding:7px 0}
 .page-user-payment .con dt {float:left; width:100px; font-weight:bold; padding-left:10px}
 .page-user-payment .con dd {margin-left:110px}
 .page-user-payment .con li {border-bottom:1px dotted #ddd; padding-bottom:3px; margin-bottom:5px}

@@ -10,7 +10,7 @@
 		<fieldset>
 			<p>
 				关键字：<input type="text" name="" class="txt"/>
-				<input type="button" value="搜索" class="btn">
+				<input type="button" value="搜索" class="btn btn-strong">
 				<a href="javascript:;" onclick="document.getElementById('mc').className = ''; return false;" class="more-con-link">更多条件</a>
 			</p>
 			<p class="none" id="mc">
@@ -35,7 +35,7 @@
 		<li>
 			<h3 class="ti">2012年7月 — 至今  苏建房地产公司 职业顾问</h3>
 			<p class="op">
-				<input type="button" value="插入" class="btn b-btn"/>
+				<input type="button" value="插入" class="btn btn-strong"/>
 			</p>
 			<p class="con">
 				负责所属区域楼盘的销售，热情接待客户，为客户分析市场的信息，拓展客户群并保持良好沟通，跟进房屋的买卖交易过户，银行按揭等售后服务情况，完成公司所下达销售任务。具有良好的销售技巧，较强的协调能力、处事能力，工作责任心和团队合作精神，成绩显著。月度综合排名前三甲，销售能力得到领导和同事的肯定。

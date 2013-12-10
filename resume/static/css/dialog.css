@@ -1,0 +1,30 @@
+body {font-family:Microsoft Yahei; font-size:12px; color:#333; overflow-y:scroll}
+html {background:white;}
+
+a {text-decoration:none; color:#567;}
+a:hover {text-decoration:underline}
+
+input.txt, textarea.txt {border:1px solid #eee; border-top-color:#ddd; border-left-color:#ddd; font-size:14px; padding:2px 2px; border-radius:3px}
+input.btn, a.btn, span.btn {border:1px solid #ccc; border-top-color:#ddd; border-left-color:#ddd; font-size:14px; padding:2px 10px; border-radius:3px; cursor:pointer; background-color:#fff; box-shadow:1px 1px 1px #ddd; text-shadow:1px 1px 1px #eee;}
+input.b-btn, a.b-btn, span.b-btn {padding:8px 15px}
+
+.frm {margin-bottom:10px;}
+.frm fieldset {padding:10px; border:none}
+.frm legend {font-size:16px; font-weight:bold; margin:5px 0 -5px 0 !important; margin:0 0 0 -4px;}
+.frm dl {padding:3px;}
+.frm dt {float:left; padding:7px 0 0; width:90px; text-align:right;}
+.frm dd {padding:3px; margin-left:100px}
+.frm span.tip {color:#aaa; margin-left:0.5em}
+.frm span.warn {color:red; margin-left:0.5em; padding-left:18px; background:url("../img/warn.gif") no-repeat left center; }
+.frm span.required_star {color:red; font-weight:bold; font-size:18px; padding:0 5px; vertical-align:middle;}
+.frm .field-desc {color:#aaa; margin-top:5px}
+.frm .radio {vertical-align:middle}
+.frm dd label {margin-right:1em;}
+form.readonly input.txt {cursor:default; border:none;}
+
+.tbl {border-collapse:collapse; border-spacing:0; border:1px solid #ccc; font-size:13px; margin-bottom:20px}
+.tbl caption {text-align:left; padding:3px;}
+.tbl thead tr {border-bottom:1px solid #ddd; border-top:1px solid #ccc}
+.tbl th {color:#555; background-color:#eee; padding:3px 7px; text-shadow:1px 1px 1px #eee; text-align:left; text-transform:capitalize;}
+.tbl tbody tr {border-bottom:1px dotted #ccc}
+.tbl td {padding:10px 7px;}

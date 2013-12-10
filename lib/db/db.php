@@ -1,6 +1,6 @@
 <?php
-include 'db_query.php';
-include 'dborm.class.php';
+include 'db_query.class.php';
+include 'dbm.class.php';
 $__DB_CONNECTION__;
 $__DB_QUERY_CACHE__;
 
@@ -165,6 +165,16 @@ function db_get_page($sql, $pager=null, $conn=null){
 		return db_fetch_all($rs);
 	}
 	return array();
+}
+
+/**
+ * get all
+ * @param  String $sql  
+ * @param  Resource $conn 
+ * @return mix       
+ */
+function db_get_all($sql, $conn=null){
+	return db_get_page($sql, null, $conn);
 }
 
 /**

@@ -3,23 +3,23 @@ if(!defined(DS)){
 	define(DS, DIRECTORY_SEPARATOR);
 }
 
-if(!defined(RESUME_CONFIG_PATH)){
-	define(RESUME_CONFIG_PATH, __DIR__.DS);
-}
-
 class ResumeMod {
 	private static $instance;
-	private $mods_keys = array('conver', 'career', 'education', 'info', 'intro', 'skill', 'title');
+	private $mods_keys;
 	private $mods = array();
+	private $path = '';
 
 	private function __construct($config){
+		$this->path = Q::ini('app_config/TEMPLATE_CONFIG_DIR');
+		$this->mods_keys = $this->getAllModsKey();
 		$this->loadMods();
 	}
 
 	private function loadMods(){
 		foreach($this->mods_keys as $k){
-			$format_file = RESUME_CONFIG_PATH.'mods'.DS.$k.DS.'format.inc.php';
-			$template_file = RESUME_CONFIG_PATH.'mods'.DS.$k.DS.'template.inc.php';
+			$format_file = $this->path.$k.DS.'format.inc.php';
+			$template_file = $this->path.$k.DS.'template.inc.php';
+
 
 			if(file_exists($format_file)){
 				$mod = include $format_file;
@@ -34,12 +34,34 @@ class ResumeMod {
 		}
 	}
 
+	private function getAllModsKey(){
+		$file_list = $this->getFileList($this->path);
+		return $file_list;
+	}
+
 	public static function init($config=array()){
 		if(!self::$instance){
 			self::$instance = new self($config);
 		}
 		return self::$instance;
 	}
+
+	private function getFileList($dir) {
+	    $file_list = array();
+	    if(false != ($handle = opendir($dir))) {
+	        $i=0;
+	        while(false !== ($file = readdir($handle))) {
+	            //去掉"“.”、“..”以及带“.xxx”后缀的文件
+	            if ($file != "." && $file != ".."&&!strpos($file,".")) {
+	                $file_list[$i]=$file;
+	                $i++;
+	            }
+	        }
+	        closedir ($handle);
+	    }
+	    return $file_list;
+	}
+
 
 	public function getAllMods(){
 		return $this->mods;
@@ -58,6 +80,11 @@ class ResumeMod {
 			}
 		}
 		return $css;
+	}
+
+	public function parseModValue($mod_id, $data_string){
+		$mod = $this->getMod($mod_id);
+		$tmp = json_decode($data_string);
 	}
 
 	public function getAllTemplates(){

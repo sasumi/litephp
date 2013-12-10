@@ -1,45 +1,66 @@
-<?php include 'header.inc.php'?>
+<?php include 'inc/header.inc.php'?>
 <?php echo css('index.css')?>
 <div class="page-index">
 	<div class="left-col">
+
+		<div class="slide">
+			<ul>
+				<li><a href=""><?php echo img('slide/p2.png');?></a></li>
+				<li><a href=""><?php echo img('slide/p1.png');?></a></li>
+			</ul>
+			<span class="ctrl-left">left</span>
+			<span class="ctrl-right">right</span>
+		</div>
+		<script>
+			YSL.dom.one('.slide').on('mouseover', function(){
+				YSL.dom.one('.slide').addClass('slide-hover');
+			});
+			YSL.dom.one('.slide').on('mouseout', function(){
+				YSL.dom.one('.slide').removeClass('slide-hover');
+			});
+		</script>
+
 		<ul>
-			<li>最易用——几分钟量身订做一份专业简历</li>
-			<li>最专业——已成功为超过1500名会员获得面试和入职机会</li>
-			<li>最实用——精选3000份，覆盖50种岗位的优秀简历范本</li>
+			<li>最易用几分钟量身订做一份专业简历</li>
+			<li>最专业已成功为超过1500名会员获得面试和入职机会</li>
+			<li>最实用精选3000份，覆盖50种岗位的优秀简历范本</li>
 		</ul>
 		<p>
 			优秀的你，需要一份更优秀的简历。创造好机会，从创建好简历开始。 <a href="<?php echo url('resume/guide')?>">马上行动</a>
 		</p>
 
 		<form action="<?php echo url('resume/guide')?>">
-			<input type="submit" class="btn" value="马上去做（几分钟完成）"/>
+			<button type="submit" class="btn btn-strong" value="马上去做（几分钟完成）"><span>马上去做（几分钟完成）</span></button>
 		</form>
 
 		<h2>怎样才是好简历？</h2>
 		<ol>
-			<li><b>等于或优于个人能力</b>——卫生法学基础、医疗机构管理制度、执业医师、执业药师、执业护士管理法律制度、传染病防治法律制度、职业病防治法律制度、食品卫生法律制度</li>
-			<li><b>理解用人单位需求</b>——卫生法学基础、医疗机构管理制度、执业医师、执业药师、执业护士管理法律制度、传染病防治法律制度、职业病防治法律制度、食品卫生法律制度</li>
-			<li><b>理解用人单位需求</b>——卫生法学基础、医疗机构管理制度、执业医师、执业药师、执业护士管理法律制度、传染病防治法律制度、职业病防治法律制度、食品卫生法律制度</li>
-			<li><b>理解用人单位需求</b>——卫生法学基础、医疗机构管理制度、执业医师、执业药师、执业护士管理法律制度、传染病防治法律制度、职业病防治法律制度、食品卫生法律制度</li>
-			<li><b>理解用人单位需求</b>——卫生法学基础、医疗机构管理制度、执业医师、执业药师、执业护士管理法律制度、传染病防治法律制度、职业病防治法律制度、食品卫生法律制度</li>
+			<li><b>等于或优于个人能力</b>卫生法学基础、医疗机构管理制度、执业医师、执业药师、执业护士管理法律制度、传染病防治法律制度、职业病防治法律制度、食品卫生法律制度</li>
+			<li><b>理解用人单位需求</b>卫生法学基础、医疗机构管理制度、执业医师、执业药师、执业护士管理法律制度、传染病防治法律制度、职业病防治法律制度、食品卫生法律制度</li>
+			<li><b>理解用人单位需求</b>卫生法学基础、医疗机构管理制度、执业医师、执业药师、执业护士管理法律制度、传染病防治法律制度、职业病防治法律制度、食品卫生法律制度</li>
+			<li><b>理解用人单位需求</b>卫生法学基础、医疗机构管理制度、执业医师、执业药师、执业护士管理法律制度、传染病防治法律制度、职业病防治法律制度、食品卫生法律制度</li>
+			<li><b>理解用人单位需求</b>卫生法学基础、医疗机构管理制度、执业医师、执业药师、执业护士管理法律制度、传染病防治法律制度、职业病防治法律制度、食品卫生法律制度</li>
 		</ol>
 	</div>
 
 	<div class="right-col">
+		<?php if(!$current_user):?>
 		<form action="<?php echo url('user/register')?>" method="post" class="frm quick-register-frm">
-			<p>
-				<input type="text" name="name" placeholder="用户名" class="txt">
-			</p>
-			<p>
-				<input type="email" name="email" placeholder="保密邮箱" class="txt">
-			</p>
-			<p>
+			<div>
+				<input type="text" name="loginname" placeholder="用户名或邮箱" class="txt">
+			</div>
+			<div>
 				<input type="password" name="password" placeholder="登录密码" class="txt">
-			</p>
-			<p>
-				<input type="submit" value="马上注册" class="btn b-btn">
-			</p>
+			</div>
+			<div class="op">
+				<input type="submit" value="登录" class="btn btn-strong btn-login">
+				<a href="<?php echo url("user/register")?>" class="btn btn-strong btn-reg">注册</a>
+			</div>
+			<div class="getpasswd">
+				<a href="<?php echo url('passwd/get')?>">忘记密码了?</a>
+			</div>
 		</form>
+		<?php endif;?>
 
 		<p>
 			已精选<b>234</b>份优秀简历，<a href="<?php echo url('resume/demolist')?>">去看看</a>
@@ -56,4 +77,4 @@
 		<p>（来自简历大师淘宝用户的真实评价）</p>
 	</div>
 </div>
-<?php include 'footer.inc.php'?>
+<?php include 'inc/footer.inc.php'?>

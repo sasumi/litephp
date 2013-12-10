@@ -202,7 +202,7 @@ function lite(){
 	}
 
 	//bind include path
-	if(defined(INCLUDE_PATH)){
+	if(defined('INCLUDE_PATH')){
 		add_include_path(INCLUDE_PATH);
 	}
 

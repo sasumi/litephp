@@ -1,14 +1,14 @@
 <?php
 $PAGE_CLASS .= 'page-resume-guide';
 $PAGE_HEAD .= css('resume_guide.css').js('resume_guide.js');
-include 'header.inc.php';
+include 'inc/header.inc.php';
 ?>
 <div class="clearfix">
 	<div class="left-col">
 		<h3>查阅参考简历库</h3>
 		<form action="?" class="frm srch-frm">
 			<input type="text" name="" value="" class="txt" placeholder="请输入关键字"/>
-			<input type="submit" class="btn" value="过滤"/>
+			<input type="submit" class="btn btn-strong" value="过滤"/>
 		</form>
 		<form action="?" class="frm quick-index-frm">
 			<legend>快速索引</legend>
@@ -110,7 +110,7 @@ include 'header.inc.php';
 				<?php endfor;?>
 			</ul>
 		</div>
-		<form action="http://dashiwang.taobao.com.taobao.com/" class="tb-link"><input type="submit" class="btn" value="找专业作家代写（需要付费）"/></form>
+		<form action="http://dashiwang.taobao.com.taobao.com/" class="tb-link"><input type="submit" class="btn btn-strong" value="找专业作家代写（需要付费）"/></form>
 	</div>
 </div>
-<?php include 'footer.inc.php'?>
+<?php include 'inc/footer.inc.php'?>

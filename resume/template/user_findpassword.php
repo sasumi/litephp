@@ -1,7 +1,7 @@
 <?php
 $PAGE_CLASS .= 'page-user-findpassword';
 $PAGE_HEAD .= css('user.css');
-include 'header.inc.php';
+include 'inc/header.inc.php';
 ?>
 <div>
 	<h2>找回密码</h2>
@@ -16,4 +16,4 @@ include 'header.inc.php';
 		</fieldset>
 	</form>
 </div>
-<?php include 'footer.inc.php';?>
+<?php include 'inc/footer.inc.php';?>

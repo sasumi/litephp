@@ -1,7 +1,7 @@
 <?php
-define(ROUTE_MODE_NORMAL, 0);
-define(ROUTE_MODE_PATH, 1);
-define(ROUTE_MODE_REWRITE, 2);
+define('ROUTE_MODE_NORMAL', 0);
+define('ROUTE_MODE_PATH', 1);
+define('ROUTE_MODE_REWRITE', 2);
 
 /**
  * 获取path信息

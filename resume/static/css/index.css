@@ -1,11 +1,22 @@
-.container-wrap {background-color:#eee; border-top:1px solid white; box-shadow:0px 0px 1px gray;}
 .page-index {font-size:14px; overflow:hidden}
-.page-index ul {padding-bottom:10px;}
-.page-index ul li {list-style:disc inside; padding:2px 0}
-.page-index ol {padding:0 20px}
+.page-index ol {padding:0 20px; color:#555;}
 .page-index ol li {list-style:decimal outside; margin-bottom:10px}
+.page-index ol b {display:block; font-size:14px; color:#333; margin-bottom:3px;}
+
 .page-index p {padding:0.5em}
 .page-index h2 {margin:1em 0}
 
-.quick-register-frm .txt {width:233px; padding:5px 10px}
-.quick-register-frm .b-btn {width:253px; font-size:18px; font-weight:bold}
+.quick-register-frm {padding:5px 0; background-color:#E9E8FF; border-radius:4px}
+.quick-register-frm div {padding:5px 10px;}
+.quick-register-frm div.op {text-align:right;}
+.quick-register-frm .txt {width:220px; padding:5px 10px}
+.quick-register-frm .btn-login {width:117px;height:30px;}
+.quick-register-frm .btn-reg {width:97px;}
+.quick-register-frm .getpasswd{text-align:right;}
+
+.slide {height:150px; overflow:hidden; position:relative;}
+.slide .ctrl-right,
+.slide .ctrl-left {display:none; cursor:pointer; background:url("../img/photo_scan_layer-32.png") no-repeat 0 -45px; top:50%; right:0; width:27px; height:44px; line-height:150px; overflow:hidden; position:absolute; z-index:2; margin-top:-22px; margin-right: 10px;}
+.slide .ctrl-left {right:auto; left:10px; background-position:0 0;}
+.slide-hover .ctrl-left,
+.slide-hover .ctrl-right {display:block;}

@@ -1,6 +1,6 @@
 <?php
 add_hook('AFTER_APP_SHUTDOWN', function($time){
-	echo '<center style="color:#ccc">耗时 '.$time.'ms</center>';
+	// echo '<center style="color:#ccc">耗时 '.$time.'ms</center>';
 });
 
 add_hook('AFTER_APP_INIT', function(){
