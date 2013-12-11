@@ -41,6 +41,7 @@ if(ACTION == 'register'){
 				HtmlExt::showIframeMsg('用户名已存在，请重新输入');
 				die;
 			}
+			$data['salt'] = md5($data['password'].APP_SALT_KEY);
 			$add_result = DBM::instance('user')->create($data);
 			if($add_result){
 				Access::init()->setLoginInfo($data);
@@ -74,8 +75,8 @@ else if(ACTION == 'login'){
 					'require' => 'please input password'
 				)
 			));
-		} catch(Exception $ex){
-			//dump($ex);
+		} catch(FilteException $ex){
+			HtmlExt::showIframeMsg($ex->getOneMsg(), 'err');
 		}
 		$u = new User();
 		//$user = $u->findByName($data['name']);

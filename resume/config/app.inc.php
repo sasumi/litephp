@@ -5,4 +5,5 @@ define('ROUTE_MODE', 1);
 define('INCLUDE_PATH', CONFIG_PATH.'../include/');
 define('ADMIN_URL', 'http://localhost/litephp/resume/admin/');
 define('YSL_URL', 'http://localhost/ysl/source/ysl.base.js');
+define('APP_SALT_KEY', 'HELLO_RESUME');
 include CONFIG_PATH.'../../lib/lite.php';

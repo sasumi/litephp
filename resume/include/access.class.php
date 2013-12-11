@@ -21,13 +21,12 @@ class Access{
 		return $_SESSION[self::SESS_KEY];
 	}
 
-	public static function checkLogin($request, $page, $action){
+	public static function checkLogin(){
 		$ins = self::init();
 		if($info = $ins->getLoginInfo()){
-			dump($info, 1);
-		} else if($page != 'user' && $action != 'login' && $action != 'register'){
-			jump_to('user/login');
+			return $info;
 		}
+		return null;
 	}
 
 	public function logout(){

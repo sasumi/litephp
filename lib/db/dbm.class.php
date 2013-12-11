@@ -13,10 +13,6 @@ class DBM {
 		return new DBM($table, $pk);
 	}
 
-	public function setPrimaryKey($pk){
-		$this->db_pk = $pk;
-	}
-
 	public function create($data=null){
 		$this->data = $data ?: $this->data;
 		return db_insert($this->db_table, $this->data);
@@ -29,6 +25,7 @@ class DBM {
 		$args = array_slice(func_get_args(), 1);
 		$count = substr_count($statement, '?');
 
+		//TODO
 		for($i=0; $i<$count; $i++){
 			$statement = str_replace('?', "'".addslashes($args[$i])."'", $statement);
 		}
