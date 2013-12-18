@@ -5,10 +5,13 @@ include 'inc/header.inc.php';
 include 'inc/usernav.inc.php';
 ?>
 <div class="right-col">
-	<h2 class="cap">个人资料</h2>
-	<form action="<?php echo url('user/modify');?>" method="POST" class="frm user-common-frm" rel="iframe-form" onresponse="response">
+	<h2 class="cap">
+		个人资料
+	</h2>
+
+	<form action="<?php echo url('user/modify');?>" method="POST" class="frm user-common-frm view-state" data-trans='async' onresponse="response">
 		<div class="avatar">
-			<?php $avatar = Q::ini('app_config/UPLOAD_URL').($current_user['album'] ?: 'demo-avatar.jpg');?>
+			<?php $avatar = UPLOAD_URL.($login_user->album ?: 'avatar.jpg');?>
 			<a href="<?php echo img_url($avatar)?>" target="_blank" style="width:120px; height:120px; overflow:hidden;">
 				<?php echo img($avatar)?>
 			</a>
@@ -22,7 +25,7 @@ include 'inc/usernav.inc.php';
 					<label for="name">姓名</label>
 				</dt>
 				<dd>
-					<input type="text" name="name" id="name" value="<?php echo $current_user['name']?>" class="txt"/>
+					<input type="text" name="name" id="name" value="<?php echo $login_user->name?>" class="txt"/>
 				</dd>
 			</dl>
 			<dl>
@@ -30,7 +33,7 @@ include 'inc/usernav.inc.php';
 					<label for="email">邮箱</label>
 				</dt>
 				<dd>
-					<input type="text" name="email" id="email" value="<?php echo $current_user['email']?>" class="txt"/>
+					<input type="text" name="email" id="email" value="<?php echo $login_user->email?>" class="txt"/>
 				</dd>
 			</dl>
 			<dl>
@@ -38,7 +41,7 @@ include 'inc/usernav.inc.php';
 					<label for="mobile">手机</label>
 				</dt>
 				<dd>
-					<input type="text" name="mobile" id="mobile" value="<?php echo $current_user['mobile']?>" class="txt"/>
+					<input type="text" name="mobile" id="mobile" value="<?php echo $login_user->mobile?>" class="txt"/>
 				</dd>
 			</dl>
 			<dl>
@@ -46,7 +49,7 @@ include 'inc/usernav.inc.php';
 					<label for="ethnic">民族</label>
 				</dt>
 				<dd>
-					<input type="text" name="ethnic" id="ethnic" value="<?php echo $current_user['ethnic']?>" class="txt"/>
+					<input type="text" name="ethnic" id="ethnic" value="<?php echo $login_user->ethnic?>" class="txt"/>
 				</dd>
 			</dl>
 			<dl>
@@ -54,7 +57,7 @@ include 'inc/usernav.inc.php';
 					<label for="hometown">籍贯</label>
 				</dt>
 				<dd>
-					<input type="text" name="hometown" id="hometown" value="<?php echo $current_user['hometown']?>" class="txt"/>
+					<input type="text" name="hometown" id="hometown" value="<?php echo $login_user->hometown?>" class="txt"/>
 				</dd>
 			</dl>
 			<dl>
@@ -62,7 +65,7 @@ include 'inc/usernav.inc.php';
 					<label for="address">现居住</label>
 				</dt>
 				<dd>
-					<input type="text" name="address" id="address" value="<?php echo $current_user['address']?>" class="txt"/>
+					<input type="text" name="address" id="address" value="<?php echo $login_user->address?>" class="txt"/>
 				</dd>
 			</dl>
 			<dl>
@@ -74,7 +77,7 @@ include 'inc/usernav.inc.php';
 						<?php
 							$arr = array('小学','初中','高中','本科','中专','大专','硕士','博士','其他');
 							foreach($arr as $name){
-								echo '<option value="'.$val.'"'.($name == $current_user['education'] ? ' selected': '').'>'.$name.'</option>';
+								echo '<option value="'.$val.'"'.($name == $login_user->education ? ' selected': '').'>'.$name.'</option>';
 							}
 						?>
 					</select>
@@ -85,7 +88,7 @@ include 'inc/usernav.inc.php';
 					<label for="height">身高</label>
 				</dt>
 				<dd>
-					<input type="text" name="height" id="height" value="<?php echo $current_user['height']?>" class="txt s-txt"/>
+					<input type="text" name="height" id="height" value="<?php echo $login_user->height?>" class="txt s-txt"/>
 					厘米
 				</dd>
 			</dl>
@@ -94,7 +97,7 @@ include 'inc/usernav.inc.php';
 					<label for="birth">出生日期</label>
 				</dt>
 				<dd>
-					<input type="text" name="birth" id="birth" value="<?php echo $current_user['birth']?>" class="txt date-txt"/>
+					<input type="text" name="birth" id="birth" value="<?php echo $login_user->birth?>" class="txt date-txt"/>
 				</dd>
 			</dl>
 			<dl>
@@ -109,7 +112,8 @@ include 'inc/usernav.inc.php';
 				<dt>
 				</dt>
 				<dd>
-					<input type="submit" value="保存修改" class="btn btn-strong"/>
+					<input type="submit" value="保存修改" class="btn btn-disable" disabled="disabled" id="save-btn">
+					<input type="button" value="取消" class="btn btn-disable" disabled="disabled" id="cancel-btn"> &nbsp;
 				</dd>
 			</dl>
 		</fieldset>
@@ -120,6 +124,29 @@ var response = function(){
 	alert(1);
 };
 (function(Y){
+	var changed = false;
+	Y.dom.all('.user-common-frm input').on('change', function(){
+		Y.dom.one('#save-btn').delAttr('disabled');
+		Y.dom.one('#save-btn').getDomNode().className = 'btn btn-strong';
+		Y.dom.one('#cancel-btn').delAttr('disabled');
+		Y.dom.one('#cancel-btn').getDomNode().className = 'btn btn-weak';
+		changed = true;
+	});
+	Y.dom.all('.user-common-frm select').on('change', function(){
+		Y.dom.one('#save-btn').delAttr('disabled');
+		Y.dom.one('#save-btn').getDomNode().className = 'btn btn-strong';
+		Y.dom.one('#cancel-btn').delAttr('disabled');
+		Y.dom.one('#cancel-btn').getDomNode().className = 'btn btn-weak';
+		changed = true;
+	});
+
+	Y.dom.one('#cancel-btn').on('click', function() {
+		if(changed && confirm('是否确定放弃本次修改？')){
+			location.reload();
+		}
+	});
+
+
 	Y.dom.one('#change-avatar-btn').on('click', function(){
 		R.changeAvatar(function(src){
 			Y.dom.one('.avatar img').setAttr('src', src);

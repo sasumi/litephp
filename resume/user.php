@@ -36,13 +36,13 @@ if(ACTION == 'register'){
 				)
 			));
 			unset($data['password2']);
-			$exists = DBM::instance('user')->find('name=?', $data['name']);
+			$exists = DBM::instance('user')->find('name=?', $data['name'])->one();
 			if($exists){
 				HtmlExt::showIframeMsg('用户名已存在，请重新输入');
 				die;
 			}
 			$data['salt'] = md5($data['password'].APP_SALT_KEY);
-			$add_result = DBM::instance('user')->create($data);
+			$add_result = DBM::instance('user', $data)->create();
 			if($add_result){
 				Access::init()->setLoginInfo($data);
 				HtmlExt::showIframeMsg('用户注册成功', 'succ');
@@ -78,13 +78,83 @@ else if(ACTION == 'login'){
 		} catch(FilteException $ex){
 			HtmlExt::showIframeMsg($ex->getOneMsg(), 'err');
 		}
-		$u = new User();
-		//$user = $u->findByName($data['name']);
-		if($user && $user['password'] == md5($data['password'])){
-			Access::init()->login($user);
-			jump_to('index');
+
+		$user = DBM::instance('user')->find('name=?',$data['name'])->one();
+		if($user && $user->password == $data['password']){
+			Access::init()->setLoginInfo($user);
+			HtmlExt::showIframeMsg('登录成功', 'succ');
+		} else {
+			HtmlExt::showIframeMsg('登录失败，用户名或密码不正确');
 		}
+		die;
 	}
+}
+
+else if(ACTION == 'changeAvatar'){
+	if(is_post()){
+		$name = $login_user->id.'_'.rand().'.jpg';
+		$config = array(
+			'upload_dir' => UPLOAD_DIR,
+			'file_type'=>'png,gif,jpg,jpeg',
+			'file_name' => $name,
+			'max_size' => 1024*1024*20,
+			'max_file_count'=>1
+		);
+		$up = new Uploader($config);
+		$rst = $up->upload($err);
+		if(!empty($rst)){
+			$user = DBM::instance('user')->find('id=?', $login_user->id)->one();
+			$user->album = $name;
+			$user->save();
+			HtmlExt::showIframeMsg('提交成功', 'succ', UPLOAD_URL.$name);
+		}
+		HtmlExt::showIframeMsg('上传失败，请稍候重试', 'err', json_encode($err));
+	}
+	$org_src = '';
+	$this->_view['org_src'] = $org_src;
+}
+
+else if(ACTION == 'changepsw'){
+	if(is_post()){
+		try {
+			$data = posts(null, array(
+				'password' => array(
+					'require' => '请输入旧密码'
+				),
+				'new' => array(
+					'require' => '请输入新密码',
+					'min6' => '新密码长度至少需要6位'
+				),
+				'rpnew' => array(
+					'require' => '请重复新密码'
+				),
+			), false);
+
+			if($data['password'] != $login_user->password){
+				HtmlExt::showIframeMsg("您输入的旧密码不正确，请重新输入", 'err');
+				die;
+			}
+			$login_user->password = $data['new'];
+			$result = $login_user->save();
+			if($result){
+				Access::init()->logout();
+				HtmlExt::showIframeMsg("密码修改成功，请重新登录系统", 'succ');
+			} else {
+				HtmlExt::showIframeMsg("系统正忙，请稍后重试", 'err');
+			}
+		} catch(FilteException $ex){
+			HtmlExt::showIframeMsg($ex->getOneMsg(), 'err');
+		}
+		die;
+	}
+}
+
+else if(ACTION == 'myresume'){
+	$resume_list = DBM::instance('resume')->find('user_id=?', $login_user->id)->limit(20)->all();
+}
+
+else if(ACTION == 'info'){
+	$login_user->name = "asfdasfd";
 }
 
 else if(ACTION == 'index'){
@@ -92,9 +162,5 @@ else if(ACTION == 'index'){
 }
 
 else if(ACTION == 'list'){
-	$page = Pager::instance();
-	$page->setPageSize(3);
-	$u = new User();
-	$data = $u->getByPage(null, $page);
 }
 include tpl();

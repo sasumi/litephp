@@ -8,10 +8,8 @@ class DB_Query {
 	private $group = '';
 	private $limit;
 	private $data;
-	private $sql;
 
-	public function __construct(){
-	}
+	public function __construct(){}
 
 	/**
 	 * 查询
@@ -119,16 +117,6 @@ class DB_Query {
 	}
 
 	/**
-	 * 设置SQL语句
-	 * @param string $sql
-	 * @return $this
-	 **/
-	public function setSql($sql){
-		$this->sql = $sql;
-		return $this;
-	}
-
-	/**
 	 * 设置限定
 	 * @param number $p1
 	 * @param number $p2
@@ -149,93 +137,89 @@ class DB_Query {
 	 * @return string
 	 **/
 	public function __toString(){
-		if(!$this->sql){
-			$sql = '';
-			switch($this->operation){
-				//查询
-				case 'SELECT':
-					$sql = 'SELECT '.implode(',', $this->fields).
-						' FROM '.implode('`,`', $this->tables).
-						($this->where ? ' WHERE '.$this->where : '').
-						($this->order ? ' ORDER BY '.$this->order : '').
-						($this->group ? ' GROUP BY '.$this->group : '');
-					break;
+		$sql = '';
+		switch($this->operation){
+			//查询
+			case 'SELECT':
+				$sql = 'SELECT '.implode(',', $this->fields).
+					' FROM '.implode('`,`', $this->tables).
+					($this->where ? ' WHERE '.$this->where : '').
+					($this->order ? ' ORDER BY '.$this->order : '').
+					($this->group ? ' GROUP BY '.$this->group : '');
+				break;
 
-				//更新
-				case 'UPDATE':
-					if(!$this->data){
-						db_exception("NO DATA IN DB.UPDATE");
-					}
-					$datas = count($this->data) == count($this->data, 1) ? array($this->data) : $this->data;
-					foreach($datas as $row){
-						$sets = array();
-						foreach($row as $field_name => $value){
-							if($value === null){
-								$sets[] = "$field_name = null";
-							} else {
-								$sets[] = "$field_name = '$value'";
-							}
-
+			//更新
+			case 'UPDATE':
+				if(!$this->data){
+					db_exception("NO DATA IN DB.UPDATE");
+				}
+				$datas = count($this->data) == count($this->data, 1) ? array($this->data) : $this->data;
+				foreach($datas as $row){
+					$sets = array();
+					foreach($row as $field_name => $value){
+						if($value === null){
+							$sets[] = "$field_name = null";
+						} else {
+							$sets[] = "$field_name = '$value'";
 						}
-					}
-					$sql = 'UPDATE '.implode('`,`', $this->tables).' SET '.implode(',', $sets).
-						($this->where ? ' WHERE '.$this->where : '').
-						($this->order ? ' ORDER BY '.$this->order : '').
-						($this->group ? ' GROUP BY '.$this->group : '');
-					break;
 
-				//删除
-				case 'DELETE':
-					$sql = "DELETE FROM ".implode('`,`', $this->tables).($this->where ? ' WHERE '.$this->where : '');
-					break;
-
-				//插入
-				case 'INSERT':
-					if(!$this->data){
-						db_exception("NO DATA IN DB.INSERT");
 					}
-					$datas = count($this->data) == count($this->data, 1) ? array($this->data) : $this->data;
-					$key_str = implode(",", array_keys($datas[0]));
-					$sql = "INSERT INTO ".implode('`,`', $this->tables)."($key_str) VALUES ";
-					$comma = '';
-					foreach($datas as $row){
-						$value_str = implode("','", array_values($row));
-						$sql .= $comma."('$value_str')";
-						$comma = ',';
-					}
-					break;
+				}
+				$sql = 'UPDATE '.implode('`,`', $this->tables).' SET '.implode(',', $sets).
+					($this->where ? ' WHERE '.$this->where : '').
+					($this->order ? ' ORDER BY '.$this->order : '').
+					($this->group ? ' GROUP BY '.$this->group : '');
+				break;
 
-				//替换
-				case 'REPLACE':
-					if(!$this->data){
-						db_exception("NO DATA IN DB.UPDATE");
-					}
-					$datas = count($this->data) == count($this->data, 1) ? array($this->data) : $this->data;
-					foreach($datas as $row){
-						$sets = array();
-						foreach($row as $field_name => $value){
-							if($value === null){
-								$sets[] = "$field_name = null";
-							} else {
-								$sets[] = "$field_name = '$value'";
-							}
+			//删除
+			case 'DELETE':
+				$sql = "DELETE FROM ".implode('`,`', $this->tables).($this->where ? ' WHERE '.$this->where : '');
+				break;
 
+			//插入
+			case 'INSERT':
+				if(!$this->data){
+					db_exception("NO DATA IN DB.INSERT");
+				}
+				$datas = count($this->data) == count($this->data, 1) ? array($this->data) : $this->data;
+				$key_str = implode(",", array_keys($datas[0]));
+				$sql = "INSERT INTO ".implode('`,`', $this->tables)."($key_str) VALUES ";
+				$comma = '';
+				foreach($datas as $row){
+					$value_str = implode("','", array_values($row));
+					$sql .= $comma."('$value_str')";
+					$comma = ',';
+				}
+				break;
+
+			//替换
+			case 'REPLACE':
+				if(!$this->data){
+					db_exception("NO DATA IN DB.UPDATE");
+				}
+				$datas = count($this->data) == count($this->data, 1) ? array($this->data) : $this->data;
+				foreach($datas as $row){
+					$sets = array();
+					foreach($row as $field_name => $value){
+						if($value === null){
+							$sets[] = "$field_name = null";
+						} else {
+							$sets[] = "$field_name = '$value'";
 						}
+
 					}
-					$sql = "REPLACE INTO ".implode('`,`', $this->tables)." SET ".implode(',', $sets).
-						($this->where ? ' WHERE '.$this->where : '');
-					break;
+				}
+				$sql = "REPLACE INTO ".implode('`,`', $this->tables)." SET ".implode(',', $sets).
+					($this->where ? ' WHERE '.$this->where : '');
+				break;
 
-				default:
-					db_exception("NO DB OPERATE SETTED");
-
-			}
-			$this->sql = $sql;
+			default:
+				db_exception("NO DB OPERATE SETTED");
 		}
-		if($this->limit){
-			$this->sql .= $this->limit ? " LIMIT ".$this->limit[0].','.$this->limit[1] : '';
+		if($this->limit && stripos(' LIMIT ', $sql) === false){
+			$sql .= $this->limit ? " LIMIT ".$this->limit[0].','.$this->limit[1] : '';
 		}
-		return $this->sql;
+		return $sql;
 	}
 }
 ?>

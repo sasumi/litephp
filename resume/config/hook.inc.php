@@ -4,8 +4,15 @@ add_hook('AFTER_APP_SHUTDOWN', function($time){
 });
 
 add_hook('AFTER_APP_INIT', function(){
-	$user = Access::init()->checkLogin();
-	$GLOBALS['current_user'] = $user;
+	if(!Access::init()->checkLogin()){
+		if(PAGE == 'resume'){
+			jump_to();
+		} else if(PAGE == 'user' && ACTION != 'login' && ACTION != 'register'){
+			jump_to();
+		}
+	} else {
+		$GLOBALS['login_user'] = DBM::instance('user')->find('id=1')->one();
+	}
 });
 
 add_hook('BEFORE_APP_INIT', function(){

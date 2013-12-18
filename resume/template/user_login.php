@@ -13,7 +13,7 @@
 	</style>
 </head>
 <body>
-	<form action="<?php echo url('user/login');?>" method="POST" class="frm user-login-frm" rel="iframe-form" onresponse="response">
+	<form action="<?php echo url('user/login');?>" method="POST" class="frm user-login-frm" data-trans='async' onresponse="response">
 		<fieldset>
 			<dl>
 				<dt><label for="name">用户名</label></dt>
@@ -43,18 +43,14 @@
 	<script>
 		var response = function(msg, type, data){
 			if(type == 'succ'){
-				YSL.use('widget.Popup', function(Y, Pop){
-					Pop.getIO('loginSucc', function(fn){
-						fn(data);
+				YSL.showTip(msg, type);
+				setTimeout(function(){
+					YSL.use('widget.Popup', function(Y, Pop){
+						Pop.getIO('loginSucc', function(fn){fn(data);});
+						Pop.closeCurrentPopup();
 					});
-					Pop.closeCurrentPopup();
-				})
+				}, 2000);
 			} else {
-				if(data == 'password_require'){
-					YSL.dom.node('#password').focus();
-				} else {
-					YSL.dom.node('#name').focus();
-				}
 				YSL.dom.one('#err-msg').show();
 				YSL.dom.one('#err-msg-con').setHtml(msg);
 			}

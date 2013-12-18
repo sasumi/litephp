@@ -20,7 +20,7 @@ $org_src = '';
 	</script>
 </head>
 <body style="height:150px; overflow:hidden;" class="dialog">
-	<form action="<?php echo url('user/changeAvatar')?>" id="myform" method="POST" class="frm" rel="iframe-form" enctype="multipart/form-data" onresponse="response">
+	<form action="<?php echo url('user/changeAvatar')?>" id="myform" method="POST" class="frm" data-trans='async' enctype="multipart/form-data" onresponse="response">
 		<fieldset>
 			<div class="img"><img src="<?php echo ($org_src ?: img_url('avatar.jpg'));?>" alt="" id="img"></div>
 			<div class="op">
@@ -76,6 +76,7 @@ $org_src = '';
 	};
 
 	YSL.use('widget.Popup', function(Y, Pop){
+		debugger;
 		Pop.getCurrentPopup().onClose = function(){
 			if(resultState == 'uploading'){
 				if(!confirm('头像正在上传中，是否确定要取消？')){

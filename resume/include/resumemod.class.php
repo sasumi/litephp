@@ -10,7 +10,7 @@ class ResumeMod {
 	private $path = '';
 
 	private function __construct($config){
-		$this->path = Q::ini('app_config/TEMPLATE_CONFIG_DIR');
+		$this->path = dirname(__FILE__).'/';
 		$this->mods_keys = $this->getAllModsKey();
 		$this->loadMods();
 	}

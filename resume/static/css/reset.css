@@ -8,7 +8,7 @@ li{list-style:none;}
 caption,th{text-align:left;}
 input,textarea,select {font-family:inherit;font-size:inherit;font-weight:inherit;}
 input,textarea,select{*font-size:100%;}
-.none {display:none;}
+.none {display:none !important}
 .clearfix:after {
 	content: ".";
 	display: block;

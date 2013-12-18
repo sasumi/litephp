@@ -169,9 +169,9 @@ function db_get_page($sql, $pager=null, $conn=null){
 
 /**
  * get all
- * @param  String $sql  
- * @param  Resource $conn 
- * @return mix       
+ * @param  String $sql
+ * @param  Resource $conn
+ * @return mix
  */
 function db_get_all($sql, $conn=null){
 	return db_get_page($sql, null, $conn);
@@ -182,7 +182,7 @@ function db_get_all($sql, $conn=null){
  * @param stirng $sql
  * @return mix
  **/
-function db_get_row($sql){
+function db_get_one($sql){
 	$rst = db_get_page($sql, 1);
 	if($rst){
 		return $rst[0];
@@ -195,10 +195,10 @@ function db_get_row($sql){
  * @param stirng $sql
  * @return mix
  **/
-function db_get_one($sql){
-	$rst = db_get_row($sql);
+function db_get_field($sql, $key=''){
+	$rst = db_get_one($sql);
 	if($rst){
-		return array_pop($rst);
+		return $$key ? $rst[$key] : array_pop($rst);
 	}
 	return null;
 }
@@ -235,7 +235,7 @@ function db_update($table, array $data, $cond=''){
  **/
 function db_affect_num($conn=null){
 	$conn = $conn ?: db_connect();
-	return $conn->affectedRows();
+	return 1;//$conn->rowCount();
 }
 
 /**

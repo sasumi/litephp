@@ -44,7 +44,7 @@
 	</div>
 
 	<div class="right-col">
-		<?php if(!$current_user):?>
+		<?php if(!$login_user):?>
 		<form action="<?php echo url('user/register')?>" method="post" class="frm quick-register-frm">
 			<div>
 				<input type="text" name="loginname" placeholder="用户名或邮箱" class="txt">

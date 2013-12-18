@@ -6,30 +6,30 @@ include 'inc/usernav.inc.php';
 ?>
 <div class="right-col">
 	<h2 class="cap">修改密码</h2>
-	<form action="<?php echo url('user/modify');?>" method="POST" class="frm user-common-frm" rel="iframe-form" onresponse="response">
+	<form action="<?php echo url('user/changepsw');?>" method="POST" id="changepsw-frm" class="frm user-common-frm" data-trans='async' onresponse="response">
 		<fieldset>
 			<dl>
 				<dt>
-					<label for="">新密码</label>
+					<label for="new-password">新密码</label>
 				</dt>
 				<dd>
-					<input type="text" name="name" id="name" value="<?php echo $current_user['name']?>" class="txt"/>
+					<input type="password" name="new" id="new-password" value="" class="txt"/>
 				</dd>
 			</dl>
 			<dl>
 				<dt>
-					<label for="email">重复新密码</label>
+					<label for="rp-new-password">重复新密码</label>
 				</dt>
 				<dd>
-					<input type="text" name="email" id="email" value="<?php echo $current_user['email']?>" class="txt"/>
+					<input type="password" name="rpnew" id="rp-new-password" value="" class="txt"/>
 				</dd>
 			</dl>
 			<dl>
 				<dt>
-					<label for="mobile">旧密码</label>
+					<label for="password">旧密码</label>
 				</dt>
 				<dd>
-					<input type="text" name="mobile" id="mobile" value="<?php echo $current_user['mobile']?>" class="txt"/>
+					<input type="password" name="password" id="password" value="" class="txt"/>
 				</dd>
 			</dl>
 			<dl>
@@ -43,17 +43,37 @@ include 'inc/usernav.inc.php';
 	</form>
 </div>
 <script>
-var response = function(){
-	alert(1);
+var response = function(msg, type){
+	YSL.showTip(msg, type);
+	if(type == 'succ'){
+		setTimeout(function() {
+			location.href = R.url('user/login');
+		}, 2000);
+	}
 };
-(function(Y){
-	Y.dom.one('#change-avatar-btn').on('click', function(){
-		R.changeAvatar(function(src){
-			Y.dom.one('.avatar img').setAttr('src', src);
-			R.scaleAvaImg(Y.dom.one('.avatar img').getDomNode());
-		});
+
+YSL.use('widget.Validator', function(Y, Val){
+	var validator = new Val({
+		form: '#changepsw-frm',
+		rules: {
+			'new': {
+				require: '请输入新密码',
+				min6:'新密码至少6位'
+			},
+			'rpnew': {
+				reuiqre: '请再次输入密码',
+				'function': function(val,element){
+					if (Y.dom.one("#new-password").getValue() != val){
+						return "两次密码不一致";
+					}
+				}
+			},
+			'password': {
+				reuiqre: '请输入旧密码',
+				min6: '请输入旧密码'
+			}
+		}
 	});
-	R.scaleAvaImg(Y.dom.one('.avatar img').getDomNode());
-})(YSL);
+});
 </script>
 <?php include 'inc/footer.inc.php'?>

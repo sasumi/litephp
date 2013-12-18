@@ -138,6 +138,9 @@ input.b-btn, a.b-btn, span.b-btn {padding:8px 15px}
 	background-color:#F4F4F4;
 	box-shadow:inset 0 3px 2px rgba(176, 176, 176, .07);
 	color:#C3C3C3 }
+	
+.switch-btn {display:inline-block; height:28px; line-height:28px; border:1px solid #aaa; border-radius:5px; font-size:12px; font-weight:normal; background-color:#ccc; padding:1px 20px 1px 1px}
+.switch-btn s {display:inline-block; height:26px; line-height:25px; border:1px solid #ccc; border-radius:5px; box-shadow:1px 1px 1px gray; padding:0 8px;  text-decoration:none; background-color:white;}
 
 .frm {margin-bottom:10px;}
 .frm fieldset {padding:10px; border:none}
