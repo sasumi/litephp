@@ -1,0 +1,55 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+		<title>blognote</title>
+		<?php echo $this->getCss('reset.css', 'global.css');?>
+		<?php echo $this->getJs('http://localhost/ysl/source/ysl.base.js');?>
+	</head>
+	<body>
+		<div class="page">
+			<div class="header">
+				<h1 class="logo hide">
+					<a href="<?php echo $this->getUrl();?>">resume</a>
+					<span>beta 0.01</span>
+				</h1>
+				<ul class="main-nav">
+					<li>
+						<a href="<?php echo $this->getUrl()?>">导航</a>
+						<ul>
+							<li><a href="<?php echo $this->getConfig('app/siteurl')?>">网站首页</a></li>
+							<li><a href="<?php echo $this->getUrl('access/logout')?>">退出登录</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="<?php echo $this->getUrl('resume')?>">简历管理</a>
+					</li>
+					<li>
+						<a href="<?php echo $this->getUrl('template/add')?>">履历录入</a>
+					</li>
+					<li>
+						<a href="<?php echo $this->getUrl('setting/feeds')?>">资费设定</a>
+					</li>
+					<li>
+						<a href="<?php echo $this->getUrl('payment/log')?>">充值记录</a>
+					</li>
+					<li>
+						<a href="<?php echo $this->getUrl('user')?>">用户管理</a>
+					</li>
+					<li class=" last">
+						<a href="<?php echo $this->getUrl('access')?>">权限管理</a>
+					</li>
+				</ul>
+
+				<script type="text/javascript">
+					YSL.use('', function(Y){
+						Y.dom.all('.main-nav>li').on('mouseover', function(){
+							this.all('ul').show();
+						});
+						Y.dom.all('.main-nav>li').on('mouseout', function(){
+							this.all('ul').hide();
+						});
+					});
+				</script>
+			</div>
+			<div class="container">

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html class="dialog">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>append catalog</title>
+	<?php echo $this->getCss('reset.css', 'global.css');?>
+	<script>
+		var all_mods = <?php echo json_encode($all_mods);?>;
+	</script>
+</head>
+<body>
+	<form class="frm">
+		<fieldset>
+			<dl>
+				<dt>栏目类型：</dt>
+				<dd>
+					<select name="mod_id" id="mod_sel">
+						<?php foreach($all_mods as $mod_id=>$mod):?>
+						<option value="<?php echo $mod_id;?>" <?php if(in_array($mod_id, $cur_mods)):?>disabled="true"<?php endif;?>>
+							<?php echo $mod['title']?><?php if(in_array($mod_id, $cur_mods)):?> - [已添加]<?php endif;?>
+						</option>
+						<?php endforeach;?>
+						<option value="0">空白栏目</option>
+					</select>
+				</dd>
+			</dl>
+			<dl>
+				<dt>栏目标题：</dt>
+				<dd><input type="text" name="title" id="mod_title" class="txt" placeholder="默认为栏目类型"/></dd>
+			</dl>
+		</fieldset>
+	</form>
+	<?php echo $this->getJs($this->getConfig('app/ysl'), 'global.js');?>
+	<script>
+	YSL.use('widget.Popup', function(Y, Pop){
+		Pop.listen('addCol', function(){
+			var mod_id = Y.dom.one('#mod_sel').getValue();
+			if(all_mods[mod_id]){
+				Pop.fire('onsuccess', Y.dom.one('#mod_title').getValue(), all_mods[mod_id]);
+			}
+		});
+	});
+	</script>
+</body>
+</html>

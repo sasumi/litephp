@@ -1,0 +1,178 @@
+<HTML><HEAD>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="imagetoolbar" content="no">
+<link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet">
+<link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet">
+<link href="个人中心－密码修改_files/axurerp_pagespecificstyles.css" type="text/css" rel="stylesheet">
+<!--[if IE 6]>
+<link href="个人中心－密码修改_files/axurerp_pagespecificstyles_ie6.css" type="text/css" rel="stylesheet">
+<![endif]-->
+<SCRIPT src="resources/scripts/jquery-1.4.2.min.js"></SCRIPT>
+<SCRIPT src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></SCRIPT>
+<SCRIPT src="resources/scripts/axurerp_beforepagescript.js"></SCRIPT>
+<SCRIPT src="resources/scripts/messagecenter.js"></SCRIPT>
+</HEAD>
+<BODY>
+<DIV class="main_container">
+
+<DIV id=u0 class="u0" >
+<DIV id=u0_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">旧&nbsp; 密 码：</span></p></DIV></DIV>
+<INPUT id=u1 type=password value="dadbdbaeadfa" class="u1"     >
+
+<DIV id=u2 class="u2" >
+<DIV id=u2_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">新 密 码：</span></p></DIV></DIV>
+<DIV id=u3 class="u3" >
+<DIV id=u3_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">再次输入新密码：</span></p></DIV></DIV>
+<DIV id=u4_container class="u4_container">
+<DIV id="u4_img" class="u4_original"></DIV>
+<DIV id=u5 class="u5" >
+<DIV id=u5_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">操作提示</span></p></DIV></DIV>
+</DIV>
+<IMG id=u4 src="resources/images/transparent.gif" class="u4"    >
+
+<INPUT id=u6 type=text value="" class="u6"     >
+
+<DIV id=u7 class="u7" >
+<DIV id=u7_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">新密码将在重新登录后生效</span></p></DIV></DIV>
+<INPUT id=u8 type=submit class="u8" value="保存更改"  >
+
+<INPUT id=u9 type=password value="dadbdbaeadfadad" class="u9"     >
+
+<INPUT id=u10 type=password value="dadbdbaeadfadaf" class="u10"     >
+
+<DIV id=u11 class="u11;">
+
+<DIV id=u11_table class="u11_table"></DIV>
+
+</DIV>
+
+<DIV id=u11container style="position:absolute; left:60px; top:451px; width:805px; height:28px; overflow:visible">
+
+<DIV id=u12_container class="u12_container">
+<DIV id=u13 class="u13" >
+<DIV id=u13_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">简历大师首页</span></p></DIV></DIV>
+</DIV>
+<IMG id=u12 src="resources/images/transparent.gif" class="u12"    >
+
+<DIV id=u14_container class="u14_container">
+<DIV id=u15 class="u15" >
+<DIV id=u15_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">联系我们</span></p></DIV></DIV>
+</DIV>
+<IMG id=u14 src="resources/images/transparent.gif" class="u14"    >
+
+<DIV id=u16_container class="u16_container">
+<DIV id=u17 class="u17" >
+<DIV id=u17_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">意见及建议</span></p></DIV></DIV>
+</DIV>
+<IMG id=u16 src="resources/images/transparent.gif" class="u16"    >
+
+<DIV id=u18_container class="u18_container">
+<DIV id=u19 class="u19" >
+<DIV id=u19_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">使用帮助</span></p></DIV></DIV>
+</DIV>
+<IMG id=u18 src="resources/images/transparent.gif" class="u18"    >
+
+<DIV id=u20_container class="u20_container">
+<DIV id=u21 class="u21" >
+<DIV id=u21_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">资费说明</span></p></DIV></DIV>
+</DIV>
+<IMG id=u20 src="resources/images/transparent.gif" class="u20"    >
+
+<DIV id=u22_container class="u22_container">
+<DIV id=u23 class="u23" >
+<DIV id=u23_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">官方旗舰店</span></p></DIV></DIV>
+</DIV>
+<IMG id=u22 src="resources/images/transparent.gif" class="u22"    >
+
+<DIV id=u24_container class="u24_container">
+<DIV id=u25 class="u25" >
+<DIV id=u25_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">简历大师微博</span></p></DIV></DIV>
+</DIV>
+<IMG id=u24 src="resources/images/transparent.gif" class="u24"    >
+
+<DIV id=u26_container class="u26_container">
+<DIV id=u27 class="u27" >
+<DIV id=u27_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">友情链接</span></p></DIV></DIV>
+</DIV>
+<IMG id=u26 src="resources/images/transparent.gif" class="u26"    >
+
+</DIV>
+<DIV id=u28 class="u28" >
+<DIV id=u28_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">ICP证粤B2-20130191</span></p></DIV></DIV>
+<DIV id=u29 class="u29" >
+<DIV id=u29_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">© 2013 All rights reserved</span></p></DIV></DIV>
+<DIV id=u30 class="u30;">
+
+<DIV id=u30_table class="u30_table"></DIV>
+
+</DIV>
+
+<DIV id=u30container style="position:absolute; left:60px; top:93px; width:605px; height:30px; overflow:visible">
+
+<DIV id=u31_container class="u31_container">
+<DIV id=u32 class="u32" >
+<DIV id=u32_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">简历管理</span></p></DIV></DIV>
+</DIV>
+<INPUT type="image" id=u31 src="resources/images/transparent.gif" class="u31"    >
+
+<DIV id=u33_container class="u33_container">
+<DIV id=u34 class="u34" >
+<DIV id=u34_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">个人资料修改</span></p></DIV></DIV>
+</DIV>
+<INPUT type="image" id=u33 src="resources/images/transparent.gif" class="u33"    >
+
+<DIV id=u35_container class="u35_container">
+<DIV id=u36 class="u36" >
+<DIV id=u36_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">头像修改</span></p></DIV></DIV>
+</DIV>
+<INPUT type="image" id=u35 src="resources/images/transparent.gif" class="u35"    >
+
+<DIV id=u37_container class="u37_container">
+<DIV id=u38 class="u38" >
+<DIV id=u38_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">密码修改</span></p></DIV></DIV>
+</DIV>
+<INPUT type="image" id=u37 src="resources/images/transparent.gif" class="u37"    >
+
+<DIV id=u39_container class="u39_container">
+<DIV id=u40 class="u40" >
+<DIV id=u40_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">付费历史</span></p></DIV></DIV>
+</DIV>
+<INPUT type="image" id=u39 src="resources/images/transparent.gif" class="u39"    >
+
+<DIV id=u41_container class="u41_container">
+<DIV id=u42 class="u42" >
+<DIV id=u42_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">新会员邀请</span></p></DIV></DIV>
+</DIV>
+<INPUT type="image" id=u41 src="resources/images/transparent.gif" class="u41"    >
+
+</DIV>
+<DIV id=u43_text class="u43_text" >
+<DIV id=u43_rtf><p style="text-align:left;"><span style="font-family:华文琥珀;font-size:48px;font-weight:normal;font-style:normal;text-decoration:none;color:#990000;">简历大师</span></p></DIV></DIV>
+<INPUT type="image" id=u43 src="resources/images/transparent.gif" class="u43"    >
+
+<DIV id=u44 class="u44" >
+<DIV id=u44_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">帮助最多用户成功应聘的简历网站</span></p></DIV></DIV>
+<INPUT id=u45 type=submit class="u45" value="退出"  >
+
+<DIV id=u46 class="u46" >
+<DIV id=u46_rtf><p style="text-align:left;"><span style="font-family:幼圆;font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">jianlidashi.com</span></p></DIV></DIV>
+<DIV id=u47_line class="u47_line"></DIV>
+
+<IMG id=u47 src="resources/images/transparent.gif" class="u47">
+
+<DIV id=u48 class="u48" >
+<DIV id=u48_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">欢迎回来 </span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#FF0000;">wclaiwei00000</span></p></DIV></DIV>
+<DIV id=u49_text class="u49_text" >
+<DIV id=u49_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#000000;">点击进入</span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#0000FF;">个人中心</span></p></DIV></DIV>
+<INPUT type="image" id=u49 src="resources/images/transparent.gif" class="u49"    >
+</DIV>
+<DIV class=preload>
+<img src="个人中心－密码修改_files/u4_original.png" width="1" height="1"/>
+<img src="个人中心－密码修改_files/u11_table.png" width="1" height="1"/>
+<img src="个人中心－密码修改_files/u12_original.png" width="1" height="1"/>
+<img src="个人中心－密码修改_files/u30_table.png" width="1" height="1"/>
+<img src="个人中心－密码修改_files/u31_original.png" width="1" height="1"/>
+<img src="个人中心－密码修改_files/u47_line.png" width="1" height="1"/></DIV>
+</BODY>
+<SCRIPT src="resources/scripts/axurerp_pagescript.js"></SCRIPT>
+<SCRIPT src="个人中心－密码修改_files/axurerp_pagespecificscript.js" charset="utf-8"></SCRIPT>

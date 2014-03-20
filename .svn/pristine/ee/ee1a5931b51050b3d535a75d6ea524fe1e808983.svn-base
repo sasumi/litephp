@@ -1,0 +1,130 @@
+body {
+    margin: 0px;
+}
+
+div {
+    background-repeat: no-repeat;
+}
+
+.raw_image {
+    width: 100%;
+    height: 100%;
+}
+
+.preload {
+    display: none;
+}
+div.main_container {
+}
+
+.form_sketch {
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.u0_original {
+    background-image: url('../下载打印－输出完成提示_files/u0_original.png');
+}
+
+.u0_container {
+    position:absolute;
+    left:140px;
+    top:120px;
+    width:380px;
+    height:295px;
+}
+
+#u0_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:386px;
+    height:301px;
+}
+
+.u1 {
+    position:absolute;
+    left:2px;
+    top:140px;
+    width:376px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u0 {
+    position:absolute;
+    left:140px;
+    top:120px;
+    width:380px;
+    height:295px
+}
+
+.u2 {
+    position:absolute;
+    left:150px;
+    top:130px;
+    width:150px;
+    height:24px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u3 {
+    position:absolute;
+    left:190px;
+    top:340px;
+    width:110px;
+    height:25px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u4 {
+    position:absolute;
+    left:220px;
+    top:210px;
+    width:180px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u5 {
+    position:absolute;
+    left:330px;
+    top:340px;
+    width:110px;
+    height:25px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+

@@ -1,0 +1,874 @@
+body {
+    margin: 0px;
+}
+
+div {
+    background-repeat: no-repeat;
+}
+
+.raw_image {
+    width: 100%;
+    height: 100%;
+}
+
+.preload {
+    display: none;
+}
+div.main_container {
+}
+
+.form_sketch {
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.u0_line {
+    background-image: url('../下载打印－付款_files/u0_line.png');
+}
+
+.u0_line {
+    position:absolute;
+    left:125px;
+    top:101px;
+    width:100px;
+    height:3px;
+}
+
+.u0 {
+    position:absolute;
+    left:125px;
+    top:101px;
+    width:100px;
+    height:3px
+}
+
+.u1_line {
+    background-image: url('../下载打印－付款_files/u1_line.png');
+}
+
+.u1_line {
+    position:absolute;
+    left:277px;
+    top:101px;
+    width:100px;
+    height:3px;
+}
+
+.u1 {
+    position:absolute;
+    left:277px;
+    top:101px;
+    width:100px;
+    height:3px
+}
+
+.u2_line {
+    background-image: url('../下载打印－付款_files/u2_line.png');
+}
+
+.u2_line {
+    position:absolute;
+    left:125px;
+    top:91px;
+    width:100px;
+    height:3px;
+}
+
+.u2 {
+    position:absolute;
+    left:125px;
+    top:91px;
+    width:100px;
+    height:3px
+}
+
+.u3_line {
+    background-image: url('../下载打印－付款_files/u3_line.png');
+}
+
+.u3_line {
+    position:absolute;
+    left:277px;
+    top:91px;
+    width:100px;
+    height:3px;
+}
+
+.u3 {
+    position:absolute;
+    left:277px;
+    top:91px;
+    width:100px;
+    height:3px
+}
+
+.u4_original {
+    background-image: url('../下载打印－付款_files/u4_original.png');
+}
+
+.u4_container {
+    position:absolute;
+    left:53px;
+    top:79px;
+    width:70px;
+    height:30px;
+}
+
+#u4_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:76px;
+    height:36px;
+}
+
+.u5 {
+    position:absolute;
+    left:2px;
+    top:6px;
+    width:66px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u4 {
+    position:absolute;
+    left:53px;
+    top:79px;
+    width:70px;
+    height:30px
+}
+
+.u6_original {
+    background-image: url('../下载打印－付款_files/u4_original.png');
+}
+
+.u6_container {
+    position:absolute;
+    left:211px;
+    top:81px;
+    width:70px;
+    height:30px;
+}
+
+#u6_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:76px;
+    height:36px;
+}
+
+.u7 {
+    position:absolute;
+    left:2px;
+    top:6px;
+    width:66px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u6 {
+    position:absolute;
+    left:211px;
+    top:81px;
+    width:70px;
+    height:30px
+}
+
+.u8_original {
+    background-image: url('../下载打印－付款_files/u4_original.png');
+}
+
+.u8_container {
+    position:absolute;
+    left:370px;
+    top:81px;
+    width:70px;
+    height:30px;
+}
+
+#u8_img {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:76px;
+    height:36px;
+}
+
+.u9 {
+    position:absolute;
+    left:2px;
+    top:4px;
+    width:66px;
+    height:21px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u8 {
+    position:absolute;
+    left:370px;
+    top:81px;
+    width:70px;
+    height:30px
+}
+
+#u10 {
+    position:absolute;
+    left:60px;
+    top:824px;
+    width:805px;
+    height:28px
+}
+
+.u10_table {
+    background-image: url('../下载打印－付款_files/u10_table.png');
+}
+
+.u10_table {
+    position:absolute;
+    left:-3px;
+    top:-3px;
+    width:809px;
+    height:32px;
+}
+
+.u11_original {
+    background-image: url('../下载打印－付款_files/u11_original.png');
+}
+
+.u11_container {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u12 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u11 {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u13_original {
+    background-image: url('../下载打印－付款_files/u11_original.png');
+}
+
+.u13_container {
+    position:absolute;
+    left:100px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u14 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u13 {
+    position:absolute;
+    left:100px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u15_original {
+    background-image: url('../下载打印－付款_files/u11_original.png');
+}
+
+.u15_container {
+    position:absolute;
+    left:200px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u16 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u15 {
+    position:absolute;
+    left:200px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u17_original {
+    background-image: url('../下载打印－付款_files/u11_original.png');
+}
+
+.u17_container {
+    position:absolute;
+    left:300px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u18 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u17 {
+    position:absolute;
+    left:300px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u19_original {
+    background-image: url('../下载打印－付款_files/u11_original.png');
+}
+
+.u19_container {
+    position:absolute;
+    left:400px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u20 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u19 {
+    position:absolute;
+    left:400px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u21_original {
+    background-image: url('../下载打印－付款_files/u11_original.png');
+}
+
+.u21_container {
+    position:absolute;
+    left:500px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u22 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u21 {
+    position:absolute;
+    left:500px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u23_original {
+    background-image: url('../下载打印－付款_files/u11_original.png');
+}
+
+.u23_container {
+    position:absolute;
+    left:600px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u24 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u23 {
+    position:absolute;
+    left:600px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u25_original {
+    background-image: url('../下载打印－付款_files/u11_original.png');
+}
+
+.u25_container {
+    position:absolute;
+    left:700px;
+    top:0px;
+    width:100px;
+    height:23px;
+}
+
+.u26 {
+    position:absolute;
+    left:2px;
+    top:2px;
+    width:96px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u25 {
+    position:absolute;
+    left:700px;
+    top:0px;
+    width:100px;
+    height:23px
+}
+
+.u27 {
+    position:absolute;
+    left:309px;
+    top:864px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u28 {
+    position:absolute;
+    left:449px;
+    top:864px;
+    width:200px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u29 {
+    position:absolute;
+    left:60px;
+    top:151px;
+    width:150px;
+    height:24px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u30_original {
+    background-image: url('../下载打印－付款_files/u30_original.png');
+}
+
+.u30_container {
+    position:absolute;
+    left:110px;
+    top:260px;
+    width:1111px;
+    height:368px;
+}
+
+#u30_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:1111px;
+    height:368px;
+}
+
+.u31 {
+    position:absolute;
+    left:2px;
+    top:176px;
+    width:1107px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u30 {
+    position:absolute;
+    left:110px;
+    top:260px;
+    width:1111px;
+    height:368px
+}
+
+.u33 {
+    position:absolute;
+    left:16px;
+    top:0px;
+    width:2px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u35 {
+    position:absolute;
+    left:16px;
+    top:0px;
+    width:2px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u36_original {
+    background-image: url('../下载打印－付款_files/u36_original.png');
+}
+
+.u36_container {
+    position:absolute;
+    left:120px;
+    top:210px;
+    width:54px;
+    height:22px;
+}
+
+#u36_img {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:54px;
+    height:22px;
+}
+
+.u37 {
+    position:absolute;
+    left:2px;
+    top:3px;
+    width:50px;
+    height:16px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u36 {
+    position:absolute;
+    left:120px;
+    top:210px;
+    width:54px;
+    height:22px
+}
+
+.u38 {
+    position:absolute;
+    left:180px;
+    top:207px;
+    width:110px;
+    height:25px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u39 {
+    position:absolute;
+    left:280px;
+    top:211px;
+    width:150px;
+    height:21px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u40 {
+    position:absolute;
+    left:340px;
+    top:211px;
+    width:390px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u41 {
+    position:absolute;
+    left:130px;
+    top:650px;
+    width:180px;
+    height:24px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u42 {
+    position:absolute;
+    left:130px;
+    top:690px;
+    width:150px;
+    height:56px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u43_text {
+    position:absolute;
+    left:50px;
+    top:11px;
+    width:220px;
+    height:49px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u43 {
+    position:absolute;
+    left:50px;
+    top:11px;
+    width:220px;
+    height:49px
+}
+
+.u44 {
+    position:absolute;
+    left:260px;
+    top:11px;
+    width:220px;
+    height:20px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u45 {
+    position:absolute;
+    left:710px;
+    top:15px;
+    width:100px;
+    height:45px;
+    ;
+    ;
+    text-align: center;;
+    font-family:'微软雅黑';
+    font-size: 13px;
+    color:#000000;
+    font-style:normal;
+    font-weight:normal;
+    text-decoration:none;
+    
+}
+
+.u46 {
+    position:absolute;
+    left:260px;
+    top:40px;
+    width:150px;
+    height:15px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u47_line {
+    background-image: url('../下载打印－付款_files/u47_line.png');
+}
+
+.u47_line {
+    position:absolute;
+    left:60px;
+    top:64px;
+    width:750px;
+    height:3px;
+}
+
+.u47 {
+    position:absolute;
+    left:60px;
+    top:64px;
+    width:750px;
+    height:3px
+}
+
+.u48 {
+    position:absolute;
+    left:550px;
+    top:14px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u49_text {
+    position:absolute;
+    left:550px;
+    top:40px;
+    width:150px;
+    height:19px;
+    ;
+    ;
+    ;
+    font-family:Arial;
+    text-align:left;
+    word-wrap:break-word;
+}
+
+.u49 {
+    position:absolute;
+    left:550px;
+    top:40px;
+    width:150px;
+    height:19px
+}
+

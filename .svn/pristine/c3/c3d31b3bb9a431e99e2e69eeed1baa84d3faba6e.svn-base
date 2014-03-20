@@ -1,0 +1,136 @@
+<?php
+class Model_Resume extends DB_Model{
+	public static function getResume($resume_id, $user_id){
+		$current_resume = array();
+
+		if($resume_id){
+			$current_resume = Model_Resume::find("id=? AND user_id=?", $resume_id, $user_id)->one();
+			if($current_resume['id']){
+				$template_item_config = ResumeMod::init()->getAllMods();
+
+				$datas = Model_ResumeData::find('resume_id=?', $resume_id)->order('`order` DESC')->all();
+				$tmp = array(
+					'cover' => array(
+						'mod_id' => 'cover',
+						'title' => '封面',
+						'visible' => $current_resume['front_cover']
+					),
+					'title' => array(
+						'mod_id' => 'title',
+						'title' => '标题',
+						'visible' => true,
+						'value' => $current_resume['title']
+					)
+				);
+
+				foreach($datas as $item){
+					//$item['value'] = json_decode($item['value']);
+
+					$mod_id = $item['mod_id'];
+					$tic = $template_item_config[$mod_id];
+
+					//可合并实例
+					if($tic['merge_instance']){
+						if(!$tmp[$mod_id]){
+							$tmp[$mod_id] = $item;
+							$tmp[$mod_id]['value'] = array();
+						}
+						$tmp[$mod_id]['value'][] = $item['value'];
+					}
+
+					//多实例
+					else if($tic['multi_instance']){
+						$tmp[$mod_id.'_'.guid()] = $item;
+					}
+
+					//单例
+					else {
+						$tmp[$mod_id] = $item;
+					}
+				}
+				$current_resume['resume_data'] = $tmp;
+			}
+		}
+		return $current_resume;
+	}
+
+	public static function getDefaultResume(){
+		$user_info = Model_Access::init()->getLoginInfo()->toArray();
+
+		return array(
+			'id' => 0,
+			'theme' => 'green',
+			'title' => '简历',
+			'resume_data' => array(
+				'cover' => array(
+					'mod_id' => 'cover',
+					'title' => '封面',
+					'value' => '',
+					'visible' => 1
+				),
+				'title' => array(
+					'mod_id' => 'title',
+					'title' => '标题',
+					'value' => '个人简历',
+					'visible' => 1
+				),
+				'info' => array(
+					'mod_id' => 'info',
+					'title' => '个人资料',
+					'value' => json_encode($user_info),
+					'visible' => 1
+				),
+			)
+		);
+	}
+
+	/**
+	 * 获取模块配置
+	 * @param  string $id
+	 * @return array
+	 */
+	public static function getModConfig($id){
+		$file = Config::get('app_config/TEMPLATE_CONFIG_DIR')."/$id/format.inc.php";
+		if(file_exists($file)){
+			return include $file;
+		}
+	}
+
+	public static function getModAllThemeCss($id){
+		$themes = $this->getModAllThemes($id);
+		if(!$themes){
+			return '';
+		}
+		$css = array();
+		foreach($themes as $k=>$theme){
+			$css[] = $theme['css'];
+		}
+		return implode("\r\n", $css);
+	}
+
+	/**
+	 * 获取模块所有主题配置
+	 * @param  string $id
+	 * @return array
+	 */
+	public static function getModAllThemes($id){
+		$file = Config::get('app_config/TEMPLATE_CONFIG_DIR')."/$id/theme.inc.php";
+		if(file_exists($file)){
+			return include $file;
+		}
+	}
+
+	/* (non-PHPdoc)
+	 * @see Model::getTableName()
+	 */
+	protected function getTableName() {
+		return "resume";
+	}
+
+	/* (non-PHPdoc)
+	 * @see Model::getPrimaryKey()
+	 */
+	protected function getPrimaryKey() {
+		return "id";
+	}
+}

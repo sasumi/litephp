@@ -1,0 +1,9 @@
+<?php
+$cur_dir = __DIR__.DIRECTORY_SEPARATOR;
+$app_url = 'http://localhost/litephp/resume/';
+return array(
+	'url' => 'http://localhost/litephp/resume/',
+	'salt' => 'HELLO_RESUME',
+	'admin' => 'http://localhost/litephp/resume/admin/',
+	'ysl' => 'http://localhost/ysl/source/ysl.base.js'
+);

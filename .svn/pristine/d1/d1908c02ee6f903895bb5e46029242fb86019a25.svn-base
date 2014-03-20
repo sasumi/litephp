@@ -1,0 +1,10 @@
+.user-register-frm {padding:10px 20px 80px}
+.user-register-frm legend {padding:10px; font-size:20px; text-shadow:2px 2px 2px #eee}
+.user-register-frm fieldset {border-top:1px solid #ddd}
+.user-register-frm dt {font-size:14px; color:#444}
+.user-register-frm dl {margin:10px 0}
+.user-register-frm dl .msg {padding-left:5px; font-size:14px;}
+.user-register-frm dl .error {color:red;}
+.user-register-frm dl .pass {display:inline-block; background:url("../img/tick.png") no-repeat 5px 0; text-indent:-999em; width:20px;}
+.user-register-frm input.txt {width:200px}
+.user-register-frm input.txt-error {border-color:red;}

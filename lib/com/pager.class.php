@@ -6,7 +6,7 @@ class Pager {
 	private $config = array(
 		'show_dot' => true,
 		'num_offset' => 2,
-		'page_size' => 10,
+		'page_size' => 5,
 		'page_key' => 'page',
 		'mode' => 'first,prev,num,next,last',
 
@@ -25,15 +25,11 @@ class Pager {
 		$this->loadPageInfo();
 	}
 
-	public static function init($identify='page', $config=array()){
+	public static function instance($identify='page', $config=array()){
 		if(!self::$instance_list[$identify]){
 			self::$instance_list[$identify] = new self($identify, $config);
 		}
 		return self::$instance_list[$identify];
-	}
-
-	public function setPageSize($num){
-		return $this->setConfig(array('page_size'=>$num));
 	}
 
 	public function setConfig($config){
@@ -61,7 +57,7 @@ class Pager {
 	}
 
 	private function loadPageInfo(){
-		$page_index = (int)gets($this->config['page_key'], array(), false);
+		$page_index = (int)Router::gets($this->config['page_key'], 'id');
 		$page_index = $page_index > 0 ? $page_index : 1;
 		$page_size = $this->getConfig('page_size');
 		$item_total = (int)$this->getInfo('item_total');
@@ -80,7 +76,7 @@ class Pager {
 	 * @return {string}
 	 */
 	private function getUrl($num){
-		parser_get_request($page, $action, $gets);
+		$gets = Router::gets(null, array(), false);
 		if(!empty($gets)){
 			foreach($gets as $key=>$get){
 				if($key == $this->config['page_key']){
@@ -89,7 +85,9 @@ class Pager {
 			}
 		}
 		$gets[$this->config['page_key']] = $num;
-		return url("$page/$action", $gets);
+		$controller = Router::getController();
+		$action = Router::getAction();
+		return Router::getUrl("$controller/$action", $gets);
 	}
 
 	/**

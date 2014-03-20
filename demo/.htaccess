@@ -1,9 +1,0 @@
-RewriteEngine On
-
-RewriteRule ^/([^/]+)\/(css|img|images|js)\/(.*)$ /$1/public/$2/$3 [L]
-RewriteRule ^/([^/]+)\/(.*)(\.swf|\.html)$ /$1/public/$2$3 [L]
-RewriteRule ^/([^/]+)\/admin\/(css|img|images|js)\/(.*)$ /$1/public/admin/$2/$3 [L]
-RewriteRule ^/([^/]+)\/admin\/(.*)(\.swf|\.html)$ /$1/public/admin/$2$3 [L]
-RewriteRule ^/([^/]+)\/(\w+)\.php(.*)$ /$1/public/$2.php$3 [L]
-
-RewriteRule ^/ysl\/(.*?)\.js(.*)$ http://localhost/ysl/trunk/source/$1.js$2 [L]

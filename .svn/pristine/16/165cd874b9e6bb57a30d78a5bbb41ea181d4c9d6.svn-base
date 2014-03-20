@@ -1,0 +1,189 @@
+<HTML><HEAD>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="imagetoolbar" content="no">
+<link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet">
+<link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet">
+<link href="下载打印－付款_files/axurerp_pagespecificstyles.css" type="text/css" rel="stylesheet">
+<!--[if IE 6]>
+<link href="下载打印－付款_files/axurerp_pagespecificstyles_ie6.css" type="text/css" rel="stylesheet">
+<![endif]-->
+<SCRIPT src="resources/scripts/jquery-1.4.2.min.js"></SCRIPT>
+<SCRIPT src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></SCRIPT>
+<SCRIPT src="resources/scripts/axurerp_beforepagescript.js"></SCRIPT>
+<SCRIPT src="resources/scripts/messagecenter.js"></SCRIPT>
+</HEAD>
+<BODY>
+<DIV class="main_container">
+
+<DIV id=u0_line class="u0_line"></DIV>
+
+<IMG id=u0 src="resources/images/transparent.gif" class="u0">
+
+<DIV id=u1_line class="u1_line"></DIV>
+
+<IMG id=u1 src="resources/images/transparent.gif" class="u1">
+
+<DIV id=u2_line class="u2_line"></DIV>
+
+<IMG id=u2 src="resources/images/transparent.gif" class="u2">
+
+<DIV id=u3_line class="u3_line"></DIV>
+
+<IMG id=u3 src="resources/images/transparent.gif" class="u3">
+
+<DIV id=u4_container class="u4_container">
+<DIV id="u4_img" class="u4_original"></DIV>
+<DIV id=u5 class="u5" >
+<DIV id=u5_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#000000;">选择模板</span></p></DIV></DIV>
+</DIV>
+<IMG id=u4 src="resources/images/transparent.gif" class="u4"    >
+
+<DIV id=u6_container class="u6_container">
+<DIV id="u6_img" class="u6_original"></DIV>
+<DIV id=u7 class="u7" >
+<DIV id=u7_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#000000;">修改替换</span></p></DIV></DIV>
+</DIV>
+<IMG id=u6 src="resources/images/transparent.gif" class="u6"    >
+
+<DIV id=u8_container class="u8_container">
+<DIV id="u8_img" class="u8_original"></DIV>
+<DIV id=u9 class="u9" >
+<DIV id=u9_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:16px;font-weight:bold;font-style:normal;text-decoration:none;color:#0000FF;">下载打印</span></p></DIV></DIV>
+</DIV>
+<IMG id=u8 src="resources/images/transparent.gif" class="u8"    >
+
+<DIV id=u10 class="u10;">
+
+<DIV id=u10_table class="u10_table"></DIV>
+
+</DIV>
+
+<DIV id=u10container style="position:absolute; left:60px; top:824px; width:805px; height:28px; overflow:visible">
+
+<DIV id=u11_container class="u11_container">
+<DIV id=u12 class="u12" >
+<DIV id=u12_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">简历大师首页</span></p></DIV></DIV>
+</DIV>
+<IMG id=u11 src="resources/images/transparent.gif" class="u11"    >
+
+<DIV id=u13_container class="u13_container">
+<DIV id=u14 class="u14" >
+<DIV id=u14_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">联系我们</span></p></DIV></DIV>
+</DIV>
+<IMG id=u13 src="resources/images/transparent.gif" class="u13"    >
+
+<DIV id=u15_container class="u15_container">
+<DIV id=u16 class="u16" >
+<DIV id=u16_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">意见及建议</span></p></DIV></DIV>
+</DIV>
+<IMG id=u15 src="resources/images/transparent.gif" class="u15"    >
+
+<DIV id=u17_container class="u17_container">
+<DIV id=u18 class="u18" >
+<DIV id=u18_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">使用帮助</span></p></DIV></DIV>
+</DIV>
+<IMG id=u17 src="resources/images/transparent.gif" class="u17"    >
+
+<DIV id=u19_container class="u19_container">
+<DIV id=u20 class="u20" >
+<DIV id=u20_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">资费说明</span></p></DIV></DIV>
+</DIV>
+<IMG id=u19 src="resources/images/transparent.gif" class="u19"    >
+
+<DIV id=u21_container class="u21_container">
+<DIV id=u22 class="u22" >
+<DIV id=u22_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">官方旗舰店</span></p></DIV></DIV>
+</DIV>
+<IMG id=u21 src="resources/images/transparent.gif" class="u21"    >
+
+<DIV id=u23_container class="u23_container">
+<DIV id=u24 class="u24" >
+<DIV id=u24_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">简历大师微博</span></p></DIV></DIV>
+</DIV>
+<IMG id=u23 src="resources/images/transparent.gif" class="u23"    >
+
+<DIV id=u25_container class="u25_container">
+<DIV id=u26 class="u26" >
+<DIV id=u26_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">友情链接</span></p></DIV></DIV>
+</DIV>
+<IMG id=u25 src="resources/images/transparent.gif" class="u25"    >
+
+</DIV>
+<DIV id=u27 class="u27" >
+<DIV id=u27_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">ICP证粤B2-20130191</span></p></DIV></DIV>
+<DIV id=u28 class="u28" >
+<DIV id=u28_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">© 2013 All rights reserved</span></p></DIV></DIV>
+<DIV id=u29 class="u29" >
+<DIV id=u29_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:18px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">支付方式</span></p></DIV></DIV>
+<DIV id=u30_container class="u30_container">
+<DIV id="u30_img" class="u30_original"></DIV>
+<DIV id=u31 class="u31" >
+<DIV id=u31_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u30 src="resources/images/transparent.gif" class="u30"    >
+
+<DIV id=u32container style="position:absolute; left:70px; top:213px; width:20px; height:16px; ; ; ;" >
+<LABEL for=u32>
+<DIV id=u33 class="u33" >
+<DIV id=u33_rtf>&nbsp;</DIV></DIV>
+</LABEL>
+<INPUT id=u32 style="position:absolute; left:-3px; top:-2px;" type=checkbox value=checkbox  >
+</DIV>
+<DIV id=u34container style="position:absolute; left:70px; top:270px; width:20px; height:16px; ; ; ;" >
+<LABEL for=u34>
+<DIV id=u35 class="u35" >
+<DIV id=u35_rtf>&nbsp;</DIV></DIV>
+</LABEL>
+<INPUT id=u34 style="position:absolute; left:-3px; top:-2px;" type=checkbox value=checkbox  >
+</DIV>
+<DIV id=u36_container class="u36_container">
+<DIV id="u36_img" class="u36_original"></DIV>
+<DIV id=u37 class="u37" >
+<DIV id=u37_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u36 src="resources/images/transparent.gif" class="u36"    >
+
+<DIV id=u38 class="u38" >
+<DIV id=u38_rtf><p style="text-align:left;"><span style="font-family:华文琥珀;font-size:24px;font-weight:normal;font-style:normal;text-decoration:none;color:#990000;">简历大师</span></p></DIV></DIV>
+<DIV id=u39 class="u39" >
+<DIV id=u39_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:16px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">旗舰店</span></p></DIV></DIV>
+<DIV id=u40 class="u40" >
+<DIV id=u40_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">（推荐采用）4钻金牌店，付款后系统自动发货，请好评哦亲！</span></p></DIV></DIV>
+<DIV id=u41 class="u41" >
+<DIV id=u41_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:18px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">共需要支付&nbsp; </span><span style="font-family:微软雅黑;font-size:18px;font-weight:bold;font-style:normal;text-decoration:none;color:#FF0000;">5.00</span><span style="font-family:微软雅黑;font-size:18px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">&nbsp;</span><span style="font-family:微软雅黑;font-size:18px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;"> 元</span></p></DIV></DIV>
+<INPUT id=u42 type=submit class="u42" value="立即提交"  >
+
+<DIV id=u43_text class="u43_text" >
+<DIV id=u43_rtf><p style="text-align:left;"><span style="font-family:华文琥珀;font-size:48px;font-weight:normal;font-style:normal;text-decoration:none;color:#990000;">简历大师</span></p></DIV></DIV>
+<INPUT type="image" id=u43 src="resources/images/transparent.gif" class="u43"    >
+
+<DIV id=u44 class="u44" >
+<DIV id=u44_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">帮助最多用户成功应聘的简历网站</span></p></DIV></DIV>
+<INPUT id=u45 type=submit class="u45" value="退出"  >
+
+<DIV id=u46 class="u46" >
+<DIV id=u46_rtf><p style="text-align:left;"><span style="font-family:幼圆;font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">jianlidashi.com</span></p></DIV></DIV>
+<DIV id=u47_line class="u47_line"></DIV>
+
+<IMG id=u47 src="resources/images/transparent.gif" class="u47">
+
+<DIV id=u48 class="u48" >
+<DIV id=u48_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">欢迎回来 </span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#FF0000;">wclaiwei00000</span></p></DIV></DIV>
+<DIV id=u49_text class="u49_text" >
+<DIV id=u49_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#000000;">点击进入</span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#0000FF;">个人中心</span></p></DIV></DIV>
+<INPUT type="image" id=u49 src="resources/images/transparent.gif" class="u49"    >
+</DIV>
+<DIV class=preload>
+<img src="下载打印－付款_files/u0_line.png" width="1" height="1"/>
+<img src="下载打印－付款_files/u1_line.png" width="1" height="1"/>
+<img src="下载打印－付款_files/u2_line.png" width="1" height="1"/>
+<img src="下载打印－付款_files/u3_line.png" width="1" height="1"/>
+<img src="下载打印－付款_files/u4_original.png" width="1" height="1"/>
+<img src="下载打印－付款_files/u10_table.png" width="1" height="1"/>
+<img src="下载打印－付款_files/u11_original.png" width="1" height="1"/>
+<img src="下载打印－付款_files/u30_original.png" width="1" height="1"/>
+<img src="下载打印－付款_files/u36_original.png" width="1" height="1"/>
+<img src="下载打印－付款_files/u47_line.png" width="1" height="1"/></DIV>
+</BODY>
+<SCRIPT src="resources/scripts/axurerp_pagescript.js"></SCRIPT>
+<SCRIPT src="下载打印－付款_files/axurerp_pagespecificscript.js" charset="utf-8"></SCRIPT>

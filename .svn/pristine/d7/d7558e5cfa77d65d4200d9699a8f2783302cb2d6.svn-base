@@ -1,0 +1,331 @@
+<HTML><HEAD>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="imagetoolbar" content="no">
+<link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet">
+<link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet">
+<link href="模板主页面编辑_的副本_files/axurerp_pagespecificstyles.css" type="text/css" rel="stylesheet">
+<!--[if IE 6]>
+<link href="模板主页面编辑_的副本_files/axurerp_pagespecificstyles_ie6.css" type="text/css" rel="stylesheet">
+<![endif]-->
+<SCRIPT src="resources/scripts/jquery-1.4.2.min.js"></SCRIPT>
+<SCRIPT src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></SCRIPT>
+<SCRIPT src="resources/scripts/axurerp_beforepagescript.js"></SCRIPT>
+<SCRIPT src="resources/scripts/messagecenter.js"></SCRIPT>
+</HEAD>
+<BODY>
+<DIV class="main_container">
+
+<DIV id=u0_container class="u0_container">
+<DIV id="u0_img" class="u0_original"></DIV>
+<DIV id=u1 class="u1" >
+<DIV id=u1_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u0 src="resources/images/transparent.gif" class="u0"    >
+
+<DIV id=u2_container class="u2_container">
+<DIV id="u2_img" class="u2_original"></DIV>
+<DIV id=u3 class="u3" >
+<DIV id=u3_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u2 src="resources/images/transparent.gif" class="u2"    >
+
+<DIV id=u4_container class="u4_container">
+<DIV id="u4_img" class="u4_original"></DIV>
+<DIV id=u5 class="u5" >
+<DIV id=u5_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u4 src="resources/images/transparent.gif" class="u4"    >
+
+<DIV id=u6_container class="u6_container">
+<DIV id="u6_img" class="u6_original"></DIV>
+<DIV id=u7 class="u7" >
+<DIV id=u7_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<INPUT type="image" id=u6 src="resources/images/transparent.gif" class="u6"    >
+
+<DIV id=u8_line class="u8_line"></DIV>
+
+<IMG id=u8 src="resources/images/transparent.gif" class="u8">
+
+<DIV id=u9_line class="u9_line"></DIV>
+
+<IMG id=u9 src="resources/images/transparent.gif" class="u9">
+
+<DIV id=u10_line class="u10_line"></DIV>
+
+<IMG id=u10 src="resources/images/transparent.gif" class="u10">
+
+<DIV id=u11_line class="u11_line"></DIV>
+
+<IMG id=u11 src="resources/images/transparent.gif" class="u11">
+
+<DIV id=u12_container class="u12_container">
+<DIV id="u12_img" class="u12_original"></DIV>
+<DIV id=u13 class="u13" >
+<DIV id=u13_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#000000;">选择模板</span></p></DIV></DIV>
+</DIV>
+<IMG id=u12 src="resources/images/transparent.gif" class="u12"    >
+
+<DIV id=u14_container class="u14_container">
+<DIV id="u14_img" class="u14_original"></DIV>
+<DIV id=u15 class="u15" >
+<DIV id=u15_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:16px;font-weight:bold;font-style:normal;text-decoration:none;color:#0000FF;">修改替换</span></p></DIV></DIV>
+</DIV>
+<IMG id=u14 src="resources/images/transparent.gif" class="u14"    >
+
+<DIV id=u16_container class="u16_container">
+<DIV id="u16_img" class="u16_original"></DIV>
+<DIV id=u17 class="u17" >
+<DIV id=u17_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">下载打印</span></p></DIV></DIV>
+</DIV>
+<IMG id=u16 src="resources/images/transparent.gif" class="u16"    >
+
+<DIV id=u18 class="u18;">
+
+<DIV id=u18_table class="u18_table"></DIV>
+
+</DIV>
+
+<DIV id=u18container style="position:absolute; left:60px; top:1024px; width:805px; height:28px; overflow:visible">
+
+<DIV id=u19_container class="u19_container">
+<DIV id=u20 class="u20" >
+<DIV id=u20_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">简历大师首页</span></p></DIV></DIV>
+</DIV>
+<IMG id=u19 src="resources/images/transparent.gif" class="u19"    >
+
+<DIV id=u21_container class="u21_container">
+<DIV id=u22 class="u22" >
+<DIV id=u22_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">联系我们</span></p></DIV></DIV>
+</DIV>
+<IMG id=u21 src="resources/images/transparent.gif" class="u21"    >
+
+<DIV id=u23_container class="u23_container">
+<DIV id=u24 class="u24" >
+<DIV id=u24_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">意见及建议</span></p></DIV></DIV>
+</DIV>
+<IMG id=u23 src="resources/images/transparent.gif" class="u23"    >
+
+<DIV id=u25_container class="u25_container">
+<DIV id=u26 class="u26" >
+<DIV id=u26_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">使用帮助</span></p></DIV></DIV>
+</DIV>
+<IMG id=u25 src="resources/images/transparent.gif" class="u25"    >
+
+<DIV id=u27_container class="u27_container">
+<DIV id=u28 class="u28" >
+<DIV id=u28_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">资费说明</span></p></DIV></DIV>
+</DIV>
+<IMG id=u27 src="resources/images/transparent.gif" class="u27"    >
+
+<DIV id=u29_container class="u29_container">
+<DIV id=u30 class="u30" >
+<DIV id=u30_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">官方旗舰店</span></p></DIV></DIV>
+</DIV>
+<IMG id=u29 src="resources/images/transparent.gif" class="u29"    >
+
+<DIV id=u31_container class="u31_container">
+<DIV id=u32 class="u32" >
+<DIV id=u32_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">简历大师微博</span></p></DIV></DIV>
+</DIV>
+<IMG id=u31 src="resources/images/transparent.gif" class="u31"    >
+
+<DIV id=u33_container class="u33_container">
+<DIV id=u34 class="u34" >
+<DIV id=u34_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">友情链接</span></p></DIV></DIV>
+</DIV>
+<IMG id=u33 src="resources/images/transparent.gif" class="u33"    >
+
+</DIV>
+<DIV id=u35 class="u35" >
+<DIV id=u35_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">ICP证粤B2-20130191</span></p></DIV></DIV>
+<DIV id=u36 class="u36" >
+<DIV id=u36_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">© 2013 All rights reserved</span></p></DIV></DIV>
+<DIV id=u37_container class="u37_container">
+<DIV id="u37_img" class="u37_original"></DIV>
+<DIV id=u38 class="u38" >
+<DIV id=u38_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<INPUT type="image" id=u37 src="resources/images/transparent.gif" class="u37"    >
+
+<DIV id=u39_container class="u39_container">
+<DIV id="u39_img" class="u39_original"></DIV>
+<DIV id=u40 class="u40" >
+<DIV id=u40_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<INPUT type="image" id=u39 src="resources/images/transparent.gif" class="u39"    >
+
+<DIV id=u41_container class="u41_container">
+<DIV id="u41_img" class="u41_original"></DIV>
+<DIV id=u42 class="u42" >
+<DIV id=u42_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<INPUT type="image" id=u41 src="resources/images/transparent.gif" class="u41"    >
+
+<DIV id=u43_container class="u43_container">
+<DIV id="u43_img" class="u43_original"></DIV>
+<DIV id=u44 class="u44" >
+<DIV id=u44_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u43 src="resources/images/transparent.gif" class="u43"    >
+
+<DIV id=u45container style="position:absolute; left:666px; top:203px; width:100px; height:19px; ; ; ;" >
+<LABEL for=u45>
+<DIV id=u46 class="u46" >
+<DIV id=u46_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:underline;color:#0000FF;">基本资料</span></p></DIV></DIV>
+</LABEL>
+<INPUT id=u45 style="position:absolute; left:-3px; top:-2px;" type=checkbox value=checkbox checked >
+</DIV>
+<DIV id=u47container style="position:absolute; left:666px; top:158px; width:100px; height:19px; ; ; ;" >
+<LABEL for=u47>
+<DIV id=u48 class="u48" >
+<DIV id=u48_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:underline;color:#0000FF;">封面</span></p></DIV></DIV>
+</LABEL>
+<INPUT id=u47 style="position:absolute; left:-3px; top:-2px;" type=checkbox value=checkbox  >
+</DIV>
+<DIV id=u49container style="position:absolute; left:666px; top:223px; width:100px; height:19px; ; ; ;" >
+<LABEL for=u49>
+<DIV id=u50 class="u50" >
+<DIV id=u50_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:underline;color:#0000FF;">能力简述</span></p></DIV></DIV>
+</LABEL>
+<INPUT id=u49 style="position:absolute; left:-3px; top:-2px;" type=checkbox value=checkbox checked >
+</DIV>
+<DIV id=u51container style="position:absolute; left:666px; top:243px; width:100px; height:19px; ; ; ;" >
+<LABEL for=u51>
+<DIV id=u52 class="u52" >
+<DIV id=u52_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:underline;color:#0000FF;">工作经历</span></p></DIV></DIV>
+</LABEL>
+<INPUT id=u51 style="position:absolute; left:-3px; top:-2px;" type=checkbox value=checkbox checked >
+</DIV>
+<DIV id=u53container style="position:absolute; left:666px; top:264px; width:100px; height:19px; ; ; ;" >
+<LABEL for=u53>
+<DIV id=u54 class="u54" >
+<DIV id=u54_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:underline;color:#0000FF;">教育经历</span></p></DIV></DIV>
+</LABEL>
+<INPUT id=u53 style="position:absolute; left:-3px; top:-2px;" type=checkbox value=checkbox checked >
+</DIV>
+<DIV id=u55container style="position:absolute; left:666px; top:287px; width:100px; height:19px; ; ; ;" >
+<LABEL for=u55>
+<DIV id=u56 class="u56" >
+<DIV id=u56_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:underline;color:#0000FF;">自我介绍</span></p></DIV></DIV>
+</LABEL>
+<INPUT id=u55 style="position:absolute; left:-3px; top:-2px;" type=checkbox value=checkbox checked >
+</DIV>
+<DIV id=u57container style="position:absolute; left:666px; top:307px; width:100px; height:19px; ; ; ;" >
+<LABEL for=u57>
+<DIV id=u58 class="u58" >
+<DIV id=u58_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">自荐信</span></p></DIV></DIV>
+</LABEL>
+<INPUT id=u57 style="position:absolute; left:-3px; top:-2px;" type=checkbox value=checkbox  >
+</DIV>
+<DIV id=u59_container class="u59_container">
+<DIV id="u59_img" class="u59_original"></DIV>
+<DIV id=u60 class="u60" >
+<DIV id=u60_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">内容条目</span></p></DIV></DIV>
+</DIV>
+<IMG id=u59 src="resources/images/transparent.gif" class="u59"    >
+
+<DIV id=u61container style="position:absolute; left:666px; top:180px; width:100px; height:19px; ; ; ;" >
+<LABEL for=u61>
+<DIV id=u62 class="u62" >
+<DIV id=u62_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:underline;color:#0000FF;">照片</span></p></DIV></DIV>
+</LABEL>
+<INPUT id=u61 style="position:absolute; left:-3px; top:-2px;" type=checkbox value=checkbox checked >
+</DIV>
+<DIV id=u63_text class="u63_text" >
+<DIV id=u63_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:#0000FF;">编辑 </span><span style="font-family:微软雅黑;font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:#000000;">| </span></p></DIV></DIV>
+<INPUT type="image" id=u63 src="resources/images/transparent.gif" class="u63"    >
+
+<INPUT id=u64 type=submit class="u64" value="增加一个项目"  >
+
+<INPUT id=u65 type=submit class="u65" value="调整项目排序"  >
+
+<DIV id=u66_container class="u66_container">
+<DIV id="u66_img" class="u66_original"></DIV>
+<DIV id=u67 class="u67" >
+<DIV id=u67_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">操作提示</span></p></DIV></DIV>
+</DIV>
+<IMG id=u66 src="resources/images/transparent.gif" class="u66"    >
+
+<INPUT id=u68 type=text value="" class="u68"     >
+
+<DIV id=u69 class="u69" >
+<DIV id=u69_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">鼠标指示对应区域（该条目内容将被套上红框），点击即可进入编辑状态。</span></p><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">灰框表示未修改；</span></p><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">绿框表示有修改；</span></p><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&nbsp;</span></p><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&nbsp;</span></p><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&nbsp;</span></p></DIV></DIV>
+<DIV id=u70_container class="u70_container">
+<DIV id="u70_img" class="u70_original"></DIV>
+<DIV id=u71 class="u71" >
+<DIV id=u71_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u70 src="resources/images/transparent.gif" class="u70"    >
+
+<DIV id=u72 class="u72" >
+<DIV id=u72_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:18px;font-weight:bold;font-style:normal;text-decoration:none;color:#CCCCCC;">给你的简历写一个标题...</span></p></DIV></DIV>
+<INPUT id=u73 type=submit class="u73" value="效果预览"  >
+
+<INPUT id=u74 type=submit class="u74" value="下一步（下载或打印）"  >
+
+<DIV id=u75_text class="u75_text" >
+<DIV id=u75_rtf><p style="text-align:left;"><span style="font-family:华文琥珀;font-size:48px;font-weight:normal;font-style:normal;text-decoration:none;color:#990000;">简历大师</span></p></DIV></DIV>
+<INPUT type="image" id=u75 src="resources/images/transparent.gif" class="u75"    >
+
+<DIV id=u76 class="u76" >
+<DIV id=u76_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">帮助最多用户成功应聘的简历网站</span></p></DIV></DIV>
+<INPUT id=u77 type=submit class="u77" value="退出"  >
+
+<DIV id=u78 class="u78" >
+<DIV id=u78_rtf><p style="text-align:left;"><span style="font-family:幼圆;font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">jianlidashi.com</span></p></DIV></DIV>
+<DIV id=u79_line class="u79_line"></DIV>
+
+<IMG id=u79 src="resources/images/transparent.gif" class="u79">
+
+<DIV id=u80 class="u80" >
+<DIV id=u80_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">欢迎回来 </span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#FF0000;">wclaiwei00000</span></p></DIV></DIV>
+<DIV id=u81_text class="u81_text" >
+<DIV id=u81_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#000000;">点击进入</span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#0000FF;">个人中心</span></p></DIV></DIV>
+<INPUT type="image" id=u81 src="resources/images/transparent.gif" class="u81"    >
+
+<DIV id=u82_container class="u82_container">
+<DIV id="u82_img" class="u82_original"></DIV>
+<DIV id=u83 class="u83" >
+<DIV id=u83_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u82 src="resources/images/transparent.gif" class="u82"    >
+
+<DIV id=u84_container class="u84_container">
+<DIV id="u84_img" class="u84_original"></DIV>
+<DIV id=u85 class="u85" >
+<DIV id=u85_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u84 src="resources/images/transparent.gif" class="u84"    >
+
+<INPUT id=u86 type=submit class="u86" value="修改头像"  >
+
+<DIV id=u87_text class="u87_text" >
+<DIV id=u87_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:#000000;">&nbsp;</span><span style="font-family:微软雅黑;font-size:14px;font-weight:normal;font-style:normal;text-decoration:none;color:#0000FF;">排序</span></p></DIV></DIV>
+<INPUT type="image" id=u87 src="resources/images/transparent.gif" class="u87"    >
+</DIV>
+<DIV class=preload>
+<img src="模板主页面编辑_的副本_files/u0_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u2_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u4_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u6_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u8_line.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u9_line.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u10_line.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u11_line.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u12_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u18_table.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u19_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u37_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u39_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u41_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u43_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u59_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u66_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u70_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u79_line.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u82_original.png" width="1" height="1"/>
+<img src="模板主页面编辑_的副本_files/u84_original.png" width="1" height="1"/></DIV>
+</BODY>
+<SCRIPT src="resources/scripts/axurerp_pagescript.js"></SCRIPT>
+<SCRIPT src="模板主页面编辑_的副本_files/axurerp_pagespecificscript.js" charset="utf-8"></SCRIPT>

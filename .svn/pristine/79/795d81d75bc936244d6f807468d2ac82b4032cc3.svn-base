@@ -1,0 +1,152 @@
+<?php
+abstract class DB_Model extends Data /** implements DB_IModel **/ {
+	private $result;
+	private $attributes_change_keys;
+	private $query;
+	private $limit;
+
+	public function __construct(){
+		if(!$this->getTableName() || !$this->getPrimaryKey()){
+			throw new LException("DB MODEL CONFIG ERROR");
+		}
+	}
+
+	/**
+	 * get db record instance
+	 * @return DB_Record
+	 */
+	protected function getDbRecord(){
+		return DB_Record::init();
+	}
+
+	/**
+	 * current model table name
+	 */
+	abstract protected function getTableName();
+
+	/**
+	 * current mode primary key
+	*/
+	abstract protected function getPrimaryKey();
+
+	/**
+	 * select function
+	 * @param string $statement
+	 * @param string $var1
+	 * @param string $var2
+	 * @return unknown|DB_Model
+	 */
+	public static function find($statement='', $var1=null, $var2=null){
+		//add slashes
+		$args = array_slice(func_get_args(), 1);
+
+		$sel = new DB_Query();
+		if($this){
+			if(!empty($args)){
+				$arr = explode('?', $statement);
+				$rst = '';
+				foreach($args as $key=>$val){
+					$rst .= $arr[$key].$this->getDbRecord()->quote($val);
+				}
+				$rst .= array_pop($arr);
+				$statement = $rst;
+			}
+			$query = $sel->select()->from($this->getTableName())->where($statement);
+			$this->query = $query;
+			return $this;
+		} else {
+			//PHP 5.3+
+			$class = get_called_class();
+			$obj = new $class;
+			if(!empty($args)){
+				$arr = explode('?', $statement);
+				$rst = '';
+				foreach($args as $key=>$val){
+					$rst .= $arr[$key].$obj->getDbRecord()->quote($val);
+				}
+				$rst .= array_pop($arr);
+				$statement = $rst;
+			}
+			$query = $sel->select()->from($obj->getTableName())->where($statement);
+			$obj->query = $query;
+			return $obj;
+		}
+	}
+
+	/**
+	 * get all records
+	 * @return array
+	 */
+	final public function all(){
+		$list = $this->getDbRecord()->getAll($this->query);
+		$obj = null;
+		if($list){
+			$obj = clone $this;
+			$obj->setItems($list);
+		}
+		return $obj;
+	}
+
+	/**
+	 * get one record
+	 * @return DB_Model|NULL
+	 */
+	final public function one(){
+		$data = $this->getDbRecord()->getOne($this->query);
+		if($data){
+			$this->setItems($data);
+			return $this;
+		}
+		return null;
+	}
+
+	/**
+	 * get records by page
+	 * @param string $page
+	 * @return multitype:
+	 */
+	final public function page($page=null){
+		return $this->getDbRecord()->getPage($this->query, $page);
+	}
+
+	/**
+	 * save current change
+	 * @return bool
+	 */
+	final public function save(){
+		$attributes = $this->getItems();
+
+		//insert
+		if(!empty($attributes) && empty($attributes[$this->getPrimaryKey()])){
+			return $this->getDbRecord()->insert($this->getTableName(), $attributes);
+		}
+
+		//update
+		else if($attributes[$this->getPrimaryKey()]){
+			$db_pk_val = $attributes[$this->getPrimaryKey()];
+			unset($attributes[$this->getPrimaryKey()]);
+			$data = array();
+			$attribute_change_keys = $this->getItemChangekeys();
+			foreach($attributes as $key=>$pro){
+				if(isset($attribute_change_keys[$key])){
+					$data[$key] = $pro;
+				}
+			}
+			if(!empty($data)){
+				return $this->getDbRecord()->update($this->getTableName(), $data, $this->getPrimaryKey().'='.$db_pk_val);
+			}
+			else {
+				throw new LException("no properies update");
+			}
+		}
+		return false;
+	}
+
+	final public function __call($method_name, $params){
+		if(method_exists($this->query, $method_name)){
+			call_user_method_array($method_name, $this->query, $params);
+			return $this;
+		}
+		throw new LException("METHOD NO EXIST:".$method_name);
+	}
+}

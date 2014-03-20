@@ -1,0 +1,485 @@
+<HTML><HEAD>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="imagetoolbar" content="no">
+<link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet">
+<link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet">
+<link href="后台－简历管理－编辑_files/axurerp_pagespecificstyles.css" type="text/css" rel="stylesheet">
+<!--[if IE 6]>
+<link href="后台－简历管理－编辑_files/axurerp_pagespecificstyles_ie6.css" type="text/css" rel="stylesheet">
+<![endif]-->
+<SCRIPT src="resources/scripts/jquery-1.4.2.min.js"></SCRIPT>
+<SCRIPT src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></SCRIPT>
+<SCRIPT src="resources/scripts/axurerp_beforepagescript.js"></SCRIPT>
+<SCRIPT src="resources/scripts/messagecenter.js"></SCRIPT>
+</HEAD>
+<BODY>
+<DIV class="main_container">
+
+<DIV id=u0 style="; position:absolute; left:0px; top:30px; width:971px; height:1351px;; overflow:hidden; ">
+<DIV id=pd3u0 style="position:absolute; left:0px; top:0px; width:1px; height:1px; visibility:hidden;">
+</DIV>
+<DIV id=pd2u0 style="position:absolute; left:0px; top:0px; width:1px; height:1px; visibility:hidden;">
+<DIV id=u1_container class="u1_container">
+<DIV id="u1_img" class="u1_original"></DIV>
+<DIV id=u2 class="u2" >
+<DIV id=u2_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tab 2</span></p></DIV></DIV>
+</DIV>
+<INPUT type="image" id=u1 src="resources/images/transparent.gif" class="u1"    >
+
+<DIV id=u3_container class="u3_container">
+<DIV id="u3_img" class="u3_original"></DIV>
+<DIV id=u4 class="u4" >
+<DIV id=u4_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#FFFFFF;">Tab 3</span></p></DIV></DIV>
+</DIV>
+<INPUT type="image" id=u3 src="resources/images/transparent.gif" class="u3"    >
+
+<DIV id=u5_container class="u5_container">
+<DIV id="u5_img" class="u5_original"></DIV>
+<DIV id=u6 class="u6" >
+<DIV id=u6_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tab 1</span></p></DIV></DIV>
+</DIV>
+<INPUT type="image" id=u5 src="resources/images/transparent.gif" class="u5"    >
+
+<DIV id=u7_container class="u7_container">
+<DIV id="u7_img" class="u7_original"></DIV>
+<DIV id=u8 class="u8" >
+<DIV id=u8_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u7 src="resources/images/transparent.gif" class="u7"    >
+
+<DIV id=u9_container class="u9_container">
+<DIV id="u9_img" class="u9_original"></DIV>
+<DIV id=u10 class="u10" >
+<DIV id=u10_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u9 src="resources/images/transparent.gif" class="u9"    >
+
+</DIV>
+<DIV id=pd1u0 style="position:absolute; left:0px; top:0px; width:1px; height:1px; visibility:hidden;">
+<DIV id=u11_container class="u11_container">
+<DIV id="u11_img" class="u11_original"></DIV>
+<DIV id=u12 class="u12" >
+<DIV id=u12_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tab 1</span></p></DIV></DIV>
+</DIV>
+<INPUT type="image" id=u11 src="resources/images/transparent.gif" class="u11"    >
+
+<DIV id=u13_container class="u13_container">
+<DIV id="u13_img" class="u13_original"></DIV>
+<DIV id=u14 class="u14" >
+<DIV id=u14_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#FFFFFF;">Tab 2</span></p></DIV></DIV>
+</DIV>
+<INPUT type="image" id=u13 src="resources/images/transparent.gif" class="u13"    >
+
+<DIV id=u15_container class="u15_container">
+<DIV id="u15_img" class="u15_original"></DIV>
+<DIV id=u16 class="u16" >
+<DIV id=u16_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tab 3</span></p></DIV></DIV>
+</DIV>
+<INPUT type="image" id=u15 src="resources/images/transparent.gif" class="u15"    >
+
+<DIV id=u17_container class="u17_container">
+<DIV id="u17_img" class="u17_original"></DIV>
+<DIV id=u18 class="u18" >
+<DIV id=u18_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u17 src="resources/images/transparent.gif" class="u17"    >
+
+<DIV id=u19_container class="u19_container">
+<DIV id="u19_img" class="u19_original"></DIV>
+<DIV id=u20 class="u20" >
+<DIV id=u20_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u19 src="resources/images/transparent.gif" class="u19"    >
+
+</DIV>
+<DIV id=pd0u0 style="position:absolute; left:0px; top:0px; width:1px; height:1px; ;">
+<DIV id=u21_container class="u21_container">
+<DIV id="u21_img" class="u21_original"></DIV>
+<DIV id=u22 class="u22" >
+<DIV id=u22_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">履历录入</span></p></DIV></DIV>
+</DIV>
+<IMG id=u21 src="resources/images/transparent.gif" class="u21"    >
+
+<DIV id=u23_container class="u23_container">
+<DIV id="u23_img" class="u23_original"></DIV>
+<DIV id=u24 class="u24" >
+<DIV id=u24_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">资费设定</span></p></DIV></DIV>
+</DIV>
+<IMG id=u23 src="resources/images/transparent.gif" class="u23"    >
+
+<DIV id=u25_container class="u25_container">
+<DIV id="u25_img" class="u25_original"></DIV>
+<DIV id=u26 class="u26" >
+<DIV id=u26_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u25 src="resources/images/transparent.gif" class="u25"    >
+
+<DIV id=u27_container class="u27_container">
+<DIV id="u27_img" class="u27_original"></DIV>
+<DIV id=u28 class="u28" >
+<DIV id=u28_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">后台首页</span></p></DIV></DIV>
+</DIV>
+<IMG id=u27 src="resources/images/transparent.gif" class="u27"    >
+
+<DIV id=u29_container class="u29_container">
+<DIV id="u29_img" class="u29_original"></DIV>
+<DIV id=u30 class="u30" >
+<DIV id=u30_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">充值记录</span></p></DIV></DIV>
+</DIV>
+<IMG id=u29 src="resources/images/transparent.gif" class="u29"    >
+
+<DIV id=u31_container class="u31_container">
+<DIV id="u31_img" class="u31_original"></DIV>
+<DIV id=u32 class="u32" >
+<DIV id=u32_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">用户管理</span></p></DIV></DIV>
+</DIV>
+<IMG id=u31 src="resources/images/transparent.gif" class="u31"    >
+
+<DIV id=u33_container class="u33_container">
+<DIV id="u33_img" class="u33_original"></DIV>
+<DIV id=u34 class="u34" >
+<DIV id=u34_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">权限管理</span></p></DIV></DIV>
+</DIV>
+<INPUT type="image" id=u33 src="resources/images/transparent.gif" class="u33"    >
+
+<DIV id=u35_container class="u35_container">
+<DIV id="u35_img" class="u35_original"></DIV>
+<DIV id=u36 class="u36" >
+<DIV id=u36_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u35 src="resources/images/transparent.gif" class="u35"    >
+
+<DIV id=u37_container class="u37_container">
+<DIV id="u37_img" class="u37_original"></DIV>
+<DIV id=u38 class="u38" >
+<DIV id=u38_rtf><p style="text-align:center;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#FFFFFF;">简历管理</span></p></DIV></DIV>
+</DIV>
+<IMG id=u37 src="resources/images/transparent.gif" class="u37"    >
+
+</DIV>
+</DIV>
+<DIV id=u39 class="u39" >
+<DIV id=u39_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">您好，</span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#0000FF;">wenjie </span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">,欢迎使用简历大师后台。你上一次登录时间是 </span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#0000FF;">2013-05-30 23:48</span></p></DIV></DIV>
+<DIV id=u40 class="u40" >
+<DIV id=u40_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">[ </span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:underline;color:#0000FF;">退出登录 </span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">]</span></p></DIV></DIV>
+<DIV id=u41 class="u41" >
+<DIV id=u41_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">[ </span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:underline;color:#0000FF;">进入网站首页 </span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">]</span></p></DIV></DIV>
+<INPUT id=u42 type=text value="基本资料" class="u42"     >
+
+<DIV id=u43 class="u43;">
+
+<DIV id=u43_table class="u43_table"></DIV>
+
+</DIV>
+
+<DIV id=u43container style="position:absolute; left:80px; top:130px; width:559px; height:120px; overflow:visible">
+
+<DIV id=u44_container class="u44_container">
+<DIV id=u45 class="u45" >
+<DIV id=u45_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">姓名</span></p></DIV></DIV>
+</DIV>
+<IMG id=u44 src="resources/images/transparent.gif" class="u44"    >
+
+<DIV id=u46_container class="u46_container">
+<DIV id=u47 class="u47" >
+<DIV id=u47_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">贾沙沙</span></p></DIV></DIV>
+</DIV>
+<IMG id=u46 src="resources/images/transparent.gif" class="u46"    >
+
+<DIV id=u48_container class="u48_container">
+<DIV id=u49 class="u49" >
+<DIV id=u49_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">性别</span></p></DIV></DIV>
+</DIV>
+<IMG id=u48 src="resources/images/transparent.gif" class="u48"    >
+
+<DIV id=u50_container class="u50_container">
+<DIV id=u51 class="u51" >
+<DIV id=u51_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">女</span></p></DIV></DIV>
+</DIV>
+<IMG id=u50 src="resources/images/transparent.gif" class="u50"    >
+
+<DIV id=u52_container class="u52_container">
+<DIV id=u53 class="u53" >
+<DIV id=u53_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">出生年月</span></p></DIV></DIV>
+</DIV>
+<IMG id=u52 src="resources/images/transparent.gif" class="u52"    >
+
+<DIV id=u54_container class="u54_container">
+<DIV id=u55 class="u55" >
+<DIV id=u55_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">1989年2月</span></p></DIV></DIV>
+</DIV>
+<IMG id=u54 src="resources/images/transparent.gif" class="u54"    >
+
+<DIV id=u56_container class="u56_container">
+<DIV id=u57 class="u57" >
+<DIV id=u57_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">民族</span></p></DIV></DIV>
+</DIV>
+<IMG id=u56 src="resources/images/transparent.gif" class="u56"    >
+
+<DIV id=u58_container class="u58_container">
+<DIV id=u59 class="u59" >
+<DIV id=u59_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">汉</span></p></DIV></DIV>
+</DIV>
+<IMG id=u58 src="resources/images/transparent.gif" class="u58"    >
+
+<DIV id=u60_container class="u60_container">
+<DIV id=u61 class="u61" >
+<DIV id=u61_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">籍贯</span></p></DIV></DIV>
+</DIV>
+<IMG id=u60 src="resources/images/transparent.gif" class="u60"    >
+
+<DIV id=u62_container class="u62_container">
+<DIV id=u63 class="u63" >
+<DIV id=u63_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">吉林</span></p></DIV></DIV>
+</DIV>
+<IMG id=u62 src="resources/images/transparent.gif" class="u62"    >
+
+<DIV id=u64_container class="u64_container">
+<DIV id=u65 class="u65" >
+<DIV id=u65_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">学历</span></p></DIV></DIV>
+</DIV>
+<IMG id=u64 src="resources/images/transparent.gif" class="u64"    >
+
+<DIV id=u66_container class="u66_container">
+<DIV id=u67 class="u67" >
+<DIV id=u67_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">本科</span></p></DIV></DIV>
+</DIV>
+<IMG id=u66 src="resources/images/transparent.gif" class="u66"    >
+
+<DIV id=u68_container class="u68_container">
+<DIV id=u69 class="u69" >
+<DIV id=u69_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">毕业院校</span></p></DIV></DIV>
+</DIV>
+<IMG id=u68 src="resources/images/transparent.gif" class="u68"    >
+
+<DIV id=u70_container class="u70_container">
+<DIV id=u71 class="u71" >
+<DIV id=u71_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">南方医科大学</span></p></DIV></DIV>
+</DIV>
+<IMG id=u70 src="resources/images/transparent.gif" class="u70"    >
+
+<DIV id=u72_container class="u72_container">
+<DIV id=u73 class="u73" >
+<DIV id=u73_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">专业</span></p></DIV></DIV>
+</DIV>
+<IMG id=u72 src="resources/images/transparent.gif" class="u72"    >
+
+<DIV id=u74_container class="u74_container">
+<DIV id=u75 class="u75" >
+<DIV id=u75_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">卫生法学</span></p></DIV></DIV>
+</DIV>
+<IMG id=u74 src="resources/images/transparent.gif" class="u74"    >
+
+<DIV id=u76_container class="u76_container">
+<DIV id=u77 class="u77" >
+<DIV id=u77_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">联系电话</span></p></DIV></DIV>
+</DIV>
+<IMG id=u76 src="resources/images/transparent.gif" class="u76"    >
+
+<DIV id=u78_container class="u78_container">
+<DIV id=u79 class="u79" >
+<DIV id=u79_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">13800000000</span></p></DIV></DIV>
+</DIV>
+<IMG id=u78 src="resources/images/transparent.gif" class="u78"    >
+
+<DIV id=u80_container class="u80_container">
+<DIV id=u81 class="u81" >
+<DIV id=u81_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">邮箱</span></p></DIV></DIV>
+</DIV>
+<IMG id=u80 src="resources/images/transparent.gif" class="u80"    >
+
+<DIV id=u82_container class="u82_container">
+<DIV id=u83 class="u83" >
+<DIV id=u83_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">abc@abc.com</span></p></DIV></DIV>
+</DIV>
+<IMG id=u82 src="resources/images/transparent.gif" class="u82"    >
+
+</DIV>
+<DIV id=u84 class="u84;">
+
+<DIV id=u84_table class="u84_table"></DIV>
+
+</DIV>
+
+<DIV id=u84container style="position:absolute; left:80px; top:245px; width:559px; height:30px; overflow:visible">
+
+<DIV id=u85_container class="u85_container">
+<DIV id=u86 class="u86" >
+<DIV id=u86_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">求职意向</span></p></DIV></DIV>
+</DIV>
+<IMG id=u85 src="resources/images/transparent.gif" class="u85"    >
+
+<DIV id=u87_container class="u87_container">
+<DIV id=u88 class="u88" >
+<DIV id=u88_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">法医、行政管理</span></p></DIV></DIV>
+</DIV>
+<IMG id=u87 src="resources/images/transparent.gif" class="u87"    >
+
+</DIV>
+<INPUT id=u89 type=text value="工作技能" class="u89"     >
+
+<TEXTAREA id=u90  class="u90"   ></TEXTAREA>
+
+<DIV id=u91 class="u91" >
+<DIV id=u91_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&#149; </span><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">法务能力：</span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">法律知识体系丰富完整，具有运用法学理论和方法分析问题和运用法律管理事务与解决问题的能力。具有较的法学逻辑思维和独立的学习、分析、处理能力，了解司法程序，能协助企业单位防范法律范围内的风险，处理企业单位日常诉讼、非诉讼法律事务。</span></p><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">&#149; 文书处理：</span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">出色的文字表达和表达能力，操作严谨，逻辑紧密。能够协助企业单位完成相关法律文件和约束性规范文件的起草、审核，以及建立法律文件、制度文档管理流程。纯熟运用word, excel,access等办公文档及数据处理分析工具，熟练制作大型活动及演讲场合的重要PPT演示文档。</span></p></DIV></DIV>
+<INPUT id=u92 type=text value="工作经验" class="u92"     >
+
+<TEXTAREA id=u93  class="u93"   ></TEXTAREA>
+
+<DIV id=u94 class="u94" >
+<DIV id=u94_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&#149; </span><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">法务能力：</span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">法律知识体系丰富完整，具有运用法学理论和方法分析问题和运用法律管理事务与解决问题的能力。具有较的法学逻辑思维和独立的学习、分析、处理能力，了解司法程序，能协助企业单位防范法律范围内的风险，处理企业单位日常诉讼、非诉讼法律事务。</span></p><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">&#149; 文书处理：</span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">出色的文字表达和表达能力，操作严谨，逻辑紧密。能够协助企业单位完成相关法律文件和约束性规范文件的起草、审核，以及建立法律文件、制度文档管理流程。纯熟运用word, excel,access等办公文档及数据处理分析工具，熟练制作大型活动及演讲场合的重要PPT演示文档。</span></p></DIV></DIV>
+<INPUT id=u95 type=text value="教育经历" class="u95"     >
+
+<TEXTAREA id=u96  class="u96"   ></TEXTAREA>
+
+<DIV id=u97 class="u97" >
+<DIV id=u97_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&#149; </span><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">法务能力：</span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">法律知识体系丰富完整，具有运用法学理论和方法分析问题和运用法律管理事务与解决问题的能力。具有较的法学逻辑思维和独立的学习、分析、处理能力，了解司法程序，能协助企业单位防范法律范围内的风险，处理企业单位日常诉讼、非诉讼法律事务。</span></p><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">&#149; 文书处理：</span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">出色的文字表达和表达能力，操作严谨，逻辑紧密。能够协助企业单位完成相关法律文件和约束性规范文件的起草、审核，以及建立法律文件、制度文档管理流程。纯熟运用word, excel,access等办公文档及数据处理分析工具，熟练制作大型活动及演讲场合的重要PPT演示文档。</span></p></DIV></DIV>
+<DIV id=u98_container class="u98_container">
+<DIV id="u98_img" class="u98_original"></DIV>
+<DIV id=u99 class="u99" >
+<DIV id=u99_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u98 src="resources/images/transparent.gif" class="u98"    >
+
+<DIV id=u100_container class="u100_container">
+<DIV id="u100_img" class="u100_original"></DIV>
+<DIV id=u101 class="u101" >
+<DIV id=u101_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u100 src="resources/images/transparent.gif" class="u100"    >
+
+<DIV id=u102_container class="u102_container">
+<DIV id="u102_img" class="u102_original"></DIV>
+<DIV id=u103 class="u103" >
+<DIV id=u103_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u102 src="resources/images/transparent.gif" class="u102"    >
+
+<INPUT id=u104 type=text value="自我介绍" class="u104"     >
+
+<TEXTAREA id=u105  class="u105"   ></TEXTAREA>
+
+<DIV id=u106 class="u106" >
+<DIV id=u106_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">&#149; </span><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">法务能力：</span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">法律知识体系丰富完整，具有运用法学理论和方法分析问题和运用法律管理事务与解决问题的能力。具有较的法学逻辑思维和独立的学习、分析、处理能力，了解司法程序，能协助企业单位防范法律范围内的风险，处理企业单位日常诉讼、非诉讼法律事务。</span></p><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">&#149; 文书处理：</span><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">出色的文字表达和表达能力，操作严谨，逻辑紧密。能够协助企业单位完成相关法律文件和约束性规范文件的起草、审核，以及建立法律文件、制度文档管理流程。纯熟运用word, excel,access等办公文档及数据处理分析工具，熟练制作大型活动及演讲场合的重要PPT演示文档。</span></p></DIV></DIV>
+<DIV id=u107_container class="u107_container">
+<DIV id="u107_img" class="u107_original"></DIV>
+<DIV id=u108 class="u108" >
+<DIV id=u108_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u107 src="resources/images/transparent.gif" class="u107"    >
+
+<INPUT id=u109 type=submit class="u109" value=""  >
+
+<DIV id=u110 class="u110" >
+<DIV id=u110_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">添加到</span></p></DIV></DIV>
+<DIV id=u111 class="u111" >
+<DIV id=u111_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">履历库</span></p></DIV></DIV>
+<DIV id=u112_container class="u112_container">
+<DIV id="u112_img" class="u112_original"></DIV>
+<DIV id=u113 class="u113" >
+<DIV id=u113_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u112 src="resources/images/transparent.gif" class="u112"    >
+
+<INPUT id=u114 type=submit class="u114" value=""  >
+
+<DIV id=u115 class="u115" >
+<DIV id=u115_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">添加到</span></p></DIV></DIV>
+<DIV id=u116 class="u116" >
+<DIV id=u116_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">履历库</span></p></DIV></DIV>
+<DIV id=u117_container class="u117_container">
+<DIV id="u117_img" class="u117_original"></DIV>
+<DIV id=u118 class="u118" >
+<DIV id=u118_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u117 src="resources/images/transparent.gif" class="u117"    >
+
+<INPUT id=u119 type=submit class="u119" value=""  >
+
+<DIV id=u120 class="u120" >
+<DIV id=u120_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">添加到</span></p></DIV></DIV>
+<DIV id=u121 class="u121" >
+<DIV id=u121_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">履历库</span></p></DIV></DIV>
+<DIV id=u122_container class="u122_container">
+<DIV id="u122_img" class="u122_original"></DIV>
+<DIV id=u123 class="u123" >
+<DIV id=u123_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u122 src="resources/images/transparent.gif" class="u122"    >
+
+<INPUT id=u124 type=submit class="u124" value=""  >
+
+<DIV id=u125 class="u125" >
+<DIV id=u125_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">添加到</span></p></DIV></DIV>
+<DIV id=u126 class="u126" >
+<DIV id=u126_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">履历库</span></p></DIV></DIV>
+<DIV id=u127_container class="u127_container">
+<DIV id="u127_img" class="u127_original"></DIV>
+<DIV id=u128 class="u128" >
+<DIV id=u128_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u127 src="resources/images/transparent.gif" class="u127"    >
+
+<DIV id=u129_container class="u129_container">
+<DIV id="u129_img" class="u129_original"></DIV>
+<DIV id=u130 class="u130" >
+<DIV id=u130_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">简历综合设置</span></p></DIV></DIV>
+</DIV>
+<IMG id=u129 src="resources/images/transparent.gif" class="u129"    >
+
+<DIV id=u131 class="u131" >
+<DIV id=u131_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">权重</span></p></DIV></DIV>
+<INPUT id=u132 type=text value="60" class="u132"     >
+
+<DIV id=u133 class="u133" >
+<DIV id=u133_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">标题</span></p></DIV></DIV>
+<INPUT id=u134 type=text value="奥巴巴应聘美国总统及美军总司令" class="u134"     >
+
+<DIV id=u135 class="u135" >
+<DIV id=u135_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">公开设置</span></p></DIV></DIV>
+<SELECT id=u136 class="u136"  >
+<OPTION selected value="完全">完全</OPTION>
+<OPTION  value="定向">定向</OPTION>
+<OPTION  value="隐私">隐私</OPTION>
+</SELECT>
+
+<DIV id=u137 class="u137" >
+<DIV id=u137_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">资历级别</span></p></DIV></DIV>
+<SELECT id=u138 class="u138"  >
+<OPTION  value="资深">资深</OPTION>
+<OPTION selected value="中级">中级</OPTION>
+<OPTION  value="初级">初级</OPTION>
+<OPTION  value="实习">实习</OPTION>
+</SELECT>
+
+<DIV id=u139 class="u139" >
+<DIV id=u139_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">应聘职位</span></p></DIV></DIV>
+<INPUT id=u140 type=submit class="u140" value="提交"  >
+
+<INPUT id=u141 type=text value="" class="u141"     >
+
+<DIV id=u142 class="u142" >
+<DIV id=u142_rtf><p style="text-align:left;"><span style="font-family:微软雅黑;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">所属行业</span></p></DIV></DIV>
+<INPUT id=u143 type=text value="" class="u143"     >
+</DIV>
+<DIV class=preload>
+<img src="后台－简历管理－编辑_files/u1_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u3_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u7_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u9_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u25_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u35_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u43_table.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u44_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u46_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u48_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u50_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u84_table.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u85_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u87_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u98_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u112_original.png" width="1" height="1"/>
+<img src="后台－简历管理－编辑_files/u129_original.png" width="1" height="1"/></DIV>
+</BODY>
+<SCRIPT src="resources/scripts/axurerp_pagescript.js"></SCRIPT>
+<SCRIPT src="后台－简历管理－编辑_files/axurerp_pagespecificscript.js" charset="utf-8"></SCRIPT>

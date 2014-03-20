@@ -22,10 +22,12 @@ class Uploader {
 		), $config);
 
 		if($this->getServerMaxSize() < $this->config['max_size']){
-			throw('UPLOAD SIZE LIMITED BY SERVER CONFIG');
+			//服务器配置上传大小与当前上传配置冲突，这里可以不需要抛出异常
+			//throw(new Exception('UPLOAD SIZE LIMITED BY SERVER CONFIG'));
+			$this->config['max_size'] = $this->getServerMaxSize();
 		}
 
-		if(!$this->config['upload_dir']){
+		if(!$this->config['upload_dir'] && !file_exists($this->config['upload_dir'])){
 			throw(new Exception('NO UPLOAD DIR SETTING'));
 		}
 		$this->config['upload_dir'] = preg_replace("/\/$/", '', str_replace('\\', '/', $this->config['upload_dir']));
@@ -115,7 +117,6 @@ class Uploader {
 				$new_name = call_user_func($this->config['file_name_converter'], $file['name']);
 			}
 			$new_path = $this->config['upload_dir'].'/'.$new_name;
-
 			if($file['error']){
 				$error = 'system';
 			} else if($file['size'] > $this->config['max_size']){
