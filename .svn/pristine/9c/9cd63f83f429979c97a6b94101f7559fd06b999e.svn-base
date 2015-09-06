@@ -1,0 +1,15 @@
+<?php include 'inc/header.inc.php';?>
+<div id="col-aside">
+	<?php include 'inc/asidenav.inc.php';?>
+</div>
+<div id="col-main">
+	<h2>upload demo1</h2>
+	<form action="<?php echo $this->getUrl('component/upload');?>" enctype="multipart/form-data" method="post">
+		<input class="txt" type="file" name="" id=""/>
+		<input class="btn" type="submit" value="upload"/>
+	</form>
+
+	<h2>upload demo 2</h2>
+	<a href="">upload here</a>
+</div>
+<?php include 'inc/footer.inc.php';?>

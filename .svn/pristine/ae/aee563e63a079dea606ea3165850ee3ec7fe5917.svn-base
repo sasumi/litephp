@@ -1,0 +1,33 @@
+(function(Y) {
+	Y.widget = {};
+	Y.methodExtend({
+		'showTip': ['widget.Tip', function(){
+			return Y.widget.Tip.show.apply(Y.widget.Tip, arguments);
+		}],
+
+		'hideTip': ['widget.Tip', function(){
+			if(Y.object.route('widget.Tip', Y)){
+				return Y.widget.Tip.closeAll();
+			}
+		}],
+
+		'showPopup': ['widget.Popup', function(){
+			var dlg = new Y.widget.Popup(arguments[0]);
+			dlg.show();
+			return dlg;
+		}],
+		'hidePopup': ['', function(){
+			if(Y.object.route('widget.Popup', Y)){
+				Y.widget.Popup.closeAll();
+			}
+		}],
+		'showMask': ['widget.masklayer', function(){
+			Y.widget.masklayer.show(arguments[0]);
+		}],
+		'hideMask':  ['widget.masklayer', function(){
+			if(Y.object.route('widget.masklayer', Y)){
+				Y.widget.masklayer.hide();
+			}
+		}]
+	});
+})(YSL);

@@ -1,0 +1,6 @@
+<?php
+use \LITE\Router;
+
+return array(
+	'mode' => Router::MODE_REWRITE
+);

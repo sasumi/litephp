@@ -1,0 +1,176 @@
+<?php
+/**
+ * Class AccessAdapter
+ * @package LITE
+ * Creator: sasumi
+ * Date: 14-10-8
+ * Time: 下午4:57
+ */
+namespace LITE;
+
+abstract class AccessAdapter {
+	const EVENT_BEFORE_LOGIN = 'before_login';
+	const EVENT_AFTER_LOGIN = 'after_login';
+	const EVENT_BEFORE_LOGOUT = 'before_logout';
+	const EVENT_AFTER_LOGOUT = 'after_logout';
+
+	protected static $instance = array();
+	protected $session_name = 'uid';
+	protected $cookie_name = 'uid';
+	protected $cookie_sid_name = 'sid';
+	protected $cookie_expired = 3600;
+	protected $cookie_path = '/';
+	protected $config = array();
+
+	/**
+	 * encrypt user id
+	 * @param $val
+	 * @return string
+	 */
+	protected function encryptUid($val){
+		$app_path = Config::get('app/path');
+		return md5($val.$app_path.date('Y-m'));
+	}
+
+	/**
+	 * single instance
+	 * @param array $config
+	 * @return self
+	 */
+	public static function instance(array $config=array()){
+		if(!self::$instance){
+			$class = get_called_class();
+			self::$instance = new $class($config);
+		}
+		return self::$instance;
+	}
+
+	/**
+	 * access construct
+	 * @param $config
+	 */
+	protected function __construct($config){
+		$this->config = array_merge($this->config, $config);
+	}
+
+	/**
+	 * get user id from user info
+	 * @param $user
+	 * @return mixed
+	 */
+	abstract public function getIdFromUserInfo($user);
+
+	/**
+	 * get user info from user id
+	 * @param $user_id
+	 * @return array | null
+	 */
+	abstract public function getUserInfoFromId($user_id);
+
+	/**
+	 * check login
+	 * if not login, jump to login page
+	 */
+	public function checkLogin(){
+
+	}
+
+	/**
+	 * get config
+	 * @param string $key
+	 * @return array | string
+	 */
+	protected function getConfig($key=''){
+		return $key ? $this->config[$key] : $this->config;
+	}
+
+	/**
+	 * set config
+	 * @param array $config
+	 */
+	protected function setConfig(array $config){
+		$this->config = array_merge($this->config, $config);
+	}
+
+	/**
+	 * get login user id
+	 */
+	public function getLoginUserId(){
+		$user_info = $this->getLoginInfo();
+		if($user_info){
+			return $this->getIdFromUserInfo($user_info);
+		}
+		return null;
+	}
+
+	/**
+	 * get login user info
+	 * @return array | null
+	 */
+	public function getLoginInfo(){
+		$sess_uid = $_SESSION[$this->session_name];
+		if($sess_uid){
+			return $this->getUserInfoFromId($sess_uid);
+		}
+		if($this->cookie_expired){
+			$cookie_uid = $_COOKIE[$this->cookie_name];
+			$cookie_sid = $_COOKIE[$this->cookie_sid_name];
+			if($this->encryptUid($cookie_uid) == $cookie_sid){
+				$user_info = $this->getUserInfoFromId($cookie_uid);
+				if($user_info){
+					$this->updateCookieInfo($user_info);
+					return $user_info;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * login system
+	 * @param array $user_info
+	 * @return bool
+	 */
+	public function login($user_info){
+		session_start();
+		$result = true;
+		$uid = $this->getIdFromUserInfo($user_info);
+		$_SESSION[$this->session_name] = $uid;
+		if($this->cookie_expired){
+			$now = time();
+			$result = setcookie($this->cookie_name, $uid, $this->cookie_expired+$now, $this->cookie_path);
+			$result = $result && setcookie($this->cookie_sid_name, $this->encryptUid($uid), $this->cookie_expired+$now, $this->cookie_path);
+		}
+		return $result;
+	}
+
+	/**
+	 * update cookie info
+	 */
+	protected function updateCookieInfo($user_info){
+		if($this->cookie_expired){
+			$uid = $this->getIdFromUserInfo($user_info);
+			$now = time();
+			setcookie($this->cookie_name, $uid, $this->cookie_expired+$now, $this->cookie_path);
+			setcookie($this->cookie_sid_name, $this->encryptUid($uid), $this->cookie_expired+$now, $this->cookie_path);
+		}
+	}
+
+	/**
+	 * logout system
+	 */
+	public function logout(){
+		unset($_SESSION[$this->session_name]);
+		setcookie($this->cookie_name, '', 0, $this->cookie_path);
+		setcookie($this->cookie_sid_name, '', 0, $this->cookie_path);
+		return true;
+	}
+
+	/**
+	 * check is login
+	 * @return bool
+	 */
+	public function isLogin(){
+		return !!$this->getLoginUserId();
+	}
+}

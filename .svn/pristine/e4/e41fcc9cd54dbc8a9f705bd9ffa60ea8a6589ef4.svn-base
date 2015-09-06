@@ -1,0 +1,79 @@
+<?php include 'inc/header.inc.php';?>
+<div id="col-aside"><?php include 'inc/asidenav.inc.php';?></div>
+<div id="col-main">
+	<div class="operate-bar">
+		<a href="<?php echo $this->getUrl('admin/updateUser');?>" class="btn" rel="popup">新增管理员</a>
+	</div>
+	<form class="search-frm well" action="<?php echo $this->getUrl('admin/showUserList');?>">
+		<div class="frm-item">
+			<label>
+				用户名：<input class="txt" type="text" name="kw" value="<?php echo $search['kw'];?>"/>
+			</label>
+		</div>
+		<div class="frm-item">
+			<label>
+				角色：
+				<select class="form-control" name="role_id">
+					<option value="">全部角色</option>
+					<?php foreach($role_list as $role):?>
+						<option value="<?php echo $role['id'];?>" <?php echo $search['role_id'] == $role['id'] ? 'selected' : '';?>><?php echo $role['name'];?></option>
+					<?php endforeach;?>
+				</select>
+			</label>
+		</div>
+		<div class="frm-item">
+			<label>
+				登录时间：<input class="txt date-txt" type="text" name="login_date" value="<?php echo $search['login_date'];?>"/>
+			</label>
+		</div>
+		<div class="frm-item">
+			<input class="btn" type="submit" value="查询"/>
+			<a href="<?=$this->getUrl('admin/showUserList');?>" class="btn">重置</a>
+		</div>
+	</form>
+	<table class="data-tbl" data-tags="emptyfix,select">
+		<thead>
+		<tr>
+			<th class="text-center"><input type="checkbox"/></th>
+			<th>用户名</th>
+			<th>角色</th>
+			<th>创建时间</th>
+			<th>email</th>
+			<th>最后登录IP</th>
+			<th>最后登录时间</th>
+			<th>状态</th>
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php foreach($user_list as $user):?>
+			<tr>
+				<td class="text-center"><input type="checkbox" name="" id=""/></td>
+				<td><?php echo $user['admin_name'];?></td>
+				<td><?php echo $user->role->name;?></td>
+				<td><?php echo $user['create_time'];?></td>
+				<td><?php echo $user['email'];?></td>
+				<td><?php echo $user['last_ip'];?></td>
+				<td><?php echo $user['last_time'];?></td>
+				<td>
+					<center><?php echo $user->del_state_html;?></center>
+				</td>
+				<td>
+					<a href="<?php echo $this->getUrl('admin/updateUserState', array('id'=>$user['id'], 'toState'=>$user['is_del']))?>" rel="async">
+						<?php echo $user->is_del ? '启用' : '禁用'?>
+					</a>
+					<a href="<?php echo $this->getUrl('admin/updateUser', array('id'=>$user['id']))?>" rel="popup" title="编辑用户信息">编辑</a>
+				</td>
+			</tr>
+		<?php endforeach;?>
+		</tbody>
+	</table>
+	<div class="select">
+		选择：
+		<span class="select-all">全选</span>
+		<span class="select-invert">反选</span>
+		<span class="select-empty">取消选择</span>
+	</div>
+	<?php echo $page; ?>
+</div>
+<?php include 'inc/footer.inc.php';?>

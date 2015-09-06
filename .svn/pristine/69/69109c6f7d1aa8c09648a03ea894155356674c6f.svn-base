@@ -1,0 +1,111 @@
+<?php
+namespace LITE;
+abstract class Config {
+	private static $app_path = '';
+	private static $config_path = '';
+	private static $CONFIGS = array();
+	private function __construct(){}
+
+	/**
+	 * get config
+	 * @param string $uri
+	 * @param bool $force_exists
+	 * @return null|array
+	 */
+	public static function get($uri='', $force_exists=false){
+		$keys = explode('/', $uri);
+		$key = $keys[0];
+		if(!self::$CONFIGS[$key]){
+			$load_result = self::load($key, $force_exists);
+			if(!$load_result){
+				return null;
+			}
+		}
+		$config = self::$CONFIGS;
+
+		for($i=0; $i<count($keys); $i++){
+			if($i == (count($keys)-1)){
+				return $config[$keys[$i]];
+			} else {
+				$config = $config[$keys[$i]];
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * assign config with default value
+	 * @param $target
+	 * @param $default_value
+	 */
+	private static function ass_config(&$target, $default_value){
+		if(!isset($target)){
+			$target = $default_value;
+		}
+	}
+
+	/**
+	 * load initialize config
+	 * @param $key
+	 * @param $force_exists
+	 * @return bool
+	 * @throws Exception
+	 */
+	private static function load($key, $force_exists){
+		$file = self::$config_path.$key.'.inc.php';
+		if(!file_exists($file)){
+			if($force_exists){
+				throw new Exception('config file not found:'.$file);
+			} else {
+				return false;
+			}
+		}
+		$config = include $file;
+		$config = !is_array($config) ? array() : $config;
+
+		switch($key){
+			case 'app':
+				self::ass_config($config['path'], self::$app_path);
+				self::ass_config($config['autorender'], true);
+				self::ass_config($config['tpl'], $config['path'].'template'.DS);
+				self::ass_config($config['include'], $config['path'].'include'.DS);
+				self::ass_config($config['library'], $config['path'].'library'.DS);
+				self::ass_config($config['url'], '/');
+				self::ass_config($config['static'], $config['url'].'static/');
+				self::ass_config($config['js'], $config['static'].'js/');
+				self::ass_config($config['img'], $config['static'].'img/');
+				self::ass_config($config['css'], $config['static'].'css/');
+				self::ass_config($config['flash'], $config['static'].'flash/');
+				break;
+
+			case 'router':
+				self::ass_config($config['mode'], Router::MODE_PATHINFO);
+				self::ass_config($config['router_key'], Router::DEFAULT_ROUTER_KEY);
+				self::ass_config($config['controller_key'], 'mod');
+				self::ass_config($config['action_key'], 'act');
+				self::ass_config($config['default_controller'], 'index');
+				self::ass_config($config['default_action'], 'index');
+				break;
+
+			case 'api':
+				$app_path = Config::get('app/path');
+				self::ass_config($config['path'], $app_path.'api'.DS);
+				break;
+		}
+		self::$CONFIGS[$key] = $config;
+		return true;
+	}
+
+	/**
+	 * init config
+	 * @param string $app_path application path
+	 */
+	public static function init($app_path = null){
+		if(!$app_path){
+			$app_path = dirname($_SERVER['SCRIPT_FILENAME']).DS;
+		}
+		self::$app_path = $app_path;
+		self::$config_path = $app_path.DS.'config'.DS;
+	}
+}
+

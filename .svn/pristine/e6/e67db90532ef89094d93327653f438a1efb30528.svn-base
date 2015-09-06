@@ -1,0 +1,84 @@
+(function(){
+	var area_list = <?php echo json_encode($area_list);?>;
+	var _getEl = function(id){
+		return document.getElementById(id);
+	};
+	var pro_sel = _getEl('province_sel');
+	var city_sel = _getEl('city_sel');
+	var county_sel = _getEl('county_sel');
+
+	var clearSel = function(sel){
+		for(var i=sel.childNodes.length-1; i>=0; i--){
+			sel.removeChild(sel.childNodes[i]);
+		}
+	};
+
+	var showPro = function(pro_id){
+		clearSel(pro_sel);
+		for(var k in area_list){
+			var item = area_list[k];
+			if(item.parent_id == '0'){
+				var opt = new Option(item.area_name, item.area_id);
+				pro_sel.appendChild(opt);
+			}
+		}
+		if(pro_id){
+			pro_sel.value = pro_id;
+		}
+	};
+
+	var showCity = function(city_id, pro_id){
+		clearSel(city_sel);
+		city_sel.childNodes.length = 0;
+		for(var k in area_list){
+			var item = area_list[k];
+			if(item.parent_id == pro_id){
+				var opt = new Option(item.area_name, item.area_id);
+				city_sel.appendChild(opt);
+			}
+		}
+		if(city_id){
+			city_sel.value = city_id;
+		} else {
+			city_sel.selectedIndex = 0;
+		}
+	};
+
+	var showCounty = function(county_id, city_id){
+		clearSel(county_sel);
+		county_sel.childNodes.length = 0;
+		for(var k in area_list){
+			var item = area_list[k];
+			if(item.parent_id == city_id){
+				var opt = new Option(item.area_name, item.area_id);
+				county_sel.appendChild(opt);
+			}
+		}
+		if(county_id){
+			county_sel.value = county_id;
+		} else {
+			county_sel.selectedIndex = 0;
+		}
+	};
+
+	pro_sel.onchange = function(){
+		showCity(0, this.value);
+		showCounty(0, city_sel.value)
+	};
+
+	city_sel.onchange = function(){
+		showCounty(0, this.value);
+	};
+
+	var init_pro = parseInt(pro_sel.getAttribute('data-value'), 10) || 0;
+	var init_city = parseInt(city_sel.getAttribute('data-value'), 10) || 0;
+	var init_county = parseInt(county_sel.getAttribute('data-value'), 10) || 0;
+	showPro(init_pro);
+
+	if(init_pro){
+		showCity(init_city, init_pro);
+	}
+	if(init_city){
+		showCounty(init_county, init_city);
+	}
+})();

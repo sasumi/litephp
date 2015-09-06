@@ -1,0 +1,119 @@
+body {font-family:Microsoft Yahei, verdana, helvetica, sans-serif; font-size:12px; background-color:white; overflow-y:scroll}
+a {color:#5272C2; text-decoration:none;}
+
+select, input.chk, label{vertical-align:middle;}
+input.txt, textarea.txt {border:1px solid #bbb; min-width:135px; border-bottom-color:#ddd; border-right-color:#ddd; vertical-align:middle; padding:5px 5px; border-radius:3px; font-family:microsoft yahei, Arial, Helvetica, sans-serif; font-size:12px; background-color:white}
+select {padding:5px; border-radius:3px; border:1px solid #ccc; min-width:170px; height:29px}
+input.date_txt {background:url("../img/date.png") no-repeat left center; padding-left:18px; font-weight:bolder; color:blue}
+.nowrap {white-space:nowrap}
+.well {background-color:#fafafa; border:1px solid #eee; border-radius:5px; padding:5px;}
+.date-txt {background:url("../img/date.png") no-repeat 97% center}
+.btn {border:none; display:inline-block; cursor:pointer; padding:3px 13px 5px; background-color:#7C97B9; color:white; border-radius:3px}
+input.btn {padding:6px 15px}
+.btn:hover {background-color:#50657E; text-decoration:none}
+.text-center {text-align:center !important}
+
+.page-iframe body {overflow:hidden}
+.page-iframe textarea {resize:none}
+.page-iframe #header,
+.page-iframe #col-aside,
+.page-iframe #footer {display:none}
+.page-iframe #col-main {margin-left:0}
+.page-iframe .frm-tbl caption {display:none}
+
+#header {background-color:#2F2F2F; color:#eee; height:30px; padding:5px; border-bottom:3px solid #eee}
+#sidebar {float:left; width:220px}
+#container {padding:10px; min-height:300px}
+#col-aside {position:absolute; width:150px;}
+#col-main {margin-left:160px;}
+#logo {float:left; margin-top:5px !important; margin:0px 0 0 5px; height:20px; width:160px;}
+#logo a {color:white; font-size:18px; display:block; text-shadow:1px 1px 1px black}
+#logo span {font-size:10px; color:#ddd}
+#logo .small {font-size:12px; font-weight:normal;}
+#footer {text-align:center; color:#bbb; padding:10px 0; clear:both;}
+#welcome {float:right; margin:10px 10px 0 10px;}
+#welcome a {color:white;}
+
+.aside-nav {padding-bottom:10px; display:block;}
+.aside-nav dt {font-size:14px; font-weight:bold; text-shadow:1px 1px 1px #eee; padding:5px 10px; border-radius:2px; color:gray;}
+.aside-nav dt.active {background-color:#9FBE99}
+.aside-nav dd {margin:7px 0;}
+.aside-nav dd a {display:block; padding:5px 10px}
+.aside-nav dd a:hover {background-color:#ECE7FF;}
+.aside-nav dd.active a {background-color:#837E97; color:white}
+
+#main-nav {float:left; margin:4px 10px 0 0;}
+#main-nav li {float:left; height:25px; margin-right:2px;}
+#main-nav li.active a{background-color:#3F5688; color:white}
+#main-nav li a:hover {background-color:#3F5688;}
+#main-nav a {color:#eee; display:block; border-radius:3px 3px 0 0; line-height:25px; padding:3px 15px;  text-transform:capitalize;}
+
+.operate-bar {padding:0 0 10px 0;}
+
+.page {color:gray; margin:10px; text-align:right;}
+.page a {color:green; font-weight:bolder; text-decoration:underline;}
+.page a:hover {background-color:#bde6bb;}
+.page span, .page em, .page a {display:inline-block; padding:1px 5px; vertical-align:middle;}
+.page_prev, .page_next {}
+
+.frm {margin:5px;}
+.frm-tbl {width:100%;}
+.frm-tbl caption {text-align:left; font-weight:bold; font-size:16px; padding:0 5px 10px;}
+.frm-tbl {border-collapse:collapse; border-spacing:0;}
+.frm-tbl td.col-label {width:60px;}
+.frm-tbl tr.odd {background-color:#FAFAFA;}
+.frm-tbl td {padding:5px 10px; line-height:20px;}
+.col-label {text-align:right;}
+
+.search-frm {padding:10px; margin-bottom:10px; overflow:hidden}
+.search-frm .frm-item {margin:5px 10px 5px 0; display:inline-block; vertical-align:middle}
+
+.data-tbl {border-collapse:collapse; border-spacing:0; width:100%; font-size:12px;}
+.data-tbl caption {display:none;}
+.data-tbl tr th {border:1px solid #ddd; padding:5px; text-align:left; background-color:#eee; white-space:nowrap}
+.data-tbl td {border:1px solid #eee; padding:5px;}
+.data-tbl tr:nth-child(odd) {background-color:#f9f9f9}
+.data-tbl .idx_col {width:40px; text-align:center;}
+.data-tbl tr.hover td, .data-tbl tr.selected td {background-color:#e7eef4}
+.data-tbl a {white-space:nowrap}
+.data-tbl tr:hover td {background-color:#F1F1F1}
+
+.pagination {padding:10px 0; display:inline-block; color:gray}
+.pagination em {font-style:normal}
+.pagination span,
+.pagination em,
+.pagination a {padding:4px 5px;}
+.pagination .page_num em {font-weight:bold; text-decoration:underline}
+
+.label-normal,
+.label-warning,
+.label-error {background-color:#83cca7; color:white;}
+span.label-normal,
+span.label-error,
+span.label-warning {padding:2px 8px; display:inline-block; font-size:12px; border-radius:5px}
+
+.label-warning {background-color:#ffc396;}
+.label-error {background-color:red;}
+
+.tab-lst {overflow:hidden; zoom:1; float:right; margin:-25px 10px 0 0}
+.tab-lst li {float:left; padding:2px 15px;}
+.tab-lst li.current {background-color:#fff; border:1px solid #ccc; border-right-color:gray; border-bottom:none;}
+
+.calendar {border-collapse:collapse; border-spacing:0; font-size:13px; width:500px; margin:30px 0 0 30px; _margin-left:10px; float:left;}
+.calendar caption {font-size:24px; font-weight:bold; text-align:left; padding:0 0 10px; text-transform:uppercase;}
+.calendar td {padding:15px 10px; text-align:center; border:2px solid #fff; background-color:#eee; }
+.calendar th {font-weight:normal; text-align:center}
+.calendar tbody th {color:green;}
+.calendar thead th {text-transform:capitalize}
+.calendar .prev_month,
+.calendar .next_month {color:#aaa; background-color:white; font-weight:normal;}
+.calendar .today {color:white; background-color:#8C58C5; border-radius:7px}
+
+.ysl-tip-container-wrap {width:100%; text-align:center; left:0; position:fixed; top:46%; z-index: 65533; _position:absolute;}
+.ysl-tip-container {display:inline-block; height:54px; line-height:54px; color:#606060; font-weight:bold; font-size: 14px; background:url("../img/tip_layer.png") no-repeat 100% -215px; padding-right:13px;}
+.ysl-tip-icon-0,
+.ysl-tip-icon-1,
+.ysl-tip-icon-2 {background:url("../img/tip_layer.png") no-repeat -6px 1px; float:left; display:inline-block; height:54px; width:45px; margin:0 0 0 -45px; _margin:0 -4px 0 0;}
+.ysl-tip-icon-0 {background-position:-6px -53px;}
+.ysl-tip-icon-2 {background-position:-6px -108px}
+.ysl-tip-content {display:inline-block; height:54px; line-height:54px; background:url("../img/tip_layer.png") repeat-x 100% -161px; padding:0 18px 0 9px}

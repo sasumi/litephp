@@ -1,0 +1,3 @@
+0000000000000000000000000000000000000000 744ca6708bda5b0e1cd311d308a3410e480dc283 unknown <sasumi@sasum-pc.(none)> 1430787838 +0800	clone: from git://github.com/sebastianbergmann/php-timer.git
+744ca6708bda5b0e1cd311d308a3410e480dc283 19689d4354b295ee3d8c54b4f42c3efb69cbc17c unknown <sasumi@sasum-pc.(none)> 1430787839 +0800	checkout: moving from master to 1.0.5
+19689d4354b295ee3d8c54b4f42c3efb69cbc17c 3e82f4e9fc92665fafd9157568e4dcb01d014e5b unknown <Sasumi@Sasumi.guojj.com> 1438142481 +0800	checkout: moving from 19689d4354b295ee3d8c54b4f42c3efb69cbc17c to 1.0.7

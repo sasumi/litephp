@@ -1,0 +1,34 @@
+<?php
+namespace LITE;
+abstract class Cache_Adapter {
+	private static $instances;
+	private $config;
+
+	protected function __construct($config){
+		$this->setConfig($config);
+	}
+
+	public function getConfig($key=''){
+		if($key){
+			return $this->config[$key];
+		}
+		return $this->config;
+	}
+
+	public function setConfig($config){
+		$this->config = $config;
+	}
+
+	public static function instance(array $config = array()){
+		$class = get_called_class();
+		if(!self::$instances[$class]){
+			self::$instances[$class] = new $class($config);
+		}
+		return self::$instances[$class];
+	}
+
+	abstract public function set($cache_key, $data, $expired=60);
+	abstract public function get($cache_key);
+	abstract public function delete($cache_key);
+	abstract public function flush();
+}

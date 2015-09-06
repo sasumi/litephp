@@ -1,0 +1,128 @@
+<?php
+/**
+ * javascript result response
+ * @author sasumihuang
+ */
+namespace LITE;
+class Result {
+	private $code;
+	private $message;
+	private $data;
+	private $jump_url;
+
+	public function __construct($message='', $code=1, $data=null, $jump_url=''){
+		$this->data = $data;
+		$this->code = is_bool($code) ? ($code ? 0 : 1) : (int)$code;
+		$this->message = $message;
+		$this->jump_url = $jump_url;
+	}
+
+	/**
+	 * check is code
+	 * @return boolean
+	 */
+	public function isSuccess(){
+		return 0 === $this->code;
+	}
+
+	/**
+	 * get message
+	 * @return string
+	 */
+	public function getMessage(){
+		return $this->message;
+	}
+
+	/**
+	 * set message
+	 * @param string $msg
+	 */
+	public function setMessage($msg){
+		$this->message = $msg;
+	}
+
+	/**
+	 * set data item
+	 * @param string $key
+	 * @param $val
+	 */
+	public function setItem($key, $val){
+		$this->data[$key] = $val;
+	}
+
+	/**
+	 * get data
+	 * @return mix
+	 */
+	public function getData(){
+		return $this->data;
+	}
+
+	/**
+	 * set data
+	 * @param unknown $data
+	 */
+	public function setData($data){
+		$this->data = $data;
+	}
+
+	public function getJumpUrl(){
+		return $this->jump_url;
+	}
+
+	public function setJumpUrl($url){
+		$this->jump_url = $url;
+	}
+
+	/**
+	 * convert to standard hash map
+	 * @return array
+	 */
+	public function getObject(){
+		return array(
+			'code' => $this->code,
+			'message' => $this->message,
+			'data' => $this->data,
+			'jump_url' => $this->jump_url
+		);
+	}
+
+	/**
+	 * auto transit response format
+	 * @return string
+	 */
+	public function __toString(){
+		return $this->message.'['.$this->code.']';
+	}
+
+	/**
+	 * transform to json
+	 * @return string
+	 */
+	public function getJson(){
+		$data = $this->getObject();
+		return json_encode($data);
+	}
+
+	/**
+	 * get jsonp format
+	 * @param string $callback
+	 * @return string
+	 */
+	public function getJsonp($callback='_callback'){
+		$data = $this->getObject();
+		return $callback.'('.json_encode($data).');';
+	}
+
+	/**
+	 * get iframe response
+	 * @param string $callback
+	 * @return string
+	 */
+	public function getIframeResponse($callback='_callback'){
+		$data = $this->getObject();
+		return '<!doctype html><html lang="en"><head><meta charset="UTF-8" /><title>iframe response</title>'.
+				'<script>window.frameElement.'.$callback.'('.json_encode($data).');</script>'.
+				'</head><body></body></html>';
+	}
+}

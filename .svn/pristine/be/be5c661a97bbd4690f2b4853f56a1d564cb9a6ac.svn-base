@@ -1,0 +1,206 @@
+<?php
+class Controller_User extends Controller_Base {
+	public function __beforeExecute($controller, $action){
+		parent::__beforeExecute($controller, $action);
+		if(!$this->checkLogin() && $action != 'register' && $action != 'login'){
+			$this->jumpTo();
+		}
+	}
+
+	public function index(){
+		$this->jumpTo('user/myresume');
+	}
+
+	public function register($get, $post){
+		if($this->checkLogin()){
+			$this->jumpTo('user');
+		}
+		if($post){
+			$ori_info = $this->posts(null, array());
+			try {
+				$data = $this->posts(null, array(
+						'name' => array(
+								'require' => '请输入用户名',
+								'id' => '用户名称必须是字母开始，包含数字、下划线的单词',
+								'min5' => '用户名必须大于5个字母',
+								'max40' => '用户名不长于40个字母'
+						),
+
+						'password' => array(
+								'require' => '请输入密码',
+								'min4' => '密码长度不得小于4个字母'
+						),
+
+						'password2' => array(
+								'require' => '请输入重复密码',
+								'same' => function($value, $ori_info=null){
+									$ori = $this->posts('password', array(), false);
+									return $value ==  $ori ? '' : 'no same';
+								}
+						)
+				));
+				unset($data['password2']);
+				$user = Model_User::find('name=?', $data['name'])->one();
+				if($user){
+					return new JResult('用户名已存在，请重新输入');
+				} else {
+					$user = new Model_User();
+				}
+				$data['salt'] = md5($data['password'].Config::get('app/salt'));
+				$add_result = $user->setItems($data)->save();
+				if($add_result){
+					$this->access_instance->setLoginInfo($user->id);
+					return new JResult('用户注册成功', true);
+				} else {
+					return new JResult('系统正忙，请稍后重试');
+				}
+			} catch(FilteException $ex){
+				$err_msg = $ex->getOneMsg();
+				return new JResult($err_msg);
+			}
+		}
+	}
+
+	public function logout(){
+		parent::logout();
+		$this->jumpTo('index');
+	}
+
+	public function login($get, $post){
+		if($post){
+			$errs = Filter::init()->filteArray($post, array(
+				'name' => array(
+					'REQUIRE' => 'please input name'
+				),
+				'password' => array(
+					'REQUIRE' => 'please input password'
+				)
+			));
+
+			if(!empty($errs)){
+				return new JResult($errs[0]);
+			}
+
+			$this->login_user = new Model_User();
+			$user = Model_User::find('name=?',$post['name'])->one();
+			if($user && $user->password == $post['password']){
+				$result = Model_Access::init()->setLoginInfo($user->id);
+				if($result){
+					return new JResult('登录成功', true);
+				}
+			}
+			return new JResult('登录失败，用户名或密码不正确');
+		}
+	}
+
+	public function changeAvatar(){
+		if($this->isPost()){
+			$rid = rand();
+			$source = $this->login_user->id.'_'.$rid.'.ori.jpg';
+			$thumb = $this->login_user->id.'_'.$rid.'.thumb.jpg';
+			$config = array(
+					'upload_dir' => Config::get('upload/path'),
+					'file_type'=>'png,gif,jpg,jpeg',
+					'file_name_converter' => function()use($source){
+						return $source;
+					},
+					'max_size' => 1024*1024*20,
+					'max_file_count'=>1
+			);
+			$up = new Uploader($config);
+			$rst = $up->upload($err);
+			if(!empty($rst)){
+				$width = Config::get('upload/thumb_width');
+				$height = Config::get('upload/thumb_height');
+				$img_pro = new ImagePro(Config::get('upload/path').$source);
+				$img_pro->resizeByMinRegion($width, $height);
+				$img_pro->cropCenterByRegion($width, $height);
+				$img_pro->saveToFile(Config::get('upload/path').$thumb);
+				$this->login_user->album = $thumb;
+				$this->login_user->save();
+				return new JResult('提交成功', true, Config::get('upload/url').$thumb);
+			}
+			return new JResult('上传失败，请稍候重试', false, $err);
+		}
+	}
+
+	public function changepsw($get, $post){
+		if($post){
+			try {
+				if($post['new'] != $post['rpnew']){
+					return new JResult('两次输入的密码必须一致');
+				}
+
+				$result = Filter::init()->filteArray($post, array(
+					'new' => array(
+						'REQUIRE' => '请输入新密码',
+						'MINLEN' => array('密码长度不得小于4个字母', 4)
+					),
+					'rpnew' => array(
+						'REQUIRE' => '请重新输入密码',
+						'MINLEN' => array('密码长度不得小于4个字母', 4)
+					),
+					'password' => array(
+						'REQUIRE' => '请输入原来的密码'
+					),
+				));
+
+				if(!empty($result)){
+					return new JResult($result[0]);
+				}
+
+				if($post['password'] != $this->login_user->password){
+					return new JResult("您输入的旧密码不正确，请重新输入");
+				}
+
+				$this->login_user->password = $post['new'];
+				$result = $this->login_user->save();
+				if($result){
+					Model_Access::init()->logout();
+					return new JResult('密码修改成功，请重新登录系统', true);
+				} else {
+					return new JResult("系统正忙，请稍后重试");
+				}
+			} catch(Exception $ex){
+				return new JResult($ex->__toString());
+			}
+		}
+	}
+
+	/**
+	 * modify user
+	 * @param unknown $get
+	 * @param unknown $post
+	 * @return JResult
+	 */
+	public function modify($get, $post){
+		if($post){
+			$result = false;
+			try {
+				$user = $this->login_user->setItems($post);
+				$result = $user->save();
+			} catch(Exception $ex){
+				return new JResult($ex, false);
+			}
+			return new JResult('用户信息修改成功', $result);
+		}
+	}
+
+	public function myresume(){
+		$resume_list = Model_Resume::find('user_id=?', $this->login_user->id)->limit(20)->all();
+		return array(
+			'resume_list' => $resume_list
+		);
+	}
+
+	public function info(){
+// 		$this->login_user->name = 'sasumi';
+// 		$result = $this->login_user->save();
+// 		var_dump($result);
+// 		die;
+		return array(
+			'user' => $this->login_user
+		);
+	}
+}
+?>

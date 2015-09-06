@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title>test</title>
+	<style type="text/css">
+		* {margin:0; padding:0}
+		span {display:block; width:80px; height:80px; text-align: center; line-height: 80px; border:1px solid white;}
+		ul {display:block; overflow:hidden;}
+		li {display:block; width:3px; height:10px; border:1px solid #eee; float:left;}
+	</style>
+	<script type="text/javascript" src="../../ysl.base.js"></script>
+	<script type="text/javascript">
+		YSL.ready(function(Y){
+			Y.use('widget.Tigerloop', function(){
+				var nodes = [];
+				/**
+				for(var i=1; i<=12; i++){
+					nodes.push(document.getElementById('cell-'+i));
+				}
+				 **/
+				for(var i=1; i<=200; i++){
+					nodes.push(document.getElementById('cell'+i));
+				}
+				var tiger = new Y.widget.Tigerloop(nodes, {
+					startIndex: 0,
+					endIndex: 199,
+					loopCount:0,
+					interval:30,
+					tween: 'Bounce.easeOut'
+				});
+				tiger.start();
+			});
+		});
+	</script>
+</head>
+<body>
+
+<ul>
+	<li id="cell1"></li>
+	<li id="cell2"></li>
+	<li id="cell3"></li>
+	<li id="cell4"></li>
+	<li id="cell5"></li>
+	<li id="cell6"></li>
+	<li id="cell7"></li>
+	<li id="cell8"></li>
+	<li id="cell9"></li>
+	<li id="cell10"></li>
+	<li id="cell11"></li>
+	<li id="cell12"></li>
+	<li id="cell13"></li>
+	<li id="cell14"></li>
+	<li id="cell15"></li>
+	<li id="cell16"></li>
+	<li id="cell17"></li>
+	<li id="cell18"></li>
+	<li id="cell19"></li>
+	<li id="cell20"></li>
+	<li id="cell21"></li>
+	<li id="cell22"></li>
+	<li id="cell23"></li>
+	<li id="cell24"></li>
+	<li id="cell25"></li>
+	<li id="cell26"></li>
+	<li id="cell27"></li>
+	<li id="cell28"></li>
+	<li id="cell29"></li>
+	<li id="cell30"></li>
+	<li id="cell31"></li>
+	<li id="cell32"></li>
+	<li id="cell33"></li>
+	<li id="cell34"></li>
+	<li id="cell35"></li>
+	<li id="cell36"></li>
+	<li id="cell37"></li>
+	<li id="cell38"></li>
+	<li id="cell39"></li>
+	<li id="cell40"></li>
+	<li id="cell41"></li>
+	<li id="cell42"></li>
+	<li id="cell43"></li>
+	<li id="cell44"></li>
+	<li id="cell45"></li>
+	<li id="cell46"></li>
+	<li id="cell47"></li>
+	<li id="cell48"></li>
+	<li id="cell49"></li>
+	<li id="cell50"></li>
+	<li id="cell51"></li>
+	<li id="cell52"></li>
+	<li id="cell53"></li>
+	<li id="cell54"></li>
+	<li id="cell55"></li>
+	<li id="cell56"></li>
+	<li id="cell57"></li>
+	<li id="cell58"></li>
+	<li id="cell59"></li>
+	<li id="cell60"></li>
+	<li id="cell61"></li>
+	<li id="cell62"></li>
+	<li id="cell63"></li>
+	<li id="cell64"></li>
+	<li id="cell65"></li>
+	<li id="cell66"></li>
+	<li id="cell67"></li>
+	<li id="cell68"></li>
+	<li id="cell69"></li>
+	<li id="cell70"></li>
+	<li id="cell71"></li>
+	<li id="cell72"></li>
+	<li id="cell73"></li>
+	<li id="cell74"></li>
+	<li id="cell75"></li>
+	<li id="cell76"></li>
+	<li id="cell77"></li>
+	<li id="cell78"></li>
+	<li id="cell79"></li>
+	<li id="cell80"></li>
+	<li id="cell81"></li>
+	<li id="cell82"></li>
+	<li id="cell83"></li>
+	<li id="cell84"></li>
+	<li id="cell85"></li>
+	<li id="cell86"></li>
+	<li id="cell87"></li>
+	<li id="cell88"></li>
+	<li id="cell89"></li>
+	<li id="cell90"></li>
+	<li id="cell91"></li>
+	<li id="cell92"></li>
+	<li id="cell93"></li>
+	<li id="cell94"></li>
+	<li id="cell95"></li>
+	<li id="cell96"></li>
+	<li id="cell97"></li>
+	<li id="cell98"></li>
+	<li id="cell99"></li>
+	<li id="cell100"></li>
+	<li id="cell101"></li>
+	<li id="cell102"></li>
+	<li id="cell103"></li>
+	<li id="cell104"></li>
+	<li id="cell105"></li>
+	<li id="cell106"></li>
+	<li id="cell107"></li>
+	<li id="cell108"></li>
+	<li id="cell109"></li>
+	<li id="cell110"></li>
+	<li id="cell111"></li>
+	<li id="cell112"></li>
+	<li id="cell113"></li>
+	<li id="cell114"></li>
+	<li id="cell115"></li>
+	<li id="cell116"></li>
+	<li id="cell117"></li>
+	<li id="cell118"></li>
+	<li id="cell119"></li>
+	<li id="cell120"></li>
+	<li id="cell121"></li>
+	<li id="cell122"></li>
+	<li id="cell123"></li>
+	<li id="cell124"></li>
+	<li id="cell125"></li>
+	<li id="cell126"></li>
+	<li id="cell127"></li>
+	<li id="cell128"></li>
+	<li id="cell129"></li>
+	<li id="cell130"></li>
+	<li id="cell131"></li>
+	<li id="cell132"></li>
+	<li id="cell133"></li>
+	<li id="cell134"></li>
+	<li id="cell135"></li>
+	<li id="cell136"></li>
+	<li id="cell137"></li>
+	<li id="cell138"></li>
+	<li id="cell139"></li>
+	<li id="cell140"></li>
+	<li id="cell141"></li>
+	<li id="cell142"></li>
+	<li id="cell143"></li>
+	<li id="cell144"></li>
+	<li id="cell145"></li>
+	<li id="cell146"></li>
+	<li id="cell147"></li>
+	<li id="cell148"></li>
+	<li id="cell149"></li>
+	<li id="cell150"></li>
+	<li id="cell151"></li>
+	<li id="cell152"></li>
+	<li id="cell153"></li>
+	<li id="cell154"></li>
+	<li id="cell155"></li>
+	<li id="cell156"></li>
+	<li id="cell157"></li>
+	<li id="cell158"></li>
+	<li id="cell159"></li>
+	<li id="cell160"></li>
+	<li id="cell161"></li>
+	<li id="cell162"></li>
+	<li id="cell163"></li>
+	<li id="cell164"></li>
+	<li id="cell165"></li>
+	<li id="cell166"></li>
+	<li id="cell167"></li>
+	<li id="cell168"></li>
+	<li id="cell169"></li>
+	<li id="cell170"></li>
+	<li id="cell171"></li>
+	<li id="cell172"></li>
+	<li id="cell173"></li>
+	<li id="cell174"></li>
+	<li id="cell175"></li>
+	<li id="cell176"></li>
+	<li id="cell177"></li>
+	<li id="cell178"></li>
+	<li id="cell179"></li>
+	<li id="cell180"></li>
+	<li id="cell181"></li>
+	<li id="cell182"></li>
+	<li id="cell183"></li>
+	<li id="cell184"></li>
+	<li id="cell185"></li>
+	<li id="cell186"></li>
+	<li id="cell187"></li>
+	<li id="cell188"></li>
+	<li id="cell189"></li>
+	<li id="cell190"></li>
+	<li id="cell191"></li>
+	<li id="cell192"></li>
+	<li id="cell193"></li>
+	<li id="cell194"></li>
+	<li id="cell195"></li>
+	<li id="cell196"></li>
+	<li id="cell197"></li>
+	<li id="cell198"></li>
+	<li id="cell199"></li>
+	<li id="cell200"></li>
+</ul>
+
+<table>
+	<tr>
+		<td><span id="cell-1">cell1</span></td>
+		<td><span id="cell-12">cell12</span></td>
+		<td><span id="cell-11">cell11</span></td>
+		<td><span id="cell-10">cell10</span></td>
+	</tr>
+	<tr>
+		<td><span id="cell-2">cell2</span></td>
+		<td></td>
+		<td></td>
+		<td><span id="cell-9">cell9</span></td>
+	</tr>
+	<tr>
+		<td><span id="cell-3">cell3</span></td>
+		<td></td>
+		<td></td>
+		<td><span id="cell-8">cell8</span></td>
+	</tr>
+	<tr>
+		<td><span id="cell-4">cell4</span></td>
+		<td><span id="cell-5">cell5</span></td>
+		<td><span id="cell-6">cell6</span></td>
+		<td><span id="cell-7">cell7</span></td>
+	</tr>
+</table>
+</html>

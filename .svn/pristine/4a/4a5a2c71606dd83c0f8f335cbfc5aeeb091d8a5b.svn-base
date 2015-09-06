@@ -1,0 +1,40 @@
+<?php
+use LITE\Config as Config;
+?>
+<!DOCTYPE html>
+<html class="<?php echo $_GET['ref'] == 'iframe' ? 'page-iframe' : '';?>">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title><?php echo Config::get('app/site_name');?></title>
+	<?php echo $this->getCss('reset.css','global.css');?>
+	<?php echo $this->getJs('My97DatePicker/WdatePicker.js');?>
+	<?php echo $this->getJs('ysl/ysl.base.js');?>
+	<?php echo $this->getJs('global.js');?>
+	<?php echo $this->getJs('My97DatePicker/WdatePicker.js');?>
+</head>
+<body>
+<div id="page">
+	<div id="header">
+		<h1 id="logo">
+			<a href="<?php echo $this->getUrl();?>"><?php echo Config::get('app/site_name');?></a>
+		</h1>
+		<div id="welcome">
+			<?php $login_user = Model_Access::instance()->getLoginInfo();?>
+			<?php if($login_user):?>
+			欢迎您， <b>admin</b> &nbsp;
+			<a href="<?php echo $this->getUrl('admin/logout');?>">退出登录</a>
+			<?php else:?>
+			您好，请 <a href="<?php echo $this->getUrl('admin/login');?>">登录系统</a>
+			<?php endif;?>
+		</div>
+		<ul id="main-nav">
+			<?php
+			$navs = Config::get('nav/main');
+			foreach($navs as $k=>$uri){?>
+			<li>
+				<a href="<?php echo $this->getUrl($uri); ?>"><?php echo $k;?></a>
+			</li>
+			<?php };?>
+		</ul>
+	</div>
+	<div id="container">

@@ -1,0 +1,423 @@
+<?php
+/**
+ * router core
+ * current version router use parameter R mode
+ */
+namespace LITE;
+abstract class Router {
+	const EVENT_BEFORE_ROUTER_INIT = 0xa07;
+	const EVENT_AFTER_ROUTER_INIT = 0xa08;
+
+	const DEFAULT_ROUTER_KEY = 'r';
+	const MODE_NORMAL = 'normal';
+	const MODE_PATHINFO = 'pathinfo';
+	const MODE_REWRITE = 'rewrite';
+
+	private static $ROUTER_KEY;
+	private static $ROUTER_MODE;
+	private static $DEFAULT_CONTROLLER = '';
+	private static $DEFAULT_ACTION = '';
+
+	private static $CONTROLLER = '';
+	private static $ACTION = '';
+	public static $GET = array();
+	public static $POST = null;
+
+	final public static function getRouterKey(){
+		return self::$ROUTER_KEY;
+	}
+
+	final public static function getMode(){
+		return self::$ROUTER_MODE;
+	}
+
+	final public static function getDefaultController(){
+		return self::$DEFAULT_CONTROLLER;
+	}
+
+	final public static function getDefaultAction(){
+		return self::$DEFAULT_ACTION;
+	}
+
+	final public static function getController(){
+		return self::$CONTROLLER;
+	}
+
+	final public static function getAction(){
+		return self::$ACTION;
+	}
+
+	final public static function get($key=null){
+		return !$key ? self::$GET : self::$GET[$key];
+	}
+
+	final public static function post($key=null){
+		return !$key ? self::$POST : self::$POST[$key];
+	}
+
+	/**
+	 * filter path list
+	 * @param $path_list
+	 * @return array
+	 */
+	private static function filterPathList($path_list){
+		$app_path = Config::get('app/path');
+		$controller_path = $app_path.'controller'.DS;
+ 		$check_path = $controller_path;
+		$check_result = array();
+		while($path = array_shift($path_list)){
+			if(is_dir($check_path.$path)){
+				$check_result[] = $path;
+				$check_path .= $path.DS;
+			} else {
+				break;
+			}
+		}
+		return $check_result;
+	}
+
+	/**
+	 * 解析路由请求到指定的C/A
+	 * @param $controller
+	 * @param $action
+	 * @param array $get
+	 * @param null $post
+	 * @throws Exception
+	 */
+	final public static function parseRequest(&$controller, &$action, &$get=array(), &$post=null){
+		$get = $_GET;
+		$post = $_POST;
+
+		//所有路由模式都去解析pathinfo，避免遗漏
+		$path_info = self::getPathInfo();
+		$path_list = explode('/', $path_info) ?: array();
+
+		switch(self::getMode()){
+			case self::MODE_NORMAL:
+				$r = $get[self::$ROUTER_KEY] ?: '';
+				unset($get[self::$ROUTER_KEY]);
+				$tmp = explode('/', $r) ?: array();
+				if(count($tmp) > 2){
+					$action = array_pop($tmp);
+					$controller = array_pop($tmp);
+					$controller = join('_', $tmp).'_'.ucfirst($controller);
+				} else {
+					list($controller, $action) = $tmp;
+				}
+				break;
+
+			case self::MODE_REWRITE:
+			case self::MODE_PATHINFO:
+				$exists_paths = self::filterPathList($path_list);
+				if(!empty($exists_paths)){
+					$path_list = array_slice($path_list, count($exists_paths));
+					list($controller, $action) = $path_list;
+					$param = array_slice($path_list, 2) ?: array();
+					$controller = join('_', $exists_paths).'_'.ucfirst($controller);
+				} else {
+					list($controller, $action) = $path_list;
+					$param = array_slice($path_list, 2);
+				}
+				for($i=0; $i<=count($param); $i+=2){
+					if($param[$i] !== NULL){
+						$get[$param[$i]] = $param[$i+1];
+					}
+				}
+				break;
+		}
+
+		$controller = $controller ?: self::$DEFAULT_CONTROLLER;
+		$action = $action ?: self::$DEFAULT_ACTION;
+
+		//safe filter
+		$c1 = Filter::init()->filteOne($controller, array('KEY' => 'controller name illegel'));
+		$c2 = Filter::init()->filteOne($action, array('KEY' => 'action name illegel'));
+		if($c1 || $c2){
+			throw new Exception($c1 ?: $c2, 23, array('parameter illege'));
+		}
+
+		foreach($get as $key=>$val){
+			$get[$key] = is_scalar($val) ? urldecode($val) : $val;
+		}
+
+		$_GET = $get;
+	}
+
+	/**
+	 * parser request parameter
+	 */
+	final public static function init(){
+		Hooker::fire(self::EVENT_BEFORE_ROUTER_INIT);
+		self::$ROUTER_MODE = Config::get('router/mode');
+		self::$ROUTER_KEY = Config::get('router/router_key');
+		self::$DEFAULT_CONTROLLER = Config::get('router/default_controller');
+		self::$DEFAULT_ACTION = Config::get('router/default_action');
+		self::parseRequest(self::$CONTROLLER, self::$ACTION, self::$GET, self::$POST);
+		Hooker::fire(self::EVENT_AFTER_ROUTER_INIT, self::$CONTROLLER, self::$ACTION, self::$GET, self::$POST);
+	}
+
+	/**
+	 * 获取path信息
+	 * @return string
+	 **/
+	final public static function getPathInfo(){
+		if($_SERVER['PATH_INFO']){
+			return trim($_SERVER['PATH_INFO'], '/');
+		}
+		$uri = $_SERVER['REQUEST_URI'];
+		$script_name = $_SERVER['SCRIPT_NAME'];
+		$path_info = '';
+
+		if(stripos($uri, $script_name) === 0){
+			$path_info = substr($uri, strlen($script_name));
+		} else {
+			$script_path = preg_replace('/(.*\/)(.*?)$/i', "'\\1'", $script_name);
+			if(stripos($uri, $script_path) === 0){
+				$path_info = substr($uri, strlen($script_path));
+			}
+		}
+
+		$path_info = trim($path_info, '/');
+		if(strstr($path_info, '?') !== false){
+			$path_info = substr($path_info, 0, strpos($path_info, '?'));
+		}
+		return $path_info;
+	}
+
+	/**
+	 * 从$_GET中获取参数
+	 * @param string $key
+	 * @param string||array $rules
+	 * @param boolean $throwException
+	 * @return string|array
+	 **/
+	final public static function gets($key=null, $rules, $throwException=true){
+		$data = $key ? self::$GET[$key] : self::$GET;
+
+		if($key){
+			Filter::init()->filteOne($data, $rules, $throwException);
+		} else {
+			Filter::init()->filteArray($data, $rules, $throwException);
+		}
+		return $data;
+	}
+
+	/**
+	 * get var from $_POST
+	 * @param null $key
+	 * @param $rules
+	 * @return mixed
+	 */
+	final public static function posts($key=null, $rules){
+		$data = $key ? $_POST[$key] : $_POST;
+		if($key){
+			Filter::init()->filteOne($data, $rules);
+		} else {
+			Filter::init()->filteArray($data, $rules);
+		}
+		return $data;
+	}
+
+	/**
+	 * 检测当前请求是否为POST
+	 * @return boolean
+	 **/
+	final public static function isPost(){
+		return $_SERVER['REQUEST_METHOD'] == 'POST';
+	}
+
+	/**
+	 * 检测当前请求是否为GET
+	 * @return boolean
+	 **/
+	final public static function isGet(){
+		return $_SERVER['REQUEST_METHOD'] == 'GET';
+	}
+
+	/**
+	 * 产生表单action
+	 * @deprecate 框架新版本已经支持路由混合解析，
+	 * 因此推荐使用 Router::getUrlInPathMode来产生表单使用的action
+	 * @param string $target
+	 * @param array $params
+	 * @return string
+	 */
+	public static function getFormAction($target='', $params=array()){
+		$html = '<input type="hidden" name="'.self::$ROUTER_KEY.'" value="'.$target.'"/>';
+		foreach($params as $name=>$p){
+			$html .= '<input type="hidden" name="'.$name.'" value="'.htmlspecialchars($p).'"/>';
+		}
+		return $html;
+	}
+
+	/**
+	 * 已pathinfo模式产生url，主要提供给form[method=get]表单使用，避免参数丢失
+	 * @param string $target
+	 * @param array $params
+	 * @return string
+	 */
+	final public static function getUrlInPathMode($target='', $params=array()){
+		return self::getUrl($target, $params, self::MODE_PATHINFO);
+	}
+
+	/**
+	 * 路由
+	 * @param string $target
+	 * @param array $params
+	 * @param null $router_mode
+	 * @return string
+	 */
+	final public static function getUrl($target='', $params=array(), $router_mode=null){
+		$app_url = Config::get('app/url');
+		$target = trim($target, '/');
+		if(empty($params) && !$target){
+			return $app_url;
+		}
+
+		if(!$target){
+			$target = self::$DEFAULT_CONTROLLER.'/'.self::$DEFAULT_ACTION;
+		}
+
+		if(strpos($target, '/') === false){
+			$target .= '/'.self::$DEFAULT_ACTION;
+		}
+
+		$router_mode = $router_mode ?: self::$ROUTER_MODE;
+		switch($router_mode){
+			case self::MODE_PATHINFO:
+				$url = rtrim($app_url, '/').'/index.php/'.$target;
+				foreach($params as $k=>$p){
+					$url .= '/'.urlencode($k).'/'.urlencode($p);
+				}
+				break;
+
+			case self::MODE_REWRITE:
+				$url = rtrim($app_url, '/').'/'.$target;
+				foreach($params as $k=>$p){
+					$url .= '/'.urlencode($k).'/'.urlencode($p);
+				}
+				break;
+
+			case self::MODE_NORMAL:
+			default:
+				$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$target;
+				if($params){
+					$url .= '&'.http_build_query($params);
+				}
+		}
+		return $url;
+	}
+
+	/**
+	 * 静态资源url规则
+	 * 规则：/ 为开始的url，直接返回应用根目录
+	 * http开始的url，返回自身
+	 * 其他规则返回资源目录，如无资源目录，则相对于静态资源目录
+	 * @deprecate 依赖 Config::get('app/url'), Config::get('app/css')等常量参数
+	 * @param  string $file_name
+	 * @param  string $type
+	 * @return string
+	 */
+	final public static function getStaticUrl($file_name, $type='static'){
+		if(strpos($file_name, '/') === 0){
+			return Config::get('app/url').substr($file_name, 1);
+		} else if(strpos($file_name, 'http://') === 0){
+			return $file_name;
+		} else {
+			$map = array(
+				'css' => Config::get('app/css'),
+				'js' => Config::get('app/js'),
+				'img' => Config::get('app/img'),
+				'flash' => Config::get('app/flash'),
+				'static' => Config::get('app/static')
+			);
+			if($map[strtolower($type)]){
+				return $map[strtolower($type)].$file_name;
+			}
+			return Config::get('app/static').$file_name;
+		}
+	}
+    /**
+	 * 调用js路径
+	 * @param string $file_name
+	 * @return string
+	 **/
+	final public static function getJsUrl($file_name){
+		return self::getStaticUrl($file_name, 'js');
+	}
+
+	/**
+	 * 调用css路径
+	 * @param string $file_name
+	 * @return string
+	 **/
+	final public static function getCssUrl($file_name){
+		return self::getStaticUrl($file_name, 'css');
+	}
+
+	/**
+	 * 调用img路径
+	 * @param string $file_name
+	 * @return string
+	 **/
+	final public static function getImgUrl($file_name){
+		return self::getStaticUrl($file_name, 'img');
+	}
+
+	/**
+	 * 调用flash路径
+	 * @param string $file_name
+	 * @return string
+	 **/
+	final public static function getFlashUrl($file_name){
+		return self::getStaticUrl($file_name, 'flash');
+	}
+
+	/**
+	 * reload current page
+	 */
+	final public static function reload(){
+		header('Location:'.$_SERVER['PHP_SELF'], true, 302);
+	}
+
+	/**
+	 * 获取当前访问url
+	 * @return string
+	 **/
+	final public static function getCurrentPageUrl(){
+		$host = $_SERVER['HTTP_HOST'];
+		$protocol = stripos($_SERVER['SERVER_PROTOCOL'], 'https') ? 'https://' : 'http://';
+		$port = $_SERVER['SERVER_PORT'] == 80 ? null : $_SERVER['SERVER_PORT'];
+		$uri = $_SERVER['REQUEST_URI'];
+		return $protocol.$host.($port ? ':'.$port : '').$uri;
+	}
+
+	/**
+	 * 页面302跳转
+	 * @deprecate 调用了url函数功能，所以参数跟url函数的参数一致
+	 **/
+	final public function jumpTo($uri=null, $args2=null){
+		$args = func_get_args();
+
+		if(stripos($args[0], '://') > 0){
+			if(!empty($args2)){
+				$url = $uri.(stripos($uri, '?') !== false ? '&' : '?').http_build_query($args2);
+			} else {
+				$url = $uri;
+			}
+			if(headers_sent()){
+				echo '<script>location.href="'.$url.'"</script>';
+			} else {
+				header('Location:'.$url);
+			}
+			die;
+		}
+		$url = call_user_func_array(array('self', 'getUrl'), $args);
+		if(headers_sent()){
+			echo '<script>location.href = "'.$url.'";</script>';
+		} else {
+			header('Location:'.$url);
+		}
+		die;
+	}
+}

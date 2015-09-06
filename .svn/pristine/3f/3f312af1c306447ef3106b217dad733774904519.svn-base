@@ -1,0 +1,58 @@
+<?php
+class Api_UserGetlist extends Api_Base{
+	/**
+	 * current api server version
+	 * @return mixed
+	 */
+	public function version() {
+		return '1.0';
+	}
+
+	/**
+	 * lowest api version supported
+	 * @return mixed
+	 */
+	public function supportVersion() {
+		return '1.0';
+	}
+
+	/**
+	 * request parameter format
+	 * @return array
+	 */
+	public function requestFormat() {
+		return array(
+			'id' => array('int', 10),
+		);
+	}
+
+	/**
+	 * api response data format
+	 * @return array
+	 */
+	public function responseFormat() {
+		return array(
+			'code' => '',
+			'message' => '',
+			'data' => null
+		);
+	}
+
+	/**
+	 * execute api server
+	 * @param null $param
+	 * @return mixed
+	 */
+	public function execute($param = null) {
+		// TODO: Implement execute() method.
+	}
+
+	/**
+	 * certify interface
+	 * @param $param
+	 * @return bool
+	 */
+	public function certify($param) {
+		return $param['certify'] == 'helloworld';
+	}
+}

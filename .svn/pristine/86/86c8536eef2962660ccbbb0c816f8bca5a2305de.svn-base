@@ -1,0 +1,333 @@
+<?php
+namespace LITE;
+use \Exception as Exception;
+
+class Application {
+	const MODE_WEB = 1;
+	const MODE_API = 2;
+	const MODE_CLI = 3;
+
+	const EVENT_BEFORE_APP_INIT = 0xa01;
+	const EVENT_AFTER_APP_INIT = 0xa02;
+	const EVENT_AFTER_APP_SHUTDOWN = 0xa03;
+	const EVENT_ON_APP_EX = 0xa09;
+	const EVENT_ON_APP_ERR = 0xa0a;
+
+	private static $instance;
+	private static $include_paths = array();
+	private $app_id = '';
+
+	/**
+	 * initialize a app
+	 * @param null $app_path
+	 * @param int $mode
+	 * @throws Exception
+	 * @throws Exception
+	 * @return Application
+	 */
+	public static function init($app_path = null, $mode){
+		if(!self::$instance){
+			try {
+				self::$instance = new self($app_path, $mode);
+			} catch(Exception $ex){
+				try {
+					$debug = Config::get('app/debug');
+					$error_page = Config::get('app/error');
+
+					//debug模式
+					if($debug){
+						dump($ex, 1);
+					}
+					else if($error_page){
+						$msg = encodeURI($ex->__toString());
+						header('Location:'.$error_page.'#msg='.$msg);
+					} else {
+						echo $ex;
+					}
+				} catch(Exception $ex){
+					throw $ex;
+				};
+			}
+		}
+		return self::$instance;
+	}
+
+	/**
+	 * initialize web mode
+	 */
+	private function initWebMode(){
+		//router init
+		Router::init();
+
+		//call controller
+		$result = Controller::dispatch();
+
+		//auto render
+		if(Config::get('app/autorender')){
+			$viewer = new View($result);
+			$viewer->render();
+		}
+	}
+
+	/**
+	 * initialize api mode
+	 */
+	private function initApiMode(){
+		Router::$GET = $_GET;
+		Router::$POST = $_POST;
+		Api_Daemon::start();
+	}
+
+	/**
+	 * initialize CLI mode
+	 * CLI mode support parameters like
+	 * php -f test.php -- id=3 name=hello
+	 * parameters will be covered to $_REQUEST
+	 */
+	private function initCLIMode(){
+		if(PHP_SAPI != 'cli'){
+			Request::sendHttpStatus(405);
+			die('ACCESS DENY');
+		}
+
+		$argv = $_SERVER['argv'];
+		$params = array();
+
+		if(!empty($argv)){
+			//remove file name
+			array_shift($argv);
+			foreach($argv as $index=>$arg){
+				if(strpos($arg, '=') !== false){
+					list($k, $v) = explode('=', $arg);
+					$params[$k] = decodeURI($v);
+				} else {
+					$params[$index] = $arg;
+				}
+			}
+		}
+		$_REQUEST = $params;
+	}
+
+	/**
+	 * lite initialize
+	 * @param null $app_path
+	 * @param $mode
+	 * @throws Exception
+	 */
+	private function __construct($app_path = null, $mode){
+		//auto select run mode
+		spl_autoload_register(array($this, 'autoload'));
+
+		//stat app launch time
+		$__init_time__ = microtime(true);
+
+		//bind core path
+		self::addIncludePath(LIB_PATH.'core'.DS);
+
+		//bind lib path
+		self::addIncludePath(LIB_PATH);
+
+		//bind lib com path
+		self::addIncludePath(LIB_PATH.'com'.DS);
+
+		Hooker::fire(self::EVENT_BEFORE_APP_INIT);
+
+		//init
+		Config::init($app_path);
+
+		//auto statistics, only take effects in web mode
+		if($mode == self::MODE_WEB && Config::get('app/auto_statistics')){
+			$this->autoStatistics();
+		}
+
+		//bind include path
+		self::addIncludePath(Config::get('app/include'));
+
+		//bind root path
+		self::addIncludePath(Config::get('app/path'));
+
+		//remove gpc, this function disabled in CLI mode
+		if($mode != self::MODE_CLI && get_magic_quotes_gpc()){
+			function stripslashes_deep($value){
+				$value = is_array($value) ?
+				array_map('stripslashes_deep', $value) :
+				stripslashes($value);
+				return $value;
+			}
+			$_POST = array_map('stripslashes_deep', $_POST);
+			$_GET = array_map('stripslashes_deep', $_GET);
+			$_COOKIE = array_map('stripslashes_deep', $_COOKIE);
+			$_REQUEST = array_map('stripslashes_deep', $_REQUEST);
+		}
+
+		switch($mode){
+			case self::MODE_WEB:
+				$this->initWebMode();
+				break;
+
+			case self::MODE_API:
+				$this->initApiMode();
+				break;
+
+			case self::MODE_CLI:
+				$this->initCLIMode();
+				break;
+
+			default:
+				throw new Exception('NO SPEC MODE');
+		}
+
+		//APP EXCEPTION
+		if(Hooker::exists(self::EVENT_ON_APP_EX)){
+			set_exception_handler(function($exception){
+				Hooker::fire(Application::EVENT_ON_APP_EX, $exception);
+			});
+		}
+
+		//APP ERROR
+		if(Hooker::exists(self::EVENT_ON_APP_ERR)){
+			set_error_handler(function($code, $message, $file, $line, $context){
+				Hooker::fire(Application::EVENT_ON_APP_ERR, $code, $message, $file, $line, $context);
+			}, E_USER_ERROR | E_USER_WARNING);
+		}
+
+		Hooker::fire(self::EVENT_AFTER_APP_INIT);
+
+		register_shutdown_function(function()use($__init_time__){
+			$run_time = round((microtime(true) - $__init_time__)*1000, 2);
+			Hooker::fire(Application::EVENT_AFTER_APP_SHUTDOWN, $run_time);
+		});
+	}
+
+	/**
+	 * get application id
+	 * @return string
+	 */
+	public function getAppId(){
+		return $this->app_id;
+	}
+
+	/**
+	 * 系统性能统计
+	 * 可以通过 ?SYS_STAT 查看上次查询结果
+	 * @todo 需要添加控制项，确保安全
+	 * @example http://www.hello.com/?SYS_STAT
+	 */
+	private function autoStatistics(){
+		$SESS_KEY = '_SYS_STATIC_INFO_';
+		$STATIC_KEY = 'SYS';
+		$GLOBALS['__DB_QUERY_COUNT__'] = 0;
+
+		Hooker::add(DB_Record::EVENT_BEFORE_DB_QUERY, function($sql)use($STATIC_KEY){
+			$GLOBALS['__DB_QUERY_COUNT__']++;
+			Statistics::instance($STATIC_KEY)->mark('BEFORE DB QUERY', $sql);
+		});
+
+		Hooker::add(DB_Record::EVENT_AFTER_DB_QUERY, function($sql)use($STATIC_KEY){
+			Statistics::instance($STATIC_KEY)->markAfter('AFTER DB QUERY', $sql);
+		});
+
+		Hooker::add(self::EVENT_AFTER_APP_SHUTDOWN, function($tm=null) use($SESS_KEY, $STATIC_KEY){
+			$msg = 'DB QUERY COUNT:'.$GLOBALS['__DB_QUERY_COUNT__']."\n";
+			$msg .= "[USED TIME] ".$tm."ms";
+			Statistics::instance($STATIC_KEY)->mark($msg, 'APP SHUTDOWN');
+			session_start();
+			$_SESSION[$SESS_KEY] = Statistics::instance($STATIC_KEY)->_toString();
+		});
+
+		//OUTPUT
+		Hooker::add(Router::EVENT_AFTER_ROUTER_INIT, function($ctrl, $act, $get, $post)use($SESS_KEY, $STATIC_KEY){
+			if(isset($get['SYS_STAT'])){
+				session_start();
+				echo $_SESSION[$SESS_KEY];
+				exit;
+			}
+		});
+	}
+
+	/**
+	 * get use defined include paths
+	 * @return array
+	 */
+	public static function getIncludePaths(){
+		return self::$include_paths;
+	}
+
+	/**
+	 * add more include path
+	 * @param string $path
+	 */
+	public static function addIncludePath($path){
+		foreach (func_get_args() as $path){
+			if (!file_exists($path) || (file_exists($path) && filetype($path) !== 'dir')){
+				continue;
+			}
+
+			$paths = explode(PATH_SEPARATOR, get_include_path());
+			if(array_search($path, $paths) === false){
+				array_push(self::$include_paths, $path);
+				array_push($paths, $path);
+			}
+			set_include_path(implode(PATH_SEPARATOR, $paths));
+		}
+	}
+
+	/**
+	 * remove include path from php setting
+	 * @param  string $path
+	 */
+	public static function removeIncludePath($path){
+		foreach (func_get_args() as $path){
+			$paths = explode(PATH_SEPARATOR, get_include_path());
+
+			if(($k = array_search($path, self::$include_paths)) !== false){
+				unset(self::$include_paths[$k]);
+			}
+
+			if(($k = array_search($path, $paths)) !== false){
+				unset($paths[$k]);
+			} else {
+				continue;
+			}
+
+			if(!count($paths)){
+				trigger_error("Include path '{$path}' can not be removed because it is the only one", E_USER_NOTICE);
+				continue;
+			}
+			set_include_path(implode(PATH_SEPARATOR, $paths));
+		}
+	}
+
+	/**
+	 * auto load class
+	 * @param $class
+	 */
+	private function autoload($class){
+		$paths = self::getIncludePaths();
+		$class = array_pop(explode('\\', $class));
+		$class = str_replace('_', DS , $class);
+
+		foreach($paths as $path){
+			$file = $path.strtolower($class).'.class.php';
+			$file2 = $path.strtolower($class);
+
+			if(file_exists($file) && is_file($file)){
+				include_once $file;
+				return;
+			} else if(file_exists($file2) && is_file($file2)){
+				include_once $file2;
+				return;
+			}
+		}
+
+		$vendor_config = include 'vendor' . DS . 'vendor.cfg.php';
+		$class = strtolower($class);
+		if($vendor_config[$class]){
+			$file = __DIR__.DS.'vendor'.DS.$vendor_config[$class];
+			if(file_exists($file)){
+				include_once $file;
+			}
+		}
+		return;
+	}
+}

@@ -1,0 +1,84 @@
+<?php
+namespace LITE;
+class Statistics {
+	private static $instance_list = array();
+	private $time_trake_list = array();
+
+	/**
+	 * 只允许单例模式
+	 */
+	private function __construct(){
+
+	}
+
+	/**
+	 * 单例模式
+	 * @param string $key
+	 * @return Statistics
+	 */
+	public static function instance($key='default'){
+		if(!self::$instance_list[$key]){
+			self::$instance_list[$key] = new self();
+		}
+		return self::$instance_list[$key];
+	}
+
+	/**
+	 * tick性能统计
+	 */
+	public function startTickMark($step=10){
+		eval("declare(ticks=$step);");
+		$self = $this;
+		register_tick_function(function()use($self){
+			$debug_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+			$info = $debug_info[1];
+			$self->mark($info['file']." [{$info['line']}] {$info['class']}{$info['type']}{$info['function']}");
+		});
+	}
+
+	public function mark($msg='', $tag=null){
+		$first = $this->time_trake_list[0];
+		$now = microtime(true);
+		$mem = memory_get_usage();
+
+		$this->time_trake_list[] = array(
+			'msg' => $msg,
+			'tag' =>  $tag,
+			'timepoint' => $now,
+			'timeoffset' => $first ? $now - $first['timepoint'] : 0,
+			'memory' => $mem
+		);
+	}
+
+	public function markBefore($msg='', $tag){
+		$this->mark($msg, $tag);
+	}
+
+	public function markAfter($msg, $tag){
+		$last_idx = count($this->time_trake_list)-1;
+		$last_item = $this->time_trake_list[$last_idx];
+
+		$this->mark($msg, $tag);
+		$cur_item = array_pop($this->time_trake_list);
+
+		$last_item['timeuse'] = number_format(($cur_item['timepoint'] - $last_item['timepoint'])*1000, 2);
+		$last_item['memuse'] = $cur_item['memory'] - $last_item['memory'];
+		$last_item['msg'] .= " // ".$cur_item['msg'];
+		$this->time_trake_list[$last_idx]=  $last_item;
+	}
+
+	public function _toString(){
+		$str = "<pre>\n";
+		foreach($this->time_trake_list as $item){
+			$str .= str_repeat('-', 100)."\n";
+			$str .= $item['tag']."\n";
+			$str .= "\n";
+			$s = array_last(explode('.',$item['timepoint'].''));
+			$str .= "[MSG] ".$item['msg']."\t\t[TIMEPOINT] ".date('H:i:s', $item['timepoint']).' '.$s."\t\t [MEM] ".number_format($item['memory']/1024, 2, null, '')."KB\n\n";
+			if(isset($item['timeuse'])){
+				$str .= "[USED TIME] ".$item['timeuse']."ms\t[USED MEM] ".number_format($item['memuse']/1023, 2)."KB\n\n";
+			}
+		}
+		return $str;
+	}
+}

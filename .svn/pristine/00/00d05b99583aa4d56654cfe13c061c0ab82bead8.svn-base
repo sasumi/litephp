@@ -1,0 +1,5 @@
+.idea
+vendor
+logs
+cron.out
+composer.phar

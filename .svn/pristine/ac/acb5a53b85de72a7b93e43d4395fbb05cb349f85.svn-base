@@ -1,0 +1,21 @@
+<?php
+use LITE\AccessAdapter;
+class Model_Access extends AccessAdapter {
+	/**
+	 * get user id from user info
+	 * @param $user
+	 * @return mixed
+	 */
+	public function getIdFromUserInfo($user) {
+		return $user['id'];
+	}
+
+	/**
+	 * get user info from user id
+	 * @param $user_id
+	 * @return array
+	 */
+	public function getUserInfoFromId($user_id) {
+		return Model_Admin::findOneByPk($user_id, true);
+	}
+}

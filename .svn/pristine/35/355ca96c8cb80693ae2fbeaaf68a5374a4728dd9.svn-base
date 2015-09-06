@@ -1,0 +1,207 @@
+<?php
+namespace LITE;
+
+/**
+ * Created by PhpStorm.
+ * User: sasumi
+ * Date: 2014/11/18
+ * Time: 9:49
+ */
+abstract class CRUD extends Controller {
+	public $use_standard_output = true;
+
+	const OP_ALL = 0x001;
+	const OP_INDEX = 0x002;
+	const OP_UPDATE = 0x003;
+	const OP_STATE = 0x004;
+	const OP_DELETE = 0x005;
+	const OP_INFO = 0x006;
+
+	/**
+	 * get support function list
+	 * @return string|array
+	 */
+	protected function supportCRUDList(){
+		return null;
+	}
+
+	/**
+	 * get relative model name
+	 * @return string
+	 */
+	protected function getModelName(){
+		return null;
+	}
+
+	/**
+	 * get current state key
+	 * @return string
+	 */
+	protected function getStateKey(){
+		return 'state';
+	}
+
+	/**
+	 * get model instance
+	 * @return DB_Model
+	 */
+	private function getModelInstance(){
+		$n = $this->getModelName();
+		return $n::meta();
+	}
+
+	/**
+	 * get primary key
+	 * @return string
+	 */
+	private function getPk(){
+		$mod = $this->getModelInstance();
+		return $mod->getPrimaryKey();
+	}
+
+	/**
+	 * get return url
+	 * @return string
+	 */
+	protected function getBackUrl(){
+		return $this->getUrl($this->getController().'/'.$this->getDefaultAction());
+	}
+
+	/**
+	 * check current crud controller supportCRUDList action
+	 * @param $op
+	 * @throws Exception
+	 * @return bool
+	 */
+	private function checkSupports($op){
+		if($this->getModelName()){
+			$sps = $this->supportCRUDList();
+			if(is_array($sps) && (in_array($op, $sps) || in_array(self::OP_ALL, $sps))){
+				return true;
+			}
+			if(!is_array($sps) && ($op == $sps || $sps == self::OP_ALL)){
+				return true;
+			}
+		}
+		throw new Exception('method not support yet');
+	}
+
+	/**
+	 * list object
+	 * @param $search
+	 * @return Result
+	 * @throws Exception
+	 */
+	public function index($search){
+		$this->checkSupports(self::OP_INDEX);
+
+		/** @var DB_Model $model_name */
+		$model_name = $this->getModelName();
+		$pk = $this->getPk();
+		$paginate = Paginate::instance();
+		$list = $model_name::find()->order("$pk DESC")->paginate();
+
+		return new Result(null, null, array(
+			'search' => $search,
+			'data_list' => $list,
+			'paginate' => $paginate
+		));
+	}
+
+	/**
+	 * update object
+	 * @param $get
+	 * @param $post
+	 * @return Result
+	 * @throws Exception
+	 */
+	public function update($get, $post){
+		$this->checkSupports(self::OP_UPDATE);
+
+		/** @var DB_Model $model_name */
+		$model_name = $this->getModelName();
+		$pk = $this->getPk();
+		$pk_val = (int)$get[$pk];
+		if(!$pk_val) {
+			$instance = new $model_name();
+		} else {
+			$instance = $model_name::findOneByPk($pk_val);
+			if(!$instance){
+				return new Result('没有找到要更新的记录');
+			}
+		}
+
+		if($post) {
+			$instance->setValues($post);
+			$instance->save();
+			return new Result(($pk_val ? '编辑' : '新增').'成功', true, null, $this->getBackUrl());
+		}
+
+		return new Result(null, null, array(
+			'data' => $instance->id ? $instance : null,
+		));
+	}
+
+	/**
+	 * update state
+	 * @param $get
+	 * @return Result
+	 * @throws Exception
+	 */
+	public function state($get){
+		$this->checkSupports(self::OP_STATE);
+
+		/** @var DB_Model $model_name */
+		$model_name = $this->getModelName();
+		$pk = $this->getPk();
+		$pk_val = (int)$get[$pk];
+		$toState = (int)$get['state'];
+		$stateKey = $this->getStateKey();
+
+		$instance = $model_name::findOneByPk($pk_val);
+		if($instance) {
+			$instance->{$stateKey} = $toState;
+			$instance->save();
+			return new Result('状态更新成功', true);
+		}
+		return new Result('操作失败，请刷新页面后重试');
+	}
+
+	/**
+	 * delete record
+	 * @return Result
+	 * @throws Exception
+	 */
+	public function delete($get){
+		$this->checkSupports(self::OP_DELETE);
+
+		/** @var DB_Model $model_name */
+		$model_name = $this->getModelName();
+		$pk = $this->getPk();
+		$pk_val = (int)$get[$pk];
+
+		if($pk_val){
+			$model_name::delByPk($pk_val);
+			return new Result('操作成功',true, null, $this->getBackUrl());
+		}
+		return new Result('操作失败，请重试');
+	}
+
+	/**
+	 * show one record
+	 * @return array
+	 * @throws Exception
+	 */
+	public function info($get){
+		$this->checkSupports(self::OP_INFO);
+
+		/** @var DB_Model $model_name */
+		$model_name = $this->getModelName();
+		$pk = $this->getPk();
+		$pk_val = (int)$get[$pk];
+
+		return new Result(null, null, array(
+			'data' => $model_name::findOneByPk($pk_val)
+		));
+	}
+}

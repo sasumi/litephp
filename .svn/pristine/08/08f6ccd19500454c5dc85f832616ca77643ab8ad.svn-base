@@ -1,0 +1,193 @@
+<?php
+use LITE\Paginate;
+
+class Controller_Stat extends Controller_Base {
+	public function index(){
+		$this->jumpTo('stat/pvStatic');
+	}
+	/**
+	 * pv统计
+	 */
+	public function pvStatic($search){
+		$search['start_time'] = $search['start_time'] ?: date('Y-m-d 00:00:00', time()-86400*5);
+		$search['end_time'] = $search['end_time'] ?: date('Y-m-d H:i:s');
+		$st = strtotime($search['start_time']);
+		$et = strtotime($search['end_time']);
+		$search['catalog'] = $search['catalog'] ?: 'home_page';
+
+		$cond = "add_time > '$st' AND add_time <= '$et'";
+		if($search['kw']){
+			$cond .= " AND catalog LIKE '%{$search['kw']}%'";
+		}
+		if($search['catalog']){
+			$cond .= " AND catalog = '{$search['catalog']}'";
+		}
+
+		$tmp = Model_Pv::find()->field('catalog')->group('catalog')->all();
+
+		$all_catalog = array_keys(array_group($tmp, 'catalog'));
+
+		$data = Model_Pv::find($cond)->field('id,uid,add_time')->all(true);
+		$day_counts = array();
+		array_walk($data, function(&$item)use(&$day_counts){
+			$item['spc_hour'] = date('m/d/H', $item['add_time']);
+			$item['spc_day'] = date('m/d', $item['add_time']);
+			$day_counts[date('m/d', $item['add_time'])] += 1;
+		});
+
+		$pv_list = array_group($data, 'spc_hour');
+		$uv_list = array();
+		array_walk($pv_list, function(&$item, $key)use(&$uv_list){
+			$uv_count = 0;
+			$tmp = array();
+			foreach($item as $i){
+				if(empty($i['uid'])){
+					$uv_count++;
+				} else {
+					if(!$tmp[$i['uid']]){
+						$uv_count++;
+					}
+				}
+				$tmp[$i['uid']] = true;
+			}
+			$uv_list[$key] = $uv_count;
+			$item = count($item);
+		});
+		ksort($uv_list);
+		ksort($pv_list);
+
+		$seris = array(
+			array(
+				'name' => 'PV',
+				'data' => array_values($pv_list)
+			),
+			array(
+				'name' => 'UV',
+				'data' => array_values($uv_list)
+			)
+		);
+		$categories = array_keys($pv_list);
+
+
+		$pv_list_day = array_group($data, 'spc_day');
+		$uv_list_day = array();
+		array_walk($pv_list_day, function(&$item, $key)use(&$uv_list_day){
+			$uv_count = 0;
+			$tmp = array();
+			foreach($item as $i){
+				if(empty($i['uid'])){
+					$uv_count++;
+				} else {
+					if(!$tmp[$i['uid']]){
+						$uv_count++;
+					}
+				}
+				$tmp[$i['uid']] = true;
+			}
+			$uv_list_day[$key] = $uv_count;
+			$item = count($item);
+		});
+		ksort($uv_list_day);
+		ksort($pv_list_day);
+
+		$seris_day = array(
+			array(
+				'name' => 'PV',
+				'data' => array_values($pv_list_day)
+			),
+			array(
+				'name' => 'UV',
+				'data' => array_values($uv_list_day)
+			)
+		);
+		$categories_day = array_keys($pv_list_day);
+
+		return array(
+			'all_catalog' => $all_catalog,
+			'seris' => $seris,
+			'categories' => $categories,
+			'seris_day' => $seris_day,
+			'categories_day' => $categories_day,
+			'search' => $search
+		);
+	}
+
+	private function getLogCss($log){
+		if(in_array($log['level'], array('e','f','s')) && in_array($log['state'], array('0', '1'))){
+			return 'danger';
+		}
+		if(in_array($log['level'], array('w')) && in_array($log['state'], array('0', '1'))){
+			return 'warning';
+		}
+		if($log['state'] == 2){
+			return 'success';
+		}
+		if($log['level'] == 'i' || $log['level'] == 'd'){
+			return 'info';
+		}
+		return '';
+	}
+
+	/**
+	 * log
+	 */
+	public function logStatic($search){
+		//有序！
+		$level_map = array(
+			'v' => 'verbose',
+			'd' => 'debug',
+			'i' => 'info',
+			'w' => 'warning',
+			'e' => 'error',
+			'f' => 'fatal',
+			's' => 'slient'
+		);
+		if(!isset($search['level'])){
+			$search['level'] = 'w';
+		} else {
+			$search['level'] = $search['level'] ?: 'v';
+		}
+		$search['start_time'] = $search['start_time'] ?: date('Y-m-d 00:00:00', time()-86400*3);
+		$search['end_time'] = $search['end_time'] ?: date('Y-m-d H:i:s');
+
+		$cond = "datetime > '{$search['start_time']}' AND datetime <= '{$search['end_time']}'";
+		if($search['tag']){
+			$cond .= " AND tag LIKE '%{$search['tag']}%'";
+		}
+		if($search['kw']){
+			$cond .= " AND (file LIKE '%{$search['kw']}%' OR content LIKE '%{$search['kw']}%')";
+		}
+
+		//级别过滤
+		if($search['level']){
+			$found = false;
+			$str = '';
+			foreach($level_map as $k=>$v){
+				if($k == $search['level']){
+					$found = true;
+				}
+				if($found){
+					$str[] = "level = '$k'";
+				}
+			}
+			$cond .= " AND (".join(' OR ', $str).")";
+		}
+		$page = Paginate::instance();
+		$page->setConfig(array('page_size'=>20));
+		$log_list = Model_Log::find($cond)->order('datetime DESC')->page($page);
+
+		foreach($log_list as &$log){
+			$log['label_class'] = 'label label-'.$level_map[$log['level']];
+			$log['level_txt'] = $level_map[$log['level']];
+			$log['css_class'] = $this->getLogCss($log);
+			$log['content_less'] = substr($log['content'], 0, 80).'...';
+		}
+
+		return array(
+			'log_list' => $log_list,
+			'search' => $search,
+			'level_map' => $level_map,
+			'page' => $page
+		);
+	}
+}

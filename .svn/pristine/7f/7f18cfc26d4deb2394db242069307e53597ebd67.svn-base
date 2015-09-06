@@ -1,0 +1,4 @@
+<?php
+use LITE\Application;
+include '../lib/boot.inc.php';
+Application::init(__DIR__.DIRECTORY_SEPARATOR.'protected'.DIRECTORY_SEPARATOR);

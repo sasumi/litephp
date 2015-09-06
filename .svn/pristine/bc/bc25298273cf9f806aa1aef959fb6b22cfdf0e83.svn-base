@@ -1,0 +1,16 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: sasumi
+ * Date: 14-8-26
+ * Time: 上午12:26
+ */
+class Controller_Market extends Controller_Base {
+	public function index(){
+		$this->jumpTo('market/ad');
+	}
+
+	public function ad(){
+
+	}
+}

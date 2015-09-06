@@ -1,0 +1,50 @@
+<?php
+use LITE\Paginate;
+use LITE\Controller;
+
+class Controller_Resume extends Controller{
+	public function index(){
+		$pager = Paginate::instance();
+		$resume_list = Model_Resume::find()->page($pager);
+
+		$fields = array();
+		if(!empty($resume_list)){
+			$firstRow = array_keys($resume_list[0]);
+			$keys = $firstRow;
+			array_unshift($keys, 'select');
+			$keys[] = 'op';
+			$vals = $firstRow;
+			array_unshift($vals, function($item){
+				if($item){
+					return '<input type="checkbox" name="ids[]" id="'.$item['id'].'" />';
+				}
+				return '<span class="select-all-btn">全选</span>';
+			});
+			$_this = $this;
+			$vals[] = function($item)use($_this){
+				if($item){
+					return '<a href="'.$_this->getUrl('resume/detail', array('id'=>$item['id'])).'">详情</a> '.
+							'<a href="'.$_this->getUrl('resume/modify', array('id'=>$item['id'])).'">编辑</a> '.
+						'<a href="'.$_this->getUrl('resume/delete', array('id'=>$item['id'])).'">删除</a>';
+				}
+				return 'operate';
+			};
+			$fields = array_combine($keys, $vals);
+			array_walk($fields, function($val, $key, $fields){
+				if(is_string($val)){
+					$fields[$val] = str_replace('_', ' ', $val);
+				}
+			}, &$fields);
+		}
+
+		$table_html = $this->view->genTable($resume_list, $fields);
+		$this->view->assign('table_html', $table_html)
+			->assign('pager',$pager);
+	}
+
+	public function add(){
+		if($this->isPost()){
+
+		}
+	}
+}

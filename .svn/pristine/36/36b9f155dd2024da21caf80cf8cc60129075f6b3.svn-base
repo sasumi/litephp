@@ -1,0 +1,10 @@
+<?php
+/**
+ * patch for &lt;php5.5
+ * User: sasumi
+ * Date: 2014/11/11
+ * Time: 14:27
+ */
+function array_column($data=array(), $key){
+	return array_keys(array_group($data, $key));
+}

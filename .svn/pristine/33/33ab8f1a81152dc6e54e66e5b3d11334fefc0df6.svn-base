@@ -1,0 +1,6 @@
+<?php
+namespace LITE;
+
+class Model extends DB_DAO {
+
+}

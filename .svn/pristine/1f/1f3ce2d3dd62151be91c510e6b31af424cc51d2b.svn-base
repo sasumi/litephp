@@ -1,0 +1,3 @@
+0000000000000000000000000000000000000000 da723fbc17274ab7093c184056a3ea836839cbb0 unknown <sasumi@sasum-pc.(none)> 1430787828 +0800	clone: from git://github.com/sebastianbergmann/php-text-template.git
+da723fbc17274ab7093c184056a3ea836839cbb0 206dfefc0ffe9cebf65c413e3d0e809c82fbf00a unknown <sasumi@sasum-pc.(none)> 1430787829 +0800	checkout: moving from master to 1.2.0
+206dfefc0ffe9cebf65c413e3d0e809c82fbf00a 31f8b717e51d9a2afca6c9f046f5d69fc27c8686 unknown <Sasumi@Sasumi.guojj.com> 1438142476 +0800	checkout: moving from 206dfefc0ffe9cebf65c413e3d0e809c82fbf00a to 1.2.1

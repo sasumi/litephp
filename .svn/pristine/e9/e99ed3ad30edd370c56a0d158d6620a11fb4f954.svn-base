@@ -1,0 +1,16 @@
+<?php
+namespace LITE;
+$controller = Router::getController();
+$action = Router::getAction();
+$side_nav = Config::get('nav/side/'.$controller) ?: array();
+?>
+<?php foreach($side_nav as $col_title=>$nav_list):?>
+<dl class="aside-nav">
+	<dt><?php echo $col_title;?></dt>
+	<?php foreach($nav_list as $sub_title=>$uri):?>
+	<dd class="<?php echo $uri == $action ? 'active' : '';?>">
+		<a href="<?php echo $this->getUrl($controller.'/'.$uri);?>"><?php echo $sub_title;?></a>
+	</dd>
+	<?php endforeach;?>
+</dl>
+<?php endforeach;?>

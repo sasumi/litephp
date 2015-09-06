@@ -1,0 +1,13 @@
+<?php
+use LITE\DB_Model;
+
+class Model_Pv extends DB_Model {
+	protected function getTableName(){
+		return "pv";
+	}
+
+	protected function getPrimaryKey(){
+		return "id";
+	}
+
+}

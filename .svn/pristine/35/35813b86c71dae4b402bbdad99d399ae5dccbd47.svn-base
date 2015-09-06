@@ -1,0 +1,30 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: sasumi
+ * Date: 14-8-26
+ * Time: 下午4:13
+ */
+
+class Controller_Component_Area extends Controller_Base {
+	public function index(){
+
+	}
+
+	public function area(){
+
+	}
+
+	public function areaJs($get){
+		$area_list = Model_Area::find()->all(true);
+		$area_list = array_group($area_list, 'area_id', true);
+
+		return array(
+			'area_list' => $area_list,
+		);
+	}
+
+	public function upload(){
+
+	}
+}

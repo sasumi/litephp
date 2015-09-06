@@ -1,0 +1,44 @@
+<?php
+return array(
+	'main' => array(
+		'首页' => 'index',
+		'组件' => 'component/area',
+		'统计' => 'stat',
+		'运营' => 'market',
+		'系统管理' => 'admin',
+	),
+
+	'side' => array(
+		'market' => array(
+			'运营' => array(
+				'广告' => 'ad',
+				'邮件' => 'email',
+				'短信' => 'sms',
+				'优惠券' => 'coupon'
+			),
+		),
+		'component/index' => array(
+			'组件' => array(
+				'地区选择' => 'area',
+				'图片上传' => 'upload',
+				'分类' => 'category',
+				'分页' => 'page',
+				''
+			)
+		),
+		'stat' => array(
+			'日志' => array(
+				'Log日志' => 'logStatic'
+			),
+			'PV/UV' => array(
+				'PV/UV统计' => 'pvStatic'
+			)
+		),
+		'admin' => array(
+			'后台用户管理' => array(
+				'管理员列表' => 'showUserList',
+				'管理员角色' => 'showRoleList'
+			),
+		),
+	)
+);

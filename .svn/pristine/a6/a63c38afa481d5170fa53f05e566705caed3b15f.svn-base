@@ -1,0 +1,73 @@
+<?php
+class Controller_Resume extends Controller_Base {
+	public function index(){
+		$this->jumpTo('user/myresume');
+	}
+
+	private function getModHtml($mod){
+		ob_start();
+		$this->view->assign('mod',$mod);
+		$this->view->render(Config::get('app/tpl').'inc'.DS.'resume_mod.inc.php');
+		$html = ob_get_contents();
+		ob_clean();
+		return $html;
+	}
+
+	public function create($get, $post){
+		if($post){
+
+		} else {
+			$resume_id = Filter::init()->filteOne($get,'int');
+			if($resume_id){
+				$resume = Model_Resume::getResume($resume_id, $user_id);
+			} else {
+				$resume = Model_Resume::getDefaultResume();
+			}
+
+			$all_mods = ResumeMod::init()->getAllMods();
+
+			foreach($resume['resume_data'] as $guid=>$mod){
+				$cur_mod = $all_mods[$mod['mod_id']];
+				$cur_mod['default_title'] = $cur_mod['title'];
+				unset($cur_mod['title']);	//去除配置title，避免歧义
+				$resume['resume_data'][$guid] = array_merge($cur_mod, $mod);
+			}
+			$template_css = ResumeMod::init()->getAllTemplateCss();
+			$themes = ResumeTheme::init()->getAllThemes();
+			$theme_css = ResumeTheme::init()->getAllThemesCss();
+
+			return array(
+					'user' => $this->login_user,
+					'all_mods', $all_mods,
+					'resume' => $resume,
+					'template_css' => $template_css,
+					'themes' => $themes,
+					'theme_css' => $theme_css
+			);
+		}
+	}
+
+	public function addMod(){
+		$all_mods = ResumeMod::init()->getAllMods();
+		$type = $this->gets('type', 'ID');
+		$mod = $all_mods[$type];
+		$html = $this->getModHtml($mod);
+		$mod['html'] = json_encode($html);
+	}
+
+	public function addCol($get){
+		$all_mods = ResumeMod::init()->getAllMods();
+		foreach($all_mods as $key=>$mod){
+			$all_mods[$key]['html'] = $this->getModHtml($mod);
+		}
+		$cur_mods = explode(',', $get);
+
+		return array(
+			'cur_mods' => $cur_mods,
+			'all_mods' => $all_mods
+		);
+	}
+}
+
+
+
