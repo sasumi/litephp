@@ -185,21 +185,38 @@ final class Record {
 	}
 
 	/**
+	 * get database table description
+	 * @param $table
+	 */
+	public function getTableMeta($table){
+
+	}
+
+	/**
+	 * get column description
+	 * @param $table
+	 * @param $column_id
+	 */
+	public function getColumnMeta($table, $column_id){
+
+	}
+
+	/**
 	 * database query
 	 * @param string|Query $sql
 	 * @return PDOStatement
 	 * @throws Exception
 	 */
-	public function query($sql) {
+	public function query($sql){
 		$this->_last_query_result = null;
 		$sql .= '';
-		try{
+		try {
 			Hooker::fire(self::EVENT_BEFORE_DB_QUERY, $sql, $this->conn);
 			$result = $this->conn->query($sql);
 			$this->_last_query_result = $result;
 			Hooker::fire(self::EVENT_AFTER_DB_QUERY, $sql, $result);
 			return $result;
-		}catch(PDOException $ex){
+		} catch (PDOException $ex){
 			Hooker::fire(self::EVENT_DB_QUERY_ERROR, $ex, $sql, $this->conn);
 			throw new Exception($ex->getMessage(), null, $sql);
 		}
