@@ -30,47 +30,6 @@ class Exception extends OrgException {
 	}
 
 	/**
-	 * 调试当前异常
-	 * @param bool $html_format
-	 * @return string
-	 */
-	public function dump($html_format=true){
-		if($html_format){
-			$html = '<div style="font-size:14px;">';
-			$line = "<br/>";
-		} else {
-			$html = '<pre>';
-			$line = "\n";
-		}
-
-		$html .= $this->message.$line;
-		$html .= $this->code .$line;
-		$html .= print_r($this->data, true);
-		$html .= $line.$line.str_repeat('=', 80).$line;
-		$c = count($this->trace_info);
-		foreach($this->trace_info as $k=>$t){
-			if($html_format && $this->isLibFile($t['file'])){
-				$html .= '<span style="color:#ccc;">';
-			}
-			$html .= '[#'.($c-$k).'] '.$t['file']."({$t['line']}) ";
-			$html .= $t['class'].$t['type'].$t['function']."()".$line;
-			if($html_format && $this->isLibFile($t['file'])){
-				$html .= '</span>';
-			}
-		}
-		return $html;
-	}
-
-	/**
-	 * 检测文件是否为Lite框架库文件
-	 * @param $file
-	 * @return bool
-	 */
-	private function isLibFile($file){
-		return stripos($file, 'litephp\lib') !== false;
-	}
-
-	/**
 	 * 打印异常对象message
 	 * @return string
 	 */
