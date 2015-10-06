@@ -1,3 +1,0 @@
-<?php
-include __DIR__.'./../../lib/lite/lite.class.php';
-\Lite\Lite::init(__DIR__.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR);

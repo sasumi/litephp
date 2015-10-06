@@ -1,4 +1,0 @@
-html, body {background:none;}
-body {height:160px; overflow:hidden; margin:0; font-size:14px;}
-.frm dl {padding:0; margin:8px 0;}
-input.txt {width:180px; padding:4px 2px;}

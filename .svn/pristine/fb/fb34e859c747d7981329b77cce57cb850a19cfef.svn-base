@@ -1,5 +1,0 @@
-.user-login-frm {padding:0 0 250px; width:400px; margin:20px 0 0 20px;}
-.user-login-frm h2 {border-bottom:1px solid #dedede; font-size:14px; padding:5px 10px; border-radius:5px 5px 0 0; text-shadow:1px 1px 1px white;}
-.user-login-frm dt {font-size:14px; color:#444}
-.user-login-frm dl {margin:10px 0}
-.user-login-frm input.txt {width:200px}

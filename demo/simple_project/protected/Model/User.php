@@ -1,21 +1,23 @@
 <?php
-namespace SimpleProject\Controller;
+namespace SimpleProject\Model;
+use Lite\DB\Meta\Table;
 use Lite\DB\Model;
 
 /**
- * Created by PhpStorm.
- * User: sasumi
- * Date: 2015/5/4
- * Time: 20:02
+ * Class User
+ * @package SimpleProject\Model
+ * @property mixed $name
+ * @property mixed $age
+ * @property mixed $address
+ * @property string $description
  */
-
 class User extends Model {
-	public function index(){
-
+	public function getProperties(){
+		return new Table();
 	}
 
 	/**
-	 * 当前表名接口
+	 * 褰撳墠琛ㄥ悕鎺ュ彛
 	 * @return string
 	 */
 	public function getTableName() {
@@ -23,7 +25,7 @@ class User extends Model {
 	}
 
 	/**
-	 * 获取当前设置主键
+	 * 鑾峰彇褰撳墠璁剧疆涓婚敭
 	 * @return string
 	 */
 	public function getPrimaryKey() {

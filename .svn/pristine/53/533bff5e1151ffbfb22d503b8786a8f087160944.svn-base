@@ -1,7 +1,0 @@
-<?php
-namespace LITE;
-abstract class Plugin {
-	public function __construct(){
-
-	}
-}

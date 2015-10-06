@@ -1,7 +1,0 @@
-<?php
-return array(
-	'path' => __DIR__.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR,
-	'url' => '{app/url}upload/',
-	'thumb_width' => 124,
-	'thumb_height' => 164
-);

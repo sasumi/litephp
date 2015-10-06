@@ -1,8 +1,0 @@
-<?php include 'inc/header.inc.php';?>
-<h2 class="sub-caption">简历管理</h2>
-<form action="<?php echo $this->getUrl('resume/batchOperate')?>" method="get">
-	<?php echo $table_html;?>
-	<?php echo $pager;?>
-</form>
-
-<?php include 'inc/footer.inc.php';?>

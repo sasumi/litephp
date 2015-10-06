@@ -1,7 +1,0 @@
-<?php
-return array(
-	'site_name' => '测试网站',
-	'url' => 'http://localhost/litephp/demo/',
-	'debug' => true,
-//	'404' => 'http://localhost/litephp/admin/static/404.html'
-);

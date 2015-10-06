@@ -1,1 +1,0 @@
-<?phpfunction open189_get_user_phone_and_province(array $params){	$url = 'http://api.189.cn/upc/real/cellphone_and_province';	$params = array_merge(array(		'app_id' => null,		'access_token' => null,		'type' => 'json'	), $params);		open189_params_check($params, 'app_id,access_token');	$response_str = http($url, 'GET', $params);	return json_decode($response_str, 1);}

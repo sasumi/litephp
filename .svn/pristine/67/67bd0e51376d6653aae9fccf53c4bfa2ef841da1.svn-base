@@ -1,7 +1,0 @@
-<?php
-use LITE\Controller;
-
-class Controller_Index extends Controller_Base {
-	public function index(){
-	}
-}

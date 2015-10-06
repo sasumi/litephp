@@ -1,8 +1,0 @@
-<?php
-define('DS', DIRECTORY_SEPARATOR);
-include  dirname(dirname(dirname(__DIR__))).DS.'lib'.DS.'boot.inc.php';
-LITE\Application::init(dirname(__DIR__).DS, LITE\Application::MODE_CLI);
-
-$id = $_REQUEST['id'];
-$user = Model_Admin::find('id=?', $id)->one();
-dump($user->toArray(), 1);

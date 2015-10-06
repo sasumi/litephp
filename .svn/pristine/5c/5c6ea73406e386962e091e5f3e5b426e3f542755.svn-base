@@ -1,6 +1,0 @@
-body {padding:10px 20px;}
-.filte-frm p {padding:3px 0;}
-.result-list li {overflow:hidden; padding:.5em 0; margin:.5em 0; border-bottom:1px dotted #ddd;}
-.result-list .ti {margin-bottom:5px; font-size:15px;}
-.result-list .con {float:left; width:460px; color:#555;}
-.result-list .op {float:right;}

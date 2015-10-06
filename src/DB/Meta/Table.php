@@ -8,9 +8,10 @@
 namespace Lite\DB\Meta;
 
 class Table {
-	private $name;  //表名
-	private $alias; //别名
-	private $fields; //字段
+	private $name;  //琛ㄥ悕
+	private $alias; //鍒悕
+	private $fields; //瀛楁
+	private $engine; //寮曟搸
 
 	/**
 	 * @return string
@@ -34,6 +35,20 @@ class Table {
 	}
 
 	/**
+	 * @return mixed
+	 */
+	public function getEngine(){
+		return $this->engine;
+	}
+
+	/**
+	 * @param mixed $engine
+	 */
+	public function setEngine($engine){
+		$this->engine = $engine;
+	}
+
+	/**
 	 * @param $name
 	 * @param string $alias
 	 * @param array $fields
@@ -48,5 +63,16 @@ class Table {
 
 	public function addField(Field $field){
 		$this->fields[] = $field;
+	}
+
+	public function __toString(){
+		$comment = addslashes($this->alias);
+		$content = [];
+		foreach($this->fields as $field){
+			$content[] = $field.'';
+		}
+		$content = join(',', $content);
+		$sql = "CREATE TABLE '{$this->name}' ($content) ENGINE={$this->engine} DEFAULT CHARSET=utf8 COMMENT='$comment'";
+		return $sql;
 	}
 }

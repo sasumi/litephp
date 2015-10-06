@@ -11,6 +11,7 @@ use Lite\Logger\LoggerLevel;
 use Lite\Logger\Message\CommonMessage;
 use function Lite\func\array_last;
 use function Lite\func\decodeURI;
+use function Lite\func\dump;
 use function Lite\func\format_size;
 
 /**

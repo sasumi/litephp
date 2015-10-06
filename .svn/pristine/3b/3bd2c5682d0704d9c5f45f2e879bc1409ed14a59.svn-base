@@ -1,7 +1,0 @@
-<?php include 'inc/header.inc.php';?>
-<?php
-$cal = new LITE\Calendar();
-$cal->setConfig(array('show_week_index'=>true));
-echo $cal;
-?>
-<?php include 'inc/footer.inc.php';?>

@@ -1,3 +1,0 @@
-0000000000000000000000000000000000000000 a923bb15680d0089e2316f7a4af8f437046e96bb unknown <sasumi@sasum-pc.(none)> 1430787847 +0800	clone: from git://github.com/sebastianbergmann/php-file-iterator.git
-a923bb15680d0089e2316f7a4af8f437046e96bb a923bb15680d0089e2316f7a4af8f437046e96bb unknown <sasumi@sasum-pc.(none)> 1430787848 +0800	checkout: moving from master to 1.4.0
-a923bb15680d0089e2316f7a4af8f437046e96bb 6150bf2c35d3fc379e50c7602b75caceaa39dbf0 unknown <Sasumi@Sasumi.guojj.com> 1438142473 +0800	checkout: moving from a923bb15680d0089e2316f7a4af8f437046e96bb to 1.4.1

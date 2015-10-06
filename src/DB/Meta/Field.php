@@ -19,17 +19,54 @@ class Field {
 	const TYPE_TIME = 9;
 	const TYPE_TIMESTAMP = 10;
 
+	/**
+	 * 类型映射到数据库类型
+	 * @var array
+	 */
+	private static $type_map = array(
+		self::TYPE_STRING => 'varchar',
+		self::TYPE_INT => 'int',
+		self::TYPE_FLOAT => 'float',
+		self::TYPE_DOUBLE => 'double',
+		self::TYPE_BOOL => 'bool',
+		self::TYPE_ENUM => 'enum',
+		self::TYPE_DATE => 'date',
+		self::TYPE_DATETIME => 'datetime',
+		self::TYPE_TIME => 'time',
+		self::TYPE_TIMESTAMP => 'timestamp'
+	);
+
+	public $primary_key;
 	public $name;
 	public $alias;
 	public $type;
+	public $require;
 	public $length;
+	public $auto_increment;
 	public $default;
 
-	public function __construct($definitions){
+	public function __construct($primary_key=false, $definitions){
+		$this->primary_key = $primary_key;
 		foreach($definitions as $k=>$def){
 			if(isset($this[$k])){
 				$this[$k] = $def;
 			}
 		}
+	}
+
+	/**
+	 * covert to SQL definition
+	 * @return string
+	 */
+	public function __toString(){
+		$type = self::$type_map[$this->type];
+		$null = $this->require ? 'NOT NULL' : '';
+		$default = $this->default ? "DEFAULT '{$this->default}'" : '';
+		$comment = addslashes($this->alias);
+		$sql = "`{$this->name}` $type({$this->length}) $null $default COMMENT '$comment'";
+		if($this->primary_key){
+			$sql .= "PRIMARY KEY (`{$this->name}`)";
+		}
+		return $sql;
 	}
 }
