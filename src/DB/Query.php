@@ -1,6 +1,7 @@
 <?php
 namespace Lite\DB;
 use Lite\Exception\Exception;
+use function Lite\func\dump;
 
 /**
  * 数据库查询抽象类
@@ -167,7 +168,7 @@ class Query {
 		}
 
 		//普通模式
-		else {
+		else if($field){
 			$this->where[] = array(
 				'type' => $arg1,
 				'field' => $field,
