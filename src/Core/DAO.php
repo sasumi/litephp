@@ -23,8 +23,10 @@ abstract class DAO implements Iterator, ArrayAccess{
 	 * 构造方法,设置元数据
 	 * @param array $data
 	 */
-	public function __construct(array $data=array()){
-		$this->setValues($data);
+	public function __construct($data=array()){
+		if($data){
+			$this->setValues($data);
+		}
 	}
 
 	/**
