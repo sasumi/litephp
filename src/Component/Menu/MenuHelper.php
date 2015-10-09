@@ -7,7 +7,28 @@
  */
 namespace Lite\Component\Menu;
 use Lite\Core\Router;
+use function Lite\func\array_clear_empty;
 use function Lite\func\array_first;
+use function Lite\func\dump;
+
+function array_clear(&$array, $handler){
+	if(!$array){
+		return;
+	}
+	foreach($array as $k=>$item){
+		$ret = $handler($item, $k);
+		if(!$ret){
+			unset($array[$k]);
+		} else {
+			$array[$k] = $ret;
+		}
+	}
+}
+
+const MENU_KEY_TITLE = 0;
+const MENU_KEY_URI = 1;
+const MENU_KEY_SUB = 2;
+const MENU_KEY_ACTIVE = 3;
 
 /**
  * 系统菜单
@@ -67,7 +88,7 @@ class MenuHelper {
 	}
 
 	/**
-	 * 检查权限
+	 * 检查权限，缺省不提供权限检查功能
 	 * @param $uri
 	 * @return bool
 	 */
@@ -86,83 +107,86 @@ class MenuHelper {
 	public function getMenuData($type){
 		if(!$this->menu_data[$type]){
 			$mnu = $this->data;
-			//主菜单命中
-			$main_nav = array();
 			$current_ctrl = strtolower(Router::getController());
 			$current_action = strtolower(Router::getAction());
-			$side = array();
 
-			//直接命中
-			foreach($mnu as $k => $item){
-				list($ctrl) = explode('/', $item[1]);
-				$active = false;
-				if(strtolower($ctrl) == strtolower($current_ctrl)){
-					$active = true;
-					$side = $item[2];
-				}
-				$main_nav[$k] = array($item[0], $item[1], $active, $item[2] ?: array());
-			}
-
-			//命中子菜单
-			if(empty($side)){
-				foreach($mnu as $k => $item){
-					if(!empty($item[2])){
-						foreach($item[2] as $sub_k => $subs){
-							foreach($subs as $item_k => $sub_item){
-								list($c, $a) = explode('/', $sub_item[1]);
-								if(strtolower($c) == $current_ctrl){
-									$main_nav[$k][2] = true;
-									$side = $item[2];
-
-									//main sub active
-									if(strtolower($a) == $current_action){
-										$main_nav[$k][3][$sub_k][$item_k][2] = true;
-									}
-									break 3;
-								}
+			//权限清理
+			array_clear($mnu, function(&$main_item){
+				//优先过滤子菜单
+				if(!empty($main_item[MENU_KEY_SUB])){
+					array_clear($main_item[MENU_KEY_SUB], function($sub_list){
+						array_clear($sub_list, function($sub_item){
+							if($sub_item[MENU_KEY_URI] && !$this->checkAccess($sub_item[MENU_KEY_URI])){
+								return false;
 							}
+							return $sub_item;
+						});
+						return $sub_list;
+					});
+				}
+
+				//只有在父级菜单没有权限情况下，才需要清理菜单项
+				if(!$main_item[MENU_KEY_URI] || !$this->checkAccess($main_item[MENU_KEY_URI])){
+					if($main_item[MENU_KEY_SUB]){
+						return false;
+					}
+				}
+				return $main_item;
+			});
+
+			//子菜单菜单命中检测
+			$found_in_sub = false;
+			array_clear($mnu, function(&$main_item)use(&$found_in_sub, $current_ctrl, $current_action){
+				if($main_item[MENU_KEY_SUB] && !$found_in_sub){
+					array_clear($main_item[MENU_KEY_SUB], function(&$sub_list)use(&$found_in_sub, $current_ctrl, $current_action){
+						if(!$found_in_sub){
+							array_clear($sub_list, function(&$sub)use(&$found_in_sub, $current_ctrl, $current_action){
+								if(!$found_in_sub){
+									list($c, $a) = explode('/',strtolower($sub[MENU_KEY_URI]));
+									$a = $a ?: strtolower(Router::getDefaultAction());
+									if($c == $current_ctrl && $a == $current_action){
+										$found_in_sub = true;
+										$sub[MENU_KEY_ACTIVE] = true;
+									}
+								}
+								return $sub;
+							});
+						}
+						return $sub_list;
+					});
+					if($found_in_sub){
+						$main_item[MENU_KEY_ACTIVE] = true;
+					}
+				}
+				return $main_item;
+			});
+
+			//父级菜单命中检测
+			if(!$found_in_sub){
+				foreach($mnu as $main_k=>$main_item){
+					if($main_item[MENU_KEY_URI]){
+						list($c, $a) = explode('/',strtolower($main_item[MENU_KEY_URI]));
+						$a = $a ?: strtolower(Router::getDefaultAction());
+						if($c == $current_ctrl && $a == $current_action){
+							$mnu[$main_k][MENU_KEY_ACTIVE] = true;
+							break;
 						}
 					}
 				}
 			}
 
-			//子菜单active处理
-			if(!empty($side)){
-				foreach($side as $k => $sub_list){
-					foreach($sub_list as $j => $sub_item){
-						list($c, $a) = explode('/', $sub_item[1]);
-						if(strtolower($c) == $current_ctrl && strtolower($a) == $current_action){
-							$side[$k][$j][2] = true;
-							break 2;
-						}
-					}
+			//析出子菜单数据
+			$side = array();
+			foreach($mnu as $main_item){
+				if($main_item[MENU_KEY_ACTIVE]){
+					$side = $main_item[MENU_KEY_SUB];
+					break;
 				}
 			}
 
-			//过滤掉没有权限的子菜单
-			foreach($main_nav as $k => $item){
-				$mnu = $item[3] ?: array();
-				foreach($mnu as $cap => $subs){
-					foreach($subs as $j => $sub_item){
-						if($this->checkAccess($sub_item[1])){
-							unset($subs[$j]);
-						}
-					}
-					if($subs){
-						$mnu[$cap] = $subs;
-					}else{
-						unset($mnu[$cap]);
-					}
-				}
-				$item[3] = $mnu;
-				if($item[1] && $this->checkAccess($item[1]) && $item[3]){
-					$item[1] = '';
-				}
-				$main_nav[$k] = $item;
-			}
 			$this->menu_data = array(
-				'side' => $side,
-				'main' => $main_nav
+				'main' => $mnu,
+				'side' => $side
 			);
 		}
 		return $this->menu_data[$type];
