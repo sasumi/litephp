@@ -7,6 +7,7 @@
 	use Lite\Core\Config;
 	use Lite\Core\View;
 	use function Lite\func\array_first;
+	use function Lite\func\dump;
 
 	/** @var View $viewer */
 	$viewer = Config::get('app/render');

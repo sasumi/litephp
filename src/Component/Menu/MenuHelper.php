@@ -36,7 +36,7 @@ const MENU_KEY_ACTIVE = 3;
  * $mnu = new Menu($menu_data);
  * echo $mnu->getMainMenu();
  * </p>
- * 菜单配置数据结构为：<p>
+ * 菜单配置数据$menu_data结构为：<p>
  * array(
  *      array('首页', 'index'),
  *      array('样品管理', 'article/index', array(
@@ -60,7 +60,7 @@ const MENU_KEY_ACTIVE = 3;
  * )
  * </p>
  * Class Menu
- * @package Lite\Component
+ * @package Lite\Component\Menu
  */
 class MenuHelper {
 	private $data;
@@ -175,6 +175,47 @@ class MenuHelper {
 				}
 			}
 
+			//普通CA模式命中不了，只能简单匹配C
+			if(!$found_in_sub){
+				array_clear($mnu, function(&$main_item)use(&$found_in_sub, $current_ctrl, $current_action){
+					if($main_item[MENU_KEY_SUB] && !$found_in_sub){
+						array_clear($main_item[MENU_KEY_SUB], function(&$sub_list)use(&$found_in_sub, $current_ctrl, $current_action){
+							if(!$found_in_sub){
+								array_clear($sub_list, function(&$sub)use(&$found_in_sub, $current_ctrl, $current_action){
+									if(!$found_in_sub){
+										list($c, $a) = explode('/',strtolower($sub[MENU_KEY_URI]));
+										if($c == $current_ctrl){
+											$found_in_sub = true;
+											$sub[MENU_KEY_ACTIVE] = true;
+										}
+									}
+									return $sub;
+								});
+							}
+							return $sub_list;
+						});
+						if($found_in_sub){
+							$main_item[MENU_KEY_ACTIVE] = true;
+						}
+					}
+					return $main_item;
+				});
+
+				//父级菜单命中检测
+				if(!$found_in_sub){
+					foreach($mnu as $main_k=>$main_item){
+						if($main_item[MENU_KEY_URI]){
+							list($c, $a) = explode('/',strtolower($main_item[MENU_KEY_URI]));
+							$a = $a ?: strtolower(Router::getDefaultAction());
+							if($c == $current_ctrl){
+								$mnu[$main_k][MENU_KEY_ACTIVE] = true;
+								break;
+							}
+						}
+					}
+				}
+			}
+
 			//析出子菜单数据
 			$side = array();
 			foreach($mnu as $main_item){
@@ -213,7 +254,7 @@ class MenuHelper {
 	 * @return string
 	 */
 	public function getSideMenu($tpl_file=''){
-		$tpl_file = $tpl_file ?: $this->main_tpl_file;
+		$tpl_file = $tpl_file ?: $this->side_tpl_file;
 		$side_nav = $this->getMenuData('side');
 		ob_start();
 		include $tpl_file;

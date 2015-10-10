@@ -3,6 +3,7 @@ namespace Lite\Core;
 use Lite\DB\Model;
 use Lite\Component\Paginate;
 use Lite\Exception\Exception;
+use function Lite\func\dump;
 
 /**
  * CRUD访问模式基类
@@ -171,6 +172,7 @@ abstract class CRUD extends Controller {
 			$instance->save();
 			return new Result('状态更新成功', true);
 		}
+		dump($pk_val, 1);
 		return new Result('操作失败，请刷新页面后重试');
 	}
 
