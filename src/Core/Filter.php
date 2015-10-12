@@ -53,6 +53,10 @@ class Filter {
 			$data = (int)$data;
 			return true;
 		};
+		$this->DEF_FILTERS['TO_FLOAT'] = function(&$data){
+			$data = (float)$data;
+			return true;
+		};
 	}
 
 	/**
@@ -147,7 +151,7 @@ class Filter {
 		$this->sortRules($rules);
 
 		//if current isn't required, no deal while data is empty
-		if(!isset($rules['REQUIRE']) && !isset($rules['TO_INT']) && !isset($data)){
+		if(!isset($rules['REQUIRE']) && !isset($rules['TO_INT']) &&!isset($rules['TO_FLOAT'])&& !isset($data)){
 			return $data;
 		}
 

@@ -143,7 +143,9 @@ abstract class CRUD extends Controller {
 		if($post) {
 			$instance->setValues($post);
 			$instance->save();
-			return new Result(($pk_val ? '编辑' : '新增').'成功', true, null, $this->getBackUrl());
+			return new Result(($pk_val ? '编辑' : '新增').'成功', true, array(
+				$pk => $instance->$pk,
+			), $this->getBackUrl());
 		}
 		return new Result(null, null, array(
 			'data' => $instance->$pk ? $instance : null,
@@ -172,7 +174,6 @@ abstract class CRUD extends Controller {
 			$instance->save();
 			return new Result('状态更新成功', true);
 		}
-		dump($pk_val, 1);
 		return new Result('操作失败，请刷新页面后重试');
 	}
 
