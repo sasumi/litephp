@@ -105,6 +105,9 @@ final class Record {
 			$dns = 'sqlite:' . $config['host'];
 		}else{
 			$dns = "{$config['driver']}:dbname={$config['database']};host={$config['host']}";
+			if($config['port']){
+				$dns .= ";port={$config['port']}";
+			}
 		}
 
 		$opt  = array();

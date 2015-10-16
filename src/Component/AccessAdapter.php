@@ -1,6 +1,7 @@
 <?php
 namespace Lite\Component;
 use Lite\Core\Config;
+use function Lite\func\dump;
 
 /**
  * 权限控制基类
@@ -41,7 +42,8 @@ abstract class AccessAdapter {
 	 */
 	public static function instance(array $config=array()){
 		if(!static::$instance){
-			static::$instance = new static($config);
+			$class = get_called_class();
+			static::$instance = new $class($config);
 		}
 		return static::$instance;
 	}

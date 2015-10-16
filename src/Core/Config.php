@@ -157,7 +157,7 @@ abstract class Config {
 
 		switch($key){
 			case 'app':
-				self::ass_config($config['controller_pattern'], '\\Controller\\{CONTROLLER}Controller');
+				self::ass_config($config['controller_pattern'], '\\controller\\{CONTROLLER}Controller');
 				self::ass_config($config['path'], self::$app_path);
 				self::ass_config($config['charset'], self::$default_charset);
 				self::ass_config($config['auto_render'], true);
