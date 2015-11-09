@@ -4,7 +4,7 @@ namespace Lite\Cache;
 use Lite\Exception\Exception;
 use Redis as SysRedis;
 
-class Redis extends Adapter{
+class CacheRedis extends CacheAdapter{
 	/** @var null|\Redis */
 	private $cache = null;        //缓存对象
 	private $defaultHost = '127.0.0.1'; //默认服务器地址

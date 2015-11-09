@@ -438,13 +438,16 @@ final class Record {
 	 * @param array $data
 	 * @param string $condition
 	 * @param int $limit
-	 * @return integer affect line number
+	 * @return int affect line number
+	 * @throws \Lite\Exception\Exception
 	 */
 	public function update($table, array $data, $condition = '', $limit=1) {
-		if(! empty($data)){
+		if(!empty($data)){
 			foreach($data as $k=>$item){
 				$data[$k] = $this->conn->quote($item);
 			}
+		} else {
+			throw new Exception('NO UPDATE DATA FOUND');
 		}
 		$query = $this->genQuery()
 			->update()

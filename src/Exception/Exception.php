@@ -14,8 +14,8 @@ class Exception extends OrgException {
     protected $file;                              // Source filename of exception
     protected $line;                              // Source line of exception
 
-	public $trace_info;
 	public $data;
+	public $trace_info;
 
 	/**
 	 * 构造方法，支持传入数据
@@ -25,8 +25,8 @@ class Exception extends OrgException {
 	 */
 	public function __construct($message=null, $code=0, $data=null){
 		parent::__construct($message, 0);
-		$this->trace_info = debug_backtrace();
 		$this->data = $data;
+		$this->trace_info = debug_backtrace();
 	}
 
 	/**

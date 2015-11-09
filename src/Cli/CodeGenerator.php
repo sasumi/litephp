@@ -128,8 +128,10 @@ function generate_table($table, $overwrite){
 
 	$meta_list = get_table_meta($table);
 	$filter_rules = get_row_filter_rule($meta_list);
+	$properties_defines = get_properties_defines($meta_list);
 	$pk = get_pk($meta_list);
 	$comment = get_class_comment($class_name, $meta_list);
+	$model_desc = get_table_desc($table);
 	$ns = get_ns();
 
 	$str = parser_tpl(file_get_contents(__DIR__.'/table.tpl'), array(
@@ -140,7 +142,9 @@ function generate_table($table, $overwrite){
 		'class_comment' => $comment,
 		'class_name' => $class_name,
 		'primary_key' => $pk,
-		'filter_rules' => $filter_rules
+		'model_desc' => $model_desc,
+		'filter_rules' => $filter_rules,
+		'properties_defines' => $properties_defines
 	));
 	$update = is_file($file);
 	file_put_contents($file, $str);
@@ -171,14 +175,58 @@ function get_class_comment($class_name, $meta_list){
 			$read_only = true;
 		}
 		$type = convert_type($meta['Type']);
-		$r .= '* '.($read_only ? '@property-read' : '@property').' '.$type.' $'.$meta['Field']." {$meta['Comment']}\n";
+		$r .= "\n * ".($read_only ? '@property-read' : '@property').' '.$type.' $'.$meta['Field']." {$meta['Comment']}";
 	}
-	$str = <<<EOT
-/**
-* Class {$class_name}
-{$r}*/
-EOT;
-	return $str;
+	return $r;
+}
+
+function get_table_desc($table){
+	$conn = get_db_conn();
+	$st = $conn->prepare('SHOW CREATE table '.$table);
+	$st->execute();
+	$ret = array();
+	while($r = $st->fetch(PDO::FETCH_ASSOC)){
+		$script = $r['Create Table'];
+		if(preg_match('/\s+comment=\'([^\']+)\'/i', $script, $matches)){
+			return $matches[1];
+		}
+	}
+	return $table;
+}
+
+function get_db_model_public_methods($class_name){
+	$f = dirname(__DIR__).'/DB/Model.php';
+	$str = file_get_contents($f);
+
+	//去除final方法
+	$str = preg_replace('/\n\s*final\s+.*?\n/', '', $str);
+
+	if(preg_match_all('/\s+public\s+([^{]+)/', $str, $matches)){
+		$matches = array_filter($matches[1], function($item){
+			if(strpos($item, '__') === false &&
+				strpos($item, 'getTableName') === false){
+				return true;
+			}
+			return false;
+		});
+
+		foreach($matches as $k=>$m){
+			$m = str_replace('function ', '', $m);
+			$m = str_replace('self', $class_name, $m);
+			if(stripos($m, 'static') !== false){
+				$m = str_replace('static ', 'static '.$class_name.' ', $m);
+			} else {
+				$m = $class_name.' '.$m;
+			}
+			$matches[$k] = $m;
+
+
+			//* @method static TableUser findOneByPk($val, $as_array=false)
+		}
+
+		return $matches;
+	}
+	return array();
 }
 
 function convert_type($meta_type){
@@ -197,6 +245,103 @@ function convert_type($meta_type){
 	return $type;
 }
 
+function get_field_alias($meta){
+	if($meta['Comment']){
+		$meta['Comment'] = preg_replace("/\\(.*$/", '', $meta['Comment']);
+	}
+	return $meta['Comment'] ?: $meta['Field'];
+}
+
+function get_field_type($meta){
+	$a = array(
+		'char',
+		'text',
+		'int',
+		'float',
+		'double',
+		'bool',
+		'enum',
+		'timestamp',
+		'datetime',
+		'date',
+		'time',
+	);
+	foreach($a as $k){
+		if(stripos($meta['Type'], $k) !== false){
+			if($k == 'char'){
+				$k = 'string';
+			}
+			return $k;
+		}
+	}
+	return null;
+}
+
+function get_properties_defines($meta_list){
+	$t = "\t\t\t";
+	$str = '';
+	foreach($meta_list as $meta){
+		$pk = $meta['Key'] == 'PRI';
+		$auto_increment = $meta['Extra'] == 'auto_increment';
+
+		//缺省自动更新时间字段设置为只读
+		$auto_update_timestamp = $meta['Extra'] == 'on update CURRENT_TIMESTAMP';
+
+		//缺省填充时间字段设置为只读
+		$auto_fill_default_timestamp = $meta['Null'] == 'NO' && $meta['Default'] == 'CURRENT_TIMESTAMP';
+
+		$readonly = ($pk && $auto_increment) || $auto_update_timestamp || $auto_fill_default_timestamp;
+		$unsigned = stripos($meta['Type'], 'unsigned') !== false;
+		$alias = addslashes(get_field_alias($meta));
+		$type = get_field_type($meta);
+		$len = intval(preg_replace('/\D/', '', $meta['Type']));
+		$required = $meta['Null'] == 'NO';
+
+		$str .= "\n{$t}'{$meta['Field']}' => array(\n";
+		$str .= "{$t}\t'alias' => '{$alias}',\n";
+		$str .= $type ? "{$t}\t'type' => '{$type}',\n" : '';
+		$str .= "{$t}\t'length' => {$len},\n";
+		$str .= $pk ? "{$t}\t'primary' => true,\n" :'';
+		$str .= $required ? "{$t}\t'required' => true,\n" : '';
+		$str .= $readonly ? "{$t}\t'readonly' => true,\n" : '';
+		$str .= $unsigned ? "{$t}\t'min' => 0" : '';
+
+		if($meta['Default'] !== null){
+			$def = addslashes($meta['Default']);
+			if($type == 'datetime'){
+				$v = $def == '0000-00-00 00:00:00' ? '' : date('Y-m-d H:i:s', strtotime($def));
+				$str .= "{$t}\t'default' => '$v',\n";
+			}
+			else if($type == 'date'){
+				$def = $def == '0000-00-00' ? '' : date('Y-m-d H:i:s', strtotime($def));
+				$str .= "{$t}\t'default' => '$def',\n";
+			}
+			else if($type == 'time'){
+				$v = $def == '00:00:00' ? '' : date('Y-m-d H:i:s', strtotime($def));
+				$str .= "{$t}\t'default' => '$v',\n";
+			}
+			else if($type == 'timestamp'){
+				if($def != 'CURRENT_TIMESTAMP'){
+					$v = $def == '0000-00-00 00:00:00' ? '' : date('Y-m-d H:i:s', strtotime($def));
+					$str .= "{$t}\t'default' => '$v',\n";
+				}
+			}
+			else if($type == 'string'){
+				$str .= "{$t}\t'default' => '$def',\n";
+			} else {
+				$str .= "{$t}\t'default' => $def,\n";
+			}
+		}
+		if($type == 'enum'){
+			$opts = get_field_options($meta);
+			$str .= "{$t}\t'options' => {$opts},\n";
+		}
+		$str .= "{$t}\t'entity' => true\n";
+		$str .= "{$t}),";
+	}
+	return $str;
+}
+
 function get_row_filter_rule($meta_list){
 	$t = "\t\t\t";
 	$str = "{$t}array(\n";
@@ -204,25 +349,26 @@ function get_row_filter_rule($meta_list){
 		if($meta['Key'] == 'PRI'){
 			continue;
 		}
-		$str .= "{$t}\t//{$meta['Comment']}\n";
+
+		$alias = get_field_alias($meta);
+		$str .= "{$t}\t//{$alias}\n";
 		$str .= "{$t}\t'{$meta['Field']}' => array(\n";
 
 		//非空处理
 		if($meta['Null'] == 'NO' && $meta['Default'] === Null){
-			$f = $meta['Comment'] ?: $meta['Field'];
-			$msg = $f.'不能为空';
+			$msg = $alias.'不能为空';
 			if(stripos($meta['Type'], 'tinyint') !== false ||
 				stripos($meta['Type'], 'enum') !== false
 			){
-				$msg = "请选择{$f}";
+				$msg = "请选择{$alias}";
 			} else if(stripos($meta['Type'], 'char') !== false ||
 				stripos($meta['Type'], 'int') !== false ||
 				stripos($meta['Type'], 'float') !== false ||
 				stripos($meta['Type'], 'double') !== false
 			){
-				$msg = "请输入{$f}";
+				$msg = "请输入{$alias}";
 			}
-			$str .= "{$t}\t\t'REQUIRE' => '".addslashes($msg)."',\n";
+			$str .= "{$t}\t\t'REQUIRED' => '".addslashes($msg)."',\n";
 		}
 
 		//缺省处理
@@ -235,8 +381,7 @@ function get_row_filter_rule($meta_list){
 		if($type == 'string' || $type == 'int'){
 			$len = intval(preg_replace('/\D/', '', $meta['Type']));
 			if($len){
-				$f = $meta['Comment'] ?: $meta['Field'];
-				$msg = $f."最大长度为 {$len} 个字符";
+				$msg = $alias."最大长度为 {$len} 个字符";
 				$str .= "{$t}\t\t'MAXLEN' => array('{$msg}',{$len}),\n";
 			}
 		}
@@ -245,6 +390,21 @@ function get_row_filter_rule($meta_list){
 	}
 	$str .= "{$t})";
 	return $str;
+}
+
+function get_field_options($meta){
+	$ns = explode(',', preg_replace(array('/.*?\(/', '/\).*/'), array('',''), $meta['Comment']));
+	$ks = explode(',', preg_replace(array('/.*?\(/', '/\).*/'), array('',''), $meta['Type']));
+
+	$opts = 'array(';
+	$comma = '';
+	foreach($ks as $idx=>$k){
+		$v = $ns[$idx];
+		$opts .= $comma."$k=>'$v'";
+		$comma = ', ';
+	}
+	$opts .= ')';
+	return $opts;
 }
 
 function convert_class_name($table_name){

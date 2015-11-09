@@ -5,7 +5,7 @@ namespace Lite\Cache;
  * 运行时内存变量缓存（共享）
  * Class VarCache
  */
-class CVar extends Adapter {
+class CacheVar extends CacheAdapter {
 	private static $DATA_STORE = array();
 	private $cache_key_prefix = '_var_cache_';
 

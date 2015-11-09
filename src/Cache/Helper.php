@@ -11,7 +11,7 @@ class Helper {
 	/**
 	 * 初始化缓存实例
 	 * @param array $config
-	 * @return Adapter
+	 * @return CacheAdapter
 	 */
 	public static function init(array $config=array()){
 		if(!$config){

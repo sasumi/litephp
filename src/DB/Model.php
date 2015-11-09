@@ -3,9 +3,11 @@ namespace Lite\DB;
 
 use Lite\Core\Config;
 use Lite\Core\DAO;
-use Lite\Core\Filter;
+use Lite\DB\Meta\Field;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;
+use function Lite\func\array_clear_fields;
+use function Lite\func\dump;
 
 /**
  * 数据库结合数据模型提供的操作抽象类, 实际业务逻辑最好通过集成该类来实现
@@ -23,6 +25,8 @@ abstract class Model extends DAO{
 
 	/** @var Query db query object * */
 	private $query = null;
+
+	private $ext_properties = array();
 
 	/**
 	 * get current called class object
@@ -67,8 +71,17 @@ abstract class Model extends DAO{
 	/**
 	 * 获取当前设置主键
 	 * @return string
+	 * @throws \Lite\Exception\Exception
 	 */
-	abstract public function getPrimaryKey();
+	public function getPrimaryKey(){
+		$defines = $this->getEntityPropertiesDefine();
+		foreach($defines as $k=>$def){
+			if($def['primary']){
+				return $k;
+			}
+		}
+		throw new Exception('no primary key found in table defines');
+	}
 
 	/**
 	 * 获取db记录实例对象
@@ -387,7 +400,7 @@ abstract class Model extends DAO{
 	/**
 	 * 获取一条记录
 	 * @param bool $as_array
-	 * @return Model|Array|NULL
+	 * @return Model|array|NULL
 	 */
 	public function one($as_array = false){
 		$data = $this->getDbRecord(self::DB_READ)->getOne($this->query);
@@ -480,52 +493,20 @@ abstract class Model extends DAO{
 	 * @throws \Lite\Exception\Exception
 	 * @return number
 	 */
-	final public function update(){
+	public function update(){
 		if($this->onBeforeUpdate() === false){
 			return false;
 		}
 
 		$data = $this->getValues();
-		$pk_val = $data[$this->getPrimaryKey()];
-		if(!$pk_val){
-			throw new Exception("primary value no found");
-		}
-		unset($data[$this->getPrimaryKey()]);
+		$pk = $this->getPrimaryKey();
 
-		$update_data = array();
-		$filters = array();
-		$item_change_keys = $this->getValueChangeKeys();
-		$all_filter_rules = $this->getFilterRules();
-		foreach($data as $key => $pro){
-			if(isset($item_change_keys[$key]) && (empty($all_filter_rules) || $all_filter_rules[$key])){
-				$update_data[$key] = $pro;
-				$filters[$key] = $all_filter_rules[$key];
-			}
-		}
+		//只更新改变的值
+		$change_keys = $this->getValueChangeKeys();
 
-		if(!empty($update_data)){
-			$result = Filter::init()->filterArray($update_data, $filters);
-			if(!empty($result)){
-				throw new BizException(array_pop($result), json_encode($result));
-			}
-
-			//unique
-			$properties_defines = $this->getPropertiesDefine();
-			if(!empty($properties_defines)){
-				foreach($properties_defines as $field_key => $rule){
-					if(isset($rule['unique']) && $data[$field_key]){
-						$c = self::find($this->getPrimaryKey()." != '".addslashes($pk_val).
-							"' AND $field_key = '".addslashes($data[$field_key])."'")->count();
-						if($c){
-							throw new BizException($rule['unique']);
-						}
-					}
-				}
-			}
-			return $this->getDbRecord(self::DB_WRITE)->update($this->getTableName(), $update_data, $this->getPrimaryKey().'='.$pk_val);
-		}else{
-			throw new Exception("no properties update");
-		}
+		$data = array_clear_fields(array_keys($change_keys), $data);
+		self::validate($data, Query::UPDATE);
+		return $this->getDbRecord(self::DB_WRITE)->update($this->getTableName(), $data, $this->getPrimaryKey().'='.$this->$pk);
 	}
 
 	/**
@@ -533,45 +514,14 @@ abstract class Model extends DAO{
 	 * @throws \Lite\Exception\BizException
 	 * @return string | bool 返回插入的id，或者失败(false)
 	 */
-	final public function insert(){
+	public function insert(){
 		if($this->onBeforeInsert() === false){
 			return false;
 		}
 
 		$data = $this->getValues();
-		$filter_rules = $this->getFilterRules();
+		self::validate($data, Query::INSERT);
 
-		//插入需要过所有的过滤器
-		foreach($filter_rules as $key => $filter){
-			if(!isset($data[$key])){
-				$data[$key] = null;
-			}
-		}
-
-		//remove no scalar
-		foreach($data as $key => $item){
-			if(!is_scalar($item)){
-				unset($data[$key]);
-			}
-		}
-
-		$result = Filter::init()->filterArray($data, $filter_rules);
-		if(!empty($result)){
-			throw new BizException(array_pop($result));
-		}
-
-		//unique
-		$properties_defines = $this->getPropertiesDefine();
-		if(!empty($properties_defines)){
-			foreach($properties_defines as $field_key => $rule){
-				if(isset($rule['unique']) && $data[$field_key]){
-					$c = self::find("$field_key = '".addslashes($data[$field_key])."'")->count();
-					if($c){
-						throw new BizException($rule['unique']);
-					}
-				}
-			}
-		}
 		$result = $this->getDbRecord(self::DB_WRITE)->insert($this->getTableName(), $data);
 		if($result){
 			$pk_val = $this->getDbRecord(self::DB_WRITE)->getLastInsertId();
@@ -579,6 +529,72 @@ abstract class Model extends DAO{
 			return $pk_val;
 		}
 		return false;
+	}
+
+	/**
+	 * @param array $src_data
+	 * @param string $query_type
+	 * @param bool $throw_exception
+	 * @return array
+	 * @throws \Lite\Exception\BizException
+	 * @throws \Lite\Exception\Exception
+	 */
+	private static function validate(&$src_data=array(), $query_type=Query::INSERT, $throw_exception=true){
+		//移除矢量数值
+		$data = array_filter($src_data, function($item){
+			return is_scalar($item);
+		});
+
+		$obj = self::meta();
+		$pro_defines = $obj->getEntityPropertiesDefine();
+		$pk = $obj->getPrimaryKey();
+
+		//移除readonly属性
+		$pro_defines = array_filter($pro_defines, function($def){
+			return !$def['readonly'];
+		});
+
+		//清理无用数据
+		$data = array_clear_fields(array_keys($pro_defines), $data);
+
+		//插入时填充default值
+		if($query_type == Query::INSERT){
+			array_walk($pro_defines, function($def, $k)use(&$data){
+				if(!isset($data[$k]) && isset($def['default'])){
+					$data[$k] = $def['default'];
+				}
+			});
+		}
+
+		//属性校验
+		foreach($pro_defines as $k=>$def){
+			if(!$def['readonly']){
+				$f = new Field($k, $def);
+				if($msg = $f->validate($data[$k])){
+					return $msg;
+				}
+			}
+		}
+
+		//unique校验
+		foreach($pro_defines as $field=>$def){
+			if($def['unique']){
+				if($query_type == Query::INSERT){
+					$count = $obj->find("$field=?", $data[$field])->count();
+				} else {
+					$count = $obj->find("$field=? AND $pk=?", $data[$field], $data[$pk])->count();
+				}
+				if($count){
+					$msg = "{$def['alias']}：{$data[$field]}已经存在，不能重复添加";
+					if($throw_exception){
+						throw new BizException($msg);
+					}
+					return $msg;
+				}
+			}
+		}
+		$src_data = $data;
+		return null;
 	}
 
 	/**
@@ -590,7 +606,7 @@ abstract class Model extends DAO{
 	 * @throws \Lite\Exception\Exception
 	 * @return array | bool
 	 */
-	final public static function insertMany($data_list, $break_on_fail = true){
+	public static function insertMany($data_list, $break_on_fail = true){
 		if(count($data_list, COUNT_RECURSIVE) == count($data_list)){
 			throw new Exception('2 dimension array needed');
 		}
@@ -607,40 +623,21 @@ abstract class Model extends DAO{
 					continue;
 				}
 			}
-			$filter_rules = $tmp->getFilterRules();
 
-			//插入需要过所有的过滤器
-			foreach($filter_rules as $key => $filter){
-				if(!isset($data[$key])){
-					$data[$key] = null;
-				}
-			}
-
-			//remove no scalar
-			foreach($data as $key => $item){
-				if(!is_scalar($item)){
-					unset($data[$key]);
-				}
-			}
-
-			$result = Filter::init()->filterArray($data, $filter_rules);
-			if(!empty($result)){
-				if($break_on_fail){
-					throw new BizException(array_pop($result));
-				}else{
-					continue;
-				}
+			$result = self::validate($data, Query::INSERT, $break_on_fail);
+			if(!$result){
+				continue;
 			}
 
 			$result = $tmp->getDbRecord(self::DB_WRITE)->insert($tmp->getTableName(), $data);
+			if(!$result && $break_on_fail){
+				return false;
+			}
+
 			if($result){
 				$pk_val = $tmp->getDbRecord(self::DB_WRITE)->getLastInsertId();
 				$tmp->setValue($tmp->getPrimaryKey(), $pk_val);
 				$return_list[] = $pk_val;
-			}else{
-				if($break_on_fail){
-					return false;
-				}
 			}
 		}
 		return $return_list;
@@ -696,7 +693,7 @@ abstract class Model extends DAO{
 	 * 保存当前对象变更之后的数值
 	 * @return bool
 	 */
-	final public function save(){
+	public function save(){
 		if($this->onBeforeSave() === false){
 			return false;
 		}
@@ -710,6 +707,14 @@ abstract class Model extends DAO{
 			return $this->insert();
 		}
 		return false;
+	}
+
+	/**
+	 * 获取所有属性key
+	 * @return array
+	 */
+	public function getAllPropertiesKey(){
+		return array_keys($this->getPropertiesDefine());
 	}
 
 	/**
@@ -739,41 +744,63 @@ abstract class Model extends DAO{
 
 	/**
 	 * 配置getter
-	 * 支持：'name' => array('has_one'=>callable, 'target_key'=>'category_id','source_key'=>默认当前对象PK)
-	 * 支持：'children' => array('has_many'=>callable, 'target_key'=>'category_id', 'source_key' => 默认当前对象PK)
-	 * 支持：'name' => array('getter' => function($k){})
-	 * 支持：'name' => array('setter' => function($k, $v){})
+	 * <p>
+	 * 支持：'name' => array(
+	 *          'has_one'=>callable,
+	 *          'target_key'=>'category_id',
+	 *          'source_key'=>默认当前对象PK)
+	 * 支持：'children' => array(
+	 *          'has_many'=>callable,
+	 *          'target_key'=>'category_id',
+	 *          'source_key' => 默认当前对象PK)
+	 * 支持：'name' => array(
+	 *          'getter' => function($k){
+
+	 *          }
+	 *      )
+	 * 支持：'name' => array(
+	 *          'setter' => function($k, $v){
+
+	 *          }
+	 *      )
+	 * </p>
 	 * @param $key
 	 * @throws \Lite\Exception\Exception
 	 * @return mixed
 	 */
 	public function __get($key){
-		$defines = $this->getPropertiesDefine($key);
-		if($defines && ($defines['has_one'] || $defines['has_many'])){
-			$source_key = $defines['source_key'];
-			$target_key = $defines['target_key'];
+		$define = $this->getPropertiesDefine($key);
 
-			if($defines['has_one']){
-				if(!$target_key && !$source_key){
-					throw new Exception('has one config must define target key or source key');
-				}
-				$match_val = $this->getValue($source_key ?: $this->getPrimaryKey());
-				/** @var Model $class */
-				$class = $defines['has_one'];
-				if(!$target_key){
-					return $class::findOneByPk($match_val);
-				}else{
-					return $class::find("$target_key = ?", $match_val)->one();
-				}
+		if($define){
+			if($define['getter']){
+				return call_user_func($define['getter'], $this);
 			}
-			if($defines['has_many']){
-				if(!$target_key){
-					throw new Exception('has many config must define target key');
+			else if($define['has_one'] || $define['has_many']){
+				$source_key = $define['source_key'];
+				$target_key = $define['target_key'];
+
+				if($define['has_one']){
+					if(!$target_key && !$source_key){
+						throw new Exception('has one config must define target key or source key');
+					}
+					$match_val = $this->getValue($source_key ?: $this->getPrimaryKey());
+					/** @var Model $class */
+					$class = $define['has_one'];
+					if(!$target_key){
+						return $class::findOneByPk($match_val);
+					}else{
+						return $class::find("$target_key = ?", $match_val)->one();
+					}
 				}
-				/** @var Model $class */
-				$class = $defines['has_many'];
-				$match_val = $this->getValue($source_key ?: $this->getPrimaryKey());
-				return $class::find("$target_key = ?", $match_val)->all();
+				if($define['has_many']){
+					if(!$target_key){
+						throw new Exception('has many config must define target key');
+					}
+					/** @var Model $class */
+					$class = $define['has_many'];
+					$match_val = $this->getValue($source_key ?: $this->getPrimaryKey());
+					return $class::find("$target_key = ?", $match_val)->all();
+				}
 			}
 		}
 		return parent::__get($key);

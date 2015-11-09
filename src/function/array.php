@@ -219,8 +219,12 @@ namespace Lite\func {
 	 * array sort by specified key
 	 * @example: array_orderby($data, 'volume', SORT_DESC, 'edition', SORT_ASC);
 	 * @param mix
+	 * @return mixed
 	 */
 	function array_orderby(&$src_arr) {
+		if(empty($src_arr)){
+			return $src_arr;
+		}
 		$args = func_get_args();
 		$data = array_shift($args);
 		foreach ($args as $n => $field) {
@@ -267,7 +271,7 @@ namespace Lite\func {
 		//选项
 		$opt = array_merge(array(
 			'return_as_tree' => true,             //以目录树返回，还是以平铺数组形式返回
-			'level_key' => 'tree_level',        //返回数据中是否追加等级信息,如果选项为空, 则不追加等级信息
+			'level_key' => 'tree_level',          //返回数据中是否追加等级信息,如果选项为空, 则不追加等级信息
 			'id_key' => 'id',                     //主键键名
 			'parent_id_key' => 'parent_id',       //父级键名
 			'children_key' => 'children'          //返回子集key(如果是平铺方式返回,该选项无效

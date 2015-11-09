@@ -1,1 +1,1 @@
-litephp
+Lite DB 数据类型规范

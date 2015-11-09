@@ -1,6 +1,7 @@
 <?php
 namespace Lite\Component;
 use Lite\Exception\Exception;
+use function Lite\func\dump;
 
 /**
  * 文件上传类
@@ -138,6 +139,7 @@ class Uploader {
 			} else if(!move_uploaded_file($file['tmp_name'], $new_path)){
 				$error = 'move uploaded file error';
 			}
+
 			if(!$error){
 				$success_list[$file['upload_key']] = $new_name;
 			} else {

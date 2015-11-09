@@ -2,7 +2,7 @@
 namespace Lite\Cache;
 use Lite\Core\Config;
 
-class File extends Adapter {
+class CacheFile extends CacheAdapter {
 	protected  function __construct(array $config = array()){
 		$config = array_merge(array(
 			'dir' => Config::get('app/path').'tmp'.DS.'filecache'.DS

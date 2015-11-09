@@ -1,7 +1,7 @@
 <?php
 namespace Lite\Cache;
 
-class Session extends Adapter {
+class CacheSession extends CacheAdapter {
 	private $cache_prefix = 'lp_cs_';
 
 	protected function __construct(array $config=array()){

@@ -195,7 +195,7 @@ class Paginate {
 		$lang = $this->getConfig('lang');
 		$html = '';
 
-		$gets = Router::gets(null, array(), false);
+		$gets = Router::gets(null, array());
 		if(!empty($gets)){
 			foreach($gets as $key=>$get){
 				if($key == $this->config['page_key']){

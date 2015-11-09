@@ -2,6 +2,7 @@
 namespace Lite\Core;
 use ArrayAccess as ArrayAccess;
 use Iterator as Iterator;
+use Lite\DB\Meta\Field;
 
 /**
  * 数据库元数据抽象类
@@ -14,7 +15,6 @@ abstract class DAO implements Iterator, ArrayAccess{
 	const GETTER_KEY_NAME = 'getter';
 
 	private $_properties_define = array();
-	private $_filter_rules = array();
 
 	private $_values = array();
 	private $_values_change_keys = array();
@@ -34,21 +34,18 @@ abstract class DAO implements Iterator, ArrayAccess{
 	 * @param $pro_def
 	 */
 	public function setPropertiesDefine(array $pro_def){
-		$this->_properties_define = $pro_def;
-	}
-
-	/**
-	 * 添加属性定义
-	 * @param $pro_def
-	 */
-	public function addPropertiesDefine(array$pro_def){
-		$this->_properties_define = array_merge($this->_properties_define, $pro_def);
+		foreach($pro_def as $key=>$def){
+			if(!$this->_properties_define[$key]){
+				$this->_properties_define[$key] = array();
+			}
+			$this->_properties_define[$key] = array_merge($this->_properties_define[$key], $def);
+		}
 	}
 
 	/**
 	 * 获取属性定义
 	 * @param null $key
-	 * @return null
+	 * @return array|null
 	 */
 	public function getPropertiesDefine($key=null){
 		if(!$key){
@@ -58,28 +55,17 @@ abstract class DAO implements Iterator, ArrayAccess{
 	}
 
 	/**
-	 * 设置校验过滤器
-	 * @param array $rules
-	 */
-	public function setFilterRules(array $rules){
-		$this->_filter_rules = $rules;
-	}
-
-	/**
-	 * 添加校验过滤器
-	 * @param array $rules
-	 */
-	public function addFilterRules(array $rules){
-		$this->_filter_rules = array_merge($this->_filter_rules, $rules);
-	}
-
-
-	/**
-	 * 获取校验过滤器
+	 * 获取实例属性定义
 	 * @return array
 	 */
-	public function getFilterRules(){
-		return $this->_filter_rules;
+	public function getEntityPropertiesDefine(){
+		$ret = array();
+		foreach($this->_properties_define as $f=>$def){
+			if($def['entity']){
+				$ret[$f] = $def;
+			}
+		}
+		return $ret;
 	}
 
 	/**

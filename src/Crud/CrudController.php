@@ -1,6 +1,8 @@
 <?php
-namespace Lite\Core;
+namespace Lite\Crud;
+use Lite\Core\Result;
 use Lite\DB\Model;
+use Lite\Core\Controller as CoreController;
 use Lite\Component\Paginate;
 use Lite\Exception\Exception;
 use function Lite\func\dump;
@@ -11,9 +13,7 @@ use function Lite\func\dump;
  * Date: 2014/11/18
  * Time: 9:49
  */
-abstract class CRUD extends Controller {
-	public $use_standard_output = true;
-
+abstract class CrudController extends CoreController {
 	const OP_ALL = 0x001;
 	const OP_INDEX = 0x002;
 	const OP_UPDATE = 0x003;
@@ -21,11 +21,7 @@ abstract class CRUD extends Controller {
 	const OP_DELETE = 0x005;
 	const OP_INFO = 0x006;
 
-	/**
-	 * 当前CRUD支持功能列表
-	 * @return string|array
-	 */
-	protected function supportCRUDList(){
+	abstract public function getCrudConfig(){
 		return null;
 	}
 
