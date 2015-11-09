@@ -212,7 +212,7 @@ class Query {
 		foreach($wheres?:$this->where as $w){
 			$k = $w['type'] == self::OP_AND ? 'AND' : 'OR';
 			if(!empty($w['operator']) && !empty($w['compare'])){
-				$str .= ($str ? " $k ":'').$w['field'].' '.$w['operator'].' '.$w['compare'];
+				$str .= ($str ? " $k ":'').'`'.$w['field'].'` '.$w['operator'].' \''.addslashes($w['compare']).'\'';
 			} else {
 				$str .= ($str ? " $k (":'(').$w['field'].')';
 			}

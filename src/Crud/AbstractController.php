@@ -6,6 +6,8 @@ use Lite\Core\Controller as CoreController;
 use Lite\Core\Result;
 use Lite\Core\View;
 use Lite\DB\Model;
+use Lite\DB\Query;
+use Lite\DB\Record;
 use Lite\Exception\Exception;
 use function Lite\func\array_clear_fields;
 use function Lite\func\dump;
@@ -91,7 +93,15 @@ abstract class AbstractController extends CoreController{
 		$operation_list = array_keys($support_list);
 
 		$paginate = Paginate::instance();
-		$list = $ins::find()->order("$pk DESC")->paginate($paginate);
+		$query = $ins::find()->order("$pk DESC");
+
+		if(in_array(ControllerInterface::OP_QUICK_SEARCH,$operation_list) && $search['kw']){
+			$qs_fields = explode(',',$support_list[ControllerInterface::OP_QUICK_SEARCH]['fields']);
+			foreach($qs_fields as $field){
+				$query->addWhere(Query::OP_OR, $field, 'like', '%'.str_replace('%', '', $search['kw']).'%');
+			}
+		}
+		$list = $query->paginate($paginate);
 
 		//显示用的字段
 		$fields = $support_list[ControllerInterface::OP_INDEX]['fields'] ?: $ins->getAllPropertiesKey();
