@@ -91,11 +91,12 @@ abstract class AbstractController extends CoreController{
 		$pk = $ins->getPrimaryKey();
 		$support_list = $this->supportCRUDList();
 		$operation_list = array_keys($support_list);
+		$support_quick_search = in_array(ControllerInterface::OP_QUICK_SEARCH,$operation_list);
 
 		$paginate = Paginate::instance();
 		$query = $ins::find()->order("$pk DESC");
 
-		if(in_array(ControllerInterface::OP_QUICK_SEARCH,$operation_list) && $search['kw']){
+		if($support_quick_search && $search['kw']){
 			$qs_fields = explode(',',$support_list[ControllerInterface::OP_QUICK_SEARCH]['fields']);
 			foreach($qs_fields as $field){
 				$query->addWhere(Query::OP_OR, $field, 'like', '%'.str_replace('%', '', $search['kw']).'%');
@@ -106,7 +107,6 @@ abstract class AbstractController extends CoreController{
 		//显示用的字段
 		$fields = $support_list[ControllerInterface::OP_INDEX]['fields'] ?: $ins->getAllPropertiesKey();
 		$defines = $ins->getPropertiesDefine();
-
 		$display_fields = array();
 		foreach($fields as $k=>$v){
 			$alias = '';
@@ -125,21 +125,38 @@ abstract class AbstractController extends CoreController{
 			}
 		}
 
+		//快速编辑字段
+		$quick_update_fields = explode(',',$support_list[ControllerInterface::OP_INDEX]['quick_update']);
+
 		/** @var View $viewer */
 		$view = Config::get('app/render');
 		$viewer = new $view(array(
-			'search' => $search,
+			'search' => $support_quick_search ? $search : null,
 			'data_list' => $list,
 			'paginate' => $paginate,
 
 			'defines' => $defines,
 			'display_fields' => $display_fields,
+			'quick_update_fields' => $quick_update_fields,
 
 			'model_instance' => $ins,
 			'operation_list' => $operation_list,
 		));
 
 		return $viewer->render($this->getDefaultCRUDTemplate(), true);
+	}
+
+	public function updateField($get, $post){
+		$support_list = $this->supportCRUDList();
+		$quick_update_fields = explode(',',$support_list[ControllerInterface::OP_INDEX]['quick_update']);
+		$quick_update_fields = array_merge($quick_update_fields, explode(',',$support_list[ControllerInterface::OP_INFO]['quick_update']));
+
+		$field = $post['field'];
+		$val = $post['value'];
+
+		if(in_array($field, $quick_update_fields)){
+
+		}
 	}
 
 	/**
