@@ -285,7 +285,7 @@ abstract class AbstractController extends CoreController{
 	 */
 	public function info($get){
 		/** @var ControllerInterface|self $this */
-		$this->checkSupport(ControllerInterface::OP_UPDATE);
+		$this->checkSupport(ControllerInterface::OP_INFO);
 
 		$ins = $this->getModelInstance();
 		$pk = $ins->getPrimaryKey();
@@ -296,7 +296,7 @@ abstract class AbstractController extends CoreController{
 		$defines = $ins->getEntityPropertiesDefine();
 
 		//get update field
-		$tmp = $support_list[ControllerInterface::OP_UPDATE]['fields'] ?: array_keys($defines);
+		$tmp = $support_list[ControllerInterface::OP_INFO]['fields'] ?: array_keys($defines);
 		$display_fields = array();
 		foreach($tmp as $k=>$v){
 			if(is_string($k)){
