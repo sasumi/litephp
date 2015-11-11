@@ -146,17 +146,30 @@ abstract class AbstractController extends CoreController{
 		return $viewer->render($this->getDefaultCRUDTemplate(), true);
 	}
 
+	/**
+	 * 更新单个字段
+	 * @param $get
+	 * @param $post
+	 * @return \Lite\Core\Result
+	 * @throws \Lite\Exception\Exception
+	 */
 	public function updateField($get, $post){
 		$support_list = $this->supportCRUDList();
 		$quick_update_fields = explode(',',$support_list[ControllerInterface::OP_INDEX]['quick_update']);
 		$quick_update_fields = array_merge($quick_update_fields, explode(',',$support_list[ControllerInterface::OP_INFO]['quick_update']));
 
+		$ins = $this->getModelInstance();
+		$pk_val = $post['pk_val'];
 		$field = $post['field'];
 		$val = $post['value'];
 
 		if(in_array($field, $quick_update_fields)){
-
+			$ins = $ins::findOneByPk($pk_val);
+			$ins->setValue($field, $val);
+			$ins->save();
+			return $this->getCommonResult(true);
 		}
+		return new Result('非法操作');
 	}
 
 	/**
