@@ -19,7 +19,7 @@ use Lite\DB\Query as Query;
  * @method Query getQuery()
  * @method static \Exception transaction($handler)
  * @method \PDOStatement execute()
- * @method static {$class_name}|Query|... find($statement = '', $var = null)
+ * @method static {$class_name}|Query find($statement = '', $var = null, ...$var2)
  * @method static {$class_name}|Query|bool create($data)
  * @method static {$class_name}|Query|array findOneByPk($val, $as_array = false)
  * @method static {$class_name}|Query|array findByPks(array $pks, $as_array = false)

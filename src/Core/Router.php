@@ -1,5 +1,6 @@
 <?php
 namespace Lite\Core;
+use Lite\Component\Request;
 use Lite\Exception\RouterException;
 use function Lite\func\array_clear_empty;
 use function Lite\func\array_clear_null;
@@ -470,12 +471,13 @@ abstract class Router{
 	}
 
 	/**
-	 * 页面302跳转
+	 * 页面302, 301跳转
 	 * @deprecate 调用了url函数功能，所以参数跟url函数的参数一致
 	 * @param null $uri
 	 * @param null $args2
+	 * @param int $status_code
 	 */
-	public static function jumpTo($uri = null, $args2 = null){
+	public static function jumpTo($uri = null, $args2 = null, $status_code=302){
 		$args = func_get_args();
 
 		if(stripos($args[0], '://') > 0){
@@ -487,6 +489,9 @@ abstract class Router{
 			if(headers_sent()){
 				echo '<script>location.href="'.$url.'"</script>';
 			}else{
+				if($status_code){
+					Request::sendHttpStatus($status_code);
+				}
 				header('Location:'.$url);
 			}
 			die;
@@ -495,9 +500,12 @@ abstract class Router{
 		if(headers_sent()){
 			echo '<script>location.href = "'.$url.'";</script>';
 		}else{
+			if($status_code){
+				Request::sendHttpStatus($status_code);
+			}
 			header('Location:'.$url);
 		}
-		die;
+		exit;
 	}
 
 	/**

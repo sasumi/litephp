@@ -416,7 +416,6 @@ final class Record {
 
 	/**
 	 * update count for specified field
-	 * @todo to be test
 	 * @param string $table
 	 * @param string $field
 	 * @param integer $offset_count
@@ -442,12 +441,12 @@ final class Record {
 	 * @throws \Lite\Exception\Exception
 	 */
 	public function update($table, array $data, $condition = '', $limit=1) {
-		if(!empty($data)){
-			foreach($data as $k=>$item){
-				$data[$k] = $this->conn->quote($item);
-			}
-		} else {
+		if(empty($data)){
 			throw new Exception('NO UPDATE DATA FOUND');
+		}
+
+		foreach($data as $k=>$item){
+			$data[$k] = $this->conn->quote($item);
 		}
 		$query = $this->genQuery()
 			->update()
@@ -463,7 +462,6 @@ final class Record {
 	 * 查询最近db执行影响行数
 	 * @description 该方法调用时候需要谨慎，需要避免_last_query_result被覆盖
 	 * @return integer
-	 *
 	 */
 	public function getAffectNum() {
 		return $this->_last_query_result ? $this->_last_query_result->rowCount() : 0;
@@ -491,12 +489,14 @@ final class Record {
 	 * @param array $data
 	 * @param null $condition
 	 * @return mixed
+	 * @throws \Lite\Exception\Exception
 	 */
 	public function insert($table, array $data, $condition=null) {
-		if(! empty($data)){
-			foreach($data as $k=>$item){
-				$data[$k] = $this->conn->quote($item);
-			}
+		if(empty($data)){
+			throw new Exception('NO INSERT DATA FOUND');
+		}
+		foreach($data as $k=>$item){
+			$data[$k] = $this->conn->quote($item);
 		}
 		$query = $this->genQuery()->insert()->from($table)->setData($data)->where($condition);
 		return $this->query($query);
