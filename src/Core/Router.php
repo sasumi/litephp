@@ -15,6 +15,7 @@ abstract class Router{
 	const EVENT_BEFORE_ROUTER_INIT = 'EVENT_BEFORE_ROUTER_INIT';
 	const EVENT_AFTER_ROUTER_INIT = 'EVENT_AFTER_ROUTER_INIT';
 	const EVENT_ROUTER_RULE_MATCH = 'EVENT_ROUTER_RULE_MATCH';
+	const EVENT_GET_STATIC_URL = 'EVENT_ROUTER_GET_STATIC_URL';
 
 	const DEFAULT_ROUTER_KEY = 'r';
 	const MODE_NORMAL = 'normal';
@@ -397,9 +398,9 @@ abstract class Router{
 	 */
 	public static function getStaticUrl($file_name, $type = 'static'){
 		if(strpos($file_name, '/') === 0){
-			return Config::get('app/url').substr($file_name, 1);
+			$url = Config::get('app/url').substr($file_name, 1);
 		}else if(strpos($file_name, 'http://') === 0){
-			return $file_name;
+			$url = $file_name;
 		}else{
 			$map = array(
 				'css' => Config::get('app/css'),
@@ -409,10 +410,16 @@ abstract class Router{
 				'static' => Config::get('app/static')
 			);
 			if($map[strtolower($type)]){
-				return $map[strtolower($type)].$file_name;
+				$url = $map[strtolower($type)].$file_name;
+			} else {
+				$url = Config::get('app/static').$file_name;
 			}
-			return Config::get('app/static').$file_name;
 		}
+
+		//event
+		$ref = new RefParam(array('url' => $url, 'type'=>$type));
+		Hooker::fire(self::EVENT_GET_STATIC_URL, $ref);
+		return $ref->get('url') ?: $url;
 	}
 
 	/**

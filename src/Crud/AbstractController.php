@@ -3,7 +3,9 @@ namespace Lite\CRUD;
 use Lite\Component\Paginate;
 use Lite\Core\Config;
 use Lite\Core\Controller as CoreController;
+use Lite\Core\Controller;
 use Lite\Core\Result;
+use Lite\Core\Router;
 use Lite\Core\View;
 use Lite\DB\Model;
 use Lite\DB\Query;
@@ -24,7 +26,7 @@ abstract class AbstractController extends CoreController{
 	 * @return string
 	 */
 	protected function getBackUrl(){
-		return $this->getUrl($this->getController().'/'.$this->getDefaultAction());
+		return '';
 	}
 
 	/**
@@ -90,7 +92,7 @@ abstract class AbstractController extends CoreController{
 		$ins = $this->getModelInstance();
 		$pk = $ins->getPrimaryKey();
 		$support_list = $this->supportCRUDList();
-		$operation_list = array_keys($support_list);
+		$operation_list = $this->getSupportOperationList();
 		$support_quick_search = in_array(ControllerInterface::OP_QUICK_SEARCH,$operation_list);
 
 		$paginate = Paginate::instance();
@@ -104,8 +106,36 @@ abstract class AbstractController extends CoreController{
 		}
 		$list = $query->paginate($paginate);
 
+		$defines = $ins->getPropertiesDefine();
+
+		/** @var View $viewer */
+		$view = Config::get('app/render');
+		$viewer = new $view(array(
+			'search' => $support_quick_search ? $search : null,
+			'data_list' => $list,
+			'paginate' => $paginate,
+
+			'defines' => $defines,
+			'display_fields' => $this->getDisplayFields(),
+			'quick_update_fields' => $this->getQuickUpdateFields(),
+
+			'model_instance' => $ins,
+			'operation_list' => $operation_list,
+		));
+
+		/** @var AbstractController $ins */
+		$class = get_called_class();
+		$ins = new $class();
+		return $viewer->render($ins->getDefaultCRUDTemplate(), true);
+	}
+
+	public function getDisplayFields(){
+		$ins = $this->getModelInstance();
+		/** @var ControllerInterface $this */
+		$support_list = $this->supportCRUDList();
 		//显示用的字段
-		$fields = $support_list[ControllerInterface::OP_INDEX]['fields'] ?: $ins->getAllPropertiesKey();
+		$fields = $support_list[ControllerInterface::OP_INDEX]['fields'] ?: array_keys($ins->getEntityPropertiesDefine());
+
 		$defines = $ins->getPropertiesDefine();
 		$display_fields = array();
 		foreach($fields as $k=>$v){
@@ -124,26 +154,20 @@ abstract class AbstractController extends CoreController{
 				$display_fields[$field] = $alias;
 			}
 		}
+		return $display_fields;
+	}
 
+	public function getQuickUpdateFields(){
+		/** @var ControllerInterface $this */
+		$support_list = $this->supportCRUDList();
 		//快速编辑字段
-		$quick_update_fields = explode(',',$support_list[ControllerInterface::OP_INDEX]['quick_update']);
+        return  explode(',',$support_list[ControllerInterface::OP_INDEX]['quick_update']);
+	}
 
-		/** @var View $viewer */
-		$view = Config::get('app/render');
-		$viewer = new $view(array(
-			'search' => $support_quick_search ? $search : null,
-			'data_list' => $list,
-			'paginate' => $paginate,
-
-			'defines' => $defines,
-			'display_fields' => $display_fields,
-			'quick_update_fields' => $quick_update_fields,
-
-			'model_instance' => $ins,
-			'operation_list' => $operation_list,
-		));
-
-		return $viewer->render($this->getDefaultCRUDTemplate(), true);
+	public function getSupportOperationList(){
+		/** @var ControllerInterface $this */
+		$support_list = $this->supportCRUDList();
+		return array_keys($support_list);
 	}
 
 	/**
@@ -154,10 +178,12 @@ abstract class AbstractController extends CoreController{
 	 * @throws \Lite\Exception\Exception
 	 */
 	public function updateField($get, $post){
+		/** @var ControllerInterface $this */
 		$support_list = $this->supportCRUDList();
 		$quick_update_fields = explode(',',$support_list[ControllerInterface::OP_INDEX]['quick_update']);
 		$quick_update_fields = array_merge($quick_update_fields, explode(',',$support_list[ControllerInterface::OP_INFO]['quick_update']));
 
+		/** @var AbstractController $this */
 		$ins = $this->getModelInstance();
 		$pk_val = $post['pk_val'];
 		$field = $post['field'];
@@ -191,9 +217,54 @@ abstract class AbstractController extends CoreController{
 
 		$defines = $ins->getEntityPropertiesDefine();
 
+		$pk_val = (int)$get[$pk];
+		if($pk_val) {
+			$ins = $ins::findOneByPk($pk_val);
+		}
+
+		if($post) {
+			$ins->setValues($post);
+			$ins->save();
+			return new Result(($pk_val ? $ins->getModelDesc().'更新' : '新增').'成功', true, array(
+				$pk => $ins->$pk,
+			), $this->getBackUrl());
+		}
+
+		$extra_params = $get;
+		unset($extra_params[Router::$ROUTER_KEY]);
+		unset($extra_params['ref']);
+
+		/** @var View $viewer */
+		$view = Config::get('app/render');
+		$viewer = new $view(array(
+			'defines' => $defines,
+			'update_fields' => $this->getUpdateFields(),
+			'model_instance' => $ins,
+			'extra_params' => $extra_params,
+			'operation_list' => $operation_list,
+		));
+
+		/** @var AbstractController $ins */
+		$class = get_called_class();
+		$ins = new $class();
+		return $viewer->render($ins->getDefaultCRUDTemplate(), true);
+	}
+
+	/**
+	 * get update field
+	 * @return array
+	 * @throws Exception
+	 */
+	public function getUpdateFields(){
+		$ins = $this->getModelInstance();
+		$defines =  $ins->getEntityPropertiesDefine();
+		$update_fields = array();
+
+		/** @var ControllerInterface $this */
+		$support_list = $this->supportCRUDList();
 		//get update field
 		$tmp = $support_list[ControllerInterface::OP_UPDATE]['fields'] ?: array_keys($defines);
-		$update_fields = array();
+
 		foreach($tmp as $k=>$v){
 			if(is_string($k)){
 				$field = $k;
@@ -209,28 +280,7 @@ abstract class AbstractController extends CoreController{
 			}
 		}
 
-		$pk_val = (int)$get[$pk];
-		if($pk_val) {
-			$ins = $ins::findOneByPk($pk_val);
-		}
-
-		if($post) {
-			$ins->setValues($post);
-			$ins->save();
-			return new Result(($pk_val ? $ins->getModelDesc().'更新' : '新增').'成功', true, array(
-				$pk => $ins->$pk,
-			), $this->getBackUrl());
-		}
-
-		/** @var View $viewer */
-		$view = Config::get('app/render');
-		$viewer = new $view(array(
-			'defines' => $defines,
-			'update_fields' => $update_fields,
-			'model_instance' => $ins,
-			'operation_list' => $operation_list,
-		));
-		return $viewer->render($this->getDefaultCRUDTemplate(), true);
+		return $update_fields;
 	}
 
 	/**
@@ -327,6 +377,10 @@ abstract class AbstractController extends CoreController{
 			'model_instance' => $ins,
 			'operation_list' => $operation_list,
 		));
-		return $viewer->render($this->getDefaultCRUDTemplate(), true);
+
+		/** @var AbstractController $ins */
+		$class = get_called_class();
+		$ins = new $class();
+		return $viewer->render($ins->getDefaultCRUDTemplate(), true);
 	}
 }

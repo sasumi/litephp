@@ -72,6 +72,13 @@ switch($cmd){
 		echo "ALL TABLE GENERATED\n";
 		break;
 
+	case 'crud':
+		$table = $args[0];
+		$model = $args[1];
+		$controller = $args[2];
+		generate_crud($table, $model, $controller, $overwrite);
+		break;
+
 	default:
 		echo $help;
 }
@@ -103,6 +110,68 @@ function generate_model($table_name, $model_name='', $overwrite){
 	echo "[DONE] model ".($update ? 'updated':'created')." >> $file -- $model_name\n";
 }
 
+function generate_crud_model($table_name, $model_name='', $overwrite){
+	generate_table($table_name, $overwrite);
+	$model_name = $model_name ?: convert_class_name($table_name);
+	$table_model = 'Table'.convert_class_name($table_name);
+
+	$ns = get_ns();
+	$fold = PROJECT_PROTECTED_DIR.'/model/';
+	$file = $fold.$model_name.'.php';
+
+	if(!$overwrite && is_file($file)){
+		echo "[IGNORE] model file exists: $file\n";
+		return;
+	}
+
+	$str = parser_tpl(file_get_contents(__DIR__.'/crud_model.tpl'), array(
+		'namespace' => $ns."\\model",
+		'generate_date' => date('Y-m-d'),
+		'generate_time' => date('H:i:s'),
+		'table_model' => $table_model,
+		'model_name' => $model_name,
+	));
+
+	$update = is_file($file);
+	file_put_contents($file, $str);
+	echo "[DONE] CRUD model ".($update ? 'updated':'created')." >> $file -- $model_name\n";
+}
+
+function generate_crud($table_name, $model_name='', $controller_name='', $overwrite=false){
+	$model_name = $model_name ?: convert_class_name($table_name);
+	generate_crud_model($table_name, $model_name, $overwrite);
+	$controller_name = $controller_name ?: convert_class_name($table_name);
+	$controller_name = $controller_name.'Controller';
+	$ns = get_ns();
+
+	if(is_file(PROJECT_PROTECTED_DIR.'/controller/BaseController.php')){
+		$extend_controller = 'BaseController';
+	} else {
+		$extend_controller = 'Controller';
+	}
+
+	$fold = PROJECT_PROTECTED_DIR.'/controller/';
+	$file = $fold.$controller_name.'.php';
+
+	if(!$overwrite && is_file($file)){
+		echo "[IGNORE] model file exists: $file\n";
+		return;
+	}
+
+	$str = parser_tpl(file_get_contents(__DIR__.'/crud_controller.tpl'), array(
+		'namespace' => $ns."\\controller",
+		'generate_date' => date('Y-m-d'),
+		'generate_time' => date('H:i:s'),
+		'extend_controller' => $extend_controller,
+		'model_name' => $model_name,
+		'controller_name' => $controller_name,
+	));
+
+	$update = is_file($file);
+	file_put_contents($file, $str);
+	echo "[DONE] CRUD Controller ".($update ? 'updated':'created')." >> $file -- $controller_name\n";
+}
+
 function get_all_table(){
 	$conn = get_db_conn();
 	$st = $conn->prepare('SHOW TABLES');
@@ -127,6 +196,7 @@ function generate_table($table, $overwrite){
 	}
 
 	$meta_list = get_table_meta($table);
+
 	$filter_rules = get_row_filter_rule($meta_list);
 	$properties_defines = get_properties_defines($meta_list);
 	$pk = get_pk($meta_list);
@@ -261,6 +331,7 @@ function get_field_type($meta){
 		'double',
 		'bool',
 		'enum',
+		'set',
 		'timestamp',
 		'datetime',
 		'date',
@@ -304,7 +375,7 @@ function get_properties_defines($meta_list){
 		$str .= $pk ? "{$t}\t'primary' => true,\n" :'';
 		$str .= $required ? "{$t}\t'required' => true,\n" : '';
 		$str .= $readonly ? "{$t}\t'readonly' => true,\n" : '';
-		$str .= $unsigned ? "{$t}\t'min' => 0" : '';
+		$str .= $unsigned ? "{$t}\t'min' => 0,\n" : '';
 
 		if($meta['Default'] !== null){
 			$def = addslashes($meta['Default']);
@@ -332,7 +403,7 @@ function get_properties_defines($meta_list){
 				$str .= "{$t}\t'default' => $def,\n";
 			}
 		}
-		if($type == 'enum'){
+		if($type == 'enum' || $type=='set'){
 			$opts = get_field_options($meta);
 			$str .= "{$t}\t'options' => {$opts},\n";
 		}

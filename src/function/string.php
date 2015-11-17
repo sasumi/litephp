@@ -72,6 +72,20 @@ namespace Lite\func {
 		return $randCode;
 	}
 
+	/**
+	 * @param $size
+	 * @param int $dot
+	 * @return string
+	 */
+	function format_size($size, $dot = 2) {
+		$mod = 1024;
+		$units = explode(' ', 'B KB MB GB TB PB');
+		for ($i = 0; $size > $mod; $i++) {
+			$size /= $mod;
+		}
+		return round($size, $dot) . '' . $units[$i];
+	}
+
 	/*
 	PHP URL encoding/decoding functions for Javascript interaction V3.0
 	(C) 2006 www.captain.at - all rights reserved

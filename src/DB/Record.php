@@ -259,12 +259,28 @@ final class Record {
 
 	/**
 	 * quote param by database connector
-	 * @param string $string
+	 * @param string $data
 	 * @param string $type
 	 * @return mixed
 	 */
-	public function quote($string, $type = null) {
-		return $this->conn->quote($string, $type);
+	public function quote($data, $type = null) {
+		if(is_array($data)){
+			$data = join(',', $data);
+		}
+		return $this->conn->quote($data, $type);
+	}
+
+	/**
+	 * quote array
+	 * @param $data
+	 * @param array $types
+	 * @return mixed
+	 */
+	public function quoteArray($data, $types=array()){
+		foreach($data as $k=>$item){
+			$data[$k] = $this->quote($item, $types[$k]);
+		}
+		return $data;
 	}
 
 	/**
@@ -445,9 +461,7 @@ final class Record {
 			throw new Exception('NO UPDATE DATA FOUND');
 		}
 
-		foreach($data as $k=>$item){
-			$data[$k] = $this->conn->quote($item);
-		}
+		$data = $this->quoteArray($data);
 		$query = $this->genQuery()
 			->update()
 			->from($table)
@@ -495,9 +509,7 @@ final class Record {
 		if(empty($data)){
 			throw new Exception('NO INSERT DATA FOUND');
 		}
-		foreach($data as $k=>$item){
-			$data[$k] = $this->conn->quote($item);
-		}
+		$data = $this->quoteArray($data);
 		$query = $this->genQuery()->insert()->from($table)->setData($data)->where($condition);
 		return $this->query($query);
 	}

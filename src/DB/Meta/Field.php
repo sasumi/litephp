@@ -96,6 +96,42 @@ class Field {
 
 				break;
 
+			case 'set':
+				$vs = explode(',',$value);
+				if(is_callable($define['options'])){
+					$define['options'] = call_user_func($define['options'], $vs, $instance);
+				}
+				if(count($define['options']) > 10){
+					$html = '<select size="1" name="'.$name.'[]"'.($required ? ' required="required"' : '') .' multiple="multiple">';
+					foreach($define['options'] as $k=>$n){
+						$attr = array(
+							'value' => $k,
+							'text' => $n
+						);
+						if(in_array($k, $vs) || (isset($define['default']) && $define['default'] == $k)){
+							$attr['selected'] = 'selected';
+						}
+						$html .= self::buildElement('option', $attr);
+					}
+					$html .= '</select>';
+				} else {
+					foreach($define['options'] as $k=>$n){
+						$attr = array(
+							'type' => 'checkbox',
+							'rel' => $rel,
+							'name' => $name.'[]',
+							'value' => $k
+						);
+						if(in_array($k, $vs) || (isset($define['default']) && $define['default'] == $k)){
+							$attr['checked'] = 'checked';
+						}
+						$html .= '<label>'.self::buildElement('input', $attr);
+						$html .= $n;
+						$html .= '</label>';
+					}
+				}
+				break;
+
 			case 'int':
 			case 'float':
 			case 'double':
@@ -103,7 +139,7 @@ class Field {
 					if(is_callable($define['options'])){
 						$define['options'] = call_user_func($define['options'], $value, $instance);
 					}
-					$html = '<select size="1" name="'.$name.'">';
+					$html = '<select size="1" name="'.$name.'"'.($required ? ' required="required"' : '').'>';
 					$html .= self::buildElement('option', array(
 						'value' => '',
 						'rel' => $rel,
@@ -181,13 +217,13 @@ class Field {
 	private static function getPattern($define){
 		switch($define['type']){
 			case 'datetime':
-				return'/^\d{4}-\d{1,2}-\d{1,2}\s\d{1,2]:\d{1,2}:\d{1,2}$/';
+				return'^\d{4}-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2}$';
 
 			case 'date':
-				return '/^\d{4}\-\d{1,2}\-\d{1,2}$/';
+				return '^\d{4}\-\d{1,2}\-\d{1,2}$';
 
 			case 'time':
-				return '/^\d{1,2]:\d{1,2}:\d{1,2}$/';
+				return '^\d{1,2]:\d{1,2}:\d{1,2}$';
 		}
 		return '';
 	}
@@ -210,7 +246,11 @@ class Field {
 		unset($attrs['text']);
 
 		foreach($attrs as $k=>$v){
-			$html .= " $k=\"".addslashes($v)."\"";
+			if($k == 'pattern'){
+				$html .= " $k=\"".$v."\"";
+			} else {
+				$html .= " $k=\"".addslashes($v)."\"";
+			}
 		}
 		if($required){
 			$html .= ' required="required"';
@@ -229,6 +269,9 @@ class Field {
 		$err = '';
 		$val = $value;
 		$name = $define['alias'];
+		if(is_callable($define['options'])){
+			$define['options'] = call_user_func($define['options']);
+		}
 
 		//type
 		if(!$err){

@@ -24,6 +24,13 @@ class RefParam implements Iterator, ArrayAccess{
 		return $this->data[$key];
 	}
 
+	public function set($key, $val){
+		$this->data[$key] = $val;
+	}
+
+	public function get($key){
+		return $this->data[$key];
+	}
 
 	public function __unset($key){
 		unset($this->data[$key]);

@@ -2,6 +2,7 @@
 namespace Lite\Component;
 use Lite\Exception\Exception;
 use function Lite\func\dump;
+use function Lite\func\format_size;
 
 /**
  * 文件上传类
@@ -129,15 +130,15 @@ class Uploader {
 			}
 			$new_path = $this->config['upload_dir'].'/'.$new_name;
 			if($file['error']){
-				$error = 'system';
+				$error = '系统错误';
 			} else if($file['size'] > $this->config['max_size']){
-				$error = 'file size overflow';
+				$error = '文件大小超出系统设置：'.format_size($this->config['max_size']);
 			} else if(!$this->checkFileType($file, $this->config['file_type'])){
-				$error = 'file type not match';
+				$error = '文件类型错误';
 			} else if(!$this->buildDir($new_path)){
-				$error = 'upload directory create error';
+				$error = '上传目录创建失败';
 			} else if(!move_uploaded_file($file['tmp_name'], $new_path)){
-				$error = 'move uploaded file error';
+				$error = '上传文件不存在';
 			}
 
 			if(!$error){

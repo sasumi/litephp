@@ -2,7 +2,7 @@
 namespace Lite\Core;
 use ArrayAccess as ArrayAccess;
 use Iterator as Iterator;
-use Lite\DB\Meta\Field;
+use function Lite\func\dump;
 
 /**
  * 数据库元数据抽象类
@@ -36,9 +36,12 @@ abstract class DAO implements Iterator, ArrayAccess{
 	public function setPropertiesDefine(array $pro_def){
 		foreach($pro_def as $key=>$def){
 			if(!$this->_properties_define[$key]){
-				$this->_properties_define[$key] = array();
+				$this->_properties_define[$key] = $def;
+			} else {
+				foreach($def as $k=>$v){
+					$this->_properties_define[$key][$k] = $v;
+				}
 			}
-			$this->_properties_define[$key] = array_merge($this->_properties_define[$key], $def);
 		}
 	}
 
