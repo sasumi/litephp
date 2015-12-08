@@ -1,13 +1,14 @@
 <?php
 namespace Lite\DB;
 
-use Lite\Component\Paginate;
 use Lite\Core\Hooker;
+use Lite\Core\PaginateInterface;
 use Lite\Core\RefParam;
 use Lite\Exception\Exception;
-use \PDO as PDO;
-use \PDOStatement as PDOStatement;
-use \PDOException as PDOException;
+use PDO as PDO;
+use PDOException as PDOException;
+use PDOStatement as PDOStatement;
+use function Lite\func\dump;
 
 /**
  *
@@ -27,14 +28,29 @@ final class Record {
 	const EVENT_DB_QUERY_ERROR = 'EVENT_DB_QUERY_ERROR';
 	const EVENT_BEFORE_DB_GET_LIST = 'EVENT_BEFORE_DB_GET_LIST';
 	const EVENT_AFTER_DB_GET_LIST = 'EVENT_AFTER_DB_GET_LIST';
+	const EVENT_ON_DB_QUERY_DISTINCT = 'EVENT_ON_DB_QUERY_DISTINCT';
 
 	private static $in_transaction_mode = false;
 	private static $instance_list = array();
 
+	/**
+	 * PDO TYPE MAP
+	 * @var array
+	 */
+	private static $PDO_TYPE_MAP = array(
+		'bool'   => PDO::PARAM_BOOL,
+		'null'   => PDO::PARAM_BOOL,
+		'int'    => PDO::PARAM_INT,
+		'float'  => PDO::PARAM_INT,
+		'double' => PDO::PARAM_INT,
+		'string' => PDO::PARAM_STR,
+	);
+
 	// select查询去重
 	// 这部分逻辑可能针对某些业务逻辑有影响，如：做某些操作之后立即查询这种
-	// so，如果程序需要，可以关闭这个选项
-	public static $QUERY_DEDUPLICATION = true;
+	// so，如果程序需要，可以通过 Record::distinctQueryOff() 关闭这个选项
+	private static $QUERY_DISTINCT = true;
+	private static $query_cache = array();
 
 	/**
 	 * @var PDO pdo connect resource
@@ -84,6 +100,20 @@ final class Record {
 	 */
 	private static function getInstanceKey(array $config) {
 		return md5(serialize($config));
+	}
+
+	/**
+	 * turn on distinct query cache
+	 */
+	public static function distinctQueryOn(){
+		self::$QUERY_DISTINCT = true;
+	}
+
+	/**
+	 * turn off distinct query cache
+	 */
+	public static function distinctQueryOff(){
+		self::$QUERY_DISTINCT = false;
 	}
 
 	/**
@@ -188,23 +218,6 @@ final class Record {
 	}
 
 	/**
-	 * get database table description
-	 * @param $table
-	 */
-	public function getTableMeta($table){
-
-	}
-
-	/**
-	 * get column description
-	 * @param $table
-	 * @param $column_id
-	 */
-	public function getColumnMeta($table, $column_id){
-
-	}
-
-	/**
 	 * database query
 	 * @param string|Query $sql
 	 * @return PDOStatement
@@ -267,6 +280,7 @@ final class Record {
 		if(is_array($data)){
 			$data = join(',', $data);
 		}
+		$type = in_array($type, self::$PDO_TYPE_MAP) ? $type : PDO::PARAM_STR;
 		return $this->conn->quote($data, $type);
 	}
 
@@ -276,7 +290,7 @@ final class Record {
 	 * @param array $types
 	 * @return mixed
 	 */
-	public function quoteArray($data, $types=array()){
+	public function quoteArray(array $data, array $types){
 		foreach($data as $k=>$item){
 			$data[$k] = $this->quote($item, $types[$k]);
 		}
@@ -291,7 +305,7 @@ final class Record {
 	 * @throws Exception
 	 */
 	public function setLimit($sql, $limit) {
-		if(preg_match('/\slimit\s/', $sql)){
+		if(preg_match('/\sLIMIT\s/i', $sql)){
 			throw new Exception('SQL LIMIT BEEN SET:' . $sql);
 		}
 		if(is_array($limit)){
@@ -347,9 +361,9 @@ final class Record {
 	public function getCount($sql) {
 		$sql .= '';
 		$sql = str_replace(array("\n", "\r"), '', $sql);
-		if(preg_match('/^\s*select.*?\s+from\s+/i', $sql)){
-			if(preg_match('/\sgroup\s+by\s/i', $sql) ||
-				preg_match('/^\s*select\s+distinct\s/i', $sql)){
+		if(preg_match('/^\s*SELECT.*?\s+FROM\s+/i', $sql)){
+			if(preg_match('/\sGROUP\s+by\s/i', $sql) ||
+				preg_match('/^\s*SELECT\s+DISTINCT\s/i', $sql)){
 				$sql = "SELECT COUNT(*) AS __NUM_COUNT__ FROM ($sql) AS cnt_";
 			} else {
 				$sql = preg_replace('/^\s*select.*?\s+from/i', 'SELECT COUNT(*) AS __NUM_COUNT__ FROM', $sql);
@@ -365,11 +379,11 @@ final class Record {
 	/**
 	 * get data by page
 	 * @param $query
-	 * @param Paginate | mixed $pager
+	 * @param PaginateInterface | mixed $pager
 	 * @return array
 	 */
 	public function getPage(Query $query, $pager = null) {
-		if($pager instanceof Paginate){
+		if($pager instanceof PaginateInterface){
 			$total = $this->getCount($query);
 			$pager->setItemTotal($total);
 			$limit = $pager->getLimit();
@@ -385,11 +399,21 @@ final class Record {
 		));
 		Hooker::fire(self::EVENT_BEFORE_DB_GET_LIST, $param);
 		if(!is_array($param['result'])){
-			$rs = $this->query($param['query']);
-			if($rs){
-				$param['result'] = self::fetchAll($rs);
-				Hooker::fire(self::EVENT_AFTER_DB_GET_LIST, $param);
+			if(self::$QUERY_DISTINCT){
+				$param['result'] = self::$query_cache[$query.'']; //todo 这里通过 isFRQuery 可以做全表cache
 			}
+			if(!isset($param['result'])){
+				$rs = $this->query($param['query']);
+				if($rs){
+					$param['result'] = self::fetchAll($rs);
+					if(self::$QUERY_DISTINCT){
+						self::$query_cache[$query.''] = $param['result'];
+					}
+				}
+			} else {
+				Hooker::fire(self::EVENT_ON_DB_QUERY_DISTINCT, $param);
+			}
+			Hooker::fire(self::EVENT_AFTER_DB_GET_LIST, $param);
 		}
 		return $param['result'] ?: array();
 	}
@@ -460,8 +484,6 @@ final class Record {
 		if(empty($data)){
 			throw new Exception('NO UPDATE DATA FOUND');
 		}
-
-		$data = $this->quoteArray($data);
 		$query = $this->genQuery()
 			->update()
 			->from($table)
@@ -509,7 +531,6 @@ final class Record {
 		if(empty($data)){
 			throw new Exception('NO INSERT DATA FOUND');
 		}
-		$data = $this->quoteArray($data);
 		$query = $this->genQuery()->insert()->from($table)->setData($data)->where($condition);
 		return $this->query($query);
 	}

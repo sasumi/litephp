@@ -3,7 +3,6 @@ namespace Lite\DB;
 
 use Lite\Core\Config;
 use Lite\Core\DAO;
-use Lite\DB\Meta\Field;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;
 use function Lite\func\array_clear_fields;
@@ -25,8 +24,6 @@ abstract class Model extends DAO{
 
 	/** @var Query db query object * */
 	private $query = null;
-
-	private $ext_properties = array();
 
 	/**
 	 * get current called class object
@@ -329,15 +326,26 @@ abstract class Model extends DAO{
 	/**
 	 * 根据主键值更新记录
 	 * @param string $val 主键值
-	 * @param $data
+	 * @param array $data
 	 * @return bool
 	 */
-	public static function updateByPk($val, $data){
+	public static function updateByPk($val, array $data){
 		$obj = static::meta();
 		$pk = $obj->getPrimaryKey();
-
-		/** @var Model $class_name */
 		return static::updateWhere($data, 1, "$pk = ?", $val);
+	}
+
+	/**
+	 * 根据主键值更新记录
+	 * @param $pks
+	 * @param array $data
+	 * @return bool
+	 * @throws \Lite\Exception\Exception
+	 */
+	public static function updateByPks($pks, array $data){
+		$obj = static::meta();
+		$pk = $obj->getPrimaryKey();
+		return static::updateWhere($data, count($pks), "$pk IN ?", $pks);
 	}
 
 	/**
@@ -503,10 +511,27 @@ abstract class Model extends DAO{
 
 		//只更新改变的值
 		$change_keys = $this->getValueChangeKeys();
-
 		$data = array_clear_fields(array_keys($change_keys), $data);
 		self::validate($data, Query::UPDATE);
+		$data = $this->quoteData($data);
 		return $this->getDbRecord(self::DB_WRITE)->update($this->getTableName(), $data, $this->getPrimaryKey().'='.$this->$pk);
+	}
+
+	/**
+	 * 数据转义
+	 * @param array $data
+	 * @return mixed
+	 */
+	private function quoteData(array $data=array()){
+		$types = array();
+		$defines = $this->getPropertiesDefine();
+		foreach($data as $k=>$v){
+			$t = $defines[$k];
+			$types[$k] = $t['type'];
+		}
+		$rec = $this->getDbRecord(self::DB_WRITE);
+		$data = $rec->quoteArray($data, $types);
+		return $data;
 	}
 
 	/**
@@ -521,6 +546,7 @@ abstract class Model extends DAO{
 
 		$data = $this->getValues();
 		self::validate($data, Query::INSERT);
+		$data = $this->quoteData($data);
 
 		$result = $this->getDbRecord(self::DB_WRITE)->insert($this->getTableName(), $data);
 		if($result){
@@ -535,7 +561,7 @@ abstract class Model extends DAO{
 	 * @param array $src_data
 	 * @param string $query_type
 	 * @param bool $throw_exception
-	 * @return array
+	 * @return string error message
 	 * @throws \Lite\Exception\BizException
 	 * @throws \Lite\Exception\Exception
 	 */
@@ -548,6 +574,24 @@ abstract class Model extends DAO{
 		$obj = self::meta();
 		$pro_defines = $obj->getEntityPropertiesDefine();
 		$pk = $obj->getPrimaryKey();
+
+		//unique校验
+		foreach($pro_defines as $field=>$def){
+			if($def['unique']){
+				if($query_type == Query::INSERT){
+					$count = $obj->find("$field=?", $data[$field])->count();
+				} else {
+					$count = $obj->find("$field=? AND $pk != ?", $data[$field], $data[$pk])->count();
+				}
+				if($count){
+					$msg = "{$def['alias']}：{$data[$field]}已经存在，不能重复添加";
+					if($throw_exception){
+						throw new BizException($msg);
+					}
+					return $msg;
+				}
+			}
+		}
 
 		//移除readonly属性
 		$pro_defines = array_filter($pro_defines, function($def){
@@ -566,35 +610,111 @@ abstract class Model extends DAO{
 			});
 		}
 
-		//属性校验
-		foreach($pro_defines as $k=>$def){
-			if(!$def['readonly']){
-				$f = new Field($k, $def);
-				if($msg = $f->validate($data[$k])){
-					return $msg;
+		//更新时，只需要处理更新数据的属性
+		else if($query_type == Query::UPDATE || $query_type == Query::REPLACE){
+			foreach($pro_defines as $k=>$define){
+				if(!isset($data[$k])){
+					unset($pro_defines[$k]);
 				}
 			}
 		}
 
-		//unique校验
-		foreach($pro_defines as $field=>$def){
-			if($def['unique']){
-				if($query_type == Query::INSERT){
-					$count = $obj->find("$field=?", $data[$field])->count();
-				} else {
-					$count = $obj->find("$field=? AND $pk=?", $data[$field], $data[$pk])->count();
-				}
-				if($count){
-					$msg = "{$def['alias']}：{$data[$field]}已经存在，不能重复添加";
+		//属性校验
+		foreach($pro_defines as $k=>$def){
+			if(!$def['readonly']){
+				if($msg = self::validateField($data[$k], $k)){
 					if($throw_exception){
 						throw new BizException($msg);
+					} else {
+						return $msg;
 					}
-					return $msg;
 				}
 			}
 		}
+
 		$src_data = $data;
 		return null;
+	}
+
+	/**
+	 * 字段校验
+	 * @param $value
+	 * @param $field
+	 * @return string
+	 */
+	private static function validateField(&$value, $field){
+		/** @var Model $obj */
+		$obj = self::meta();
+		$define = $obj->getPropertiesDefine($field);
+
+		$err = '';
+		$val = $value;
+		$name = $define['alias'];
+		if(is_callable($define['options'])){
+			$define['options'] = call_user_func($define['options'], null);
+		}
+
+		//type
+		if(!$err){
+			switch($define['type']){
+				case 'int':
+					if(!self::isInt($val)){
+						$err = $name.'格式不正确';
+					};
+					break;
+
+				case 'float':
+				case 'double':
+					if(!self::isFloat($val)){
+						$err = $name.'格式不正确';
+					}
+					break;
+
+				case 'enum':
+					$err = !isset($define['options'][$val]) ? '请选择'.$name : '';
+					break;
+
+				//string暂不校验
+				case 'string':
+					break;
+			}
+		}
+
+		//required
+		if(!$err && $define['required'] && strlen($val) == 0){
+			$err = "请输入{$name}";
+		}
+
+		//length
+		if(!$err && $define['length'] && $define['type'] != 'datetime' && $define['type'] != 'date' && $define['type'] != 'time'){
+			$err = strlen($val) > $define['length'] ? "{$name}长度超出" :'';
+		}
+
+		if(!$err){
+			$value = $val;
+		}
+		return $err;
+	}
+
+	/**
+	 * check is int
+	 * @param $val
+	 * @return bool
+	 */
+	private static function isInt($val){
+		return $val == intval($val) && strlen($val) == strlen(intval($val));
+	}
+
+	/**
+	 * check is float
+	 * @param $val
+	 * @return bool
+	 */
+	private static function isFloat($val){
+		if(self::isInt($val)){
+			return true;
+		}
+		return $val == floatval($val) && strlen($val) == strlen(floatval($val));
 	}
 
 	/**
@@ -625,7 +745,7 @@ abstract class Model extends DAO{
 			}
 
 			$result = self::validate($data, Query::INSERT, $break_on_fail);
-			if(!$result){
+			if($result){
 				continue;
 			}
 

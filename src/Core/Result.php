@@ -22,6 +22,28 @@ class Result {
 	}
 
 	/**
+	 * quick convert
+	 * @param $mix
+	 * @param int $code
+	 * @param null $data
+	 * @param string $jump_url
+	 * @return self
+	 */
+	public static function convert($mix, $code=1, $data=null, $jump_url=''){
+		if($mix instanceof Result){
+			return $mix;
+		}
+		else if(is_array($mix)){
+			$r = new Result();
+			$r->setData($mix);
+			return $r;
+		}
+		else {
+			return new self($mix, $code, $data, $jump_url);
+		}
+	}
+
+	/**
 	 * 检测是否成功
 	 * @return boolean
 	 */

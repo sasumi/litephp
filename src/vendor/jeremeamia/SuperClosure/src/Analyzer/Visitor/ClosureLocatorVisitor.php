@@ -1,12 +1,12 @@
 <?php namespace SuperClosure\Analyzer\Visitor;
 
-use SuperClosure\Exception\ClosureAnalysisException;
+use PhpParser\Node as AstNode;
+use PhpParser\Node\Expr\Closure as ClosureNode;
+use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
-use PhpParser\Node\Stmt\Class_ as ClassNode;
-use PhpParser\Node\Expr\Closure as ClosureNode;
-use PhpParser\Node as AstNode;
 use PhpParser\NodeVisitorAbstract as NodeVisitor;
+use SuperClosure\Exception\ClosureAnalysisException;
 
 /**
  * This is a visitor that extends the nikic/php-parser library and looks for a

@@ -268,42 +268,42 @@ namespace Lite\func {
 	 * @return array
 	 */
 	function array_filter_subtree($parent_id, $all, $opt = array(), $level = 0) {
-		//选项
 		$opt = array_merge(array(
-			'return_as_tree' => true,             //以目录树返回，还是以平铺数组形式返回
+			'return_as_tree' => false,             //以目录树返回，还是以平铺数组形式返回
 			'level_key' => 'tree_level',          //返回数据中是否追加等级信息,如果选项为空, 则不追加等级信息
 			'id_key' => 'id',                     //主键键名
 			'parent_id_key' => 'parent_id',       //父级键名
 			'children_key' => 'children'          //返回子集key(如果是平铺方式返回,该选项无效
 		), $opt);
 
-		$result = array();
-		$has_children = array_group($all, $opt['parent_id_key']);
+		$pn_k = $opt['parent_id_key'];
+		$lv_k = $opt['level_key'];
+		$id_k = $opt['id_key'];
+		$as_tree = $opt['return_as_tree'];
+		$c_k = $opt['children_key'];
 
-		foreach ($all as $item) {
-			if($item[$opt['parent_id_key']] == $parent_id) {
-				if($opt['level_key']) {
-					$item[$opt['level_key']] = $level;
+		$result = array();
+		$has_children = array_group($all, $pn_k);
+
+		foreach ($all as $k=>$item) {
+			if($item[$pn_k] == $parent_id) {
+				if($lv_k) {
+					$item[$lv_k] = $level;
 				}
 				if(!$opt['return_as_tree']) {
 					$result[] = $item;
 				}
-				if($has_children[$item[$opt['id_key']]]) {
-					$sub = array_filter_subtree($item[$opt['id_key']], $all, $opt, $level + 1);
+				if($has_children[$item[$id_k]]) {
+					$sub = array_filter_subtree($item[$id_k], $all, $opt, $level + 1);
 					if(!empty($sub)) {
-						if($opt['level_key']) {
-							foreach ($sub as $k => $s) {
-								$sub[$k][$opt['level_key']] = $item[$opt['level_key']] + 1;
-							}
-						}
-						if($opt['return_as_tree']) {
-							$item[$opt['children_key']] = $sub;
+						if($as_tree) {
+							$item[$c_k] = $sub;
 						} else {
 							$result = array_merge($result, $sub);
 						}
 					}
 				}
-				if($opt['return_as_tree']) {
+				if($as_tree) {
 					$result[] = $item;
 				}
 			}

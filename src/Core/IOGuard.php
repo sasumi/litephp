@@ -1,6 +1,6 @@
 <?php
 namespace Lite\Core;
-use \Iterator as Iterator;
+use Iterator as Iterator;
 
 /**
  * Lite框架IO保护基础类

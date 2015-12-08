@@ -2,11 +2,11 @@
 
 namespace PhpParser;
 
-use PhpParser\Node\Name;
-use PhpParser\Node\Expr;
-use PhpParser\Node\Stmt;
-use PhpParser\Node\Scalar;
 use PhpParser\Comment;
+use PhpParser\Node\Expr;
+use PhpParser\Node\Name;
+use PhpParser\Node\Scalar;
+use PhpParser\Node\Stmt;
 
 abstract class BuilderAbstract implements Builder {
     /**

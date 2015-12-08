@@ -31,6 +31,98 @@ namespace Lite\func {
 		}
 	}
 
+	/**
+	 * error code to string
+	 * @param $value
+	 * @return string
+	 */
+	function error2string($value){
+		$level_names = array(
+			E_ERROR           => 'E_ERROR',
+			E_WARNING         => 'E_WARNING',
+			E_PARSE           => 'E_PARSE',
+			E_NOTICE          => 'E_NOTICE',
+			E_CORE_ERROR      => 'E_CORE_ERROR',
+			E_CORE_WARNING    => 'E_CORE_WARNING',
+			E_COMPILE_ERROR   => 'E_COMPILE_ERROR',
+			E_COMPILE_WARNING => 'E_COMPILE_WARNING',
+			E_USER_ERROR      => 'E_USER_ERROR',
+			E_USER_WARNING    => 'E_USER_WARNING',
+			E_USER_NOTICE     => 'E_USER_NOTICE'
+		);
+		if(defined('E_STRICT')){
+			$level_names[E_STRICT] = 'E_STRICT';
+		}
+		$levels = array();
+		if(($value & E_ALL) == E_ALL){
+			$levels[] = 'E_ALL';
+			$value &= ~E_ALL;
+		}
+		foreach($level_names as $level => $name){
+			if(($value & $level) == $level){
+				$levels[] = $name;
+			}
+		}
+		return implode(' | ', $levels);
+	}
+
+	/**
+	 * string to error code
+	 * @param $string
+	 * @return int
+	 */
+	function string2error($string){
+		$level_names = array(
+			'E_ERROR',
+			'E_WARNING',
+			'E_PARSE',
+			'E_NOTICE',
+			'E_CORE_ERROR',
+			'E_CORE_WARNING',
+			'E_COMPILE_ERROR',
+			'E_COMPILE_WARNING',
+			'E_USER_ERROR',
+			'E_USER_WARNING',
+			'E_USER_NOTICE',
+			'E_ALL'
+		);
+		if(defined('E_STRICT')){
+			$level_names[] = 'E_STRICT';
+		}
+		$value = 0;
+		$levels = explode('|', $string);
+
+		foreach($levels as $level){
+			$level = trim($level);
+			if(defined($level)){
+				$value |= (int)constant($level);
+			}
+		}
+		return $value;
+	}
+
+	/**
+	 * print system error & debug info
+	 * @param $code
+	 * @param $msg
+	 * @param $file
+	 * @param $line
+	 */
+	function print_sys_error($code, $msg, $file, $line){
+		echo "<pre>";
+		$code = error2string($code);
+		echo "[$code] $msg\n\n";
+		echo "* $file #$line\n\n";
+
+		$bs = debug_backtrace();
+		array_shift($bs);
+		foreach($bs as $k=>$b){
+			echo count($bs)-$k." {$b['class']}{$b['type']}{$b['function']}\n";
+			echo "  {$b['file']}  #{$b['line']} \n\n";
+		}
+		die;
+	}
+
 	function get_last_exit_trace() {
 		declare(ticks = 1);
 		$GLOBALS['___LAST_RUN___'] = null;

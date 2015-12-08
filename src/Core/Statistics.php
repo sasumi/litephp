@@ -106,7 +106,7 @@ class Statistics {
 	public function _toString(){
 		$str = "<pre>\n";
 		foreach($this->time_track_list as $item){
-			$str .= str_repeat('-', 100)."\n";
+			$str .= str_repeat('-', 120)."\n";
 			$str .= $item['tag']."\n";
 			$str .= "\n";
 			$s = array_last(explode('.',$item['time_point'].''));

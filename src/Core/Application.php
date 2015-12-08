@@ -5,10 +5,12 @@ use Exception as Exception;
 use Lite\Api\Daemon;
 use Lite\Component\Request;
 use Lite\DB\Record;
+use Lite\Exception\BizException;
 use Lite\Exception\RouterException;
 use Lite\Logger\Logger;
 use Lite\Logger\LoggerLevel;
 use Lite\Logger\Message\CommonMessage;
+use ReflectionClass;
 use function Lite\func\array_last;
 use function Lite\func\decodeURI;
 use function Lite\func\dump;
@@ -100,10 +102,14 @@ class Application{
 		//router init
 		Router::init();
 
+		/** @var Controller $ctrl_ins */
+		$ctrl_ins = null;
+
 		try {
-			$result = Controller::dispatch($this->namespace);
+			$result = self::dispatch($ctrl_ins, $method);
 		} catch(Exception $ex){
-			if(!Config::get('app/debug') && Config::get('app/auto_process_logic_error')){
+			if(($ex instanceof BizException) || //业务限制逻辑，直接使用友好输出格式
+				(!Config::get('app/debug') && Config::get('app/auto_process_logic_error'))){
 				$result = new Result($ex->getMessage(), false, $ex);
 			} else {
 				throw $ex;
@@ -112,11 +118,66 @@ class Application{
 
 		//auto render
 		if(Config::get('app/auto_render')){
-			$render = Config::get('app/render');
-			/** @var View $viewer */
-			$viewer = new $render($result);
-			$viewer->render();
+			$tpl_file = $ctrl_ins::__getTemplate(Router::getController(), Router::getAction());
+			if($result instanceof View){
+				$result->render($tpl_file);
+			} else {
+				/** @var View $viewer */
+				$render = Config::get('app/render');
+				$viewer = new $render($result);
+				$viewer->render($tpl_file);
+			}
 		}
+	}
+
+	/**
+	 * 分发控制器
+	 * @param null $ctrl
+	 * @param null $action
+	 * @return mixed
+	 * @throws \Lite\Exception\RouterException
+	 */
+	private function dispatch(&$ctrl=null, &$action=null){
+		$controller = Router::getController();
+		$action = Router::getAction();
+		$get = Router::get();
+		$post = Router::post();
+
+		$CtrlClass = $this->namespace.Config::get('app/controller_pattern');
+		$CtrlClass = str_replace('{CONTROLLER}', ucfirst($controller), $CtrlClass);
+		if(!class_exists($CtrlClass)){
+			throw new RouterException('Controller not found:'.$CtrlClass);
+		}
+
+		/** @var Controller $ctrl */
+		$ctrl = new $CtrlClass($controller, $action);
+		$is_ctrl_prototype = $ctrl instanceof Controller;
+
+		//support some class non extends lite\controller
+		if($is_ctrl_prototype){
+			$cancel = $ctrl->__beforeExecute($controller, $action);
+			if($cancel === false){
+				die;
+			}
+		}
+
+		if(!method_exists($ctrl, $action)){
+			throw new RouterException('Controller Method No Exists: '.$controller.'/'.$action);
+		}
+
+		//禁止私有方法、静态方法被当做action访问
+		$rc = new ReflectionClass($CtrlClass);
+		$m = $rc->getMethod($action);
+		if(!$m->isPublic() || $m->isStatic()){
+			throw new RouterException('Action Should Be Public And Non Static');
+		}
+
+		$result = call_user_func(array($ctrl, $action), $get, $post);
+
+		if($is_ctrl_prototype){
+			$ctrl->__afterExecute($controller, $action, $result);
+		}
+		return $result;
 	}
 
 	/**
@@ -192,16 +253,6 @@ class Application{
 		//绑定项目根目录
 		self::addIncludePath(Config::get('app/path'));
 
-		//去除GPC处理功能，该方法在CLI模式中不启用
-		/**
-		if($mode != self::MODE_CLI && function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()){
-			$_POST = array_map('stripslashes_deep', $_POST);
-			$_GET = array_map('stripslashes_deep', $_GET);
-			$_COOKIE = array_map('stripslashes_deep', $_COOKIE);
-			$_REQUEST = array_map('stripslashes_deep', $_REQUEST);
-		}
-		 **/
-
 		//APP EXCEPTION
 		if(Hooker::exists(self::EVENT_ON_APP_EX)){
 			set_exception_handler(function ($exception){
@@ -262,6 +313,7 @@ class Application{
 		$GLOBALS['__DB_QUERY_COUNT__'] = 0;
 		$GLOBALS['__DB_QUERY_TIME__'] = 0;
 		$GLOBALS['__DB_QUERY_MEM__'] = 0;
+		$GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__'] = 0;
 
 		Hooker::add(Record::EVENT_BEFORE_DB_QUERY, function ($sql) use ($STATIC_KEY){
 			$GLOBALS['__DB_QUERY_COUNT__']++;
@@ -276,13 +328,23 @@ class Application{
 			$GLOBALS['__DB_QUERY_MEM__'] += $tt['mem_used'];
 		});
 
+		Hooker::add(Record::EVENT_ON_DB_QUERY_DISTINCT, function(){
+			$GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__']++;
+		});
+
 		Hooker::add(self::EVENT_AFTER_APP_SHUTDOWN, function ($tm = null) use ($SESSION_KEY, $STATIC_KEY){
+			$pc = 0;
+			if($GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__'] + $GLOBALS['__DB_QUERY_COUNT__']){
+				$pc = number_format($GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__'] / ($GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__'] + $GLOBALS['__DB_QUERY_COUNT__'])*100, 2, null, '');
+			}
+
 			$msg = 'DB QUERY COUNT:'.$GLOBALS['__DB_QUERY_COUNT__'].
-				"\t\t\tDB QUERY TIME:".$GLOBALS['__DB_QUERY_TIME__'].'ms'.
-				"\t\t\tDB QUERY COST MEM:".format_size($GLOBALS['__DB_QUERY_MEM__'])."\n";
+				"\t\t\tDB QUERY TIME:".$GLOBALS['__DB_QUERY_TIME__']."ms\n".
+				"DEDUPLICATION QUERY:".$GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__']."($pc%)".
+				"\t\tDB QUERY COST MEM:".format_size($GLOBALS['__DB_QUERY_MEM__'])."\n\n";
 
 			$msg .= "[PROCESS USED TIME] ".$tm."ms";
-			Statistics::instance($STATIC_KEY)->mark($msg, str_repeat('=', 100)."\nAPP SHUTDOWN");
+			Statistics::instance($STATIC_KEY)->mark($msg, str_repeat('=', 120)."\nAPP SHUTDOWN");
 			if(!headers_sent()){
 				session_start();
 			}

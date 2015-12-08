@@ -1,31 +1,25 @@
 <?php
 namespace Lite\Cli;
-use \PDO;
+use PDO;
 
-if(PHP_SAPI != 'cli'){
-	throw new \Exception('script run in CLI mode only');
-}
-
-define('PROJECT_ROOT', get_project_dir());
+!defined('PROJECT_ROOT') && define('PROJECT_ROOT', get_project_dir());
 define('PROJECT_PROTECTED_DIR', PROJECT_ROOT.'/protected');
-
 class CodeGenerator {
-	public static function load(){
-
-	}
+	public static function load(){}
 }
 
-$args = $_SERVER['argv'];
-$script_file = array_shift($args);
-$cmd = array_shift($args);
-$overwrite = false;
-
-if(stripos($cmd, '-') === 0){
-	$overwrite = stripos($cmd, 'o') !== false;
+if(PHP_SAPI == 'cli'){
+	$args = $_SERVER['argv'];
+	$script_file = array_shift($args);
 	$cmd = array_shift($args);
-}
+	$overwrite = false;
 
-$help = <<<EOT
+	if(stripos($cmd, '-') === 0){
+		$overwrite = stripos($cmd, 'o') !== false;
+		$cmd = array_shift($args);
+	}
+
+	$help = <<<EOT
 =======================================================
 <<STATEMENT LIST>>
 option: -o overwrite file
@@ -44,43 +38,44 @@ php $script_file [-o] alltable
 =======================================================
 EOT;
 
-switch($cmd){
-	case 'model':
-		generate_model($args[0], $args[1], $overwrite);
-		break;
+	switch($cmd){
+		case 'model':
+			generate_model($args[0], $args[1], $overwrite);
+			break;
 
-	case 'allmodel':
-		$tables = get_all_table();
-		foreach($tables as $item){
-			$table = array_pop($item);
-			generate_model($table, null, $overwrite);
-		}
-		echo "ALL MODEL GENERATED\n";
-		break;
+		case 'allmodel':
+			$tables = get_all_table();
+			foreach($tables as $item){
+				$table = array_pop($item);
+				generate_model($table, null, $overwrite);
+			}
+			echo "ALL MODEL GENERATED\n";
+			break;
 
-	case 'table':
-		$table = $args[0];
-		generate_table($table, $overwrite);
-		break;
-
-	case 'alltable':
-		$tables = get_all_table();
-		foreach($tables as $item){
-			$table = array_pop($item);
+		case 'table':
+			$table = $args[0];
 			generate_table($table, $overwrite);
-		}
-		echo "ALL TABLE GENERATED\n";
-		break;
+			break;
 
-	case 'crud':
-		$table = $args[0];
-		$model = $args[1];
-		$controller = $args[2];
-		generate_crud($table, $model, $controller, $overwrite);
-		break;
+		case 'alltable':
+			$tables = get_all_table();
+			foreach($tables as $item){
+				$table = array_pop($item);
+				generate_table($table, $overwrite);
+			}
+			echo "ALL TABLE GENERATED\n";
+			break;
 
-	default:
-		echo $help;
+		case 'crud':
+			$table = $args[0];
+			$model = $args[1];
+			$controller = $args[2];
+			generate_crud($table, $model, $controller, $overwrite);
+			break;
+
+		default:
+			echo $help;
+	}
 }
 
 function generate_model($table_name, $model_name='', $overwrite){
@@ -322,6 +317,16 @@ function get_field_alias($meta){
 	return $meta['Comment'] ?: $meta['Field'];
 }
 
+function get_field_precision($meta){
+	$type = get_field_type($meta);
+	if(in_array($type, array('float','double'))){
+		if(preg_match('/,(\d+)\)/', $meta['Type'], $matches)){
+			return (int)$matches[1];
+		}
+	}
+	return 0;
+}
+
 function get_field_type($meta){
 	$a = array(
 		'char',
@@ -365,6 +370,7 @@ function get_properties_defines($meta_list){
 		$unsigned = stripos($meta['Type'], 'unsigned') !== false;
 		$alias = addslashes(get_field_alias($meta));
 		$type = get_field_type($meta);
+		$precision = get_field_precision($meta);
 		$len = intval(preg_replace('/\D/', '', $meta['Type']));
 		$required = $meta['Null'] == 'NO';
 
@@ -375,6 +381,7 @@ function get_properties_defines($meta_list){
 		$str .= $pk ? "{$t}\t'primary' => true,\n" :'';
 		$str .= $required ? "{$t}\t'required' => true,\n" : '';
 		$str .= $readonly ? "{$t}\t'readonly' => true,\n" : '';
+		$str .= $precision ? "{$t}\t'precision' => $precision,\n" : '';
 		$str .= $unsigned ? "{$t}\t'min' => 0,\n" : '';
 
 		if($meta['Default'] !== null){

@@ -1,10 +1,10 @@
 <?php
 namespace Lite\Api;
 
-use Lite\Core\Router;
-use Lite\Exception\Exception;
 use Lite\Component\Request;
 use Lite\Core\Config;
+use Lite\Core\Router;
+use Lite\Exception\Exception;
 
 /**
  * Creator: sasumi

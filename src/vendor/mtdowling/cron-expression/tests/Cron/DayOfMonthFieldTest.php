@@ -3,7 +3,6 @@
 namespace Cron\Tests;
 
 use Cron\DayOfMonthField;
-
 use DateTime;
 
 /**

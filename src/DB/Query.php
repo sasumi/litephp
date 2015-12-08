@@ -59,6 +59,13 @@ class Query {
 	}
 
 	/**
+	 * 当前查询是否为全行查询
+	 */
+	public function isFRQuery(){
+		return !$this->sql && $this->fields == array('*');
+	}
+
+	/**
 	 * 查询
 	 * @param string $str
 	 * @return $this

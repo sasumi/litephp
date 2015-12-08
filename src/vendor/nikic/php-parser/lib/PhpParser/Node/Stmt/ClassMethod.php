@@ -2,9 +2,9 @@
 
 namespace PhpParser\Node\Stmt;
 
+use PhpParser\Error;
 use PhpParser\Node;
 use PhpParser\Node\FunctionLike;
-use PhpParser\Error;
 
 class ClassMethod extends Node\Stmt implements FunctionLike
 {

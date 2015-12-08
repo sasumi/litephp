@@ -1,6 +1,7 @@
 <?php
 namespace Lite\Component;
 use Lite\Core\Config;
+use Lite\Core\PaginateInterface;
 use Lite\Core\Router;
 
 /**
@@ -9,19 +10,19 @@ use Lite\Core\Router;
  * Date: 14-8-28
  * Time: 上午11:25
  */
-class Paginate {
+class Paginate implements PaginateInterface {
 	private static $instance_list;
 
 	private static $_guid_count = 1;
 	private $guid;
 	private $page_info;
-	private $pagesize_flag = false;     //pagesize是否来自于GET
+	private $page_size_flag = false;     //page_size是否来自于GET
 	private $config = array(
 		'show_dot' => true,
 		'num_offset' => 5,
 		'page_size' => 10,
 		'page_key' => 'page',
-		'pagesize_key' => 'page_size',
+		'page_size_key' => 'page_size',
 		'mode' => 'first,prev,num,next,last',
 
 		'lang' => array(
@@ -135,9 +136,9 @@ class Paginate {
 		$page_index = (int)Router::gets($this->config['page_key'], array());
 		$page_index = $page_index > 0 ? $page_index : 1;
 
-		$page_size = (int)Router::gets($this->config['pagesize_key'], array());
+		$page_size = (int)Router::gets($this->config['page_size_key'], array());
 		if($page_size){
-			$this->pagesize_flag = true;
+			$this->page_size_flag = true;
 		} else {
 			$page_size = $this->getConfig('page_size');
 		}
@@ -164,7 +165,7 @@ class Paginate {
 				if($key == $this->config['page_key']){
 					unset($gets[$key]);
 				}
-				if($key == $this->config['pagesize_key']){
+				if($key == $this->config['page_size_key']){
 					unset($gets[$key]);
 				}
 			}
@@ -172,8 +173,8 @@ class Paginate {
 		if(isset($num)){
 			$gets[$this->config['page_key']] = $num;
 		}
-		if($this->pagesize_flag && $page_size){
-			$gets[$this->config['pagesize_key']] = $page_size;
+		if($this->page_size_flag && $page_size){
+			$gets[$this->config['page_size_key']] = $page_size;
 		}
 		$controller = Router::getController();
 		$action = Router::getAction();
@@ -201,7 +202,7 @@ class Paginate {
 				if($key == $this->config['page_key']){
 					unset($gets[$key]);
 				}
-				if($key == $this->config['pagesize_key']){
+				if($key == $this->config['page_size_key']){
 					unset($gets[$key]);
 				}
 			}
@@ -281,8 +282,8 @@ class Paginate {
 				$html .= '<form action="'.$form_action.'" method="get" class="page_input_form">';
 				$html .= '<input type="number" class="page_input" name="'.$this->config['page_key'].'" size="2" value="">';
 
-				if($this->pagesize_flag){
-					$html .= '<input type="hidden" class="page_input" name="'.$this->config['pagesize_key'].'" size="2" value="'.$page_info['page_size'].'">';
+				if($this->page_size_flag){
+					$html .= '<input type="hidden" class="page_input" name="'.$this->config['page_size_key'].'" size="2" value="'.$page_info['page_size'].'">';
 				}
 
 				$html .= '<input type="submit" class="page_jump_btn" value="'.$lang['page_jump'].'">';
@@ -291,8 +292,8 @@ class Paginate {
 
 			else if($mode == 'select' && $page_info['page_total'] > 0){
 				$html .= '<form action="'.$form_action.'" method="get" class="page_select_form">';
-				if($this->pagesize_flag){
-					$html .= '<input type="hidden" class="page_input" name="'.$this->config['pagesize_key'].'" size="2" value="'.$page_info['page_size'].'">';
+				if($this->page_size_flag){
+					$html .= '<input type="hidden" class="page_input" name="'.$this->config['page_size_key'].'" size="2" value="'.$page_info['page_size'].'">';
 				}
 				$html .= '<select onchange="this.parentNode.submit()" name="'.$this->config['page_key'].'">';
 				for($i=1; $i<=$page_info['page_total']; $i++){
@@ -303,10 +304,10 @@ class Paginate {
 				$html .= '</form>';
 			}
 
-			else if($mode == 'pagesize'){
+			else if($mode == 'page_size'){
 				$html .= '<form action="'.$form_action.'" method="get" class="page_size_form">';
 				$html .= '<label>'.$lang['page_size'];
-				$html .= '<input type="number" list="page_number_list_'.$this->guid.'" class="page_size_input" name="'.$this->config['pagesize_key'].'" size="2" value="'.$page_info['page_size'].'">';
+				$html .= '<input type="number" list="page_number_list_'.$this->guid.'" class="page_size_input" name="'.$this->config['page_size_key'].'" size="2" value="'.$page_info['page_size'].'">';
 				$html .= '<datalist id="page_number_list_'.$this->guid.'">';
 				$html .= '<option label="10" value="10"/>';
 				$html .= '<option label="20" value="20"/>';

@@ -1,6 +1,6 @@
 <?php
 namespace Lite\Exception;
-use \Exception as OrgException;
+use Exception as OrgException;
 
 /**
  * Lite框架通用异常类
