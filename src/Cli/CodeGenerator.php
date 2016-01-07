@@ -35,6 +35,12 @@ php $script_file [-o] table table_name
 
 generate all tables:
 php $script_file [-o] alltable
+
+generate specified crud use table:
+php $script_file [-o] crud table_name
+
+generate all crud module:
+php $script_file [-o] allcrud
 =======================================================
 EOT;
 
@@ -71,6 +77,15 @@ EOT;
 			$model = $args[1];
 			$controller = $args[2];
 			generate_crud($table, $model, $controller, $overwrite);
+			break;
+
+		case 'allcrud':
+			$tables = get_all_table();
+			foreach($tables as $item){
+				$table = array_pop($item);
+				generate_crud($table, null, null, $overwrite);
+			}
+			echo "ALL CRUD GENERATED\n";
 			break;
 
 		default:
@@ -348,6 +363,7 @@ function get_field_type($meta){
 		'datetime',
 		'date',
 		'time',
+		'blob'
 	);
 
 	$t = $meta['Type'];

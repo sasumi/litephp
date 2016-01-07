@@ -8,7 +8,7 @@ use function Lite\func\dump;
 
 /** @var View $view */
 $view = Config::get('app/render');
-foreach($side_nav as $col_title=>$nav_list):?>
+foreach($side_nav ?: array() as $col_title=>$nav_list):?>
 	<dl class="aside-nav">
 		<dt><?php echo $col_title;?></dt>
 		<?php foreach($nav_list as $item):?>

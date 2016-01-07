@@ -14,7 +14,7 @@ class {$model_name} extends {$table_model} implements ModelInterface {
 	}
 
 	/**
-	* 获取模型状态key
+	* get state key
 	* @return string
 	*/
 	public function getStateKey(){
