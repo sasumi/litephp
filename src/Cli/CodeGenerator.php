@@ -310,6 +310,14 @@ function convert_type($meta_type){
 	return $type;
 }
 
+function get_field_description($meta){
+	$type = get_field_type($meta);
+	if($type != 'set' && $type != 'enum' && $meta['Comment'] && preg_match('/\((.*)\)$/', $meta['Comment'], $matches)){
+		return $matches[1];
+	}
+	return '';
+}
+
 function get_field_alias($meta){
 	if($meta['Comment']){
 		$meta['Comment'] = preg_replace("/\\(.*$/", '', $meta['Comment']);
@@ -330,7 +338,6 @@ function get_field_precision($meta){
 function get_field_type($meta){
 	$a = array(
 		'char',
-		'text',
 		'int',
 		'float',
 		'double',
@@ -342,15 +349,35 @@ function get_field_type($meta){
 		'date',
 		'time',
 	);
+
+	$t = $meta['Type'];
+
+	//文本判断
+	switch($t){
+
+		case 'tinytext':
+			return 'text';
+
+		case 'text':
+			return 'simple_rich_text';
+
+		case 'mediumtext':
+			return 'rich_text';
+
+		case 'longtext':
+			return 'rich_text';
+	}
 	foreach($a as $k){
-		if(stripos($meta['Type'], $k) !== false){
+		if(stripos($t, $k) !== false){
 			if($k == 'char'){
-				$k = 'string';
+				return 'string';
 			}
 			return $k;
 		}
 	}
-	return null;
+
+	var_dump($meta);
+	throw new \Exception('data type detected fail');
 }
 
 function get_properties_defines($meta_list){
@@ -369,42 +396,38 @@ function get_properties_defines($meta_list){
 		$readonly = ($pk && $auto_increment) || $auto_update_timestamp || $auto_fill_default_timestamp;
 		$unsigned = stripos($meta['Type'], 'unsigned') !== false;
 		$alias = addslashes(get_field_alias($meta));
+		$description = addslashes(get_field_description($meta));
 		$type = get_field_type($meta);
 		$precision = get_field_precision($meta);
-		$len = intval(preg_replace('/\D/', '', $meta['Type']));
-		$required = $meta['Null'] == 'NO';
+
+		$len = null;
+		if($type != 'enum' && $type != 'set'){
+			$len = intval(preg_replace('/\D/', '',  preg_replace('/\..*?/', '', preg_replace('/,.*$/', '',$meta['Type']))));
+		}
+
+		$required = $meta['Null'] == 'NO' && $meta['Default'] === null;
+
+		if($meta['Field'] == 'create_time'){
+			//var_dump($required, $meta['Default'], $meta);die;
+		}
 
 		$str .= "\n{$t}'{$meta['Field']}' => array(\n";
 		$str .= "{$t}\t'alias' => '{$alias}',\n";
 		$str .= $type ? "{$t}\t'type' => '{$type}',\n" : '';
-		$str .= "{$t}\t'length' => {$len},\n";
+		$str .= isset($len) ? "{$t}\t'length' => {$len},\n" : '';
 		$str .= $pk ? "{$t}\t'primary' => true,\n" :'';
 		$str .= $required ? "{$t}\t'required' => true,\n" : '';
 		$str .= $readonly ? "{$t}\t'readonly' => true,\n" : '';
 		$str .= $precision ? "{$t}\t'precision' => $precision,\n" : '';
 		$str .= $unsigned ? "{$t}\t'min' => 0,\n" : '';
+		$str .= $description ? "{$t}\t'description' => '$description',\n" : '';
 
 		if($meta['Default'] !== null){
 			$def = addslashes($meta['Default']);
-			if($type == 'datetime'){
-				$v = $def == '0000-00-00 00:00:00' ? '' : date('Y-m-d H:i:s', strtotime($def));
-				$str .= "{$t}\t'default' => '$v',\n";
+			if($type == 'timestamp' && $def == 'CURRENT_TIMESTAMP'){
+				$str .= "{$t}\t'default' => time(),\n";
 			}
-			else if($type == 'date'){
-				$def = $def == '0000-00-00' ? '' : date('Y-m-d H:i:s', strtotime($def));
-				$str .= "{$t}\t'default' => '$def',\n";
-			}
-			else if($type == 'time'){
-				$v = $def == '00:00:00' ? '' : date('Y-m-d H:i:s', strtotime($def));
-				$str .= "{$t}\t'default' => '$v',\n";
-			}
-			else if($type == 'timestamp'){
-				if($def != 'CURRENT_TIMESTAMP'){
-					$v = $def == '0000-00-00 00:00:00' ? '' : date('Y-m-d H:i:s', strtotime($def));
-					$str .= "{$t}\t'default' => '$v',\n";
-				}
-			}
-			else if($type == 'string'){
+			else if(in_array($type, array('string','date','datetime','time','timestamp'))){
 				$str .= "{$t}\t'default' => '$def',\n";
 			} else {
 				$str .= "{$t}\t'default' => $def,\n";

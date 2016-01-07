@@ -512,8 +512,7 @@ abstract class Model extends DAO{
 		//只更新改变的值
 		$change_keys = $this->getValueChangeKeys();
 		$data = array_clear_fields(array_keys($change_keys), $data);
-		self::validate($data, Query::UPDATE);
-		$data = $this->quoteData($data);
+		list($data) = self::validate($data, Query::UPDATE, $this->$pk);
 		return $this->getDbRecord(self::DB_WRITE)->update($this->getTableName(), $data, $this->getPrimaryKey().'='.$this->$pk);
 	}
 
@@ -545,8 +544,7 @@ abstract class Model extends DAO{
 		}
 
 		$data = $this->getValues();
-		self::validate($data, Query::INSERT);
-		$data = $this->quoteData($data);
+		list($data) = self::validate($data, Query::INSERT);
 
 		$result = $this->getDbRecord(self::DB_WRITE)->insert($this->getTableName(), $data);
 		if($result){
@@ -560,20 +558,28 @@ abstract class Model extends DAO{
 	/**
 	 * @param array $src_data
 	 * @param string $query_type
+	 * @param null $pk_val
 	 * @param bool $throw_exception
-	 * @return string error message
+	 * @return array [data,error_message]
 	 * @throws \Lite\Exception\BizException
 	 * @throws \Lite\Exception\Exception
 	 */
-	private static function validate(&$src_data=array(), $query_type=Query::INSERT, $throw_exception=true){
+	private static function validate($src_data=array(), $query_type=Query::INSERT, $pk_val=null, $throw_exception=true){
+		$obj = self::meta();
+		$pro_defines = $obj->getEntityPropertiesDefine();
+		$pk = $obj->getPrimaryKey();
+
+		//转换set数据
+		foreach($src_data as $k=>$d){
+			if($pro_defines[$k]['type'] == 'set' && is_array($d)){
+				$src_data[$k] = join(',', $d);
+			}
+		}
+
 		//移除矢量数值
 		$data = array_filter($src_data, function($item){
 			return is_scalar($item);
 		});
-
-		$obj = self::meta();
-		$pro_defines = $obj->getEntityPropertiesDefine();
-		$pk = $obj->getPrimaryKey();
 
 		//unique校验
 		foreach($pro_defines as $field=>$def){
@@ -581,14 +587,14 @@ abstract class Model extends DAO{
 				if($query_type == Query::INSERT){
 					$count = $obj->find("$field=?", $data[$field])->count();
 				} else {
-					$count = $obj->find("$field=? AND $pk != ?", $data[$field], $data[$pk])->count();
+					$count = $obj->find("$field=? AND $pk != ?", $data[$field], $pk_val)->count();
 				}
 				if($count){
 					$msg = "{$def['alias']}：{$data[$field]}已经存在，不能重复添加";
 					if($throw_exception){
 						throw new BizException($msg);
 					}
-					return $msg;
+					return array($data, $msg);
 				}
 			}
 		}
@@ -604,7 +610,8 @@ abstract class Model extends DAO{
 		//插入时填充default值
 		if($query_type == Query::INSERT){
 			array_walk($pro_defines, function($def, $k)use(&$data){
-				if(!isset($data[$k]) && isset($def['default'])){
+				if((!isset($data[$k]) || strlen($data[$k]) == 0)
+					&& isset($def['default'])){
 					$data[$k] = $def['default'];
 				}
 			});
@@ -626,14 +633,12 @@ abstract class Model extends DAO{
 					if($throw_exception){
 						throw new BizException($msg);
 					} else {
-						return $msg;
+						return array($data, $msg);
 					}
 				}
 			}
 		}
-
-		$src_data = $data;
-		return null;
+		return array($data, null);
 	}
 
 	/**
@@ -658,14 +663,14 @@ abstract class Model extends DAO{
 		if(!$err){
 			switch($define['type']){
 				case 'int':
-					if(!self::isInt($val)){
+					if($val != intval($val)){
 						$err = $name.'格式不正确';
-					};
+					}
 					break;
 
 				case 'float':
 				case 'double':
-					if(!self::isFloat($val)){
+					if(!is_numeric($val)){
 						$err = $name.'格式不正确';
 					}
 					break;
@@ -697,27 +702,6 @@ abstract class Model extends DAO{
 	}
 
 	/**
-	 * check is int
-	 * @param $val
-	 * @return bool
-	 */
-	private static function isInt($val){
-		return $val == intval($val) && strlen($val) == strlen(intval($val));
-	}
-
-	/**
-	 * check is float
-	 * @param $val
-	 * @return bool
-	 */
-	private static function isFloat($val){
-		if(self::isInt($val)){
-			return true;
-		}
-		return $val == floatval($val) && strlen($val) == strlen(floatval($val));
-	}
-
-	/**
 	 * 批量插入数据
 	 * 由于这里插入会涉及到数据检查，最终效果还是一条一条的插入
 	 * @param $data_list
@@ -744,8 +728,8 @@ abstract class Model extends DAO{
 				}
 			}
 
-			$result = self::validate($data, Query::INSERT, $break_on_fail);
-			if($result){
+			list($data, $errors) = self::validate($data, Query::INSERT, null, $break_on_fail);
+			if($errors){
 				continue;
 			}
 
@@ -820,7 +804,6 @@ abstract class Model extends DAO{
 
 		$data = $this->getValues();
 		$has_pk = !empty($data[$this->getPrimaryKey()]);
-
 		if($has_pk){
 			return $this->update();
 		}else if(!empty($data)){

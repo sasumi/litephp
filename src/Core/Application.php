@@ -109,7 +109,7 @@ class Application{
 			$result = self::dispatch($ctrl_ins, $method);
 		} catch(Exception $ex){
 			if(($ex instanceof BizException) || //业务限制逻辑，直接使用友好输出格式
-				(!Config::get('app/debug') && Config::get('app/auto_process_logic_error'))){
+				(!Config::get('app/debug') && Config::get('app/auto_process_logic_error') && !($ex instanceof RouterException))){
 				$result = new Result($ex->getMessage(), false, $ex);
 			} else {
 				throw $ex;

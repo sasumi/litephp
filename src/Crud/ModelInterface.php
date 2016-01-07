@@ -16,7 +16,7 @@ interface ModelInterface {
 
 	/**
 	 * 获取模型状态key
-	 * @return string
+	 * @return number
 	 */
 	public function getStateKey();
 }

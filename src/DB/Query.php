@@ -218,7 +218,7 @@ class Query {
 		$str = '';
 		foreach($wheres?:$this->where as $w){
 			$k = $w['type'] == self::OP_AND ? 'AND' : 'OR';
-			if(!empty($w['operator']) && !empty($w['compare'])){
+			if(!empty($w['operator']) && isset($w['compare'])){
 				$str .= ($str ? " $k ":'').'`'.$w['field'].'` '.$w['operator'].' \''.addslashes($w['compare']).'\'';
 			} else {
 				$str .= ($str ? " $k (":'(').$w['field'].')';
@@ -332,11 +332,7 @@ class Query {
 				foreach($data_list as $row){
 					$str = array();
 					foreach($row as $val){
-						if(is_numeric($val)){
-							$str[] = $val;
-						} else {
-							$str[] = $val;
-						}
+						$str[] = "'".addslashes($val)."'";
 					}
 					$value_str = implode(",", $str);
 					$sql .= $comma."($value_str)";
@@ -358,7 +354,7 @@ class Query {
 						if($value === null){
 							$sets[] = "$field_name = NULL";
 						} else {
-							$sets[] = "$field_name = ".$value;
+							$sets[] = "$field_name = "."'".addslashes($value)."'";;
 						}
 					}
 				}

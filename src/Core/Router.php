@@ -4,6 +4,7 @@ use Lite\Component\Request;
 use Lite\Exception\RouterException;
 use function Lite\func\array_clear_empty;
 use function Lite\func\array_clear_null;
+use function Lite\func\dump;
 
 /**
  * 路由基础类。当前路由路由基础类
@@ -136,10 +137,8 @@ abstract class Router{
 		$action = $action ?: self::$DEFAULT_ACTION;
 
 		//安全保护
-		$c1 = Filter::init()->filterOne($controller, array('KEY' => 'controller name illegal'));
-		$c2 = Filter::init()->filterOne($action, array('KEY' => 'action name illegal'));
-		if($c1 || $c2){
-			throw new RouterException($c1 ?: $c2, 23, array('parameter illegal'));
+		if(!preg_match('/^\w+$/', $controller) || !preg_match('/^\w+$/', $action)){
+			throw new RouterException($controller ?: $action, 23, array('parameter illegal'));
 		}
 
 		//自动decode
@@ -212,38 +211,6 @@ abstract class Router{
 			$path_info = substr($path_info, 0, strpos($path_info, '?'));
 		}
 		return $path_info;
-	}
-
-	/**
-	 * 从$_GET中获取参数
-	 * @param string $key
-	 * @param string||array $rules
-	 * @return string|array
-	 **/
-	public static function gets($key = null, $rules){
-		$data = $key ? self::$GET[$key] : self::$GET;
-		if($key){
-			Filter::init()->filterOne($data, $rules);
-		}else{
-			Filter::init()->filterArray($data, $rules);
-		}
-		return $data;
-	}
-
-	/**
-	 * 从$_POST中获取变量
-	 * @param null $key
-	 * @param $rules
-	 * @return mixed
-	 */
-	public static function posts($key = null, $rules){
-		$data = $key ? $_POST[$key] : $_POST;
-		if($key){
-			Filter::init()->filterOne($data, $rules);
-		}else{
-			Filter::init()->filterArray($data, $rules);
-		}
-		return $data;
 	}
 
 	/**
@@ -683,5 +650,9 @@ abstract class Router{
 			$str = str_replace('{'.$k.'}', $v, $str);
 		}
 		return $str;
+	}
+
+	public static function parseUrl(){
+
 	}
 }

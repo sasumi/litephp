@@ -15,9 +15,7 @@ abstract class Controller extends Router{
 	/**
 	 * 构造方法（该方法主要用于容错，避免类继承基础控制器，自身也没有实现构造方法）
 	 */
-	public function __construct(){
-
-	}
+	public function __construct(){}
 
 	/**
 	 * get template

@@ -133,10 +133,10 @@ class Paginate implements PaginateInterface {
 	 * @return $this
 	 */
 	private function updatePageInfo(){
-		$page_index = (int)Router::gets($this->config['page_key'], array());
+		$page_index = (int)Router::get($this->config['page_key']);
 		$page_index = $page_index > 0 ? $page_index : 1;
 
-		$page_size = (int)Router::gets($this->config['page_size_key'], array());
+		$page_size = (int)Router::get($this->config['page_size_key']);
 		if($page_size){
 			$this->page_size_flag = true;
 		} else {
@@ -159,7 +159,7 @@ class Paginate implements PaginateInterface {
 	 * @return string
 	 */
 	private function getUrl($num = null, $page_size=null){
-		$gets = Router::gets(null, array());
+		$gets = Router::get();
 		if(!empty($gets)){
 			foreach($gets as $key=>$get){
 				if($key == $this->config['page_key']){
@@ -196,7 +196,7 @@ class Paginate implements PaginateInterface {
 		$lang = $this->getConfig('lang');
 		$html = '';
 
-		$gets = Router::gets(null, array());
+		$gets = Router::get();
 		if(!empty($gets)){
 			foreach($gets as $key=>$get){
 				if($key == $this->config['page_key']){

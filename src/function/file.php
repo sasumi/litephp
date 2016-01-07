@@ -68,6 +68,51 @@ namespace Lite\func {
 	}
 
 	/**
+	 * read file by line
+	 * @param callable $handle
+	 * @param string $file
+	 * @param int $buff_size
+	 * @return bool
+	 */
+	function read_line(callable $handle, $file, $buff_size=1024){
+		$hd = fopen($file, 'r') or die('file open fail');
+		$stop = false;
+		$line_buff = '';
+		$read_line_counter = 0;
+		while(!feof($hd) && !$stop){
+			$buff = fgets($hd, $buff_size);
+			$break_count = substr_count($buff, "\n");
+			if($break_count){
+				$tmp = explode("\n", $buff);
+				$c = count($tmp);
+				for($i=0; $i<$c; $i++){
+					//tail
+					if($i == ($c-1)){
+						$line_buff = $tmp[$i];
+					} else {
+						//start
+						if($i == 0){
+							$line_buff .= $tmp[$i];
+						}
+						//middle
+						else {
+							$line_buff = $tmp[$i];
+						}
+						$read_line_counter++;
+						if($handle($line_buff, $read_line_counter) === false){
+							return false;
+						}
+					}
+				}
+			} else {
+				$line_buff .= $buff;
+			}
+		}
+		fclose($hd);
+		return true;
+	}
+
+	/**
 	 * 递归查询文件夹大小
 	 * @param $path
 	 * @return int

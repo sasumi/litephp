@@ -17,6 +17,8 @@ abstract class Config {
 
 	/**
 	 * 获取配置项
+	 * @example
+	 * <p> Config::get('app/url');</p>
 	 * @param string $uri 配置项key，格式如：myconfig/configitem
 	 * @param bool $force_exists 是否要求配置项必须存在，如果为true，则配置项不存在时，系统会抛异常
 	 * @param bool $refresh
@@ -86,6 +88,12 @@ abstract class Config {
 		return !!file_put_contents($file, $content);
 	}
 
+	/**
+	 * @param $uri
+	 * @param $data
+	 * @param null $over_write_all
+	 * @return bool
+	 */
 	public static function save($uri, $data, $over_write_all=null){
 		if(self::set($uri, $data, $over_write_all)){
 			$keys = explode('/', $uri);
