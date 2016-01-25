@@ -18,34 +18,110 @@ Application::init(__NAMESPACE__);
 
 ## 目录结构说明
 ```
-├─app                   //程序业务逻辑目录
-│  ├─api                //对外API目录?
-│  ├─controller         //Controller
-│  ├─include            //程序内部公用类库（如果是外部库）
-│  ├─model              //Model
-│  └─template           //模版
-│      ├─access
-│      ├─admin
-│      ├─usergroup
-│      └─userlog
-├─config                //程序配置目录，可以通过Config::get('aa/bb')方式读取
-├─database              //程序数据库定义目录(可外配)
-│  ├─log                //log数据库定义
-│  │  └─db_definition   //定义table
-		db.inc.php      //数据库连接信息
-│  └─www                //默认网站www配置
-│      └─db_definition
-├─document              //程序文档
-├─public                //httpd开放目录
-│  ├─static             //静态资源目录
-│  │  ├─css
-│  │  ├─img
-│  │  └─js
-│  └─upload             //上传目录
-├─script                //站点脚本
-│  └─build
-├─tests                 //测试用例
-└─tmp                   //缓存
+
+├─api
+│      index.php
+│      
+├─app
+│  ├─api
+│  ├─controller
+│  │      AccessController.php
+│  │      AppBizReportController.php
+│  │      AppClickReportController.php
+│  │      AppLogReportController.php
+│  │      AppPhotoDownloadReportController.php
+│  │      AppPhotoUploadReportController.php
+│  │      BaseController.php
+│  │      BillController.php
+│  │      IndexController.php
+│  │      RichEditorController.php
+│  │      RpcController.php
+│  │      UploadController.php
+│  │      UserController.php
+│  │      UserGroupController.php
+│  │      
+│  ├─include
+│  │      Auth.php
+│  │      ViewBase.php
+│  │      
+│  ├─model
+│  │      AppBizReport.php
+│  │      AppClickReport.php
+│  │      AppLogReport.php
+│  │      AppPhotoDownloadReport.php
+│  │      AppPhotoUploadReport.php
+│  │      Bill.php
+│  │      Rpc.php
+│  │      
+│  └─template
+│      ├─crud
+│      │      index.php
+│      │      info.php
+│      │      quick_search.inc.php
+│      │      update.php
+│      │      
+│      ├─inc
+│      │      footer.inc.php
+│      │      header.inc.php
+│      │      shortcut.inc.php
+│      │      side_mnu.php
+│      │      
+│      ├─index
+│      │      deny.php
+│      │      index.php
+│      │      login.php
+│      │      
+│      ├─user
+│      │      updatepassword.php
+│      │      
+│      └─usergroup
+│              updateusergroupaccess.php
+│              
+├─config                                                //应用配置目录
+│      app.inc.php                                      //应用基础信息配置
+│      nav.inc.php
+│      router.inc.php
+│      upload.inc.php
+│      
+├─database                                              //数据库模型目录
+│  └─monitor
+│      │  db.inc.php                                    //数据库连接配置(可被Model子类覆盖)
+│      │  
+│      ├─db_definition                                  //公用数据表定义(继承DB/Model)
+│      │      TableAppBizReport.php
+│      │      TableAppClickReport.php
+│      │      TableAppLogReport.php
+│      │      TableAppPhotoDownloadReport.php
+│      │      TableAppPhotoUploadReport.php
+│      │      TableBill.php
+│      │      TableRpc.php  
+│      │      
+│      └─model_base                                     //公用model逻辑
+│              ModelBill.php
+│              
+├─public                                                //对外开放目录
+│  │  index.php                                         //主引导脚本
+│  │  
+│  ├─static                                             //静态资源脚本(目录可在app.inc.php)中定制
+│  │  ├─css                                             //样式
+│  │  │      login.css
+│  │  │      patch.css
+│  │  │      
+│  │  ├─img                                             //图片
+│  │  │      body-bg.png
+│  │  │      default_avatar.png
+│  │  │      default_image.png
+│  │  │      
+│  │  └─js                                              //javascript脚本
+│  │          global.js
+│  │          
+│  └─upload
+├─script                                                //项目运行脚本(包括crontab脚本)
+│      scaffold.php                                     //系统脚手架
+│      
+├─tmp                                                   //系统缓存目录
+└─vendor                                                //第三方库目录
+        autoload.php                                    //第三方库加载脚本
 ```
 
 

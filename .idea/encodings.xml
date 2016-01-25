@@ -1,30 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
-    <file url="file://$PROJECT_DIR$/demo/cms" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/css/reset.css" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/arrow-down-right2.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/arrow-right2.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/arrow_add_small.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/arrow_delete_small.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/arrow_down_small.gif" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/arrow_up_small.gif" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/b_logo.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/blue-dot.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/button_grey_down.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/checkbox-checked.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/checkbox-partial.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/checkbox-unchecked.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/close.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/collapse.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/date.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/delete.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/img_error.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/line.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/stripe_green_gray.jpg" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/stripe_green_gray_w.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/tip_layer.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/static/img/upload24.png" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/demo/cms/upgrade.php" charset="GBK" />
-  </component>
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
 </project>

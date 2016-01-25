@@ -262,6 +262,12 @@ class Application{
 		//绑定项目include目录
 		self::addIncludePath(Config::get('app/path').'include/');
 
+		//绑定vendor目录loader
+		$vl = Config::get('app/root').'vendor/autoload.php';
+		if(is_file($vl)){
+			include_once $vl;
+		}
+
 		//绑定项目数据库定义目录
 		self::addIncludePath(Config::get('app/database_source'));
 
