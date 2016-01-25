@@ -95,7 +95,7 @@ abstract class LoggerLevel {
 
 	/**
 	 * supported color set for web view
-	 * @var array for-color & background-color
+	 * @var array fore-color & background-color
 	 */
 	public static $log_color_set = array(
 		self::DEBUG => array('#fafafa', 'gray'),

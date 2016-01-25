@@ -5,7 +5,7 @@ use Lite\Exception\Exception;
 use Memcache as SysMem;
 
 class CacheMemcache extends CacheAdapter{
-	/** @var Memcache * */
+	/** @var SysMem * */
 	private $cache;        //缓存对象
 	private $defaultHost = '127.0.0.1'; //默认服务器地址
 	private $defaultPort = 11211;       //默认端口号

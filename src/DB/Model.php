@@ -626,6 +626,17 @@ abstract class Model extends DAO{
 			}
 		}
 
+
+		//处理date日期默认为NULL情况
+		foreach($data as $k=>$val){
+			if(in_array($pro_defines[$k]['type'], array('date', 'datetime', 'time')) &&
+				array_key_exists('default', $pro_defines[$k]) && $pro_defines[$k]['default'] === null &&
+				!$data[$k]
+			){
+				$data[$k] = null;
+			}
+		}
+
 		//属性校验
 		foreach($pro_defines as $k=>$def){
 			if(!$def['readonly']){

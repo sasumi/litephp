@@ -60,6 +60,15 @@ abstract class {$class_name} extends Model {
 		return '{$table_name}';
 	}
 
+
+	/**
+	* get database config
+	* @return array
+	*/
+	protected function getDbConfig(){
+		return include dirname(__DIR__).'/db.inc.php';
+	}
+
 	/**
 	* 获取模块名称
 	* @return string

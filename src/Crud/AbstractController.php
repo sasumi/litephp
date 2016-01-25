@@ -174,14 +174,23 @@ abstract class AbstractController extends CoreController{
 		 */
 		if($support_quick_search){
 			foreach($quick_search_defines as $field=>$def){
-				if(strlen($search[$field])){
+				if($search[$field] || strlen($search[$field])){
 					switch($def['type']){
 						case 'string':
+						case 'text':
+						case 'simple_rich_text':
 							$query->addWhere(Query::OP_AND, $field, 'like', '%'.str_replace('%', '', $search[$field]).'%');
 							break;
 
-						case 'text':
-							$query->addWhere(Query::OP_AND, $field, 'like', '%'.str_replace('%', '', $search[$field]).'%');
+						case 'date':
+						case 'datetime':
+						case 'timestamp':
+							if($search[$field][0]){
+								$query->addWhere(Query::OP_AND, $field, '>=', $search[$field][0]);
+							}
+							if($search[$field][1]){
+								$query->addWhere(Query::OP_AND, $field, '<=', $search[$field][1]);
+							}
 							break;
 
 						default:
@@ -213,8 +222,6 @@ abstract class AbstractController extends CoreController{
 		} else {
 			$list = $query->paginate($paginate);
 		}
-
-
 
 		return array(
 			'search' => $support_quick_search ? $search : null,

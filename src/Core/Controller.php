@@ -8,7 +8,7 @@ use function Lite\func\dump;
  * Date: 2014/11/18
  * Time: 9:49
  */
-abstract class Controller extends Router{
+abstract class Controller {
 	public static $common_success_message = '操作成功';
 	public static $common_fail_message = '操作失败，请重试';
 

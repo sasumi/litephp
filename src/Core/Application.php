@@ -3,7 +3,6 @@ namespace Lite\Core;
 
 use Exception as Exception;
 use Lite\Api\Daemon;
-use Lite\Component\Request;
 use Lite\DB\Record;
 use Lite\Exception\BizException;
 use Lite\Exception\RouterException;
@@ -15,6 +14,7 @@ use function Lite\func\array_last;
 use function Lite\func\decodeURI;
 use function Lite\func\dump;
 use function Lite\func\format_size;
+use function Lite\func\print_sys_error;
 
 /**
  * Lite框架应用初始化处理类
@@ -39,20 +39,20 @@ class Application{
 
 	/**
 	 * 初始化框架逻辑
-	 * @param null $app_path app物理路径
+	 * @param null $app_root 项目物理路径
 	 * @param string $namespace app namespace
 	 * @param int $mode app模式（web模式、API模式、cli模式）
 	 * @throws Exception
 	 * @return Application
 	 */
-	public static function init($namespace, $app_path = null, $mode=self::MODE_WEB){
+	public static function init($namespace, $app_root = null, $mode=self::MODE_WEB){
 		if(!self::$instance){
 			try{
-				self::$instance = new self($namespace, $app_path, $mode);
+				self::$instance = new self($namespace, $app_root, $mode);
 			} catch(Exception $ex){
 				//调试模式
 				if(Config::get('app/debug')){
-					dump($ex, 1);
+					print_sys_error($ex->getCode(), $ex->getMessage());
 				}
 
 				$log_level = ($ex instanceof RouterException) ? LoggerLevel::INFO : LoggerLevel::WARNING;
@@ -186,6 +186,15 @@ class Application{
 	private function initApiMode(){
 		Router::$GET = $_GET;
 		Router::$POST = $_POST;
+
+		if(Router::isPut()){
+			$tmp = Router::readInputData();
+			Router::$PUT = $tmp ? json_decode($tmp, true) : array();
+		}
+		if(Router::isDelete()){
+			$tmp = Router::readInputData();
+			Router::$DELETE = $tmp ? json_decode($tmp, true) : array();
+		}
 		self::sendCharset();
 		Daemon::start();
 	}
@@ -223,12 +232,12 @@ class Application{
 	/**
 	 * 框架初始化方法
 	 * @param $namespace
-	 * @param null $app_path
+	 * @param null $app_root
 	 * @param $mode
 	 * @throws \Exception
-	 * @internal param null $app_path
+	 * @internal param null $app_root
 	 */
-	private function __construct($namespace, $app_path = null, $mode){
+	private function __construct($namespace, $app_root = null, $mode){
 		$this->namespace = $namespace;
 
 		//注册项目文件自动加载逻辑
@@ -240,18 +249,21 @@ class Application{
 		Hooker::fire(self::EVENT_BEFORE_APP_INIT);
 
 		//配置初始化
-		Config::init($app_path);
+		Config::init($app_root);
 
 		//自动性能统计（SQL），仅在web模式中生效
 		if($mode == self::MODE_WEB && Config::get('app/auto_statistics')){
 			$this->autoStatistics();
 		}
 
-		//绑定项目include目录
-		self::addIncludePath(Config::get('app/include'));
-
 		//绑定项目根目录
 		self::addIncludePath(Config::get('app/path'));
+
+		//绑定项目include目录
+		self::addIncludePath(Config::get('app/path').'include/');
+
+		//绑定项目数据库定义目录
+		self::addIncludePath(Config::get('app/database_source'));
 
 		//APP EXCEPTION
 		if(Hooker::exists(self::EVENT_ON_APP_EX)){
@@ -390,6 +402,12 @@ class Application{
 				$file = substr($class, strlen($this->namespace)+1);
 				$file = str_replace('\\', DIRECTORY_SEPARATOR, $file);
 				$file = $path.$file.'.php';
+				if(is_file($file)){
+					include_once $file;
+					return;
+				}
+				//不包含ns的情况
+				$file = $path.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
 				if(is_file($file)){
 					include_once $file;
 				}

@@ -4,6 +4,8 @@
  */
 namespace Lite\func {
 
+	use Exception;
+
 	/**
 	 * 测试
 	 **/
@@ -108,7 +110,7 @@ namespace Lite\func {
 	 * @param $file
 	 * @param $line
 	 */
-	function print_sys_error($code, $msg, $file, $line){
+	function print_sys_error($code, $msg, $file=null, $line=null){
 		echo "<pre>";
 		$code = error2string($code);
 		echo "[$code] $msg\n\n";
@@ -132,6 +134,14 @@ namespace Lite\func {
 		register_shutdown_function(function () {
 			dump($GLOBALS['___LAST_RUN___'], 1);
 		});
+	}
+
+	/**
+	 * print exception
+	 * @param Exception $ex
+	 */
+	function print_exception(Exception $ex){
+		print_sys_error($ex->getCode(), $ex->getMessage(), $ex->getFile(), $ex->getLine());
 	}
 
 	/**

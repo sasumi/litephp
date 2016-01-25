@@ -230,6 +230,7 @@ class MenuHelper {
 				'side' => $side
 			);
 		}
+
 		return $this->menu_data[$type];
 	}
 

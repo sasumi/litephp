@@ -1,6 +1,7 @@
 <?php
 namespace Lite\Core;
 use Lite\Exception\Exception;
+use function Lite\func\dump;
 
 /**
  * 配置项基础类
@@ -9,7 +10,7 @@ use Lite\Exception\Exception;
  * Time: 9:00
  */
 abstract class Config {
-	private static $app_path = '';
+	private static $app_root = '';
 	private static $config_path = '';
 	private static $default_charset = 'utf-8';
 	private static $CONFIGS = array();
@@ -81,7 +82,7 @@ abstract class Config {
 			$config = array_merge($config, $data);
 		}
 
-		$file = Config::get('app/path')."config/$key.inc.php";
+		$file = Config::get('app/root')."config/$key.inc.php";
 		$content = "<?php\n".
 			"//Last update:".date('Y-m-d H:i:s')."\n\n".
 			"return ".var_export($config, true).";";
@@ -122,7 +123,7 @@ abstract class Config {
 				$config = array_merge($config, $data);
 			}
 
-			$file = Config::get('app/path')."config/$key.inc.php";
+			$file = Config::get('app/root')."config/$key.inc.php";
 			$content = "<?php\n".
 				"//Last update:".date('Y-m-d H:i:s')."\n\n".
 				"return ".var_export($config, true).";";
@@ -165,14 +166,15 @@ abstract class Config {
 
 		switch($key){
 			case 'app':
+				self::ass_config($config['root'], self::$app_root);
+				self::ass_config($config['path'], $config['root'].'app/');
 				self::ass_config($config['controller_pattern'], '\\controller\\{CONTROLLER}Controller');
-				self::ass_config($config['path'], self::$app_path);
 				self::ass_config($config['charset'], self::$default_charset);
 				self::ass_config($config['auto_render'], true);
+				self::ass_config($config['database_source'], $config['root'].'database/');
 				self::ass_config($config['render'], __NAMESPACE__.'\\View');
-				self::ass_config($config['tpl'], $config['path'].'template'.DS);
-				self::ass_config($config['include'], $config['path'].'include'.DS);
-				self::ass_config($config['library'], $config['path'].'library'.DS);
+				self::ass_config($config['tpl'], $config['path'].'template/');
+				self::ass_config($config['include'], $config['path'].'include/');
 				self::ass_config($config['url'], '/');
 				self::ass_config($config['static'], $config['url'].'static/');
 				self::ass_config($config['js'], $config['static'].'js/');
@@ -191,24 +193,24 @@ abstract class Config {
 				break;
 
 			case 'api':
-				$app_path = Config::get('app/path');
-				self::ass_config($config['path'], $app_path.'api'.DS);
+				self::ass_config($config['path'], Config::get('app/path').'api/');
 				break;
 		}
+
 		self::$CONFIGS[$key] = $config;
 		return true;
 	}
 
 	/**
 	 * 初始化配置
-	 * @param string $app_path application path
+	 * @param string $app_root application root
 	 */
-	public static function init($app_path = null){
-		if(!$app_path){
-			$app_path = dirname($_SERVER['SCRIPT_FILENAME']).DS.'protected'.DS;
+	public static function init($app_root = null){
+		if(!$app_root){
+			$app_root = dirname(dirname($_SERVER['SCRIPT_FILENAME'])).'/';
 		}
-		self::$app_path = $app_path;
-		self::$config_path = $app_path.DS.'config'.DS;
+		self::$app_root = $app_root;
+		self::$config_path = $app_root.'config/';
 	}
 }
 

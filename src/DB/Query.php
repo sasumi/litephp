@@ -186,15 +186,26 @@ class Query {
 	}
 
 	/**
-	 * 设置AND查询条件 <p>
-	 * 调用范例：$query->where('age', '>', 18)->where('gender', '=', 'male')->where('name', 'like', '%moon%');
-	 * </p>
+	 * alias for and where
 	 * @param string $field
 	 * @param null $operator
 	 * @param null $compare
 	 * @return $this
 	 */
 	public function where($field, $operator=null, $compare=null){
+		return $this->andWhere($field, $operator, $compare);
+	}
+
+	/**
+	 * 设置AND查询条件 <p>
+	 * 调用范例：$query->where('age', '>', 18)->where('gender', '=', 'male')->where('name', 'like', '%moon%');
+	 * </p>
+	 * @param $field
+	 * @param null $operator
+	 * @param null $compare
+	 * @return Query
+	 */
+	public function andWhere($field, $operator=null, $compare=null){
 		$this->addWhere(self::OP_AND, $field, $operator, $compare);
 		return $this;
 	}
@@ -332,7 +343,7 @@ class Query {
 				foreach($data_list as $row){
 					$str = array();
 					foreach($row as $val){
-						$str[] = "'".addslashes($val)."'";
+						$str[] = $val !== null ? "'".addslashes($val)."'" : 'null';
 					}
 					$value_str = implode(",", $str);
 					$sql .= $comma."($value_str)";

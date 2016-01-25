@@ -3,7 +3,9 @@ namespace Lite\Cli;
 use PDO;
 
 !defined('PROJECT_ROOT') && define('PROJECT_ROOT', get_project_dir());
-define('PROJECT_PROTECTED_DIR', PROJECT_ROOT.'/protected');
+define('PROJECT_PROTECTED_DIR', PROJECT_ROOT.'/app');
+$GLOBALS['namespace'] = '';
+
 class CodeGenerator {
 	public static function load(){}
 }
@@ -11,13 +13,10 @@ class CodeGenerator {
 if(PHP_SAPI == 'cli'){
 	$args = $_SERVER['argv'];
 	$script_file = array_shift($args);
+	$args = get_args($args);
+	$GLOBALS['ns'] = $args['ns'];
+	$overwrite = $args['overwrite'];
 	$cmd = array_shift($args);
-	$overwrite = false;
-
-	if(stripos($cmd, '-') === 0){
-		$overwrite = stripos($cmd, 'o') !== false;
-		$cmd = array_shift($args);
-	}
 
 	$help = <<<EOT
 =======================================================
@@ -25,28 +24,28 @@ if(PHP_SAPI == 'cli'){
 option: -o overwrite file
 
 generate model file
-php $script_file [-o] model table_name model_name
+php $script_file model [-o] -t table_name -m model_name
 
 generate all model file
-php $script_file [-o] model allmodel
+php $script_file allmodel [-o]
 
 generate specified database table:
-php $script_file [-o] table table_name
+php $script_file table [-o] -t table_name
 
 generate all tables:
-php $script_file [-o] alltable
+php $script_file alltable [-o]
 
 generate specified crud use table:
-php $script_file [-o] crud table_name
+php $script_file crud [-o] -t table_name -m model_name -c controller_name
 
 generate all crud module:
-php $script_file [-o] allcrud
+php $script_file allcrud [-o]
 =======================================================
 EOT;
 
 	switch($cmd){
 		case 'model':
-			generate_model($args[0], $args[1], $overwrite);
+			generate_model($args['t'], $args['m'], $overwrite);
 			break;
 
 		case 'allmodel':
@@ -59,7 +58,7 @@ EOT;
 			break;
 
 		case 'table':
-			$table = $args[0];
+			$table = $args['t'];
 			generate_table($table, $overwrite);
 			break;
 
@@ -73,9 +72,9 @@ EOT;
 			break;
 
 		case 'crud':
-			$table = $args[0];
-			$model = $args[1];
-			$controller = $args[2];
+			$table = $args['t'];
+			$model = $args['m'];
+			$controller = $args['c'];
 			generate_crud($table, $model, $controller, $overwrite);
 			break;
 
@@ -91,6 +90,23 @@ EOT;
 		default:
 			echo $help;
 	}
+}
+
+function get_args(array $args){
+	$ret = array();
+	for($i=0; $i<count($args); $i++){
+		if($args[$i] == '-o'){
+			$ret['overwrite'] = true;
+		} else {
+			if(substr($args[$i], 0, 1) == '-'){
+				$ret[substr($args[$i], 1)] = $args[$i+1];
+				$i++;
+			} else {
+				$ret[] = $args[$i];
+			}
+		}
+	}
+	return $ret;
 }
 
 function generate_model($table_name, $model_name='', $overwrite){
@@ -195,9 +211,10 @@ function get_all_table(){
 
 function generate_table($table, $overwrite){
 	$class_name = 'Table'.convert_class_name($table);
-	$fold = PROJECT_PROTECTED_DIR.'/model/table/';
+	$ns = get_ns();
+	$fold = PROJECT_ROOT."/database/$ns/db_definition/";
 	if(!is_dir($fold)){
-		mkdir($fold);
+		mkdir($fold,null, true);
 	}
 	$file = $fold.$class_name.'.php';
 	if(!$overwrite && is_file($file)){
@@ -207,7 +224,6 @@ function generate_table($table, $overwrite){
 
 	$meta_list = get_table_meta($table);
 
-	$filter_rules = get_row_filter_rule($meta_list);
 	$properties_defines = get_properties_defines($meta_list);
 	$pk = get_pk($meta_list);
 	$comment = get_class_comment($class_name, $meta_list);
@@ -215,7 +231,7 @@ function generate_table($table, $overwrite){
 	$ns = get_ns();
 
 	$str = parser_tpl(file_get_contents(__DIR__.'/table.tpl'), array(
-		'namespace' => $ns."\\model\\table",
+		'namespace' => $ns."\\db_definition",
 		'generate_date' => date('Y-m-d'),
 		'generate_time' => date('H:i:s'),
 		'table_name' => $table,
@@ -223,7 +239,6 @@ function generate_table($table, $overwrite){
 		'class_name' => $class_name,
 		'primary_key' => $pk,
 		'model_desc' => $model_desc,
-		'filter_rules' => $filter_rules,
 		'properties_defines' => $properties_defines
 	));
 	$update = is_file($file);
@@ -234,7 +249,7 @@ function generate_table($table, $overwrite){
 function get_project_dir(){
 	$stack = debug_backtrace();
 	$f = $stack[count($stack) - 1];
-	$project_dir = dirname(dirname(dirname($f['file'])));
+	$project_dir = dirname(dirname($f['file']));
 	return $project_dir;
 }
 
@@ -415,17 +430,13 @@ function get_properties_defines($meta_list){
 		$description = addslashes(get_field_description($meta));
 		$type = get_field_type($meta);
 		$precision = get_field_precision($meta);
+		$unique = $meta['Key'] == 'UNI';
 
 		$len = null;
 		if($type != 'enum' && $type != 'set'){
 			$len = intval(preg_replace('/\D/', '',  preg_replace('/\..*?/', '', preg_replace('/,.*$/', '',$meta['Type']))));
 		}
-
 		$required = $meta['Null'] == 'NO' && $meta['Default'] === null;
-
-		if($meta['Field'] == 'create_time'){
-			//var_dump($required, $meta['Default'], $meta);die;
-		}
 
 		$str .= "\n{$t}'{$meta['Field']}' => array(\n";
 		$str .= "{$t}\t'alias' => '{$alias}',\n";
@@ -437,6 +448,7 @@ function get_properties_defines($meta_list){
 		$str .= $precision ? "{$t}\t'precision' => $precision,\n" : '';
 		$str .= $unsigned ? "{$t}\t'min' => 0,\n" : '';
 		$str .= $description ? "{$t}\t'description' => '$description',\n" : '';
+		$str .= $unique ? "{$t}\t'unique' => true,\n" : '';
 
 		if($meta['Default'] !== null){
 			$def = addslashes($meta['Default']);
@@ -448,7 +460,10 @@ function get_properties_defines($meta_list){
 			} else {
 				$str .= "{$t}\t'default' => $def,\n";
 			}
+		} else if($meta['Null'] != 'NO'){
+			$str .= "{$t}\t'default' => null,\n";
 		}
+
 		if($type == 'enum' || $type=='set'){
 			$opts = get_field_options($meta);
 			$str .= "{$t}\t'options' => {$opts},\n";
@@ -456,56 +471,6 @@ function get_properties_defines($meta_list){
 		$str .= "{$t}\t'entity' => true\n";
 		$str .= "{$t}),";
 	}
-	return $str;
-}
-
-function get_row_filter_rule($meta_list){
-	$t = "\t\t\t";
-	$str = "{$t}array(\n";
-	foreach($meta_list as $meta){
-		if($meta['Key'] == 'PRI'){
-			continue;
-		}
-
-		$alias = get_field_alias($meta);
-		$str .= "{$t}\t//{$alias}\n";
-		$str .= "{$t}\t'{$meta['Field']}' => array(\n";
-
-		//非空处理
-		if($meta['Null'] == 'NO' && $meta['Default'] === Null){
-			$msg = $alias.'不能为空';
-			if(stripos($meta['Type'], 'tinyint') !== false ||
-				stripos($meta['Type'], 'enum') !== false
-			){
-				$msg = "请选择{$alias}";
-			} else if(stripos($meta['Type'], 'char') !== false ||
-				stripos($meta['Type'], 'int') !== false ||
-				stripos($meta['Type'], 'float') !== false ||
-				stripos($meta['Type'], 'double') !== false
-			){
-				$msg = "请输入{$alias}";
-			}
-			$str .= "{$t}\t\t'REQUIRED' => '".addslashes($msg)."',\n";
-		}
-
-		//缺省处理
-		if($meta['Null'] == 'YES' && $meta['Default'] !== Null){
-			$str .= "{$t}\t\t'DEFAULT' => ".(is_string($meta['Default']) ? "''" : $meta['Default']).",\n";
-		}
-
-		//处理长度
-		$type = convert_type($meta['Type']);
-		if($type == 'string' || $type == 'int'){
-			$len = intval(preg_replace('/\D/', '', $meta['Type']));
-			if($len){
-				$msg = $alias."最大长度为 {$len} 个字符";
-				$str .= "{$t}\t\t'MAXLEN' => array('{$msg}',{$len}),\n";
-			}
-		}
-
-		$str .= "{$t}\t),\n";
-	}
-	$str .= "{$t})";
 	return $str;
 }
 
@@ -540,7 +505,10 @@ function parser_tpl($content, $vars){
 }
 
 function get_ns(){
-	$str = file_get_contents(PROJECT_ROOT.'/index.php');
+	if($GLOBALS['ns']){
+		return $GLOBALS['ns'];
+	}
+	$str = file_get_contents(PROJECT_ROOT.'/public/index.php');
 	preg_match('/namespace\s*([^;]*);/', $str, $matches);
 	return trim($matches[1]);
 }
@@ -558,7 +526,8 @@ function get_table_meta($table){
 }
 
 function get_db_conn(){
-	$config = include PROJECT_PROTECTED_DIR.'/config/db.inc.php';
+	$ns = get_ns();
+	$config = include PROJECT_ROOT."/database/$ns/db.inc.php";
 	$config['driver'] = $config['driver'] ?: 'mysql';
 	$config['charset'] = $config['charset'] ?: 'utf8';
 	if($config['dns']){

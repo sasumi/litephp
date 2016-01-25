@@ -8,6 +8,8 @@
  */
 namespace Lite\Component;
 
+use Lite\Core\Request;
+
 class SMS{
 	const SHORT_MSG = 0;
 	const LONG_MSG = 1;

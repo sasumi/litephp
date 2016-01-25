@@ -1,6 +1,6 @@
 <?php
 namespace Lite\Core;
-use Lite\Component\Request;
+use Lite\Core\Request;
 use Lite\Exception\RouterException;
 use function Lite\func\array_clear_empty;
 use function Lite\func\array_clear_null;
@@ -30,8 +30,64 @@ abstract class Router{
 
 	private static $CONTROLLER = '';
 	private static $ACTION = '';
+	private static $listen_flag = false; //listen stopped by last handler
+
 	public static $GET = array();
-	public static $POST = null;
+	public static $POST = array();
+	public static $PUT = array();
+	public static $DELETE = array();
+
+	/**
+	 * read php input data
+	 * @return string
+	 */
+	public static function readInputData(){
+		$data = file_get_contents('php://input');
+		return $data;
+	}
+
+	/**
+	 * read php input by chunk
+	 * @param $handler
+	 * @param int $chunk_size
+	 */
+	public static function readInputDataChunk($handler, $chunk_size=1024){
+		$fp = fopen('php://input', 'r');
+		while($data = fread($fp, $chunk_size)){
+			$handler($data);
+		}
+		fclose($fp);
+	}
+
+	/**
+	 * listen path rule
+	 * @todo to be tested & considering conflict on normal url format
+	 * @param $path
+	 * @param $handler
+	 * @return bool
+	 */
+	public static function listen($path, $handler){
+		if(self::$listen_flag){
+			return false;
+		}
+		$path = $path ?: '/';
+		$current_path = self::getPathInfo();
+		if(preg_match($path, '/\{(\w+)\}/', $matches)){
+			$path_reg = str_replace('/(\{\w+\})/', '(\w+)', $path);
+		} else {
+			$path_reg = $path;
+		}
+		$path_reg = str_replace('\/', '\\/', $path_reg);
+		if(preg_match($current_path, $path_reg, $matches_vars)){
+			array_shift($matches_vars);
+			$ret = call_user_func_array($handler, $matches_vars);
+			if($ret == false){
+				self::$listen_flag = true;
+			}
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * 获取当前路由控制key
@@ -98,6 +154,24 @@ abstract class Router{
 	 */
 	public static function post($key = null){
 		return !$key ? self::$POST : self::$POST[$key];
+	}
+
+	/**
+	 * 获取PUT变量
+	 * @param null $key
+	 * @return array
+	 */
+	public static function put($key = null){
+		return !$key ? self::$PUT : self::$PUT[$key];
+	}
+
+	/**
+	 * 获取DELETE变量
+	 * @param null $key
+	 * @return array
+	 */
+	public static function delete($key = null){
+		return !$key ? self::$DELETE : self::$DELETE[$key];
 	}
 
 	/**
@@ -227,6 +301,22 @@ abstract class Router{
 	 **/
 	public static function isGet(){
 		return $_SERVER['REQUEST_METHOD'] == 'GET';
+	}
+
+	/**
+	 * 检测当前请求是否为PUT
+	 * @return boolean
+	 **/
+	public static function isPut(){
+		return $_SERVER['REQUEST_METHOD'] == 'PUT';
+	}
+
+	/**
+	 * 检测当前请求是否为DELETE
+	 * @return boolean
+	 **/
+	public static function isDelete(){
+		return $_SERVER['REQUEST_METHOD'] == 'DELETE';
 	}
 
 	/**

@@ -3,7 +3,7 @@ namespace Lite\Api;
 
 use Lite\Cache\Helper;
 use Lite\Component\Client as ComClient;
-use Lite\Component\Request;
+use Lite\Core\Request;
 use Lite\Core\Result;
 use Lite\Exception\Exception;
 
@@ -230,7 +230,7 @@ abstract class Client {
 			'error_code' => $error_code,
 			'error_message' => $error_message,
 			'platform' => 3, //pc
-			'ip' => ComClient::getIp(),
+			'ip' => \Lite\Component\Client::getIp(),
 			'create_time' => date('Y-m-d H:i:s'),
 		);
 		$url = 'http://htadmin.hai0.com/order/api/index.php/log.cgiret';
