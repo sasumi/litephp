@@ -406,11 +406,11 @@ class Application{
 					include_once $file;
 					return;
 				}
-				//不包含ns的情况
-				$file = $path.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
-				if(is_file($file)){
-					include_once $file;
-				}
+			}
+			//不包含ns的情况
+			$file = $path.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
+			if(is_file($file)){
+				include_once $file;
 			}
 		}
 	}

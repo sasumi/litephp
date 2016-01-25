@@ -184,12 +184,21 @@ abstract class AbstractController extends CoreController{
 
 						case 'date':
 						case 'datetime':
-						case 'timestamp':
 							if($search[$field][0]){
 								$query->addWhere(Query::OP_AND, $field, '>=', $search[$field][0]);
 							}
 							if($search[$field][1]){
 								$query->addWhere(Query::OP_AND, $field, '<=', $search[$field][1]);
+							}
+							break;
+
+						case 'timestamp':
+						case 'microtime':
+							if($search[$field][0]){
+								$query->addWhere(Query::OP_AND, $field, '>=', strtotime($search[$field][0]));
+							}
+							if($search[$field][1]){
+								$query->addWhere(Query::OP_AND, $field, '<=', strtotime($search[$field][1]));
 							}
 							break;
 
