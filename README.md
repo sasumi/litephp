@@ -19,8 +19,8 @@ Application::init(__NAMESPACE__);
 ## 目录结构说明
 ```
 
-├─api
-│      index.php
+├─api                                                   //api入口目录,可以根据实际项目配置其他的入口位置
+│      index.php                                        //api入口引导文件
 │      
 ├─app
 │  ├─api                                                //api逻辑目录
