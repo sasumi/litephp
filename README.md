@@ -9,6 +9,12 @@
 * `/index.php` 入口文件，引入litephp bootstrap启动脚本，配置命名空间
   主要调用：  
 ```
+# 初始化框架逻辑
+# @param null $app_root 项目物理路径
+# @param string $namespace app namespace
+# @param int $mode app模式（web模式、API模式、cli模式, SRC源码模式）
+# @throws Exception
+# @return Application
 Application::init(__NAMESPACE__);
 ```
 

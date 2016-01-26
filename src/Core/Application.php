@@ -42,7 +42,7 @@ class Application{
 	 * 初始化框架逻辑
 	 * @param null $app_root 项目物理路径
 	 * @param string $namespace app namespace
-	 * @param int $mode app模式（web模式、API模式、cli模式）
+	 * @param int $mode app模式（web模式、API模式、cli模式, SRC源码模式）
 	 * @throws Exception
 	 * @return Application
 	 */
