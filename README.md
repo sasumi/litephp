@@ -23,9 +23,9 @@ Application::init(__NAMESPACE__);
 │      index.php
 │      
 ├─app
-│  ├─api
-│  ├─controller
-│  │      AccessController.php
+│  ├─api                                                //api逻辑目录
+│  ├─controller                                         //控制器controller目录
+│  │      AccessController.php                          //控制器
 │  │      AppBizReportController.php
 │  │      AppClickReportController.php
 │  │      AppLogReportController.php
@@ -40,11 +40,11 @@ Application::init(__NAMESPACE__);
 │  │      UserController.php
 │  │      UserGroupController.php
 │  │      
-│  ├─include
+│  ├─include                                            //项目额外实现类库（命名空间在 {app}\下面）
 │  │      Auth.php
-│  │      ViewBase.php
+│  │      ViewBase.php                                  //View基类,一般建议项目有自身的View来实现相应的视图定制
 │  │      
-│  ├─model
+│  ├─model                                              //业务Model页面
 │  │      AppBizReport.php
 │  │      AppClickReport.php
 │  │      AppLogReport.php
@@ -53,20 +53,20 @@ Application::init(__NAMESPACE__);
 │  │      Bill.php
 │  │      Rpc.php
 │  │      
-│  └─template
-│      ├─crud
-│      │      index.php
-│      │      info.php
-│      │      quick_search.inc.php
-│      │      update.php
+│  └─template                                           //模版文件配置
+│      ├─crud                                           //缺省CRUD模版目录(可通过ControllerInterface重载)
+│      │      index.php                                 //CRUD列表页
+│      │      info.php                                  //CRUD信息页
+│      │      quick_search.inc.php                      //CRUD快速搜索代码块
+│      │      update.php                                //CRUD编辑\新增页面
 │      │      
-│      ├─inc
+│      ├─inc                                            //子模版页面
 │      │      footer.inc.php
 │      │      header.inc.php
 │      │      shortcut.inc.php
 │      │      side_mnu.php
 │      │      
-│      ├─index
+│      ├─index                                          //对应IndexController控制器页面
 │      │      deny.php
 │      │      index.php
 │      │      login.php
@@ -78,17 +78,17 @@ Application::init(__NAMESPACE__);
 │              updateusergroupaccess.php
 │              
 ├─config                                                //应用配置目录
-│      app.inc.php                                      //应用基础信息配置
-│      nav.inc.php
-│      router.inc.php
-│      upload.inc.php
+│      app.inc.php                                      //应用基础信息配置 *
+│      nav.inc.php                                      //导航菜单配置(一般仅在管理后台生效) -
+│      router.inc.php                                   //路由规则配置 -
+│      upload.inc.php                                   //上传配置(Upload类使用) -
 │      
-├─database                                              //数据库模型目录
+├─database                                              //数据库模型目录 -
 │  └─monitor
-│      │  db.inc.php                                    //数据库连接配置(可被Model子类覆盖)
+│      │  db.inc.php                                    //数据库连接配置(可被Model子类覆盖) -
 │      │  
 │      ├─db_definition                                  //公用数据表定义(继承DB/Model)
-│      │      TableAppBizReport.php
+│      │      TableAppBizReport.php                     //实际数据库表定义类
 │      │      TableAppClickReport.php
 │      │      TableAppLogReport.php
 │      │      TableAppPhotoDownloadReport.php
@@ -115,7 +115,7 @@ Application::init(__NAMESPACE__);
 │  │  └─js                                              //javascript脚本
 │  │          global.js
 │  │          
-│  └─upload
+│  └─upload                                             //上传目录(仅限于当前目录提供文件存储)
 ├─script                                                //项目运行脚本(包括crontab脚本)
 │      scaffold.php                                     //系统脚手架
 │      

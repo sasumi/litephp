@@ -23,9 +23,10 @@ use function Lite\func\print_sys_error;
  * Time: 9:00
  */
 class Application{
-	const MODE_WEB = 1;
-	const MODE_API = 2;
-	const MODE_CLI = 3;
+	const MODE_WEB = 1; //普通HTTP web模式
+	const MODE_API = 2; //HTTP API模式
+	const MODE_CLI = 3; //CLI命令模式
+	const MODE_SRC = 4; //源码模式（该模式提供代码加载逻辑等，不进行初始化Controller）
 
 	const EVENT_BEFORE_APP_INIT = 'EVENT_BEFORE_APP_INIT';
 	const EVENT_AFTER_APP_INIT = 'EVENT_AFTER_APP_INIT';
@@ -304,6 +305,10 @@ class Application{
 
 			case self::MODE_CLI:
 				$this->initCLIMode();
+				break;
+
+			case self::MODE_SRC:
+				//source mode
 				break;
 
 			default:
