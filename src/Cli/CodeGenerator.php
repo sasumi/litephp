@@ -125,6 +125,7 @@ function generate_model($table_name, $model_name='', $overwrite){
 
 	$str = parser_tpl(file_get_contents(__DIR__.'/model.tpl'), array(
 		'namespace' => $ns."\\model",
+		'table_namespace' => $ns."\\model\\table\\{$table_model}",
 		'generate_date' => date('Y-m-d'),
 		'generate_time' => date('H:i:s'),
 		'table_model' => $table_model,

@@ -1,6 +1,6 @@
 <?php
 namespace {$namespace};
-use {$namespace}\table\{$table_model};
+use {$table_namespace};
 
 /**
  * User: Lite Scaffold
