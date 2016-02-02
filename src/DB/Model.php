@@ -208,7 +208,8 @@ abstract class Model extends DAO{
 			$query = new Query($query);
 		}
 		if($query){
-			$obj = new __ModelHelper__();
+			//@todo 这里需要重新考虑要不要提供 setQuery方法给DB/Model
+			$obj = self::meta();
 			if($db_config){
 				$obj->setDbConfig($db_config);
 			}
@@ -681,7 +682,7 @@ abstract class Model extends DAO{
 
 				case 'float':
 				case 'double':
-					if(!is_numeric($val)){
+					if(isset($val) && !is_numeric($val)){
 						$err = $name.'格式不正确';
 					}
 					break;

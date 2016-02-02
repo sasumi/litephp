@@ -34,7 +34,7 @@ foreach($fs as $f){
 	}
 
 	//add ns
-	$con = preg_replace('/\<\?php/', "<?php\nnamespace {$ns}\\Controller;\n", $con);
+	$con = preg_replace('/\<\?php/', "<?php\nnamespace {$ns}\\controller;\n", $con);
 	$con = replace_common($con);
 
 	$new_file = dirname($f).DS.$ctrl.'Controller.php';
@@ -55,7 +55,7 @@ foreach($fs as $f){
 	}
 
 	//add ns
-	$con = preg_replace('/\<\?php/', "<?php\nnamespace {$ns}\\Model;\n", $con);
+	$con = preg_replace('/\<\?php/', "<?php\nnamespace {$ns}\\model;\n", $con);
 	$con = replace_common($con);
 
 	$new_file = dirname($f).DS.$model.'.php';
@@ -90,7 +90,7 @@ function replace_common_dir($dir){
 }
 
 /**
- * µÝ¹éµÄglob
+ * é€’å½’çš„glob
  * Does not support flag GLOB_BRACE
  * @param $pattern
  * @param int $flags
@@ -102,7 +102,7 @@ function glob_recursive($pattern, $flags = 0) {
 		$files = array_merge($files, glob_recursive($dir . '/' . basename($pattern), $flags));
 	}
 
-	//ÐÞÕýÄ¿Â¼·Ö¸ô·û
+	//ä¿®æ­£ç›®å½•åˆ†éš”ç¬¦
 	array_walk($files, function (&$file) {
 		$file = str_replace(array('/', '\\'), array(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), $file);
 	});
