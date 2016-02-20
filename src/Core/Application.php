@@ -34,6 +34,9 @@ class Application{
 	const EVENT_ON_APP_EX = 'EVENT_ON_APP_EX';
 	const EVENT_ON_APP_ERR = 'EVENT_ON_APP_ERR';
 
+	//Controller文件名是否区分大小写
+	public static $CONTROLLER_FILE_NAME_CASE_INSENSITIVE = true;
+
 	private static $instance;
 	private static $include_paths = array();
 	private $namespace;
@@ -146,8 +149,16 @@ class Application{
 
 		$CtrlClass = $this->namespace.Config::get('app/controller_pattern');
 		$CtrlClass = str_replace('{CONTROLLER}', ucfirst($controller), $CtrlClass);
+
 		if(!class_exists($CtrlClass)){
-			throw new RouterException('Controller not found:'.$CtrlClass);
+			//在Linux环境下，如果Controller文件找不到，
+			//会尝试再次不区分文件名大小写去目录找一次文件
+			if(self::$CONTROLLER_FILE_NAME_CASE_INSENSITIVE){
+				self::loadControllerCaseInsensitive($CtrlClass);
+			}
+			if(!class_exists($CtrlClass)){
+				throw new RouterException('Controller not found:'.$CtrlClass);
+			}
 		}
 
 		/** @var Controller $ctrl */
@@ -258,7 +269,7 @@ class Application{
 		}
 
 		//绑定项目根目录
-		self::addIncludePath(Config::get('app/path'));
+		self::addIncludePath(Config::get('app/path'), true);
 
 		//绑定项目include目录
 		self::addIncludePath(Config::get('app/path').'include/');
@@ -398,7 +409,7 @@ class Application{
 	 * 添加include path
 	 * @param string $path
 	 */
-	public static function addIncludePath($path){
+	public static function addIncludePath($path, $case_sensitive=true){
 		self::$include_paths[] = $path;
 	}
 
@@ -424,5 +435,27 @@ class Application{
 				include_once $file;
 			}
 		}
+	}
+
+	/**
+	 * 不区分大小写加载controller文件（注意，仅文件名不区分大小写，目录还是区分的）
+	 * @param $ctrl_class
+	 * @return bool
+	 */
+	private function loadControllerCaseInsensitive($ctrl_class){
+		$p = Config::get('app/path');
+		$ns = $this->namespace;
+		$ctrl_class = preg_replace('/^'.$ns.'\\\\/', '', $ctrl_class);
+		$f = rtrim($p, '/\\').'/'.$ctrl_class.'.php';
+		$dir = dirname($f);
+		$base_name = strtolower(basename($f));
+		$all_files = glob($dir.'/*.php', GLOB_NOSORT);
+		foreach($all_files as $cf){
+			if(strtolower(basename($cf)) == $base_name){
+				include_once $cf;
+				return true;
+			}
+		}
+		return false;
 	}
 }
