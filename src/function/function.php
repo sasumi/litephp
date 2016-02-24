@@ -3,7 +3,6 @@
  * Lite杂项操作函数
  */
 namespace Lite\func {
-
 	use Exception;
 
 	/**
@@ -141,7 +140,28 @@ namespace Lite\func {
 	 * @param Exception $ex
 	 */
 	function print_exception(Exception $ex){
-		print_sys_error($ex->getCode(), $ex->getMessage(), $ex->getFile(), $ex->getLine());
+		$trace_info = $ex->getTrace();
+		$code = $ex->getCode();
+		$msg = $ex->getMessage();
+		$file = $ex->getFile();
+		$line = $ex->getLine();
+
+		echo "<pre>";
+		$s_code = error2string($code);
+		echo "[$s_code:$code] $msg\n\n";
+		echo "[Loc] $file  #$line\n\n";
+		if($ex instanceof \Lite\Exception\Exception){
+			echo "[Data] ";
+			echo var_export($ex->data, true)."\n";
+		}
+		echo str_repeat('-',80)."\n\n";
+
+		foreach($trace_info as $k=>$b){
+			echo '['.str_pad((count($trace_info)-$k).']', 4, ' ')."{$b['file']}  #{$b['line']} \n";
+			echo "     {$b['class']}{$b['type']}{$b['function']}()\n";
+			echo "\n";
+		}
+		die;
 	}
 
 	/**

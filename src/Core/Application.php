@@ -14,6 +14,7 @@ use function Lite\func\array_last;
 use function Lite\func\decodeURI;
 use function Lite\func\dump;
 use function Lite\func\format_size;
+use function Lite\func\print_exception;
 use function Lite\func\print_sys_error;
 
 /**
@@ -34,8 +35,16 @@ class Application{
 	const EVENT_ON_APP_EX = 'EVENT_ON_APP_EX';
 	const EVENT_ON_APP_ERR = 'EVENT_ON_APP_ERR';
 
+	//application instance
 	private static $instance;
+
+	//current controller(only in web mode)
+	private static $controller;
+
+	//project config include paths
 	private static $include_paths = array();
+
+	//project namespace
 	private $namespace;
 
 	/**
@@ -53,7 +62,7 @@ class Application{
 			} catch(Exception $ex){
 				//调试模式
 				if(Config::get('app/debug')){
-					print_sys_error($ex->getCode(), $ex->getMessage());
+					print_exception($ex);
 				}
 
 				$log_level = ($ex instanceof RouterException) ? LoggerLevel::INFO : LoggerLevel::WARNING;
@@ -103,11 +112,8 @@ class Application{
 		//router init
 		Router::init();
 
-		/** @var Controller $ctrl_ins */
-		$ctrl_ins = null;
-
 		try {
-			$result = self::dispatch($ctrl_ins, $method);
+			$result = self::dispatch();
 		} catch(Exception $ex){
 			if(($ex instanceof BizException) || //业务限制逻辑，直接使用友好输出格式
 				(!Config::get('app/debug') && Config::get('app/auto_process_logic_error') && !($ex instanceof RouterException))){
@@ -119,6 +125,7 @@ class Application{
 
 		//auto render
 		if(Config::get('app/auto_render')){
+			$ctrl_ins = self::getController();
 			$tpl_file = $ctrl_ins::__getTemplate(Router::getController(), Router::getAction());
 			if($result instanceof View){
 				$result->render($tpl_file);
@@ -132,13 +139,19 @@ class Application{
 	}
 
 	/**
+	 * 获取WEB模式使用的controller对象
+	 * @return Controller
+	 */
+	public static function getController(){
+		return self::$controller;
+	}
+
+	/**
 	 * 分发控制器
-	 * @param null $ctrl
-	 * @param null $action
 	 * @return mixed
 	 * @throws \Lite\Exception\RouterException
 	 */
-	private function dispatch(&$ctrl=null, &$action=null){
+	private function dispatch(){
 		$controller = Router::getController();
 		$action = Router::getAction();
 		$get = Router::get();
@@ -152,6 +165,7 @@ class Application{
 
 		/** @var Controller $ctrl */
 		$ctrl = new $CtrlClass($controller, $action);
+		self::$controller = $ctrl;
 		$is_ctrl_prototype = $ctrl instanceof Controller;
 
 		//support some class non extends lite\controller
