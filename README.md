@@ -166,18 +166,23 @@ CodeGenerator::Load();
 2. 日期
 	1. year
 		* 产生 `input:text`
+		* 同时绑定日期控件
 				
 	2. datetime
 		* 产生 `input:text`
+		* 同时绑定日期控件
 		
 	3. date
 		* 产生 `input:text`
+		* 同时绑定日期控件
 				
 	4. time
 		* 产生 `input:text`
+		* 同时绑定日期控件
 		
 	5. timestamp
-		* 不产生表单元素
+		* 产生 `input:text`
+		* 同时绑定日期控件
 		
 3. 字符
 	1. char
@@ -188,7 +193,7 @@ CodeGenerator::Load();
 		* 产生 `textarea`
 		
 	4. text
-		* 产生 简单富文本编辑器[1]
+		* 产生简单富文本编辑器[1]
 		
 	5. mediumtext
 		* 产生复杂富文本编辑器[2]
@@ -209,7 +214,10 @@ CodeGenerator::Load();
 	4. 备注内包含括号部分,如:(note)，将被解析为字段补充描述(description),追加在输入表单后面,enum,set除外
 	5. default在不为null情况下,值将被填入默认表单值(新建页面)
 	6. primary key缺省为readonly，不产生表单元素
-	
+
+5. **非法规则**
+	1. 声明timestamp类型，实际存储却为int类型
+	2. 声明
 
 	
 ## CB通用后台说明
@@ -236,5 +244,5 @@ CodeGenerator::Load();
 6. 备注
 7. 分库、分表、分区
 
-   
+[a]   
 [1]: 简单富文本编辑器不包含图片、或其他资源上传功能。 http://www.baidu.com 
