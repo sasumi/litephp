@@ -127,10 +127,14 @@ class MenuHelper {
 
 				//只有在父级菜单没有权限情况下，才需要清理菜单项
 				if(!$main_item[MENU_KEY_URI] || !$this->checkAccess($main_item[MENU_KEY_URI])){
-					if($main_item[MENU_KEY_SUB]){
+					if(!$main_item[MENU_KEY_SUB]){
 						return false;
+					} else {
+						$main_item[MENU_KEY_URI] = ''; //子菜单有权限，父菜单没有权限，uri重置为空
 					}
 				}
+				//父级菜单没有权限
+
 				return $main_item;
 			});
 

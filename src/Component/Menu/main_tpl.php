@@ -9,7 +9,10 @@
 	use function Lite\func\array_first;
 	use function Lite\func\dump;
 
-	/** @var View $viewer */
+	/**
+	 * @var View $viewer
+	 * @var array $main_nav
+	 */
 	$viewer = Config::get('app/render');
 
 	foreach($main_nav as $k=>$item){

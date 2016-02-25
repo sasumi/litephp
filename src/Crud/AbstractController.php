@@ -263,6 +263,34 @@ abstract class AbstractController extends CoreController{
 			}
 		}
 
+		//排序
+		$order_fields = $support_list[CI::OP_INDEX]['order_fields'];
+		$order_links = array(); //排序链接,当前排序状态
+		$order_field = $search['_ord_'];
+		$order_dir = $search['_dir_'];
+		if($order_fields){
+			$ops_dir = ($order_dir == 'desc' || !$order_dir) ? 'asc' : 'desc';
+			foreach($order_fields as $f){
+				if($order_field == $f){
+					$search['_dir_'] = $ops_dir;
+					$order_links[$f] = array(Router::getUrl(Router::getController().'/index', $search), $order_dir);
+				} else {
+					$search['_dir_'] = $ops_dir;
+					$search['_ord_'] = $f;
+					$order_links[$f] = array(Router::getUrl(Router::getController().'/index', $search), '');
+				}
+			}
+			if($order_field && $order_dir){
+				$query->order("$order_field ".($order_dir == 'inc' ? 'ASC':'DESC'));
+			}
+		}
+
+		//导出
+		$export_format = $support_list[CI::OP_INDEX]['export'];
+		$export_link = $export_format ? Router::getUrl(Router::getController().'/index', array_merge($search, array(
+			'_export_' => $export_format
+		))) : '';
+
 		/** @var MultiLevelModelInterface|ModelInterface|Model $ins */
 		if($ins instanceof MultiLevelModelInterface){
 			$list = $query->all(true);
@@ -295,7 +323,10 @@ abstract class AbstractController extends CoreController{
 			'update_in_new_page' => $update_in_new_page,
 			'defines' => $defines,
 			'display_fields' => $this->getOpFields(CI::OP_INDEX),
+			'order_links' => $order_links,
 			'quick_update_fields' => $this->getQuickUpdateFields(CI::OP_INDEX),
+			'export_link' => $export_link,
+			'export_format' => $export_format,
 			'model_instance' => $ins,
 			'operation_list' => $operation_list,
 		);

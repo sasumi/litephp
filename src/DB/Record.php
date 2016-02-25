@@ -234,7 +234,10 @@ final class Record {
 			return $result;
 		} catch (PDOException $ex){
 			Hooker::fire(self::EVENT_DB_QUERY_ERROR, $ex, $sql, $this->conn);
-			throw new Exception($ex->getMessage(), null, $sql);
+			throw new Exception($ex->getMessage(), null, array(
+				'query' => $sql,
+				'host' => $this->config['host']
+			));
 		}
 	}
 
