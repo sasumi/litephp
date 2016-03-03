@@ -459,7 +459,6 @@ abstract class AbstractController extends CoreController{
 
 		$ins = $this->getModelInstance();
 		$pk = $ins->getPrimaryKey();
-
 		$support_list = $this->supportCRUDList();
 		$operation_list = array_keys($support_list);
 		$defines = $ins->getEntityPropertiesDefine();

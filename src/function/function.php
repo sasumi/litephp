@@ -109,18 +109,23 @@ namespace Lite\func {
 	 * @param $msg
 	 * @param $file
 	 * @param $line
+	 * @param string $trace_string
 	 */
-	function print_sys_error($code, $msg, $file=null, $line=null){
+	function print_sys_error($code, $msg, $file=null, $line=null, $trace_string=''){
 		echo "<pre>";
 		$code = error2string($code);
 		echo "[$code] $msg\n\n";
 		echo "* $file #$line\n\n";
 
-		$bs = debug_backtrace();
-		array_shift($bs);
-		foreach($bs as $k=>$b){
-			echo count($bs)-$k." {$b['class']}{$b['type']}{$b['function']}\n";
-			echo "  {$b['file']}  #{$b['line']} \n\n";
+		if(!$trace_string){
+			$bs = debug_backtrace();
+			array_shift($bs);
+			foreach($bs as $k=>$b){
+				echo count($bs)-$k." {$b['class']}{$b['type']}{$b['function']}\n";
+				echo "  {$b['file']}  #{$b['line']} \n\n";
+			}
+		} else {
+			echo $trace_string;
 		}
 		die;
 	}
@@ -141,7 +146,7 @@ namespace Lite\func {
 	 * @param Exception $ex
 	 */
 	function print_exception(Exception $ex){
-		print_sys_error($ex->getCode(), $ex->getMessage(), $ex->getFile(), $ex->getLine());
+		print_sys_error($ex->getCode(), $ex->getMessage(), $ex->getFile(), $ex->getLine(), $ex->getTraceAsString());
 	}
 
 	/**

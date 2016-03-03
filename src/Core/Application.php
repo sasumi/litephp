@@ -6,6 +6,7 @@ use Lite\Api\Daemon;
 use Lite\DB\Record;
 use Lite\Exception\BizException;
 use Lite\Exception\RouterException;
+use function Lite\func\print_exception;
 use Lite\Logger\Logger;
 use Lite\Logger\LoggerLevel;
 use Lite\Logger\Message\CommonMessage;
@@ -56,7 +57,7 @@ class Application{
 			} catch(Exception $ex){
 				//调试模式
 				if(Config::get('app/debug')){
-					print_sys_error($ex->getCode(), $ex->getMessage());
+					print_exception($ex);
 				}
 
 				$log_level = ($ex instanceof RouterException) ? LoggerLevel::INFO : LoggerLevel::WARNING;

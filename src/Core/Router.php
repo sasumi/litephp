@@ -321,7 +321,7 @@ abstract class Router{
 
 	/**
 	 * 产生表单action
-	 * @deprecate 框架新版本已经支持路由混合解析，
+	 * @deprecated 框架新版本已经支持路由混合解析，
 	 * 因此推荐使用 Router::getUrlInPathMode来产生表单使用的action
 	 * @param string $target
 	 * @param array $params
@@ -536,7 +536,7 @@ abstract class Router{
 
 	/**
 	 * 页面302, 301跳转
-	 * @deprecate 调用了url函数功能，所以参数跟url函数的参数一致
+	 * @deprecated 调用了url函数功能，所以参数跟url函数的参数一致
 	 * @param null $uri
 	 * @param null $args2
 	 * @param int $status_code
