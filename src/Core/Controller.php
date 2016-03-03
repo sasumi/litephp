@@ -18,18 +18,14 @@ abstract class Controller {
 	public function __construct(){}
 
 	/**
-	 * get template
+	 * 获取当前controller、action配置的模板
+	 * 返回空表示由view来指定模板
 	 * @param $controller
 	 * @param $action
 	 * @return string
 	 */
 	public static function __getTemplate($controller, $action){
-		$def_tpl = $controller.'/'.$action.'.php';
-		$def_tpl = strtolower($def_tpl);
-
-		/** @var View $viewer */
-		$viewer = Config::get('app/render');
-		return $viewer::resolveTemplate($def_tpl);
+		return null;
 	}
 
 	/**

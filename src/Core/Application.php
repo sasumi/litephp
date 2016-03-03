@@ -15,6 +15,7 @@ use function Lite\func\array_last;
 use function Lite\func\decodeURI;
 use function Lite\func\dump;
 use function Lite\func\format_size;
+use function Lite\func\print_exception;
 use function Lite\func\print_sys_error;
 
 /**
@@ -35,11 +36,16 @@ class Application{
 	const EVENT_ON_APP_EX = 'EVENT_ON_APP_EX';
 	const EVENT_ON_APP_ERR = 'EVENT_ON_APP_ERR';
 
-	//Controller文件名是否区分大小写
-	public static $CONTROLLER_FILE_NAME_CASE_INSENSITIVE = true;
-
+	//application instance
 	private static $instance;
+
+	//current controller(only in web mode)
+	private static $controller;
+
+	//project config include paths
 	private static $include_paths = array();
+
+	//project namespace
 	private $namespace;
 
 	/**
@@ -107,11 +113,8 @@ class Application{
 		//router init
 		Router::init();
 
-		/** @var Controller $ctrl_ins */
-		$ctrl_ins = null;
-
 		try {
-			$result = self::dispatch($ctrl_ins, $method);
+			$result = self::dispatch();
 		} catch(Exception $ex){
 			if(($ex instanceof BizException) || //业务限制逻辑，直接使用友好输出格式
 				(!Config::get('app/debug') && Config::get('app/auto_process_logic_error') && !($ex instanceof RouterException))){
@@ -123,6 +126,7 @@ class Application{
 
 		//auto render
 		if(Config::get('app/auto_render')){
+			$ctrl_ins = self::getController();
 			$tpl_file = $ctrl_ins::__getTemplate(Router::getController(), Router::getAction());
 			if($result instanceof View){
 				$result->render($tpl_file);
@@ -136,13 +140,19 @@ class Application{
 	}
 
 	/**
+	 * 获取WEB模式使用的controller对象
+	 * @return Controller
+	 */
+	public static function getController(){
+		return self::$controller;
+	}
+
+	/**
 	 * 分发控制器
-	 * @param null $ctrl
-	 * @param null $action
 	 * @return mixed
 	 * @throws \Lite\Exception\RouterException
 	 */
-	private function dispatch(&$ctrl=null, &$action=null){
+	private function dispatch(){
 		$controller = Router::getController();
 		$action = Router::getAction();
 		$get = Router::get();
@@ -150,20 +160,13 @@ class Application{
 
 		$CtrlClass = $this->namespace.Config::get('app/controller_pattern');
 		$CtrlClass = str_replace('{CONTROLLER}', ucfirst($controller), $CtrlClass);
-
 		if(!class_exists($CtrlClass)){
-			//在Linux环境下，如果Controller文件找不到，
-			//会尝试再次不区分文件名大小写去目录找一次文件
-			if(self::$CONTROLLER_FILE_NAME_CASE_INSENSITIVE){
-				self::loadControllerCaseInsensitive($CtrlClass);
-			}
-			if(!class_exists($CtrlClass)){
-				throw new RouterException('Controller not found:'.$CtrlClass);
-			}
+			throw new RouterException('Controller not found:'.$CtrlClass);
 		}
 
 		/** @var Controller $ctrl */
 		$ctrl = new $CtrlClass($controller, $action);
+		self::$controller = $ctrl;
 		$is_ctrl_prototype = $ctrl instanceof Controller;
 
 		//support some class non extends lite\controller
@@ -270,7 +273,7 @@ class Application{
 		}
 
 		//绑定项目根目录
-		self::addIncludePath(Config::get('app/path'), true);
+		self::addIncludePath(Config::get('app/path'));
 
 		//绑定项目include目录
 		self::addIncludePath(Config::get('app/path').'include/');
@@ -410,7 +413,7 @@ class Application{
 	 * 添加include path
 	 * @param string $path
 	 */
-	public static function addIncludePath($path, $case_sensitive=true){
+	public static function addIncludePath($path){
 		self::$include_paths[] = $path;
 	}
 
@@ -436,27 +439,5 @@ class Application{
 				include_once $file;
 			}
 		}
-	}
-
-	/**
-	 * 不区分大小写加载controller文件（注意，仅文件名不区分大小写，目录还是区分的）
-	 * @param $ctrl_class
-	 * @return bool
-	 */
-	private function loadControllerCaseInsensitive($ctrl_class){
-		$p = Config::get('app/path');
-		$ns = $this->namespace;
-		$ctrl_class = preg_replace('/^'.$ns.'\\\\/', '', $ctrl_class);
-		$f = rtrim($p, '/\\').'/'.$ctrl_class.'.php';
-		$dir = dirname($f);
-		$base_name = strtolower(basename($f));
-		$all_files = glob($dir.'/*.php', GLOB_NOSORT);
-		foreach($all_files as $cf){
-			if(strtolower(basename($cf)) == $base_name){
-				include_once $cf;
-				return true;
-			}
-		}
-		return false;
 	}
 }
