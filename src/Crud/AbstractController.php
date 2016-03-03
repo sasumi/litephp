@@ -143,6 +143,59 @@ abstract class AbstractController extends CoreController{
 	}
 
 	/**
+	 * 检测CRUD页面是否需要在新窗口打开
+	 * @param string $operate_type 操作类型
+	 * @param Model $instance
+	 * @param int $threshold 阀值（行数）
+	 * @param array $factors 因子（普通表单、textarea输入框、简单富文本、复杂富文本）
+	 * @return bool
+	 */
+	protected function checkNewWindowFlag($operate_type, $instance, $threshold=20, $factors=array(1, 4, 20, 20)){
+		$counts = $this->getOperateFieldCount($operate_type, $instance);
+		$sum = 0;
+		foreach($counts as $k=>$c){
+			$sum += $c*$factors[$k];
+		}
+		return $sum>=$threshold;
+	}
+
+	/**
+	 * 获取操作字段数量
+	 * @param $operate_type
+	 * @param Model $instance
+	 * @return array
+	 */
+	protected function getOperateFieldCount($operate_type, $instance){
+		/** @var ControllerInterface|self $this*/
+		$support = $this->supportCRUDList()[$operate_type];
+		if($support){
+			$op_fields = $this->getOpFields($operate_type);
+			$def = $instance->getPropertiesDefine();
+			$nc = $tc = $sc = $lc = 0;
+			foreach($op_fields as $field=>$n){
+				switch($def[$field]['type']){
+					case 'text':
+						$tc++;
+						break;
+
+					case 'simple_rich_text':
+						$sc++;
+						break;
+
+					case 'rich_text':
+						$lc++;
+						break;
+
+					default:
+						$nc++;
+				}
+			}
+			return array($nc, $tc, $sc, $lc);
+		}
+		return array();
+	}
+
+	/**
 	 * 列表
 	 * @param $search
 	 * @return Result
@@ -182,6 +235,7 @@ abstract class AbstractController extends CoreController{
 							$query->addWhere(Query::OP_AND, $field, 'like', '%'.str_replace('%', '', $search[$field]).'%');
 							break;
 
+						case 'timestamp':
 						case 'date':
 						case 'datetime':
 							if($search[$field][0]){
@@ -192,7 +246,7 @@ abstract class AbstractController extends CoreController{
 							}
 							break;
 
-						case 'timestamp':
+
 						case 'microtime':
 							if($search[$field][0]){
 								$query->addWhere(Query::OP_AND, $field, '>=', strtotime($search[$field][0]));
@@ -232,11 +286,13 @@ abstract class AbstractController extends CoreController{
 			$list = $query->paginate($paginate);
 		}
 
+		$update_in_new_page = $this->checkNewWindowFlag(CI::OP_UPDATE, $ins);
 		return array(
 			'search' => $support_quick_search ? $search : null,
 			'data_list' => $list,
 			'paginate' => $paginate,
 			'quick_search_defines' => $quick_search_defines,
+			'update_in_new_page' => $update_in_new_page,
 			'defines' => $defines,
 			'display_fields' => $this->getOpFields(CI::OP_INDEX),
 			'quick_update_fields' => $this->getQuickUpdateFields(CI::OP_INDEX),
