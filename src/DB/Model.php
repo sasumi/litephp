@@ -682,7 +682,7 @@ abstract class Model extends DAO{
 
 				case 'float':
 				case 'double':
-					if(isset($val) && !is_numeric($val)){
+					if(!(!$define['options']['required'] && empty($val)) && isset($val) && !is_numeric($val)){
 						$err = $name.'格式不正确';
 					}
 					break;

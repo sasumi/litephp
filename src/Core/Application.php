@@ -272,7 +272,7 @@ class Application{
 		}
 
 		//绑定项目根目录
-		self::addIncludePath(Config::get('app/path'));
+		self::addIncludePath(Config::get('app/path'), true);
 
 		//绑定项目include目录
 		self::addIncludePath(Config::get('app/path').'include/');
@@ -412,7 +412,7 @@ class Application{
 	 * 添加include path
 	 * @param string $path
 	 */
-	public static function addIncludePath($path){
+	public static function addIncludePath($path, $case_sensitive=true){
 		self::$include_paths[] = $path;
 	}
 
@@ -438,5 +438,27 @@ class Application{
 				include_once $file;
 			}
 		}
+	}
+
+	/**
+	 * 不区分大小写加载controller文件（注意，仅文件名不区分大小写，目录还是区分的）
+	 * @param $ctrl_class
+	 * @return bool
+	 */
+	private function loadControllerCaseInsensitive($ctrl_class){
+		$p = Config::get('app/path');
+		$ns = $this->namespace;
+		$ctrl_class = preg_replace('/^'.$ns.'\\\\/', '', $ctrl_class);
+		$f = rtrim($p, '/\\').'/'.$ctrl_class.'.php';
+		$dir = dirname($f);
+		$base_name = strtolower(basename($f));
+		$all_files = glob($dir.'/*.php', GLOB_NOSORT);
+		foreach($all_files as $cf){
+			if(strtolower(basename($cf)) == $base_name){
+				include_once $cf;
+				return true;
+			}
+		}
+		return false;
 	}
 }

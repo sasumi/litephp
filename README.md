@@ -214,7 +214,7 @@ CodeGenerator::Load();
 	4. 备注内包含括号部分,如:(note)，将被解析为字段补充描述(description),追加在输入表单后面,enum,set除外
 	5. default在不为null情况下,值将被填入默认表单值(新建页面)
 	6. primary key缺省为readonly，不产生表单元素
-
+	
 5. **非法规则**
 	1. 声明timestamp类型，实际存储却为int类型
 	2. 声明

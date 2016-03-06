@@ -3,6 +3,7 @@
  * Lite杂项操作函数
  */
 namespace Lite\func {
+
 	use Exception;
 
 	/**
@@ -108,18 +109,23 @@ namespace Lite\func {
 	 * @param $msg
 	 * @param $file
 	 * @param $line
+	 * @param string $trace_string
 	 */
-	function print_sys_error($code, $msg, $file=null, $line=null){
+	function print_sys_error($code, $msg, $file=null, $line=null, $trace_string=''){
 		echo "<pre>";
 		$code = error2string($code);
 		echo "[$code] $msg\n\n";
 		echo "* $file #$line\n\n";
 
-		$bs = debug_backtrace();
-		array_shift($bs);
-		foreach($bs as $k=>$b){
-			echo count($bs)-$k." {$b['class']}{$b['type']}{$b['function']}\n";
-			echo "  {$b['file']}  #{$b['line']} \n\n";
+		if(!$trace_string){
+			$bs = debug_backtrace();
+			array_shift($bs);
+			foreach($bs as $k=>$b){
+				echo count($bs)-$k." {$b['class']}{$b['type']}{$b['function']}\n";
+				echo "  {$b['file']}  #{$b['line']} \n\n";
+			}
+		} else {
+			echo $trace_string;
 		}
 		die;
 	}
@@ -140,28 +146,7 @@ namespace Lite\func {
 	 * @param Exception $ex
 	 */
 	function print_exception(Exception $ex){
-		$trace_info = $ex->getTrace();
-		$code = $ex->getCode();
-		$msg = $ex->getMessage();
-		$file = $ex->getFile();
-		$line = $ex->getLine();
-
-		echo "<pre>";
-		$s_code = error2string($code);
-		echo "[$s_code:$code] $msg\n\n";
-		echo "[Loc] $file  #$line\n\n";
-		if($ex instanceof \Lite\Exception\Exception){
-			echo "[Data] ";
-			echo var_export($ex->data, true)."\n";
-		}
-		echo str_repeat('-',80)."\n\n";
-
-		foreach($trace_info as $k=>$b){
-			echo '['.str_pad((count($trace_info)-$k).']', 4, ' ')."{$b['file']}  #{$b['line']} \n";
-			echo "     {$b['class']}{$b['type']}{$b['function']}()\n";
-			echo "\n";
-		}
-		die;
+		print_sys_error($ex->getCode(), $ex->getMessage(), $ex->getFile(), $ex->getLine(), $ex->getTraceAsString());
 	}
 
 	/**
