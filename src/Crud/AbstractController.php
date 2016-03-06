@@ -273,6 +273,7 @@ abstract class AbstractController extends CoreController{
 			foreach($order_fields as $f){
 				if($order_field == $f){
 					$search['_dir_'] = $ops_dir;
+					$search['_ord_'] = $f;
 					$order_links[$f] = array(Router::getUrl(Router::getController().'/index', $search), $order_dir);
 				} else {
 					$search['_dir_'] = $ops_dir;
@@ -281,8 +282,7 @@ abstract class AbstractController extends CoreController{
 				}
 			}
 			if($order_field && $order_dir){
-				$order_field = addslashes($order_field);
-				$query->order("`$order_field` ".($order_dir == 'asc' ? 'ASC':'DESC'));
+				$query->order("`".addslashes($order_field)."` ".($order_dir == 'asc' ? 'ASC':'DESC'));
 			}
 		}
 
