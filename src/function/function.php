@@ -146,7 +146,11 @@ namespace Lite\func {
 	 * @param Exception $ex
 	 */
 	function print_exception(Exception $ex){
-		print_sys_error($ex->getCode(), $ex->getMessage(), $ex->getFile(), $ex->getLine(), $ex->getTraceAsString());
+		$data_str = '';
+		if($ex instanceof \Lite\Exception\Exception){
+			$data_str = json_encode($ex->data);
+		}
+		print_sys_error($ex->getCode(), $ex->getMessage()."\ndata:".$data_str, $ex->getFile(), $ex->getLine(), $ex->getTraceAsString());
 	}
 
 	/**

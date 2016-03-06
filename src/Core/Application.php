@@ -125,8 +125,9 @@ class Application{
 
 		//auto render
 		if(Config::get('app/auto_render')){
+			//controller有可能因为construct失败，导致没有实例化
 			$ctrl_ins = self::getController();
-			$tpl_file = $ctrl_ins::__getTemplate(Router::getController(), Router::getAction());
+			$tpl_file = $ctrl_ins ? $ctrl_ins::__getTemplate(Router::getController(), Router::getAction()) : null;
 			if($result instanceof View){
 				$result->render($tpl_file);
 			} else {

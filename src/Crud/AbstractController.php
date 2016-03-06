@@ -281,7 +281,8 @@ abstract class AbstractController extends CoreController{
 				}
 			}
 			if($order_field && $order_dir){
-				$query->order("$order_field ".($order_dir == 'inc' ? 'ASC':'DESC'));
+				$order_field = addslashes($order_field);
+				$query->order("`$order_field` ".($order_dir == 'asc' ? 'ASC':'DESC'));
 			}
 		}
 
