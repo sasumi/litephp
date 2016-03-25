@@ -159,12 +159,15 @@ namespace Lite\func {
 					if(is_callable($cfg)) {
 						$data[$k] = call_user_func($cfg, $item);
 						$keep = true;
+						break;
 					} else if(is_array($cfg) && $data[$k]) {
 						$data[$k] = array_clear_fields($cfg, $item);
 						$keep = true;
+						break;
 					}
 				}
 			}
+
 			if(!$keep) {
 				unset($data[$k]);
 			}

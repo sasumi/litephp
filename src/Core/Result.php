@@ -174,24 +174,31 @@ class Result {
 		if($data['data'] instanceof Exception){
 			$data['data'] .= '';
 		}
+
 		$html = '<!doctype html><html lang="en"><head><meta charset="UTF-8" /><title></title>'.
-				'<script>
+			'<script>
 				var frame = null;
 				try {
 					frame = window.frameElement;
+					if(!frame){
+						throw("no frame 1");
+					}
 				} catch(ex){
 					try {
 						document.domain = location.host.replace(/^[\w]+\./, \'\');
 						frame = window.frameElement;
+						if(!frame){
+							throw("no frame 2");
+						}
 					} catch(ex){
 						if(window.console){
 							console.log("i try twice to cross domain. sorry, i m give up...");
 						}
 					}
-				}
+				};
 				</script>'.
-				"<script>frame.$callback(".json_encode($data).");</script>".
-				'</head><body></body></html>';
+			"<script>frame.$callback(".json_encode($data).");</script>".
+			'</head><body></body></html>';
 		return $html;
 	}
 }

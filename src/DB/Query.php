@@ -126,7 +126,7 @@ class Query {
 			return $this;
 		}
 		$this->fields = explode(',', $str);
-		$this->fields = $this->escapeKey($this->fields);
+		$this->fields = self::escapeKey($this->fields);
 		return $this;
 	}
 
@@ -138,7 +138,7 @@ class Query {
 	public function from($str){
 		$tables = explode(',', $str);
 		foreach($tables as $key=>$table){
-			$tables[$key] = $this->escapeKey($this->table_prefix.$table);
+			$tables[$key] = self::escapeKey($this->table_prefix.$table);
 		}
 		$this->tables = $tables;
 		return $this;
@@ -228,11 +228,12 @@ class Query {
 	private function getWhereStr(array $wheres=array()){
 		$str = '';
 		foreach($wheres?:$this->where as $w){
+			$f = $w['field'];
 			$k = $w['type'] == self::OP_AND ? 'AND' : 'OR';
 			if(!empty($w['operator']) && isset($w['compare'])){
-				$str .= ($str ? " $k ":'').'`'.$w['field'].'` '.$w['operator'].' \''.addslashes($w['compare']).'\'';
+				$str .= ($str ? " $k ":'').'`'.$f.'` '.$w['operator'].' \''.addslashes($w['compare']).'\'';
 			} else {
-				$str .= ($str ? " $k (":'(').$w['field'].')';
+				$str .= ($str ? " $k (":'(').$f.')';
 			}
 		}
 		return $str ? ' WHERE '.$str : '';
@@ -297,15 +298,15 @@ class Query {
 	 * @param $field
 	 * @return string
 	 */
-	private function escapeKey($field){
+	private static function escapeKey($field){
 		if(is_array($field)){
 			$ret = array();
 			foreach($field as $val){
-				$ret[] = strpos($val, '`') === false && strpos($val, ' ') === false ? "`$val`" : $val;
+				$ret[] = (strpos($val, '`') === false && strpos($val, ' ') === false && $val != '*') ? "`$val`" : $val;
 			}
 			return $ret;
 		} else {
-			return strpos($field, '`') === false && strpos($field, ' ') === false ? "`$field`" : $field;
+			return (strpos($field, '`') === false && strpos($field, ' ') === false && $field != '*') ? "`$field`" : $field;
 		}
 	}
 
@@ -321,7 +322,7 @@ class Query {
 
 		switch($this->operation){
 			case self::SELECT:
-				$sql = 'SELECT '.implode(',', $this->fields).
+				$sql = 'SELECT '.implode(',', self::escapeKey($this->fields)).
 					' FROM '.implode(',', $this->tables).
 					$this->getWhereStr().
 					($this->group ? ' GROUP BY '.$this->group : '').
@@ -337,7 +338,7 @@ class Query {
 					throw new Exception("NO DATA IN DB.INSERT");
 				}
 				$data_list = count($this->data) == count($this->data, 1) ? array($this->data) : $this->data;
-				$key_str = implode(",", $this->escapeKey(array_keys($data_list[0])));
+				$key_str = implode(",", self::escapeKey(array_keys($data_list[0])));
 				$sql = "INSERT INTO ".implode(',', $this->tables)."($key_str) VALUES ";
 				$comma = '';
 				foreach($data_list as $row){
@@ -361,7 +362,7 @@ class Query {
 				foreach($data_list as $row){
 					$sets = array();
 					foreach($row as $field_name => $value){
-						$field_name = $this->escapeKey($field_name);
+						$field_name = self::escapeKey($field_name);
 						if($value === null){
 							$sets[] = "$field_name = NULL";
 						} else {
