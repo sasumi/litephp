@@ -1,7 +1,7 @@
 <?php
 $flag = '__logger_load_flag__';
 if($GLOBALS[$flag]){
-	return;
+	//return;
 }
 $GLOBALS[$flag] = true;
 

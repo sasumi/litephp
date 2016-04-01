@@ -518,23 +518,6 @@ abstract class Model extends DAO{
 	}
 
 	/**
-	 * 数据转义
-	 * @param array $data
-	 * @return mixed
-	 */
-	private function quoteData(array $data=array()){
-		$types = array();
-		$defines = $this->getPropertiesDefine();
-		foreach($data as $k=>$v){
-			$t = $defines[$k];
-			$types[$k] = $t['type'];
-		}
-		$rec = $this->getDbRecord(self::DB_WRITE);
-		$data = $rec->quoteArray($data, $types);
-		return $data;
-	}
-
-	/**
 	 * 插入当前对象
 	 * @throws \Lite\Exception\BizException
 	 * @return string | bool 返回插入的id，或者失败(false)
@@ -586,9 +569,9 @@ abstract class Model extends DAO{
 		foreach($pro_defines as $field=>$def){
 			if($def['unique']){
 				if($query_type == Query::INSERT){
-					$count = $obj->find("$field=?", $data[$field])->count();
+					$count = $obj->find("`$field`=?", $data[$field])->count();
 				} else {
-					$count = $obj->find("$field=? AND $pk != ?", $data[$field], $pk_val)->count();
+					$count = $obj->find("`$field`=? AND `$pk != ?", $data[$field], $pk_val)->count();
 				}
 				if($count){
 					$msg = "{$def['alias']}：{$data[$field]}已经存在，不能重复添加";
@@ -671,6 +654,8 @@ abstract class Model extends DAO{
 			$define['options'] = call_user_func($define['options'], null);
 		}
 
+		$required = $define['required'];
+
 		//type
 		if(!$err){
 			switch($define['type']){
@@ -682,13 +667,13 @@ abstract class Model extends DAO{
 
 				case 'float':
 				case 'double':
-					if(!(!$define['options']['required'] && empty($val)) && isset($val) && !is_numeric($val)){
+					if(!(!$required && !strlen($val.'')) && isset($val) && !is_numeric($val)){
 						$err = $name.'格式不正确';
 					}
 					break;
 
 				case 'enum':
-					$err = !isset($define['options'][$val]) ? '请选择'.$name : '';
+					$err =  !(!$required && !strlen($val.'')) && !isset($define['options'][$val]) ? '请选择'.$name : '';
 					break;
 
 				//string暂不校验
@@ -927,17 +912,5 @@ abstract class Model extends DAO{
 	 */
 	public function __toString(){
 		return $this->query.'';
-	}
-}
-
-/**
- * DB Helper，主要提供给Model内部使用。
- * 外部还是尽量调用DB\Model::setQuery来使用
- */
-class __ModelHelper__ extends Model{
-	public function getTableName(){
-	}
-
-	public function getPrimaryKey(){
 	}
 }

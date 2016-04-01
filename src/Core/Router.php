@@ -535,10 +535,20 @@ abstract class Router{
 	}
 
 	/**
+	 * 获取当前action页面url
+	 * @param array $param
+	 * @return string
+	 */
+	public static function getCurrentActionPageUrl($param=array()){
+		$ctrl = static::getController();
+		$act = static::getAction();
+		return static::getUrl("$ctrl/$act", $param);
+	}
+
+	/**
 	 * 页面302, 301跳转
-	 * @deprecated 调用了url函数功能，所以参数跟url函数的参数一致
-	 * @param null $uri
-	 * @param null $args2
+	 * @param string $uri 控制url
+	 * @param array|string $args2 query参数
 	 * @param int $status_code
 	 */
 	public static function jumpTo($uri = null, $args2 = null, $status_code=302){
