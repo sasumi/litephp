@@ -231,7 +231,6 @@ class Query {
 			$f = $w['field'];
 			$k = $w['type'] == self::OP_AND ? 'AND' : 'OR';
 			if(!empty($w['operator']) && isset($w['compare'])){
-<<<<<<< HEAD
 				//数组，拼接数组
 				if(is_array($w['compare'])){
 					if(!empty($w['compare'])){
@@ -245,9 +244,6 @@ class Query {
 				} else {
 					$str .= ($str ? " $k ":'').'`'.$f.'` '.$w['operator'].' \''.addslashes($w['compare']).'\'';
 				}
-=======
-				$str .= ($str ? " $k ":'').'`'.$f.'` '.$w['operator'].' \''.addslashes($w['compare']).'\'';
->>>>>>> f4a8dabd5e0ef9f732dedd18ff6654d89ec7f802
 			} else {
 				$str .= ($str ? " $k (":'(').$f.')';
 			}
