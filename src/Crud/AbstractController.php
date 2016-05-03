@@ -95,7 +95,8 @@ abstract class AbstractController extends CoreController{
 		}
 
 		$defines = $ins->getPropertiesDefine();
-		$display_fields = array();
+		$operate_fields = array();
+
 		foreach($fields as $k=>$v){
 			$alias = '';
 			if(is_string($k)){
@@ -107,12 +108,13 @@ abstract class AbstractController extends CoreController{
 			if(!$alias){
 				$alias = $defines[$field]['alias'];
 			}
+
 			//remove primary or undefined field
 			if($defines[$field] && !$defines[$field]['primary']){
-				$display_fields[$field] = $alias;
+				$operate_fields[$field] = $alias;
 			}
 		}
-		return $display_fields;
+		return $operate_fields;
 	}
 
 	/**

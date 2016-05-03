@@ -237,13 +237,14 @@ abstract class Model extends DAO{
 		try{
 			Record::beginTransactionAll();
 			if(call_user_func($handler) === false){
-				throw new Exception('DB transaction fail');
+				throw new Exception('DB transaction interrupt');
 			}
 			Record::commitAll();
 		} catch(Exception $exception){
 			Record::rollbackAll();
+		} finally {
+			Record::cancelTransactionStateAll();
 		}
-		Record::cancelTransactionStateAll();
 		return $exception;
 	}
 
@@ -436,30 +437,26 @@ abstract class Model extends DAO{
 	}
 
 	/**
-	 * 根据分段进行数据处理
-	 * @param int $size
-	 * @param $handler
-	 * @return bool
+	 * 根据分段进行数据处理，常见用于节省WebServer内存操作
+	 * @param int $size 分块大小
+	 * @param callable $handler 回调函数
+	 * @param bool $as_array 查询结果作为数组格式回调
+	 * @return bool 是否执行了分块动作
+	 * @throws Exception
 	 */
-	private $query_result;
-	public function chunk($size = 1, $handler){
-		if(!isset($this->query_result)){
-			$this->query_result = $this->getDbRecord(self::DB_READ)->query($this->query);
-		}
-
-		$i = 0;
-		$result = array();
-		while($item = Record::fetchAssoc($this->query_result) && $i++ < $size){
-			$result[] = $item;
-		}
-
-		$ret = null;
-		if(!empty($result)){
-			$ret = call_user_func($handler, $result);
-			$this->chunk($size, $handler);
-		}
-		if($ret === false){
+	public function chunk($size = 1, $handler, $as_array=false){
+		$total = $this->count();
+		$start = 0;
+		if(!$total){
 			return false;
+		}
+
+		while($total > 0){
+			$data = $this->paginate(array($start, array($start, $size)), $as_array);
+			if(call_user_func($handler, $data) === false){
+				break;
+			}
+			$total -= $size;
 		}
 		return true;
 	}
@@ -571,7 +568,7 @@ abstract class Model extends DAO{
 				if($query_type == Query::INSERT){
 					$count = $obj->find("`$field`=?", $data[$field])->count();
 				} else {
-					$count = $obj->find("`$field`=? AND `$pk != ?", $data[$field], $pk_val)->count();
+					$count = $obj->find("`$field`=? AND `$pk` <> ?", $data[$field], $pk_val)->count();
 				}
 				if($count){
 					$msg = "{$def['alias']}：{$data[$field]}已经存在，不能重复添加";
@@ -626,7 +623,7 @@ abstract class Model extends DAO{
 			if(!$def['readonly']){
 				if($msg = self::validateField($data[$k], $k)){
 					if($throw_exception){
-						throw new BizException($msg);
+						throw new BizException($msg, null, array('data'=>$data, 'key' => $k));
 					} else {
 						return array($data, $msg);
 					}
