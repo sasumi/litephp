@@ -90,6 +90,8 @@ EOT;
 		default:
 			echo $help;
 	}
+} else {
+	include 'websetup.php';
 }
 
 function get_args(array $args){
@@ -529,15 +531,15 @@ function get_table_meta($table){
 function get_db_conn(){
 	$ns = get_ns();
 	$config = include PROJECT_ROOT."/database/$ns/db.inc.php";
-	$config['driver'] = $config['driver'] ?: 'mysql';
+	$config['type'] = $config['type'] ?: 'mysql';
 	$config['charset'] = $config['charset'] ?: 'utf8';
 	if($config['dns']){
 		$dns = $config['dns'];
 	}
-	else if($config['driver'] == 'sqlite'){
+	else if($config['type'] == 'sqlite'){
 		$dns = 'sqlite:' . $config['host'];
 	}else{
-		$dns = "{$config['driver']}:dbname={$config['database']};host={$config['host']}";
+		$dns = "{$config['type']}:dbname={$config['database']};host={$config['host']}";
 		if($config['port']){
 			$dns .= ";port={$config['port']}";
 		}

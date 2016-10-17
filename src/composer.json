@@ -1,9 +1,0 @@
-{
-	"config": {
-        "vendor-dir": "vendor"
-    },
-    "require": {
-	    "jimbojsb/workman": "@dev",
-	    "hellogerard/jobby": "dev-master"
-	}
-}

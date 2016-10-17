@@ -3,8 +3,35 @@
  * Lite杂项操作函数
  */
 namespace Lite\func {
-
 	use Exception;
+
+	//CLI前景色
+	const CLI_FORE_COLOR_BLACK = '0;30';
+	const CLI_FORE_COLOR_DARK_GRAY = '1;30';
+	const CLI_FORE_COLOR_BLUE = '0;34';
+	const CLI_FORE_COLOR_LIGHT_BLUE = '1;34';
+	const CLI_FORE_COLOR_GREEN = '0;32';
+	const CLI_FORE_COLOR_LIGHT_GREEN = '1;32';
+	const CLI_FORE_COLOR_CYAN = '0;36';
+	const CLI_FORE_COLOR_LIGHT_CYAN = '1;36';
+	const CLI_FORE_COLOR_RED = '0;31';
+	const CLI_FORE_COLOR_LIGHT_RED = '1;31';
+	const CLI_FORE_COLOR_PURPLE = '0;35';
+	const CLI_FORE_COLOR_LIGHT_PURPLE = '1;35';
+	const CLI_FORE_COLOR_BROWN = '0;33';
+	const CLI_FORE_COLOR_YELLOW = '1;33';
+	const CLI_FORE_COLOR_LIGHT_GRAY = '0;37';
+	const CLI_FORE_COLOR_WHITE = '1;37';
+
+	//CLI背景色
+	const CLI_BACK_COLOR_BLACK = '40';
+	const CLI_BACK_COLOR_RED = '41';
+	const CLI_BACK_COLOR_GREEN = '42';
+	const CLI_BACK_COLOR_YELLOW = '43';
+	const CLI_BACK_COLOR_BLUE = '44';
+	const CLI_BACK_COLOR_MAGENTA = '45';
+	const CLI_BACK_COLOR_CYAN = '46';
+	const CLI_BACK_COLOR_LIGHT_GRAY = '47';
 
 	/**
 	 * 测试
@@ -13,24 +40,56 @@ namespace Lite\func {
 		if(!headers_sent()) {
 			header('Content-Type: text/html; charset=utf-8');
 		}
-		echo "\r\n\r\n" . '<pre style="background-color:#ddd; font-size:12px">' . "\r\n";
-		$args = func_get_args();
-		$last = array_slice($args, -1, 1);
-		$die = $last[0] === 1;
-		if($die) {
-			$args = array_slice($args, 0, -1);
-		}
-		if($args) {
-			foreach ($args as $arg) {
-				var_dump($arg);
-				echo str_repeat('-', 50) . "\n";
+
+		$params = func_get_args();
+		$tmp = $params;
+		$cli = PHP_SAPI == 'cli';
+
+		//normal debug
+		if(count($params)>0){
+			$act = array_pop($tmp) === 1;
+			$params = $act ? array_slice($params, 0, -1) : $params;
+			echo $cli ? "\n" : '<pre style="font-size:12px; background-color:#eee; color:green; margin:0 0 10px 0; padding:0.5em; border-bottom:1px solid gray; width:100%; left:0; top:0">'."\n";
+			$comma = '';
+			foreach($params as $var){
+				echo $comma;
+				var_dump($var);
+				$trace = debug_backtrace();
+				echo "File:".($cli ? '' : '<b style="color:gray">').$trace[0]['file'].($cli ? '' : '</b><br/>')." Line: ".($cli ? '' : '<b>').$trace[0]['line'].($cli ? "\n" : '"</b><br/>"');
+				$comma = $cli ? "\n" : '<div style="height:0px; line-height:1px; font-size:1px; border-bottom:1px solid white; border-top:1px solid #ccc; margin:10px 0"></div>';
+			}
+			echo $cli ? '' : '</pre>';
+			if($act){
+				die();
+			}
+		} //for tick debug
+		else{
+			if(++$GLOBALS['ONLY_FOR_DEBUG_INDEX']>=$GLOBALS['TICK_DEBUG_START_INDEX']){
+				$trace = debug_backtrace();
+				echo '<pre style="display:block; font-size:12px; color:green; padding:2px 0; border-bottom:1px solid #ddd; clear:both;">'.'['.($GLOBALS['ONLY_FOR_DEBUG_INDEX']).'] <b>'.$trace[0]['file'].'</b> line:'.$trace[0]['line'].'</pre>';
 			}
 		}
-		$info = debug_backtrace();
-		echo $info[0]['file'] . ' [' . $info[0]['line'] . "] \r\n</pre>";
-		if($die) {
-			die;
+	}
+
+	/**
+	 * get cli console color output string
+	 * @param $str
+	 * @param null $foreground_color
+	 * @param null $background_color
+	 * @return string
+	 */
+	function getCliColorOutput($str, $foreground_color=null, $background_color=null){
+		$color_str = '';
+		if($foreground_color){
+			$color_str .= "\033[".$foreground_color."m";
 		}
+		if($background_color){
+			$color_str .= "\033[".$background_color."m";
+		}
+		if($color_str){
+			return $str."\033[0m";
+		}
+		return $str;
 	}
 
 	/**

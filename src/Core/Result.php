@@ -142,7 +142,7 @@ class Result {
 	 * 转换当前对象为JSON
 	 * @return string
 	 */
-	public function getJson(){
+	public function getJSON(){
 		$data = $this->getObject();
 		if($this->getData()){
 			$p_data = json_decode(json_encode($this->getData()));
@@ -156,7 +156,7 @@ class Result {
 	 * @param string $callback
 	 * @return string
 	 */
-	public function getJsonp($callback='_callback'){
+	public function getJSONP($callback='_callback'){
 		$data = $this->getObject();
 		return $callback.'('.json_encode($data).');';
 	}

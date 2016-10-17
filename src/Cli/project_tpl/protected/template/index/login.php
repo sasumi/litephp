@@ -1,7 +1,7 @@
 <?php
 $PAGE_HEAD_HTML .= $this->getCss('login.css');
 include $this->getTemplate('inc/header.inc.php');?>
-<form action="<?php echo $this->getUrl('index/login')?>" class="frm well" id="login-frm" method="post" rel="async" data-on-error="onerror">
+<form action="<?php echo $this->getUrl('index/login')?>" class="frm well" id="login-frm" method="post" data-component="async">
 	<table class="frm-tbl">
 		<caption>用户登录</caption>
 		<tr>
@@ -38,7 +38,6 @@ include $this->getTemplate('inc/header.inc.php');?>
 	</table>
 </form>
 <script>
-	var onerror;
 	var CAPTCHA_URL = '<?php echo $this->getUrl('index/captcha');?>';
 	seajs.use(['jquery', 'ywj/net', 'ywj/msg'], function($, net, msg){
 		$('#login-frm input[name=name]').focus();
@@ -46,12 +45,6 @@ include $this->getTemplate('inc/header.inc.php');?>
 		var ud = function(){
 			var s = net.mergeCgiUri(CAPTCHA_URL, {__:Math.random()});
 			$('#captcha-img').attr('src', s);
-		};
-
-		onerror = function(msg, data){
-			debugger;
-			msg.show(msg, 'error');
-
 		};
 		$('[rel=refresh-captcha]').click(function(){
 			ud();

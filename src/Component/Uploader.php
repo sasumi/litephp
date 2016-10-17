@@ -1,8 +1,11 @@
 <?php
 namespace Lite\Component;
+use Lite\Core\Result;
 use Lite\Exception\Exception;
 use function Lite\func\dump;
 use function Lite\func\format_size;
+use function Lite\func\plain_items;
+use function Lite\func\restructure_files;
 
 /**
  * 文件上传类
@@ -42,27 +45,43 @@ class Uploader {
 	/**
 	 * 获取整理好的需要上传文件列表
 	 * @return array
+	 * @throws \Lite\Exception\Exception
 	 */
 	public function getUploadFiles(){
-		$result_arr = array();
-		foreach($_FILES as $key=>$file){
-			if(is_array($file['name'])){
-				for($i=0; $i<count($file['name']); $i++){
-					$result_arr[] = array(
-						'upload_key' => $key,
-						'name' => $file['name'][$i],
-						'type' => $file['type'][$i],
-						'tmp_name' => $file['tmp_name'][$i],
-						'error' => $file['error'][$i],
-						'size' => $file['size'][$i]
-					);
-				}
-			} else {
-				$file['upload_key'] = $key;
-				$result_arr[] = $file;
+		$files = restructure_files($_FILES);
+		$files = plain_items($files, null, 'upload_key');
+
+		$error_message_map = array(
+			UPLOAD_ERR_INI_SIZE => '文件大小超过系统设置',
+			UPLOAD_ERR_FORM_SIZE => '表单大小超过系统设置',
+			UPLOAD_ERR_PARTIAL => '文件发生部分损坏',
+			UPLOAD_ERR_NO_FILE => '文件丢失',
+			UPLOAD_ERR_NO_TMP_DIR => '系统TMP目录缺失',
+			UPLOAD_ERR_CANT_WRITE => '系统TMP文件写入失败',
+			UPLOAD_ERR_EXTENSION => '其他未知错误',
+		);
+
+		foreach($files as $k=>$file){
+			$error = '';
+			if ($file['error']){
+				$error = $error_message_map[$file['error']] ?: $error_message_map[UPLOAD_ERR_EXTENSION];
+			}
+			if(!$file['tmp_name']){
+				unset($files[$k]);
+				continue;
+			}
+			//handle error
+			if($error){
+				throw new Exception($error, null, array(
+					'errors' => $error,
+					'file' => $file
+				));
+			}
+			if (empty($file['name'])) {
+				throw new Exception('文件名称不能为空');
 			}
 		}
-		return $result_arr;
+		return $files;
 	}
 
 	/**
@@ -107,19 +126,18 @@ class Uploader {
 		if(!in_array($ext, explode(',', $file_types))){
 			return false;
 		} else {
-			return MimeInfo::checkByExts($this->config['file_type'], $file['type']);
+			return MimeInfo::checkByExtensions($this->config['file_type'], $file['type']);
 		}
 	}
 
 	/**
 	 * 上传文件
-	 * @param array $fail
+	 * @param array $errors
 	 * @return array
 	 */
-	public function upload(&$fail=array()){
+	public function upload(&$errors=array()){
 		$files = $this->getUploadFiles();
 		$success_list = array();
-
 		$files = array_slice($files, 0, $this->config['max_file_count']);
 
 		foreach($files as $file){
@@ -128,6 +146,7 @@ class Uploader {
 			if($this->config['file_name_converter']){
 				$new_name = call_user_func($this->config['file_name_converter'], $file['name']);
 			}
+
 			$new_path = $this->config['upload_dir'].'/'.$new_name;
 			if($file['error']){
 				$error = '系统错误';
@@ -144,7 +163,7 @@ class Uploader {
 			if(!$error){
 				$success_list[$file['upload_key']] = $new_name;
 			} else {
-				$fail[$file['upload_key']] = $error;
+				$errors[$file['upload_key']] = $error;
 			}
 		}
 		return $success_list;

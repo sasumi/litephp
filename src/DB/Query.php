@@ -4,7 +4,7 @@ use Lite\Exception\Exception;
 use function Lite\func\dump;
 
 /**
- * 数据库查询抽象类
+ * 数据库查询语句抽象类
  * User: sasumi
  * Date: 2015/01/06
  * Time: 9:49
@@ -287,7 +287,7 @@ class Query {
 		}
 
 		if($this->sql && $this->limit){
-			if(preg_match('/\slimit\s/', $this->sql)){
+			if(preg_match('/\slimit\s/i', $this->sql)){
 				throw new Exception('SQL LIMIT SET:' . $this->sql);
 			}
 			$this->sql = $this->sql . ' LIMIT ' . $this->limit[0] . ',' . $this->limit[1];

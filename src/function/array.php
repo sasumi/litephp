@@ -40,6 +40,56 @@ namespace Lite\func {
 		return $result;
 	}
 
+	/**
+	 * 将多重数组值取出来
+	 * @param $arr
+	 * @param string $original_key
+	 * @param string $original_key_name
+	 * @return array
+	 */
+	function plain_items($arr, $original_key='', $original_key_name='original_key'){
+		if(count($arr) == count($arr, COUNT_RECURSIVE)){
+			$arr[$original_key_name] = $original_key;
+			return array($arr);
+		} else {
+			$ret = array();
+			foreach($arr as $k=>$item){
+				$ret = array_merge($ret, plain_items($item, $k, $original_key_name));
+			}
+			return $ret;
+		}
+	}
+
+	/**
+	 * 重新组织PHP $_FILES数组格式
+	 * @param array $input
+	 * @return array
+	 */
+	function restructure_files(array $input){
+		$output = [];
+		foreach($input as $name => $array){
+			foreach($array as $field => $value){
+				$pointer = &$output[$name];
+				if(!is_array($value)){
+					$pointer[$field] = $value;
+					continue;
+				}
+				$stack = [&$pointer];
+				$iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($value), \RecursiveIteratorIterator::SELF_FIRST);
+				foreach($iterator as $key => $v){
+					array_splice($stack, $iterator->getDepth()+1);
+					$pointer = &$stack[count($stack)-1];
+					$pointer = &$pointer[$key];
+					$stack[] = &$pointer;
+					if(!$iterator->hasChildren()){
+						$pointer[$field] = $v;
+					}
+				}
+			}
+		}
+		return $output;
+	}
+
     /**
      * 检测KEY合并数组，增强array_merge
      * @param array $array1
@@ -199,7 +249,7 @@ namespace Lite\func {
 	 * get first item of array
 	 * @param array $data
 	 * @param null &$key
-	 * @return
+	 * @return mixed|null
 	 */
 	function array_first(array $data = array(), &$key = null) {
 		foreach ($data as $key => $item) {

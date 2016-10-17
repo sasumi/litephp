@@ -168,7 +168,7 @@ abstract class Config {
 			case 'app':
 				self::ass_config($config['root'], self::$app_root);
 				self::ass_config($config['path'], $config['root'].'app/');
-				self::ass_config($config['controller_pattern'], '\\controller\\{CONTROLLER}Controller');
+				self::ass_config($config['controller_pattern'], '{PATH}{CONTROLLER}Controller');
 				self::ass_config($config['charset'], self::$default_charset);
 				self::ass_config($config['auto_render'], true);
 				self::ass_config($config['database_source'], $config['root'].'database/');
@@ -188,6 +188,7 @@ abstract class Config {
 				self::ass_config($config['router_key'], Router::DEFAULT_ROUTER_KEY);
 				self::ass_config($config['controller_key'], 'mod');
 				self::ass_config($config['action_key'], 'act');
+				self::ass_config($config['default_path'], '/');
 				self::ass_config($config['default_controller'], 'index');
 				self::ass_config($config['default_action'], 'index');
 				break;

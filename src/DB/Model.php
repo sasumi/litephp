@@ -3,6 +3,7 @@ namespace Lite\DB;
 
 use Lite\Core\Config;
 use Lite\Core\DAO;
+use Lite\DB\Driver\DBAbstract;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;
 use function Lite\func\array_clear_fields;
@@ -82,13 +83,13 @@ abstract class Model extends DAO{
 
 	/**
 	 * 获取db记录实例对象
-	 * @param int $recode_type
-	 * @return Record
+	 * @param int $operate_type
+	 * @return DBAbstract
 	 */
-	protected function getDbRecord($recode_type = self::DB_WRITE){
+	protected function getDbDriver($operate_type = self::DB_WRITE){
 		$configs = $this->getDbConfig();
-		$config = $this->parseConfig($recode_type, $configs);
-		return Record::instance($config);
+		$config = $this->parseConfig($operate_type, $configs);
+		return DBAbstract::instance($config);
 	}
 
 	/**
@@ -125,13 +126,13 @@ abstract class Model extends DAO{
 	/**
 	 * 解析数据库配置
 	 * 分析出配置中的读、写配置
-	 * @param string $recode_type
+	 * @param string $operate_type
 	 * @param array $all_config
 	 * @throws Exception
 	 * @internal param array $all
 	 * @return array
 	 */
-	private function parseConfig($recode_type = null, array $all_config){
+	private function parseConfig($operate_type = null, array $all_config){
 		$read_list = array();
 		$write_list = array();
 		$depKey = 'host';
@@ -164,7 +165,7 @@ abstract class Model extends DAO{
 			}
 		}
 
-		switch($recode_type){
+		switch($operate_type){
 			case self::DB_WRITE:
 				$k = array_rand($write_list, 1);
 				$host_config = $write_list[$k];
@@ -178,20 +179,12 @@ abstract class Model extends DAO{
 		}
 
 		$host_config = array_merge($host_config, array(
-			'driver'  => 'mysql',
-			'charset' => 'utf-8'
+			'driver'  => 'pdo',
+			'type' => 'mysql',
 		), $all_config);
 
-		$host_config['driver'] = strtolower($host_config['driver']);
-		$host_config['charset'] = strtolower($host_config['charset']);
-
-		// 矫正mysql charset
-		if($host_config['driver'] == 'mysql'){
-			$host_config['charset'] = str_replace('-', '', $host_config['charset']);
-		}
-
 		if(empty($host_config[$depKey])){
-			throw new Exception('DB CONFIG ERROR FOR RECORD TYPE:'.$recode_type);
+			throw new Exception('DB CONFIG ERROR FOR DRIVER TYPE:'.$operate_type);
 		}
 		return $host_config;
 	}
@@ -208,7 +201,6 @@ abstract class Model extends DAO{
 			$query = new Query($query);
 		}
 		if($query){
-			//@todo 这里需要重新考虑要不要提供 setQuery方法给DB/Model
 			$obj = self::meta();
 			if($db_config){
 				$obj->setDbConfig($db_config);
@@ -230,22 +222,25 @@ abstract class Model extends DAO{
 	/**
 	 * 开始一个事务
 	 * @param callable $handler
-	 * @return Exception
+	 * @throws \Lite\Exception\Exception
+	 * @throws null
 	 */
 	public static function transaction($handler){
 		$exception = null;
 		try{
-			Record::beginTransactionAll();
+			DBAbstract::beginTransactionAll();
 			if(call_user_func($handler) === false){
-				throw new Exception('DB transaction interrupt');
+				throw new Exception('database transaction interrupt');
 			}
-			Record::commitAll();
+			DBAbstract::commitAll();
 		} catch(Exception $exception){
-			Record::rollbackAll();
+			DBAbstract::rollbackAll();
 		} finally {
-			Record::cancelTransactionStateAll();
+			DBAbstract::cancelTransactionStateAll();
 		}
-		return $exception;
+		if($exception){
+			throw $exception;
+		}
 	}
 
 	/**
@@ -254,7 +249,7 @@ abstract class Model extends DAO{
 	 */
 	public function execute(){
 		$type = Query::isWriteOperation($this->query) ? self::DB_WRITE : self::DB_READ;
-		$result = $this->getDbRecord($type)->query($this->query);
+		$result = $this->getDbDriver($type)->query($this->query);
 		return $result;
 	}
 
@@ -363,7 +358,7 @@ abstract class Model extends DAO{
 		$obj = static::meta();
 		$statement = self::parseConditionStatement($args, $obj);
 		$table = $obj->getTableName();
-		$result = $obj->getDbRecord(self::DB_WRITE)->update($table, $data, $statement, $limit);
+		$result = $obj->getDbDriver(self::DB_WRITE)->update($table, $data, $statement, $limit);
 		return $result;
 	}
 
@@ -380,7 +375,7 @@ abstract class Model extends DAO{
 		$obj = static::meta();
 		$statement = self::parseConditionStatement($args, $obj);
 		$table = $obj->getTableName();
-		$result = $obj->getDbRecord(self::DB_WRITE)->delete($table, $statement, $limit);
+		$result = $obj->getDbDriver(self::DB_WRITE)->delete($table, $statement, $limit);
 		return $result;
 	}
 
@@ -390,7 +385,7 @@ abstract class Model extends DAO{
 	 * @return array
 	 */
 	public function all($as_array = false){
-		$list = $this->getDbRecord(self::DB_READ)->getAll($this->query);
+		$list = $this->getDbDriver(self::DB_READ)->getAll($this->query);
 		if($as_array){
 			return $list;
 		}
@@ -408,12 +403,30 @@ abstract class Model extends DAO{
 	}
 
 	/**
+	 * @param bool $as_array
+	 * @param null $key
+	 * @return array
+	 * @throws \Lite\Exception\Exception
+	 */
+	public function allAsAssoc($as_array=false, $key=null){
+		$list = $this->all($as_array);
+		$tmp = array();
+		if($list){
+			$key = $key ?: $this->getPrimaryKey();
+			foreach($list as $item){
+				$tmp[$item->{$key}] = $item;
+			}
+		}
+		return $tmp;
+	}
+
+	/**
 	 * 获取一条记录
 	 * @param bool $as_array
 	 * @return Model|array|NULL
 	 */
 	public function one($as_array = false){
-		$data = $this->getDbRecord(self::DB_READ)->getOne($this->query);
+		$data = $this->getDbDriver(self::DB_READ)->getOne($this->query);
 		if($as_array){
 			return $data;
 		}
@@ -426,13 +439,33 @@ abstract class Model extends DAO{
 	}
 
 	/**
+	 * 返回关联数组分页
+	 * @param $paginate
+	 * @param bool $as_array
+	 * @param null $key
+	 * @return array
+	 * @throws \Lite\Exception\Exception
+	 */
+	public function paginateAsAssoc($paginate, $as_array=false, $key=null){
+		$list = $this->paginate($paginate, $as_array);
+		$tmp = array();
+		if($list){
+			$key = $key ?: $this->getPrimaryKey();
+			foreach($list as $item){
+				$tmp[$item->{$key}] = $item;
+			}
+		}
+		return $tmp;
+	}
+
+	/**
 	 * 获取一个记录字段
 	 * @param $key
 	 * @return mixed|null
 	 */
 	public function ceil($key){
 		$this->query->field($key);
-		$data = $this->getDbRecord(self::DB_READ)->getOne($this->query);
+		$data = $this->getDbDriver(self::DB_READ)->getOne($this->query);
 		return $data ? array_pop($data) : null;
 	}
 
@@ -466,7 +499,7 @@ abstract class Model extends DAO{
 	 * @return int
 	 */
 	public function count(){
-		$count = $this->getDbRecord(self::DB_READ)->getCount($this->query);
+		$count = $this->getDbDriver(self::DB_READ)->getCount($this->query);
 		return $count;
 	}
 
@@ -477,7 +510,7 @@ abstract class Model extends DAO{
 	 * @return array || null
 	 */
 	public function paginate($page = null, $as_array = false){
-		$list = $this->getDbRecord(self::DB_READ)->getPage($this->query, $page);
+		$list = $this->getDbDriver(self::DB_READ)->getPage($this->query, $page);
 		if($as_array){
 			return $list;
 		}
@@ -511,7 +544,7 @@ abstract class Model extends DAO{
 		$change_keys = $this->getValueChangeKeys();
 		$data = array_clear_fields(array_keys($change_keys), $data);
 		list($data) = self::validate($data, Query::UPDATE, $this->$pk);
-		return $this->getDbRecord(self::DB_WRITE)->update($this->getTableName(), $data, $this->getPrimaryKey().'='.$this->$pk);
+		return $this->getDbDriver(self::DB_WRITE)->update($this->getTableName(), $data, $this->getPrimaryKey().'='.$this->$pk);
 	}
 
 	/**
@@ -527,9 +560,9 @@ abstract class Model extends DAO{
 		$data = $this->getValues();
 		list($data) = self::validate($data, Query::INSERT);
 
-		$result = $this->getDbRecord(self::DB_WRITE)->insert($this->getTableName(), $data);
+		$result = $this->getDbDriver(self::DB_WRITE)->insert($this->getTableName(), $data);
 		if($result){
-			$pk_val = $this->getDbRecord(self::DB_WRITE)->getLastInsertId();
+			$pk_val = $this->getDbDriver(self::DB_WRITE)->getLastInsertId();
 			$this->setValue($this->getPrimaryKey(), $pk_val);
 			return $pk_val;
 		}
@@ -727,13 +760,13 @@ abstract class Model extends DAO{
 				continue;
 			}
 
-			$result = $tmp->getDbRecord(self::DB_WRITE)->insert($tmp->getTableName(), $data);
+			$result = $tmp->getDbDriver(self::DB_WRITE)->insert($tmp->getTableName(), $data);
 			if(!$result && $break_on_fail){
 				return false;
 			}
 
 			if($result){
-				$pk_val = $tmp->getDbRecord(self::DB_WRITE)->getLastInsertId();
+				$pk_val = $tmp->getDbDriver(self::DB_WRITE)->getLastInsertId();
 				$tmp->setValue($tmp->getPrimaryKey(), $pk_val);
 				$return_list[] = $pk_val;
 			}
@@ -751,7 +784,7 @@ abstract class Model extends DAO{
 			return false;
 		}
 		$statement = $this->getPrimaryKey().'='.$pk_val;
-		$result = $this->getDbRecord(self::DB_WRITE)->delete($this->getTableName(), $statement, 1);
+		$result = $this->getDbDriver(self::DB_WRITE)->delete($this->getTableName(), $statement, 1);
 		return !!$result;
 	}
 
@@ -770,15 +803,15 @@ abstract class Model extends DAO{
 			foreach($args as $key => $val) {
 				if(is_array($val)){
 					array_walk($val, function (&$item) use ($obj){
-						$item = $obj->getDbRecord(self::DB_READ)->quote($item);
+						$item = $obj->getDbDriver(self::DB_READ)->quote($item);
 					});
 					if(!empty($val)){
 						$rst .= $arr[$key] . '(' . join(',', $val) . ')';
 					} else {
-						$rst .= $arr[$key] . '(' . $obj->getDbRecord(self::DB_READ)->quote('') . ')';
+						$rst .= $arr[$key] . '(' . $obj->getDbDriver(self::DB_READ)->quote('') . ')';
 					}
 				} else {
-					$rst .= $arr[$key] . $obj->getDbRecord(self::DB_READ)->quote($val);
+					$rst .= $arr[$key] . $obj->getDbDriver(self::DB_READ)->quote($val);
 				}
 			}
 			$rst .= array_pop($arr);
@@ -804,14 +837,6 @@ abstract class Model extends DAO{
 			return $this->insert();
 		}
 		return false;
-	}
-
-	/**
-	 * 获取所有属性key
-	 * @return array
-	 */
-	public function getAllPropertiesKey(){
-		return array_keys($this->getPropertiesDefine());
 	}
 
 	/**

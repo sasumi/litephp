@@ -3,7 +3,7 @@ namespace Lite\Api;
 
 use Lite\Cache\Helper;
 use Lite\Component\Client as ComClient;
-use Lite\Core\Request;
+use Lite\Component\Http;
 use Lite\Core\Result;
 use Lite\Exception\Exception;
 
@@ -235,7 +235,7 @@ abstract class Client {
 		);
 		$url = 'http://htadmin.hai0.com/order/api/index.php/log.cgiret';
 		try {
-			Request::post($url, $data, 2);
+			Http::post($url, $data, 2);
 		} catch (Exception $ex){
 		}
 	}
@@ -263,7 +263,7 @@ abstract class Client {
 		);
 		$url = 'http://htadmin.hai0.com/order/api/index.php/log.cgispd';
 		try {
-			Request::post($url, $data, 2);
+			Http::post($url, $data, 2);
 		} catch (Exception $ex){
 
 		}
@@ -322,19 +322,19 @@ abstract class Client {
 							$data = is_array($req['data']) ? http_build_query($req['data']) : $req['data'];
 							$url = $req['url'] . (stripos($req['url'], '?') ? '&' : '?') . $data;
 						}
-						$result = Request::get($req['url'], $this->request_config['timeout']);
+						$result = Http::get($req['url'], $this->request_config['timeout']);
 						break;
 
 					case 'json':
-						$result = Request::postInJSON($req['url'], $req['data'],  $this->request_config['timeout']);
+						$result = Http::postInJSON($req['url'], $req['data'],  $this->request_config['timeout']);
 						break;
 
 					case 'post':
 					default:
 						if($this->request_config['request_format'] == self::REQ_JSON){
-							$result = Request::postInJSON($req['url'], $req['data'], $this->request_config['timeout']);
+							$result = Http::postInJSON($req['url'], $req['data'], $this->request_config['timeout']);
 						} else {
-							$result = Request::post($req['url'], $req['data'], $this->request_config['timeout']);
+							$result = Http::post($req['url'], $req['data'], $this->request_config['timeout']);
 						}
 				}
 			} catch(Exception $ex){

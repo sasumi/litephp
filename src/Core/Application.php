@@ -3,9 +3,12 @@ namespace Lite\Core;
 
 use Exception as Exception;
 use Lite\Api\Daemon;
+use Lite\Component\Http;
+use Lite\DB\Driver\DBAbstract;
 use Lite\DB\Record;
 use Lite\Exception\BizException;
 use Lite\Exception\RouterException;
+use function Lite\func\glob_recursive;
 use Lite\Logger\Logger;
 use Lite\Logger\LoggerLevel;
 use Lite\Logger\Message\CommonMessage;
@@ -71,8 +74,8 @@ class Application{
 
 				//找不到路由
 				if($ex instanceof RouterException){
+					Http::sendHttpStatus(404);
 					if($page404 = Config::get('app/page404')){
-						Request::sendHttpStatus(404);
 						$vc = Config::get('app/render');
 
 						/** @var View $view */
@@ -83,7 +86,7 @@ class Application{
 				//其他类型错误
 				else {
 					if($page_error = Config::get('app/page_error')){
-						Header('Location:'.$page_error);
+						Http::redirect($page_error);
 					};
 				}
 
@@ -153,19 +156,21 @@ class Application{
 	 * @throws \Lite\Exception\RouterException
 	 */
 	private function dispatch(){
+		$path = Router::getPath();
+		$path = ltrim($path, "/");
 		$controller = Router::getController();
 		$action = Router::getAction();
 		$get = Router::get();
 		$post = Router::post();
 
-		$CtrlClass = $this->namespace.Config::get('app/controller_pattern');
-		$CtrlClass = str_replace('{CONTROLLER}', ucfirst($controller), $CtrlClass);
-		if(!class_exists($CtrlClass)){
-			throw new RouterException('Controller not found:'.$CtrlClass);
-		}
+		$ctrl_class = $this->namespace.'\\controller\\'.Config::get('app/controller_pattern');
+		$ctrl_class = str_replace('{CONTROLLER}', ucfirst($controller), $ctrl_class);
+		$ctrl_class = str_replace('{PATH}', str_replace('/', '\\', $path), $ctrl_class);
+
+		self::loadControllerCaseInsensitive($ctrl_class);
 
 		/** @var Controller $ctrl */
-		$ctrl = new $CtrlClass($controller, $action);
+		$ctrl = new $ctrl_class($controller, $action);
 		self::$controller = $ctrl;
 		$is_ctrl_prototype = $ctrl instanceof Controller;
 
@@ -182,7 +187,7 @@ class Application{
 		}
 
 		//禁止私有方法、静态方法被当做action访问
-		$rc = new ReflectionClass($CtrlClass);
+		$rc = new ReflectionClass($ctrl_class);
 		$m = $rc->getMethod($action);
 		if(!$m->isPublic() || $m->isStatic()){
 			throw new RouterException('Action Should Be Public And Non Static');
@@ -223,7 +228,7 @@ class Application{
 	 */
 	private function initCLIMode(){
 		if(PHP_SAPI != 'cli'){
-			Request::sendHttpStatus(405);
+			Http::sendHttpStatus(405);
 			die('ACCESS DENY');
 		}
 
@@ -353,12 +358,12 @@ class Application{
 		$GLOBALS['__DB_QUERY_MEM__'] = 0;
 		$GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__'] = 0;
 
-		Hooker::add(Record::EVENT_BEFORE_DB_QUERY, function ($sql) use ($STATIC_KEY){
+		Hooker::add(DBAbstract::EVENT_BEFORE_DB_QUERY, function ($sql) use ($STATIC_KEY){
 			$GLOBALS['__DB_QUERY_COUNT__']++;
 			Statistics::instance($STATIC_KEY)->mark('BEFORE DB QUERY', $sql);
 		});
 
-		Hooker::add(Record::EVENT_AFTER_DB_QUERY, function ($sql) use ($STATIC_KEY){
+		Hooker::add(DBAbstract::EVENT_AFTER_DB_QUERY, function ($sql) use ($STATIC_KEY){
 			Statistics::instance($STATIC_KEY)->markAfter('AFTER DB QUERY', $sql);
 			$tmp = Statistics::instance($STATIC_KEY)->getTimeTrackList();
 			$tt = array_last($tmp);
@@ -366,11 +371,14 @@ class Application{
 			$GLOBALS['__DB_QUERY_MEM__'] += $tt['mem_used'];
 		});
 
-		Hooker::add(Record::EVENT_ON_DB_QUERY_DISTINCT, function(){
+		Hooker::add(DBAbstract::EVENT_ON_DB_QUERY_DISTINCT, function(){
 			$GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__']++;
 		});
 
 		Hooker::add(self::EVENT_AFTER_APP_SHUTDOWN, function ($tm = null) use ($SESSION_KEY, $STATIC_KEY){
+			if(Router::get('SYS_STAT')){
+				return;
+			}
 			$pc = 0;
 			if($GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__'] + $GLOBALS['__DB_QUERY_COUNT__']){
 				$pc = number_format($GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__'] / ($GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__'] + $GLOBALS['__DB_QUERY_COUNT__'])*100, 2, null, '');
@@ -442,24 +450,28 @@ class Application{
 	}
 
 	/**
-	 * 不区分大小写加载controller文件（注意，仅文件名不区分大小写，目录还是区分的）
+	 * 不区分大小写加载controller文件，包括文件名和目录路径
 	 * @param $ctrl_class
-	 * @return bool
+	 * @throws \Lite\Exception\RouterException
 	 */
 	private function loadControllerCaseInsensitive($ctrl_class){
-		$p = Config::get('app/path');
+		$controller_root = Config::get('app/path').'controller/';
+		$files = glob_recursive($controller_root.'*.php', GLOB_NOSORT);
+
 		$ns = $this->namespace;
-		$ctrl_class = preg_replace('/^'.$ns.'\\\\/', '', $ctrl_class);
-		$f = rtrim($p, '/\\').'/'.$ctrl_class.'.php';
-		$dir = dirname($f);
-		$base_name = strtolower(basename($f));
-		$all_files = glob($dir.'/*.php', GLOB_NOSORT);
-		foreach($all_files as $cf){
-			if(strtolower(basename($cf)) == $base_name){
-				include_once $cf;
-				return true;
+		$c = preg_replace('/^'.$ns.'\\\\/', '', $ctrl_class);
+		$class_file = str_replace('\\', '/', Config::get('app/path').$c.'.php');
+
+		foreach($files as $f){
+			$f = str_replace('\\','/',$f);
+			if(strcasecmp($f, $class_file) === 0){
+				include_once $f;
+				if(!class_exists($ctrl_class)){
+					throw new RouterException('controller class not found:'.$ctrl_class);
+				}
+				return;
 			}
 		}
-		return false;
+		throw new RouterException('controller file not found:'.$ctrl_class);
 	}
 }

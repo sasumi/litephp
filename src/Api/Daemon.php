@@ -1,7 +1,7 @@
 <?php
 namespace Lite\Api;
 
-use Lite\Core\Request;
+use Lite\Component\Http;
 use Lite\Core\Config;
 use Lite\Core\Router;
 use Lite\Exception\Exception;
@@ -27,7 +27,7 @@ abstract class Daemon{
 		$param = null;
 		list($api_instance, $param) = ($router ? call_user_func($router, $api_path) : self::defaultParser($api_path));
 		if(!$api_instance){
-			Request::sendHttpStatus(404);
+			Http::sendHttpStatus(404);
 			return false;
 		}
 
@@ -39,11 +39,11 @@ abstract class Daemon{
 		$request_format = $api_instance->requestFormat();
 
 		if(!$api_instance->checkRequestFormat($param, $request_format)){
-			Request::sendHttpStatus(501);
+			Http::sendHttpStatus(501);
 		}
 
 		if($api_instance->certify($param) !== true){
-			Request::sendHttpStatus(401);
+			Http::sendHttpStatus(401);
 			return false;
 		}
 

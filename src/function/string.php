@@ -45,6 +45,9 @@ namespace Lite\func {
 	 * @return string
 	 */
 	function h($str, $len = null, $tail = '...') {
+		if(is_object($str)){
+			return $str;
+		}
 		if(is_array($str)) {
 			$ret = array();
 			foreach ($str as $k => $s) {

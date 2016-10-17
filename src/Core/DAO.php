@@ -46,6 +46,14 @@ abstract class DAO implements Iterator, ArrayAccess{
 	}
 
 	/**
+	 * 获取所有属性key
+	 * @return array
+	 */
+	public function getAllPropertiesKey(){
+		return array_keys($this->getPropertiesDefine());
+	}
+
+	/**
 	 * 获取属性定义
 	 * @param null $key
 	 * @return array|null
@@ -129,10 +137,22 @@ abstract class DAO implements Iterator, ArrayAccess{
 
 	/**
 	 * 转换当前数据为数组
+	 * @param array $fields
 	 * @return array
 	 */
-	final public function toArray(){
-		return $this->_values;
+	final public function toArray($fields=array()){
+		$ret = array();
+		if($fields){
+			foreach($fields as $field){
+				$ret[$field] = $this->{$field};
+			}
+		} else {
+			$defines = $this->getPropertiesDefine();
+			foreach($defines as $k=>$def){
+				$ret[$k] = $this->{$k};
+			}
+		}
+		return $ret;
 	}
 
 	/**
@@ -164,15 +184,16 @@ abstract class DAO implements Iterator, ArrayAccess{
 	}
 
 	/**
-	 * 转换对象数组为二维数组
+	 * 转换对象数组为二维数组，数组中包含虚拟属性key
 	 * @param array $object_list
+	 * @param array $fields
 	 * @return array
 	 */
-	public static function convertObjectListToArray(array $object_list){
+	public static function convertObjectListToArray(array $object_list, $fields=array()){
 		$ret = array();
 		/** @var DAO $obj */
 		foreach($object_list as $obj){
-			$ret[] = $obj->toArray();
+			$ret[] = $obj->toArray($fields);
 		}
 		return $ret;
 	}
