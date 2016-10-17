@@ -23,10 +23,6 @@ $cmd_list = array(
 	'crud' => array('CRUD', '-t %T% -m %M% -c %C%'),
 	'allcrud' => array('All CRUD'),
 );
-
-$ns_list = array(
-	'www'=
-);
 ?>
 <!doctype html>
 <html lang="en">
