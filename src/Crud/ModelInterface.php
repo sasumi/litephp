@@ -1,5 +1,5 @@
 <?php
-namespace Lite\CRUD;
+namespace Lite\Crud;
 
 /**
  * Created by PhpStorm.

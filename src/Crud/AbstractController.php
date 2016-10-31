@@ -1,10 +1,11 @@
 <?php
-namespace Lite\CRUD;
+namespace Lite\Crud;
 use Lite\Component\Paginate;
 use Lite\Core\Controller as CoreController;
 use Lite\Core\Result;
 use Lite\Core\Router;
-use Lite\CRUD\ControllerInterface as CI;
+use Lite\Core\View;
+use Lite\Crud\ControllerInterface as CI;
 use Lite\DB\Model;
 use Lite\DB\Query;
 use Lite\Exception\Exception;
@@ -54,16 +55,15 @@ abstract class AbstractController extends CoreController{
 	 * @throws Exception
 	 */
 	protected function getModelInstance(){
-		/** @var Model $model */
 		if($this instanceof CI){
-			$model = $this->getModel();
+			$model = $this->getModelClass();
 			$ins = $model::meta();
 			if($ins instanceof ModelInterface){
 				return $ins;
 			}
-			throw new Exception('mode should inherit interface model');
+			throw new Exception('CRUD数据模型必须继承 ModelInterface接口');
 		}
-		throw new Exception('controller should inherit interface CI');
+		throw new Exception('CRUD控制器必须继承 ControllerInterface接口');
 	}
 
 	/**
@@ -130,9 +130,9 @@ abstract class AbstractController extends CoreController{
 			return array();
 		}
 		if(in_array('*', $fields)){
-			/** @var Model $mod */
-			$mod = $this->getModel();
-			$ins = $mod::meta();
+			/** @var Model $model */
+			$model = $this->getModelClass();
+			$ins = $model::meta();
 			$fields = $ins->getAllPropertiesKey();
 		}
 		return $fields;
@@ -266,25 +266,12 @@ abstract class AbstractController extends CoreController{
 		}
 
 		//排序
-		$order_fields = $support_list[CI::OP_INDEX]['order_fields'];
-		$order_links = array(); //排序链接,当前排序状态
-		$order_field = $search['_ord_'];
-		$order_dir = $search['_dir_'];
+		$order_fields = $support_list[CI::OP_INDEX]['order_fields'] ?: array();
 		if($order_fields){
-			$ops_dir = ($order_dir == 'desc' || !$order_dir) ? 'asc' : 'desc';
-			foreach($order_fields as $f){
-				if($order_field == $f){
-					$search['_dir_'] = $ops_dir;
-					$search['_ord_'] = $f;
-					$order_links[$f] = array(Router::getUrl(Router::getController().'/index', $search), $order_dir);
-				} else {
-					$search['_dir_'] = $ops_dir;
-					$search['_ord_'] = $f;
-					$order_links[$f] = array(Router::getUrl(Router::getController().'/index', $search), '');
-				}
-			}
+			View::setOrderConfig($order_fields);
+			list($order_field, $order_dir) = View::getCurrentOrderSet();
 			if($order_field && $order_dir){
-				$query->order("`".addslashes($order_field)."` ".($order_dir == 'asc' ? 'ASC':'DESC'));
+				$query->order("`".addslashes($order_field)."` $order_dir");
 			}
 		}
 
@@ -319,19 +306,19 @@ abstract class AbstractController extends CoreController{
 
 		$update_in_new_page = $this->checkNewWindowFlag(CI::OP_UPDATE, $ins);
 		return array(
-			'search' => $support_quick_search ? $search : null,
-			'data_list' => $list,
-			'paginate' => $paginate,
+			'search'               => $support_quick_search ? $search : null,
+			'data_list'            => $list,
+			'paginate'             => $paginate,
 			'quick_search_defines' => $quick_search_defines,
-			'update_in_new_page' => $update_in_new_page,
-			'defines' => $defines,
-			'display_fields' => $this->getOpFields(CI::OP_INDEX),
-			'order_links' => $order_links,
-			'quick_update_fields' => $this->getQuickUpdateFields(CI::OP_INDEX),
-			'export_link' => $export_link,
-			'export_format' => $export_format,
-			'model_instance' => $ins,
-			'operation_list' => $operation_list,
+			'update_in_new_page'   => $update_in_new_page,
+			'defines'              => $defines,
+			'order_fields'         => $order_fields,
+			'display_fields'       => $this->getOpFields(CI::OP_INDEX),
+			'quick_update_fields'  => $this->getQuickUpdateFields(CI::OP_INDEX),
+			'export_link'          => $export_link,
+			'export_format'        => $export_format,
+			'model_instance'       => $ins,
+			'operation_list'       => $operation_list,
 		);
 	}
 
@@ -451,7 +438,7 @@ abstract class AbstractController extends CoreController{
 		$pk_val = (int)$get[$pk];
 
 		$stateKey = $ins->getStateKey();
-		$toState = (int)$get[$stateKey];
+		$toState = $get[$stateKey];
 		$instance = $ins::findOneByPk($pk_val);
 
 		if($instance) {

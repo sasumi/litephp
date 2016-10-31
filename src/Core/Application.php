@@ -1,20 +1,20 @@
 <?php
 namespace Lite\Core;
 
-use Exception as Exception;
 use Lite\Api\Daemon;
 use Lite\Component\Http;
 use Lite\DB\Driver\DBAbstract;
 use Lite\Exception\BizException;
+use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
-use function Lite\func\decodeURI;
-use function Lite\func\format_size;
 use Lite\Logger\Logger;
 use Lite\Logger\LoggerLevel;
 use Lite\Logger\Message\CommonMessage;
 use ReflectionClass;
 use function Lite\func\array_last;
+use function Lite\func\decodeURI;
 use function Lite\func\dump;
+use function Lite\func\format_size;
 use function Lite\func\glob_recursive;
 use function Lite\func\print_exception;
 use function Lite\func\print_sys_error;
@@ -26,10 +26,9 @@ use function Lite\func\print_sys_error;
  * Time: 9:00
  */
 class Application{
-	const MODE_WEB = 1; //普通HTTP web模式
-	const MODE_API = 2; //HTTP API模式
-	const MODE_CLI = 3; //CLI命令模式
-	const MODE_SRC = 4; //源码模式（该模式提供代码加载逻辑等，不进行初始化Controller）
+	const MODE_WEB = 0x01; //普通HTTP web模式
+	const MODE_API = 0x02; //HTTP API模式
+	const MODE_CLI = 0x03; //CLI命令模式（该模式提供代码加载逻辑等，不进行初始化Controller）
 
 	const EVENT_BEFORE_APP_INIT = 'EVENT_BEFORE_APP_INIT';
 	const EVENT_AFTER_APP_INIT = 'EVENT_AFTER_APP_INIT';
@@ -50,6 +49,70 @@ class Application{
 	private $namespace;
 
 	/**
+	 * 框架初始化方法
+	 * @param $namespace
+	 * @param null $app_root
+	 * @param $mode
+	 * @throws \Exception
+	 * @internal param null $app_root
+	 */
+	private function __construct($namespace, $app_root = null, $mode){
+		$this->namespace = $namespace;
+
+		//注册项目文件自动加载逻辑
+		spl_autoload_register(array($this, 'autoload'));
+
+		Hooker::fire(self::EVENT_BEFORE_APP_INIT);
+
+		//配置初始化
+		Config::init($app_root);
+
+		//自动性能统计（SQL），仅在web模式中生效
+		if($mode == self::MODE_WEB && Config::get('app/auto_statistics')){
+			$this->autoStatistics();
+		}
+
+		//绑定项目根目录
+		self::addIncludePath(Config::get('app/path'), true);
+
+		//绑定项目include目录
+		self::addIncludePath(Config::get('app/path').'include/');
+
+		//绑定vendor目录loader
+		$vl = Config::get('app/root').'vendor/autoload.php';
+		if(is_file($vl)){
+			include_once $vl;
+		}
+
+		//绑定项目数据库定义目录
+		self::addIncludePath(Config::get('app/database_source'));
+
+		register_shutdown_function(function (){
+			Hooker::fire(Application::EVENT_AFTER_APP_SHUTDOWN);
+		});
+
+		Hooker::fire(self::EVENT_AFTER_APP_INIT);
+
+		//启用相应的应用模式
+		switch($mode){
+			case self::MODE_WEB:
+				$this->initWebMode();
+				break;
+
+			case self::MODE_API:
+				$this->initApiMode();
+				break;
+
+			case self::MODE_CLI:
+				$this->initCLIMode();
+				break;
+
+			default:
+				throw new Exception('NO SPEC MODE');
+		}
+	}
+
+	/**
 	 * 初始化框架逻辑
 	 * @param null $app_root 项目物理路径
 	 * @param string $namespace app namespace
@@ -59,41 +122,66 @@ class Application{
 	 */
 	public static function init($namespace, $app_root = null, $mode=self::MODE_WEB){
 		if(!self::$instance){
-			try{
-				self::$instance = new self($namespace, $app_root, $mode);
-			} catch(Exception $ex){
-				//调试模式
-				if(Config::get('app/debug')){
-					print_exception($ex);
+			//BIND APP ERROR
+			set_error_handler(function ($code, $message, $file, $line, $context){
+				Hooker::fire(Application::EVENT_ON_APP_ERR, $code, $message, $file, $line, $context);
+			}, E_USER_ERROR | E_USER_WARNING);
+
+			//BIND APP EXCEPTION
+			set_exception_handler(function ($exception){
+				self::handleException($exception);
+				Hooker::fire(Application::EVENT_ON_APP_EX, $exception);
+			});
+
+			//BIND LAST ERROR
+			register_shutdown_function(function(){
+				$error = error_get_last();
+				if($error && ($error['type'] == E_ERROR || $error['type'] == E_WARNING)){
+					self::handleException(new Exception($error['message'], null, $error));
 				}
+			});
 
-				$log_level = ($ex instanceof RouterException) ? LoggerLevel::INFO : LoggerLevel::WARNING;
-				Logger::instance('LITE')->log($log_level, new CommonMessage('APP EX:'.$ex->getMessage(),
-					array('referer'=> $_SERVER['HTTP_REFERER'], 'exception'=>$ex->__toString())));
-
-				//找不到路由
-				if($ex instanceof RouterException){
-					Http::sendHttpStatus(404);
-					if($page404 = Config::get('app/page404')){
-						$vc = Config::get('app/render');
-
-						/** @var View $view */
-						$view = new $vc();
-						$view->render($page404);
-					}
-				}
-				//其他类型错误
-				else {
-					if($page_error = Config::get('app/page_error')){
-						Http::redirect($page_error);
-					};
-				}
-
-				//即使上面页面跳转了，这里还会继续输出错误信息，方便调试
-				die('<!-- '.htmlspecialchars($ex->getMessage()).'-->');
-			}
+			//init app
+			self::$instance = new self($namespace, $app_root, $mode);
 		}
 		return self::$instance;
+	}
+
+	/**
+	 * handle application exception
+	 * @param \Exception $ex
+	 * @throws \Exception
+	 */
+	private static function handleException(\Exception $ex){
+		//调试模式
+		if(Config::get('app/debug')){
+			print_exception($ex);
+		}
+
+		$log_level = ($ex instanceof RouterException) ? LoggerLevel::INFO : LoggerLevel::WARNING;
+		Logger::instance('LITE')->log($log_level, new CommonMessage('APP EX:'.$ex->getMessage(),
+			array('referer'=> $_SERVER['HTTP_REFERER'], 'exception'=>$ex->__toString())));
+
+		//找不到路由
+		if($ex instanceof RouterException){
+			Http::sendHttpStatus(404);
+			if($page404 = Config::get('app/page404')){
+				$vc = Config::get('app/render');
+
+				/** @var View $view */
+				$view = new $vc();
+				$view->render($page404);
+			}
+		}
+		//其他类型错误
+		else {
+			if($page_error = Config::get('app/page_error')){
+				Http::redirect($page_error);
+			};
+		}
+
+		//即使上面页面跳转了，这里还会继续输出错误信息，方便调试
+		die('<!-- '.htmlspecialchars($ex->getMessage()).'-->');
 	}
 
 	/**
@@ -226,11 +314,6 @@ class Application{
 	 * 相应的参数会被转换为$_REQUEST变量
 	 */
 	private function initCLIMode(){
-		if(PHP_SAPI != 'cli'){
-			Http::sendHttpStatus(405);
-			die('ACCESS DENY');
-		}
-
 		$argv = $_SERVER['argv'];
 		$params = array();
 
@@ -247,92 +330,6 @@ class Application{
 			}
 		}
 		$_REQUEST = $params;
-	}
-
-	/**
-	 * 框架初始化方法
-	 * @param $namespace
-	 * @param null $app_root
-	 * @param $mode
-	 * @throws \Exception
-	 * @internal param null $app_root
-	 */
-	private function __construct($namespace, $app_root = null, $mode){
-		$this->namespace = $namespace;
-
-		//注册项目文件自动加载逻辑
-		spl_autoload_register(array($this, 'autoload'));
-
-		//记录系统启动时间
-		$__init_time__ = microtime(true);
-
-		Hooker::fire(self::EVENT_BEFORE_APP_INIT);
-
-		//配置初始化
-		Config::init($app_root);
-
-		//自动性能统计（SQL），仅在web模式中生效
-		if($mode == self::MODE_WEB && Config::get('app/auto_statistics')){
-			$this->autoStatistics();
-		}
-
-		//绑定项目根目录
-		self::addIncludePath(Config::get('app/path'), true);
-
-		//绑定项目include目录
-		self::addIncludePath(Config::get('app/path').'include/');
-
-		//绑定vendor目录loader
-		$vl = Config::get('app/root').'vendor/autoload.php';
-		if(is_file($vl)){
-			include_once $vl;
-		}
-
-		//绑定项目数据库定义目录
-		self::addIncludePath(Config::get('app/database_source'));
-
-		//APP EXCEPTION
-		if(Hooker::exists(self::EVENT_ON_APP_EX)){
-			set_exception_handler(function ($exception){
-				Hooker::fire(Application::EVENT_ON_APP_EX, $exception);
-			});
-		}
-
-		//APP ERROR
-		if(Hooker::exists(self::EVENT_ON_APP_ERR)){
-			set_error_handler(function ($code, $message, $file, $line, $context){
-				Hooker::fire(Application::EVENT_ON_APP_ERR, $code, $message, $file, $line, $context);
-			}, E_USER_ERROR | E_USER_WARNING);
-		}
-
-		register_shutdown_function(function () use ($__init_time__){
-			$run_time = round((microtime(true) - $__init_time__)*1000, 2);
-			Hooker::fire(Application::EVENT_AFTER_APP_SHUTDOWN, $run_time);
-		});
-
-		Hooker::fire(self::EVENT_AFTER_APP_INIT);
-
-		//启用相应的应用模式
-		switch($mode){
-			case self::MODE_WEB:
-				$this->initWebMode();
-				break;
-
-			case self::MODE_API:
-				$this->initApiMode();
-				break;
-
-			case self::MODE_CLI:
-				$this->initCLIMode();
-				break;
-
-			case self::MODE_SRC:
-				//source mode
-				break;
-
-			default:
-				throw new Exception('NO SPEC MODE');
-		}
 	}
 
 	/**
@@ -374,7 +371,7 @@ class Application{
 			$GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__']++;
 		});
 
-		Hooker::add(self::EVENT_AFTER_APP_SHUTDOWN, function ($tm = null) use ($SESSION_KEY, $STATIC_KEY){
+		Hooker::add(self::EVENT_AFTER_APP_SHUTDOWN, function() use ($SESSION_KEY, $STATIC_KEY){
 			if(Router::get('SYS_STAT')){
 				return;
 			}
@@ -388,7 +385,7 @@ class Application{
 				"DEDUPLICATION QUERY:".$GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__']."($pc%)".
 				"\t\tDB QUERY COST MEM:".format_size($GLOBALS['__DB_QUERY_MEM__'])."\n\n";
 
-			$msg .= "[PROCESS USED TIME] ".$tm."ms";
+			$msg .= "[PROCESS USED TIME] ".number_format((microtime(true)-$_SERVER['REQUEST_TIME_FLOAT'])*1000, 1)."ms";
 			Statistics::instance($STATIC_KEY)->mark($msg, str_repeat('=', 120)."\nAPP SHUTDOWN");
 			if(!headers_sent()){
 				session_start();

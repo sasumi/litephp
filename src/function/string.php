@@ -38,6 +38,22 @@ function substr_utf8($string, $length, $tail = '...'){
 }
 
 /**
+ * covert integer to string
+ * @param $data
+ * @return array|string
+ */
+function int2str($data){
+	if(is_array($data)){
+		foreach($data as $k => $item){
+			$data[$k] = int2str($item);
+		}
+	} else{
+		return (string)$data;
+	}
+	return $data;
+}
+
+/**
  * 输出html变量
  * @param array|string $str
  * @param $len

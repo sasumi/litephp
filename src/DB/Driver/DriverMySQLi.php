@@ -84,10 +84,6 @@ class DriverMysqli extends DBAbstract{
 	 */
 	public function connect(array $config, $re_connect = false){
 		$conn = new mysqli($config['host'], $config['user'], $config['password'], $config['database'], $config['port']);
-		if($config['charset']){
-			$config['charset'] = str_replace('-', '', $config['charset']);
-			$conn->query("SET NAMES '".$config['charset']."'");
-		}
 		$this->conn = $conn;
 	}
 }

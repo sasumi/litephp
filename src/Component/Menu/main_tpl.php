@@ -8,7 +8,7 @@
 	use const Lite\Component\Menu\MENU_KEY_URI;
 	use function Lite\func\array_first;
 	use function Lite\func\dump;
-
+	
 	/**
 	 * @var View $viewer
 	 * @var array $main_nav

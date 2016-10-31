@@ -1,5 +1,5 @@
 <?php
-namespace Lite\CRUD;
+namespace Lite\Crud;
 
 /**
  * 多级分类CRUD接口

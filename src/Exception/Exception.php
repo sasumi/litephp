@@ -1,5 +1,6 @@
 <?php
 namespace Lite\Exception;
+
 use Exception as OrgException;
 
 /**
@@ -8,22 +9,27 @@ use Exception as OrgException;
  * Date: 2014/11/18
  * Time: 9:49
  */
-class Exception extends OrgException {
+class Exception extends OrgException{
 	protected $message = 'Unknown exception';     // Exception message
-    protected $code    = -1;                       // User-defined exception code
-    protected $file;                              // Source filename of exception
-    protected $line;                              // Source line of exception
+	protected $code = -1;                       // User-defined exception code
+	protected $file;                              // Source filename of exception
+	protected $line;                              // Source line of exception
 
 	public $data;
+
+	public function getData(){
+		return $this->data;
+	}
 
 	/**
 	 * 构造方法，支持传入数据
 	 * @param null $message
 	 * @param int $code
 	 * @param null $data current context data
+	 * @param null $prev_exception
 	 */
-	public function __construct($message=null, $code=0, $data=null){
-		parent::__construct($message, 0);
+	public function __construct($message = null, $code = 0, $data = null, $prev_exception = null){
+		parent::__construct($message, $code, $prev_exception);
 		$this->data = $data;
 	}
 

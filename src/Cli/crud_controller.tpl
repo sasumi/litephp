@@ -1,6 +1,7 @@
 <?php
 namespace {$namespace};
-use Lite\CRUD\ControllerInterface;
+use www\model\{$model_name};
+use Lite\Crud\ControllerInterface;
 
 /**
  * Created by PhpStorm.
@@ -23,7 +24,7 @@ class {$controller_name} extends {$extend_controller} implements ControllerInter
 	 * get relate model name
 	 * @return string
 	 */
-	public function getModel(){
-		return 'www\model\{$model_name}';
+	public function getModelClass(){
+		return {$model_name}::class;
 	}
 }

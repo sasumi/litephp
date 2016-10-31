@@ -293,7 +293,7 @@ namespace Lite\func {
 	 * @param mix
 	 * @return mixed
 	 */
-	function array_orderby(&$src_arr) {
+	function array_orderby($src_arr) {
 		if(empty($src_arr)){
 			return $src_arr;
 		}
@@ -311,6 +311,7 @@ namespace Lite\func {
 		$args[] = &$data;
 		call_user_func_array('array_multisort', $args);
 		$src_arr = array_pop($args);
+		return $src_arr;
 	}
 
 	/**
@@ -339,13 +340,13 @@ namespace Lite\func {
 	 * @param int $level
 	 * @return array
 	 */
-	function array_filter_subtree($parent_id, $all, $opt = array(), $level = 0) {
+	function array_filter_subtree($parent_id, $all, $opt = array(), $level = 0, $group_by_parents = array()){
 		$opt = array_merge(array(
 			'return_as_tree' => false,             //以目录树返回，还是以平铺数组形式返回
-			'level_key' => 'tree_level',          //返回数据中是否追加等级信息,如果选项为空, 则不追加等级信息
-			'id_key' => 'id',                     //主键键名
-			'parent_id_key' => 'parent_id',       //父级键名
-			'children_key' => 'children'          //返回子集key(如果是平铺方式返回,该选项无效
+			'level_key'      => 'tree_level',      //返回数据中是否追加等级信息,如果选项为空, 则不追加等级信息
+			'id_key'         => 'id',              //主键键名
+			'parent_id_key'  => 'parent_id',       //父级键名
+			'children_key'   => 'children'         //返回子集key(如果是平铺方式返回,该选项无效
 		), $opt);
 
 		$pn_k = $opt['parent_id_key'];
@@ -355,27 +356,25 @@ namespace Lite\func {
 		$c_k = $opt['children_key'];
 
 		$result = array();
-		$has_children = array_group($all, $pn_k);
+		$group_by_parents = $group_by_parents ?: array_group($all, $pn_k);
 
-		foreach ($all as $k=>$item) {
-			if($item[$pn_k] == $parent_id) {
-				if($lv_k) {
-					$item[$lv_k] = $level;
-				}
-				if(!$opt['return_as_tree']) {
+		foreach($all as $k => $item){
+			if($item[$pn_k] == $parent_id){
+				$item[$lv_k] = $level;  //set level
+				if(!$opt['return_as_tree']){
 					$result[] = $item;
 				}
-				if($has_children[$item[$id_k]]) {
-					$sub = array_filter_subtree($item[$id_k], $all, $opt, $level + 1);
-					if(!empty($sub)) {
-						if($as_tree) {
+				if($group_by_parents[$item[$id_k]]){
+					$sub = array_filter_subtree($item[$id_k], $all, $opt, $level+1, $group_by_parents);
+					if(!empty($sub)){
+						if($as_tree){
 							$item[$c_k] = $sub;
-						} else {
+						} else{
 							$result = array_merge($result, $sub);
 						}
 					}
 				}
-				if($as_tree) {
+				if($as_tree){
 					$result[] = $item;
 				}
 			}

@@ -65,12 +65,6 @@ class DriverPDO extends DBAbstract {
 
 		$conn = new PDO($dns, $config['user'], $config['password'], $opt);
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		if($config['charset']){
-			if($config['type'] == 'mysql'){
-				$config['charset'] = str_replace('-', '', $config['charset']);
-			}
-			$conn->exec("SET NAMES '".$config['charset']."'");
-		}
 		$this->conn = $conn;
 		return $conn;
 	}

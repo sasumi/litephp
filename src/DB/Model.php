@@ -274,6 +274,17 @@ abstract class Model extends DAO{
 	}
 
 	/**
+	 * add more find condition
+	 * @param array $args
+	 * @return mixed
+	 */
+	public function andFind(...$args){
+		$statement = self::parseConditionStatement($args, $this);
+		$this->query->where($statement);
+		return $this;
+	}
+
+	/**
 	 * 创建新对象
 	 * @param $data
 	 * @return bool| Model
@@ -484,9 +495,11 @@ abstract class Model extends DAO{
 			return false;
 		}
 
+		$page_index = 0;
+		$page_total = ceil($total / $size);
 		while($total > 0){
-			$data = $this->paginate(array($start, array($start, $size)), $as_array);
-			if(call_user_func($handler, $data) === false){
+			$data = $this->paginate(array($start, $size), $as_array);
+			if(call_user_func($handler, $data, $page_index++, $page_total) === false){
 				break;
 			}
 			$total -= $size;
@@ -567,6 +580,42 @@ abstract class Model extends DAO{
 			return $pk_val;
 		}
 		return false;
+	}
+
+	/**
+	 * replace data
+	 * @param array $data
+	 * @param int $limit
+	 * @param array ...$args
+	 * @return mixed
+	 * @throws \Lite\Exception\BizException
+	 */
+	public static function replace(array $data, $limit = 0, ...$args){
+		$obj = self::meta();
+		$statement = self::parseConditionStatement($args, $obj);
+
+		$obj = static::meta();
+		$table = $obj->getTableName();
+		$result = $obj->getDbDriver(self::DB_WRITE)->replace($table, $data, $statement, $limit);
+		return $result;
+	}
+
+	/**
+	 * increase or decrease offset
+	 * @param $field
+	 * @param $offset
+	 * @param int $limit
+	 * @param array ...$args
+	 * @return int
+	 */
+	public static function increase($field, $offset, $limit=0, ...$args){
+		$obj = self::meta();
+		$statement = self::parseConditionStatement($args, $obj);
+
+		$obj = static::meta();
+		$table = $obj->getTableName();
+		$result = $obj->getDbDriver(self::DB_WRITE)->increase($table, $field, $offset, $statement, $limit);
+		return $result;
 	}
 
 	/**
@@ -772,6 +821,18 @@ abstract class Model extends DAO{
 			}
 		}
 		return $return_list;
+	}
+
+	/**
+	 * 快速批量插入数据，不进行ORM检查
+	 * @param $data_list
+	 * @return mixed
+	 * @throws \Lite\Exception\Exception
+	 */
+	public static function insertManyQuick($data_list){
+		$obj = static::meta();
+		$result = $obj->getDbDriver(self::DB_WRITE)->insert($obj->getTableName(), $data_list);
+		return $result;
 	}
 
 	/**

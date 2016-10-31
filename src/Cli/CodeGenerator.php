@@ -1,6 +1,7 @@
 <?php
 namespace Lite\Cli;
 use PDO;
+use function Lite\func\dump;
 
 !defined('PROJECT_ROOT') && define('PROJECT_ROOT', get_project_dir());
 define('PROJECT_PROTECTED_DIR', PROJECT_ROOT.'/app');
@@ -159,6 +160,7 @@ function generate_crud_model($table_name, $model_name='', $overwrite){
 		'generate_time' => date('H:i:s'),
 		'table_model' => $table_model,
 		'model_name' => $model_name,
+		'model_desc' => $model_desc,
 	));
 
 	$update = is_file($file);
@@ -233,6 +235,8 @@ function generate_table($table, $overwrite){
 	$model_desc = get_table_desc($table);
 	$ns = get_ns();
 
+	$class_const_string = get_const_string($meta_list);
+
 	$str = parser_tpl(file_get_contents(__DIR__.'/table.tpl'), array(
 		'namespace' => $ns."\\db_definition",
 		'generate_date' => date('Y-m-d'),
@@ -242,6 +246,7 @@ function generate_table($table, $overwrite){
 		'class_name' => $class_name,
 		'primary_key' => $pk,
 		'model_desc' => $model_desc,
+		'class_const_string' => $class_const_string,
 		'properties_defines' => $properties_defines
 	));
 	$update = is_file($file);
@@ -473,6 +478,46 @@ function get_properties_defines($meta_list){
 		}
 		$str .= "{$t}\t'entity' => true\n";
 		$str .= "{$t}),";
+	}
+	return $str;
+}
+
+function get_const_string($meta_list){
+	$t = "\t";
+	$str = '';
+
+	foreach($meta_list as $meta){
+		$type = get_field_type($meta);
+		if($type == 'enum'){
+			$ks = explode(',', preg_replace(array('/.*?\(/', '/\).*/'), array('',''), $meta['Type']));
+			array_walk($ks, function(&$item){
+				$item = trim($item, "'");
+			});
+
+			//忽略掉enum不是字符串情况
+			$tmp = '';
+			foreach($ks as $idx=>$k){
+				if(is_numeric($k)){
+					continue 2;
+				}
+				$const_key = strtoupper($meta['Field'].'_'.$k);
+				$tmp .= "{$t}const $const_key = '$k';\n";
+			}
+			$str .= $tmp;
+
+			$ns = explode(',', preg_replace(array('/.*?\(/', '/\).*/'), array('',''), $meta['Comment']));
+			if(count($ns) > 1){
+				$const_map_key = '$'.strtolower($meta['Field'].'_map');
+				$str .= "\n";
+				$str .= "{$t}public static $const_map_key = array(\n";
+				foreach($ks as $idx=>$k){
+					$const_key = strtoupper($meta['Field'].'_'.$k);
+					$n = $ns[$idx];
+					$str .= "{$t}\tself::$const_key => '$n',\n";
+				}
+				$str .= "{$t});\n\n";
+			}
+		}
 	}
 	return $str;
 }

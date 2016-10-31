@@ -352,7 +352,9 @@ abstract class Router{
 		$action = $action ?: self::$DEFAULT_ACTION;
 		
 		//首页
-		if(empty($params) && strtolower($controller) == strtolower(self::$DEFAULT_CONTROLLER) && strtolower($action) == strtolower(self::$DEFAULT_ACTION)){
+		if(empty($params) &&
+			strtolower($controller) == strtolower(self::$DEFAULT_CONTROLLER) &&
+			strtolower($action) == strtolower(self::$DEFAULT_ACTION)){
 			return $app_url;
 		}
 

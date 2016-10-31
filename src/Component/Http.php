@@ -69,7 +69,7 @@ abstract class Http extends Curl{
 	 * @return bool
 	 */
 	public static function sendHttpStatus($code){
-		if(isset(self::$HTTP_STATUS[$code])) {
+		if(!headers_sent() && isset(self::$HTTP_STATUS[$code])) {
 			header('HTTP/1.1 '.$code.' '.self::$HTTP_STATUS[$code]);
 			header('Status:'.$code.' '.self::$HTTP_STATUS[$code]);        //确保FastCGI模式下正常
 			return true;

@@ -22,15 +22,75 @@ abstract class DBAbstract{
 	const EVENT_BEFORE_DB_GET_LIST = 'EVENT_BEFORE_DB_GET_LIST';
 	const EVENT_AFTER_DB_GET_LIST = 'EVENT_AFTER_DB_GET_LIST';
 	const EVENT_ON_DB_QUERY_DISTINCT = 'EVENT_ON_DB_QUERY_DISTINCT';
-
+	
 	private static $in_transaction_mode = false;
 	private static $instance_list = array();
-
+	
 	// select查询去重
 	// 这部分逻辑可能针对某些业务逻辑有影响，如：做某些操作之后立即查询这种
 	// so，如果程序需要，可以通过 Record::distinctQueryOff() 关闭这个选项
 	private static $QUERY_DISTINCT = true;
 	private static $query_cache = array();
+	
+	/**
+	 * database config
+	 * @var array
+	 */
+	private $config = array();
+	
+	/**
+	 * db record construct, connect to database
+	 * @param array $config
+	 */
+	private function __construct($config){
+		$this->config = $config;
+		$this->connect($this->config);
+		
+		//charset
+		if($this->config['charset']){
+			$this->setCharset($this->config['charset']);
+		}
+		
+		//timezone
+		if($this->config['timezone']){
+			$this->setTimeZone($this->config['timezone']);
+		}
+	}
+
+	/**
+	 * debug sql
+	 */
+	public static function debug(){
+		Hooker::add(self::EVENT_BEFORE_DB_QUERY, function($query){
+			dump($query);
+		});
+	}
+	
+	/**
+	 * set charset to connection session
+	 * @param $charset
+	 * @throws \Lite\Exception\Exception
+	 */
+	public function setCharset($charset){
+		$charset = str_replace('-', '', $charset);
+		$this->query("SET NAMES '".$charset."'");
+	}
+	
+	/**
+	 * set timezone to connection session
+	 * @param $timezone
+	 * @throws \Lite\Exception\Exception
+	 */
+	public function setTimeZone($timezone){
+		if(preg_match('/[a-zA-Z]/', $timezone)){
+			$def_tz = date_default_timezone_get();
+			date_default_timezone_set('UTC');
+			date_default_timezone_set($timezone);
+			$timezone = date('P');
+			date_default_timezone_set($def_tz); //reset system default timezone setting
+		}
+		$this->query("SET time_zone = '$timezone'");
+	}
 	
 	/**
 	 * 单例
@@ -44,24 +104,24 @@ abstract class DBAbstract{
 			/** @var self $class */
 			$db_type = strtolower($config['type']) ?: 'mysql';
 			$driver = strtolower($config['driver']) ?: 'pdo';
-
+			
 			if(($driver == 'mysql' || $driver == 'mysqli') && $db_type != 'mysql'){
 				throw new Exception("database driver: [$driver] no fix type: [$db_type]");
 			}
-
+			
 			switch($driver){
 				case 'mysql':
 					$ins = new DriverMySQL($config);
 					break;
-
+				
 				case 'mysqli':
 					$ins = new DriverMysqli($config);
 					break;
-
+				
 				case 'pdo':
 					$ins = new DriverPDO($config);
 					break;
-
+				
 				default:
 					throw new Exception("database config driver: [$driver] no support", 0, $config);
 			}
@@ -69,22 +129,7 @@ abstract class DBAbstract{
 		}
 		return self::$instance_list[$key];
 	}
-
-	/**
-	 * database config
-	 * @var array
-	 */
-	private $config = array();
-
-	/**
-	 * db record construct, connect to database
-	 * @param array $config
-	 */
-	private function __construct($config){
-		$this->config = $config;
-		$this->connect($this->config);
-	}
-
+	
 	/**
 	 * get database config
 	 * @param null $key
@@ -93,7 +138,7 @@ abstract class DBAbstract{
 	public function getConfig($key = null){
 		return $key ? $this->config[$key] : $this->config;
 	}
-
+	
 	/**
 	 * get instance key
 	 * @param array $config
@@ -102,21 +147,21 @@ abstract class DBAbstract{
 	private static function getInstanceKey(array $config){
 		return md5(serialize($config));
 	}
-
+	
 	/**
 	 * turn on distinct query cache
 	 */
 	public static function distinctQueryOn(){
 		self::$QUERY_DISTINCT = true;
 	}
-
+	
 	/**
 	 * turn off distinct query cache
 	 */
 	public static function distinctQueryOff(){
 		self::$QUERY_DISTINCT = false;
 	}
-
+	
 	/**
 	 * begin all transaction
 	 * @return array
@@ -124,14 +169,14 @@ abstract class DBAbstract{
 	public static function beginTransactionAll(){
 		self::$in_transaction_mode = true;
 		$result_list = array();
-
+		
 		/* @var self $ins * */
 		foreach(self::$instance_list as $ins){
 			$result_list[] = $ins->beginTransaction();
 		}
 		return $result_list;
 	}
-
+	
 	/**
 	 * rollback all transaction
 	 */
@@ -143,7 +188,7 @@ abstract class DBAbstract{
 		}
 		return $result_list;
 	}
-
+	
 	/**
 	 * commit all transaction
 	 * @return array
@@ -156,7 +201,7 @@ abstract class DBAbstract{
 		}
 		return $result_list;
 	}
-
+	
 	/**
 	 * cancel all transaction state
 	 * @return array
@@ -170,7 +215,7 @@ abstract class DBAbstract{
 		self::$in_transaction_mode = false;
 		return $result_list;
 	}
-
+	
 	/**
 	 * quote param by database connector
 	 * @param string $data
@@ -181,9 +226,18 @@ abstract class DBAbstract{
 		if(is_array($data)){
 			$data = join(',', $data);
 		}
-		return addslashes($data);
+		if($data === null){
+			return 'null';
+		}
+		if(is_bool($data)){
+			return $data ? 'TRUE' : 'FALSE';
+		}
+		if(!is_string($data) && is_numeric($data)){
+			return $data;
+		}
+		return "'".addslashes($data)."'";
 	}
-
+	
 	/**
 	 * quote array
 	 * @param $data
@@ -196,7 +250,7 @@ abstract class DBAbstract{
 		}
 		return $data;
 	}
-
+	
 	/**
 	 * get data by page
 	 * @param $query
@@ -238,7 +292,7 @@ abstract class DBAbstract{
 		}
 		return $param['result'] ?: array();
 	}
-
+	
 	/**
 	 * get all
 	 * @param Query $query
@@ -247,7 +301,7 @@ abstract class DBAbstract{
 	public function getAll(Query $query){
 		return $this->getPage($query, null);
 	}
-
+	
 	/**
 	 * get one row
 	 * @param Query $query
@@ -260,7 +314,7 @@ abstract class DBAbstract{
 		}
 		return null;
 	}
-
+	
 	/**
 	 * 获取一个字段
 	 * @param Query $query
@@ -274,7 +328,7 @@ abstract class DBAbstract{
 		}
 		return null;
 	}
-
+	
 	/**
 	 * 更新数量
 	 * @param string $table
@@ -290,7 +344,7 @@ abstract class DBAbstract{
 		$this->query($query);
 		return $this->getAffectNum();
 	}
-
+	
 	/**
 	 * 数据更新
 	 * @param string $table
@@ -308,7 +362,49 @@ abstract class DBAbstract{
 		$this->query($query);
 		return $this->getAffectNum();
 	}
-
+	
+	/**
+	 * replace data
+	 * @param $table
+	 * @param array $data
+	 * @param string $condition
+	 * @param $limit
+	 * @return mixed
+	 * @throws \Lite\Exception\BizException
+	 * @throws \Lite\Exception\Exception
+	 */
+	public function replace($table, array $data, $condition = '', $limit = 0){
+		if(empty($data)){
+			throw new BizException('NO REPLACE DATA FOUND');
+		}
+		$query = $this->genQuery()->update()->from($table)->setData($data)->where($condition)->limit($limit);
+		$this->query($query);
+		$affect_num = $this->getAffectNum();
+		if(!$affect_num){
+			$query = $this->genQuery()->insert()->from($table)->setData($data);
+			$this->query($query);
+			return $this->getAffectNum();
+		}
+		return $affect_num;
+	}
+	
+	/**
+	 * @param $table
+	 * @param $field
+	 * @param int $offset
+	 * @param string $statement
+	 * @param int $limit
+	 * @return int
+	 */
+	public function increase($table, $field, $offset = 1, $statement = '', $limit = 0){
+		$off = $offset>0 ? "+ $offset" : "- $offset";
+		$where = $statement ? "WHERE $statement" : '';
+		$limit_str = $limit>0 ? "LIMIT $limit" : '';
+		$query = "UPDATE `$table` SET `$field` = `$field` $off $where $limit_str";
+		$this->query($query);
+		return $this->getAffectNum();
+	}
+	
 	/**
 	 * 删除数据库数据
 	 * @param $table
@@ -324,7 +420,7 @@ abstract class DBAbstract{
 		$result = $this->query($query);
 		return !!$result;
 	}
-
+	
 	/**
 	 * 数据插入
 	 * @param $table
@@ -340,7 +436,7 @@ abstract class DBAbstract{
 		$query = $this->genQuery()->insert()->from($table)->setData($data)->where($condition);
 		return $this->query($query);
 	}
-
+	
 	/**
 	 * 产生Query对象
 	 * @return Query
@@ -351,7 +447,7 @@ abstract class DBAbstract{
 		$ins->setTablePrefix($prefix);
 		return $ins;
 	}
-
+	
 	/**
 	 * sql query
 	 * @param $query
@@ -365,42 +461,43 @@ abstract class DBAbstract{
 			$result = $this->dbQuery($query);
 			Hooker::fire(self::EVENT_AFTER_DB_QUERY, $query, $result);
 			return $result;
-		} catch(Exception $ex){
+		} catch(\Exception $ex){
 			Hooker::fire(self::EVENT_DB_QUERY_ERROR, $ex, $query, $this->config);
-			throw new Exception($ex->getMessage(), null, array(
+			throw new Exception($ex->getMessage(), 0, array(
 				'query' => $query,
 				'host'  => $this->getConfig('host')
 			));
 		}
 	}
-
+	
 	/**
 	 * 执行查询
+	 * 规划dbQuery代替实际的数据查询主要目的是：为了统一对数据库查询动作做统一的行为监控
 	 * @param $query
 	 * @return mixed
 	 */
 	public abstract function dbQuery($query);
-
+	
 	/**
 	 * 获取条数
 	 * @param $sql
 	 * @return mixed
 	 */
 	public abstract function getCount($sql);
-
+	
 	/**
 	 * 获取操作影响条数
-	 * @return mixed
+	 * @return integer
 	 */
 	public abstract function getAffectNum();
-
+	
 	/**
 	 * 获取所有记录
 	 * @param $resource
 	 * @return mixed
 	 */
 	public abstract function fetchAll($resource);
-
+	
 	/**
 	 * 设置限额
 	 * @param $sql
@@ -408,37 +505,37 @@ abstract class DBAbstract{
 	 * @return mixed
 	 */
 	public abstract function setLimit($sql, $limit);
-
+	
 	/**
 	 * 获取最后插入ID
 	 * @return mixed
 	 */
 	public abstract function getLastInsertId();
-
+	
 	/**
 	 * 事务提交
 	 * @return mixed
 	 */
 	public abstract function commit();
-
+	
 	/**
 	 * 事务回滚
 	 * @return mixed
 	 */
 	public abstract function rollback();
-
+	
 	/**
 	 * 开始事务操作
 	 * @return mixed
 	 */
 	public abstract function beginTransaction();
-
+	
 	/**
 	 * 取消事务操作状态
 	 * @return mixed
 	 */
 	public abstract function cancelTransactionState();
-
+	
 	/**
 	 * connect to specified config database
 	 * @param array $config

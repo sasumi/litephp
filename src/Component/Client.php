@@ -229,6 +229,22 @@ class Client {
 		return $exp;
 	}
 
+	public static function inCli(){
+		return PHP_SAPI == 'cli';
+	}
+
+	/**
+	 * check script in windows
+	 * @return bool
+	 */
+	public static function inWindows(){
+		if(self::inCli()){
+			return stripos($_SERVER['OS'], 'windows') !== false;
+		}
+		list($os) = self::getSystem();
+		return $os == 'Windows';
+	}
+
 	/**
 	 * 获取客户端系统标识
 	 * @return array

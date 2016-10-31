@@ -137,7 +137,7 @@ abstract class Config {
 	 * @param mixed $target 配置项值
 	 * @param mixed $default_value 缺省值
 	 */
-	private static function ass_config(&$target, $default_value){
+	private static function assignConfig(&$target, $default_value){
 		if(!isset($target)){
 			$target = $default_value;
 		}
@@ -166,35 +166,35 @@ abstract class Config {
 
 		switch($key){
 			case 'app':
-				self::ass_config($config['root'], self::$app_root);
-				self::ass_config($config['path'], $config['root'].'app/');
-				self::ass_config($config['controller_pattern'], '{PATH}{CONTROLLER}Controller');
-				self::ass_config($config['charset'], self::$default_charset);
-				self::ass_config($config['auto_render'], true);
-				self::ass_config($config['database_source'], $config['root'].'database/');
-				self::ass_config($config['render'], __NAMESPACE__.'\\View');
-				self::ass_config($config['tpl'], $config['path'].'template/');
-				self::ass_config($config['include'], $config['path'].'include/');
-				self::ass_config($config['url'], '/');
-				self::ass_config($config['static'], $config['url'].'static/');
-				self::ass_config($config['js'], $config['static'].'js/');
-				self::ass_config($config['img'], $config['static'].'img/');
-				self::ass_config($config['css'], $config['static'].'css/');
-				self::ass_config($config['flash'], $config['static'].'flash/');
+				self::assignConfig($config['root'], self::$app_root);
+				self::assignConfig($config['path'], $config['root'].'app/');
+				self::assignConfig($config['controller_pattern'], '{PATH}{CONTROLLER}Controller');
+				self::assignConfig($config['charset'], self::$default_charset);
+				self::assignConfig($config['auto_render'], true);
+				self::assignConfig($config['database_source'], $config['root'].'database/');
+				self::assignConfig($config['render'], __NAMESPACE__.'\\View');
+				self::assignConfig($config['tpl'], $config['path'].'template/');
+				self::assignConfig($config['include'], $config['path'].'include/');
+				self::assignConfig($config['url'], '/');
+				self::assignConfig($config['static'], $config['url'].'static/');
+				self::assignConfig($config['js'], $config['static'].'js/');
+				self::assignConfig($config['img'], $config['static'].'img/');
+				self::assignConfig($config['css'], $config['static'].'css/');
+				self::assignConfig($config['flash'], $config['static'].'flash/');
 				break;
 
 			case 'router':
-				self::ass_config($config['mode'], Router::MODE_NORMAL);
-				self::ass_config($config['router_key'], Router::DEFAULT_ROUTER_KEY);
-				self::ass_config($config['controller_key'], 'mod');
-				self::ass_config($config['action_key'], 'act');
-				self::ass_config($config['default_path'], '/');
-				self::ass_config($config['default_controller'], 'index');
-				self::ass_config($config['default_action'], 'index');
+				self::assignConfig($config['mode'], Router::MODE_NORMAL);
+				self::assignConfig($config['router_key'], Router::DEFAULT_ROUTER_KEY);
+				self::assignConfig($config['controller_key'], 'mod');
+				self::assignConfig($config['action_key'], 'act');
+				self::assignConfig($config['default_path'], '/');
+				self::assignConfig($config['default_controller'], 'index');
+				self::assignConfig($config['default_action'], 'index');
 				break;
 
 			case 'api':
-				self::ass_config($config['path'], Config::get('app/path').'api/');
+				self::assignConfig($config['path'], Config::get('app/path').'api/');
 				break;
 		}
 
@@ -203,8 +203,9 @@ abstract class Config {
 	}
 
 	/**
-	 * 初始化配置
+	 * 框架配置初始化，检测配置目录是否存在
 	 * @param string $app_root application root
+	 * @throws \Lite\Exception\Exception
 	 */
 	public static function init($app_root = null){
 		if(!$app_root){
@@ -212,6 +213,8 @@ abstract class Config {
 		}
 		self::$app_root = $app_root;
 		self::$config_path = $app_root.'config/';
+		if(!is_dir(self::$config_path)){
+			throw new Exception('application config directory no found', null, self::$config_path);
+		}
 	}
 }
-

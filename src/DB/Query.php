@@ -85,6 +85,11 @@ class Query {
 		return $this;
 	}
 
+	public function replace(){
+		$this->operation = self::REPLACE;
+		return $this;
+	}
+
 	/**
 	 * 插入
 	 * @return $this

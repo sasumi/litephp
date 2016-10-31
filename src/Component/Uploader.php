@@ -1,6 +1,5 @@
 <?php
 namespace Lite\Component;
-use Lite\Core\Result;
 use Lite\Exception\Exception;
 use function Lite\func\dump;
 use function Lite\func\format_size;

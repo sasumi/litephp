@@ -34,10 +34,6 @@ class DriverMySQL extends DBAbstract {
 			throw new Exception(mysql_error(), null, $config);
 		}
 		mysql_select_db($config['database'], $this->conn);
-		if($config['charset']){
-			$config['charset'] = str_replace('-', '', $config['charset']);
-			$this->query("SET NAMES '".$config['charset']."'");
-		}
 	}
 
 	public function dbQuery($query){
@@ -86,15 +82,6 @@ class DriverMySQL extends DBAbstract {
 
 	public function getLastInsertId(){
 		return mysql_insert_id($this->conn);
-	}
-
-	public function quote($data, $type=null){
-		if(is_array($data)){
-			$data = join(',', $data);
-		} else if(is_numeric($data)){
-			return "'$data'";
-		}
-		return addslashes($data);
 	}
 
 	/**

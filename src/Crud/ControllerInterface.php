@@ -5,9 +5,11 @@
  * Date: 2015/10/19
  * Time: 20:32
  */
-namespace Lite\CRUD;
+namespace Lite\Crud;
 
-interface ControllerInterface {
+use Lite\DB\Model;
+
+interface ControllerInterface{
 	const OP_ALL = 'all';
 	const OP_INDEX = 'index';
 	const OP_UPDATE = 'update';
@@ -24,7 +26,7 @@ interface ControllerInterface {
 
 	/**
 	 * get relate model name
-	 * @return string
+	 * @return Model
 	 */
-	public function getModel();
+	public function getModelClass();
 }
