@@ -986,7 +986,14 @@ abstract class Model extends DAO{
 				}
 			}
 		}
-		return parent::__get($key);
+		$v = parent::__get($key);
+
+		//如果当前属性未定义，或者未从数据库中获取相应字段
+		//则抛异常
+		if(!isset($v)){
+			throw new Exception('model property no found', null, $key);
+		}
+		return $v;
 	}
 
 	/**

@@ -1,0 +1,48 @@
+/** reset **/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{margin:0;padding:0}
+body{font-family:Microsoft Yahei, SimSun, Courier new,Tahoma,Lucida Grande,serif;font-size:12px;line-height:20px}
+label,input,select{vertical-align:middle}
+q:before,q:after{content:''}
+
+body {font-size:16px; font-family:Microsoft Yahei, SimSun, Courier new, Tahoma, Lucida Grande, serif; line-height:1.6}
+
+a {color:#00aeff; text-decoration:none;}
+a:hover {text-decoration:underline}
+a:hover img { outline:1px solid #00aeff;}
+ul, ol {list-style-position:inside; padding:0.5em}
+body {background-color:#ccc; padding:20px;}
+article {max-width:1200px; margin:10px auto; background-color:white; padding:40px; box-shadow:1px 1px 10px #9a9a9a; box-sizing:border-box}
+h1, h2, h3, h4, h5, h6 {font-weight:normal}
+h1 {font-size:36px;}
+h2 {font-size:28px;}
+h3 {font-size:24px;}
+h4 {font-size:18px; color:#333;}
+
+article h1:after,
+article h2:after,
+article h3:after {content:""; display:block; border-bottom:1px solid #eee; margin:0.5em 0;}
+article h2,
+article h3,
+article h4,
+article h5,
+article h6 {margin-top:1em;}
+article blockquote {border:1px dotted #ccc; padding:15px; background-color:#efefef; border-radius:3px}
+article img {max-width:90%; margin:1em 0; border:2px solid white;}
+article img:hover {box-shadow:1px 1px 12px #e2e2e2}
+article var {background-color:#a4e6ff; display:inline-block; padding:1px 5px; border-radius:3px; font-size:14px; font-style:normal}
+article sub {display:block; font-size:14px; color:gray;}
+article hr {display:block; height:0; border:none; border-top:1px solid #ccc; border-bottom:1px solid #eee; margin:10px 0;}
+
+article li ul,
+article li ol {margin-left:1em;}
+
+article strong {color:orange; font-weight:normal}
+article code {color:green; background-color:#eee; white-space:pre-line; padding:5px 0; font-size:13px; font-family:Inconsolata, "Source Code Pro", serif;}
+article q {font-style:italic; color:gray;}
+
+.toc { position:fixed; bottom:10px; left:50%; margin-left:600px; padding:0 10px; overflow:hidden;}
+.toc ul {list-style:none;}
+.toc li.level-2:before {content:""; display:block; float:left; height:0; width:0; margin:12px 5px 0 0; border:5px solid transparent; border-top-color:gray;}
+.toc .level-3 {margin-left:15px;}
+.toc:hover a {color:black;}
+.toc a {font-size:14px; color:gray;}

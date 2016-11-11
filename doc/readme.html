@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>LitePHP Code Guide</title>
+	<link rel="stylesheet" href="asserts/article.css">
+	<script src="http://s.temtop.com/seajs/sea.js?v2015"></script>
+	<script src="http://s.temtop.com/seajs/config.js?v20160510"></script>
+	<script src="http://s.temtop.com/jquery/jquery-1.8.3.min.js?v2015"></script>
+	<script src="http://s.temtop.com/ywj/component/imagescale.js?v20160901"></script>
+	<script>seajs.use('ywj/auto');</script>
+	<style>
+		.config-items {border-collapse:collapse; border-spacing:0; margin-top:1em; font-size:14px; min-width:50%;}
+		.config-items thead th {text-align:left;}
+		.config-items td,
+		.config-items th {border:1px solid #eee; padding:0.5em 1em;}
+		.config-items .desc {color:gray;}
+		.config-items .k {font-style:italic; color:gray;}
+		.config-items .k:before,
+		.config-items .k:after {font-size:18px; color:#ccc;}
+		.config-items .k:before {content:"\""; margin-right:0.2em;}
+		.config-items .k:after {content:"\""; margin-left:0.2em;}
+		.config-items .r {color:orange;}
+	</style>
+</head>
+<body>
+<article>
+	<h1>LitePHP手册</h1>
+	<blockquote>
+		环境要求：
+		<ul>
+			<li>
+				PHP 5.6 或以上
+				需安装以下扩展
+				<ul>
+					<li>php_mbstring</li>
+					<li>php_pdo_mysql</li>
+					<li>php_mysqli</li>
+					<li>php_gd2</li>
+					<li>php_curl</li>
+				</ul>
+			</li>
+			<li>MySQL5.6 或以上</li>
+			<li>Apache2.4+ 或NGINX</li>
+		</ul>
+	</blockquote>
+
+	<h2>本手册目录</h2>
+	<ol>
+		<li><a href="">应用目录说明</a></li>
+		<li><a href="">应用配置说明</a></li>
+		<li><a href="">框架主要文件、目录说明</a></li>
+		<li><a href="crud.html">CRUD使用说明</a></li>
+		<li><a href="database.html">数据库使用规范</a></li>
+	</ol>
+
+	<h2>应用目录</h2>
+	<code>
+<pre>
+├─api                                                   //api入口目录,可以根据实际项目配置其他的入口位置
+│      index.php                                        //api入口引导文件
+│
+├─app
+│  ├─api                                                //api逻辑目录
+│  ├─controller                                         //控制器controller目录
+│  │      AccessController.php                          //控制器
+│  │      ...
+│  │
+│  ├─include                                            //项目额外实现类库（命名空间在 {app}\下面）
+│  │      Auth.php
+│  │      ViewBase.php                                  //View基类,一般建议项目有自身的View来实现相应的视图定制
+│  │
+│  ├─model                                              //业务Model页面
+│  │      AppBizReport.php
+│  │      ...
+│  │
+│  └─template                                           //模版文件配置
+│      ├─crud                                           //缺省CRUD模版目录(可通过ControllerInterface重载)
+│      │      index.php                                 //CRUD列表页
+│      │      info.php                                  //CRUD信息页
+│      │      update.php                                //CRUD编辑\新增页面
+│      ├─index                                          //对应IndexController控制器页面
+│      │      deny.php
+│      │      ...
+│      │
+│      └─ ...
+│
+├─config                                                //应用配置目录
+│      app.inc.php                                      //应用基础信息配置
+│      router.inc.php                                   //路由规则配置 -
+│      ...
+│
+├─database                                              //数据库模型目录 -
+│  └─www
+│      │  db.inc.php                                    //数据库连接配置(可被Model子类覆盖) -
+│      │
+│      ├─db_definition                                  //公用数据表定义(继承DB/Model)
+│      │      TableAppBizReport.php                     //实际数据库表定义类
+│      │      ...
+│      │
+│      └─ ...                                           //其他DB库
+│
+├─public                                                //对外开放目录
+│  │  index.php                                         //主引导脚本
+│  │
+│  ├─static                                             //静态资源脚本(目录可在app.inc.php)中定制
+│  │  ├─css                                             //样式目录
+│  │  │      default.css
+│  │  │
+│  │  ├─img                                             //图片目录
+│  │  │      default_image.png
+│  │  │
+│  │  └─js                                              //javascript目录
+│  │          global.js
+│  │
+│  └─upload                                             //上传目录(仅限于当前目录提供文件存储)
+├─script                                                //项目运行脚本(包括crontab脚本)
+│      scaffold.php                                     //系统脚手架
+│
+├─tmp                                                   //系统缓存目录
+└─vendor                                                //第三方库目录
+    └─autoload.php                                    //第三方库加载脚本
+</pre>
+	</code>
+
+	<h2>应用配置项</h2>
+	<blockquote>
+		<p>应用配置项一般存放于 /config/目录，文件命名采用 name.inc.php</p>
+		<p>没有采用以上规则的文件将不会被Lite\Config::get方法获取到</p>
+		<p>
+			配置文件通过返回数组形式封装配置项，如：
+			<code>
+			&lt;? php return array('key'=>'val');
+			</code>
+		</p>
+	</blockquote>
+
+	<table class="config-items">
+		<caption></caption>
+		<thead>
+			<tr>
+				<th>配置文件</th>
+				<th>配置项</th>
+				<th>功能说明</th>
+				<th>案例</th>
+				<th>是否必填</th>
+			</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td rowspan="4">
+				/config/app.inc.php
+				<p class="desc">应用基础配置信息</p>
+			</td>
+			<td><span class="k">url</span></td>
+			<td><span class="s">应用访问URL路径，以斜杠结尾</span></td>
+			<td>http://www.site.com/app/</td>
+			<td><span class="r">必填</span></td>
+		</tr>
+		<tr>
+			<td><span class="k">static</span></td>
+			<td><span class="s">静态资源访问URL路径，以斜杠结尾</span></td>
+			<td>http://www.site.com/app/static/</td>
+			<td><span class="r">必填</span></td>
+		</tr>
+		<tr>
+			<td><span class="k">debug</span></td>
+			<td>是否开启debug调试</td>
+			<td>true</td>
+			<td><span class="r">必填</span></td>
+		</tr>
+		<tr>
+			<td><span class="k">render</span></td>
+			<td>渲染使用View类名</td>
+			<td><code>"render" => MyView::class</code></td>
+			<td><span class="r">必填</span></td>
+		</tr>
+
+		<tr>
+			<td rowspan="1">
+				/config/router.inc.php
+				<p class="desc">应用路由模式配置</p>
+			</td>
+			<td><span class="k">url</span></td>
+			<td><span class="s">应用访问URL路径，以斜杠结尾</span></td>
+			<td>http://www.site.com/app/</td>
+			<td><span class="r">必填</span></td>
+		</tr>
+		</tbody>
+	</table>
+</article>
+<script src="asserts/toc.js"></script>
+<script>
+	setTimeout(function(){
+//		location.reload();
+	}, 3000);
+</script>
+</body>
+</html>

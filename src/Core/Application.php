@@ -67,11 +67,6 @@ class Application{
 		//配置初始化
 		Config::init($app_root);
 
-		//自动性能统计（SQL），仅在web模式中生效
-		if($mode == self::MODE_WEB && Config::get('app/auto_statistics')){
-			$this->autoStatistics();
-		}
-
 		//绑定项目根目录
 		self::addIncludePath(Config::get('app/path'), true);
 
@@ -166,20 +161,15 @@ class Application{
 		if($ex instanceof RouterException){
 			Http::sendHttpStatus(404);
 			if($page404 = Config::get('app/page404')){
-				$vc = Config::get('app/render');
-
-				/** @var View $view */
-				$view = new $vc();
-				$view->render($page404);
+				Http::redirect($page404);
 			}
 		}
 		//其他类型错误
 		else {
-			if($page_error = Config::get('app/page_error')){
+			if($page_error = Config::get('app/pageError')){
 				Http::redirect($page_error);
 			};
 		}
-
 		//即使上面页面跳转了，这里还会继续输出错误信息，方便调试
 		die('<!-- '.htmlspecialchars($ex->getMessage()).'-->');
 	}
@@ -338,71 +328,6 @@ class Application{
 	 */
 	public function getNamespace(){
 		return $this->namespace;
-	}
-
-	/**
-	 * 系统性能统计
-	 * 可以通过 ?SYS_STAT 查看上次查询结果
-	 * 需要在相应的配置项中打开，才具备这个功能，缺省关闭
-	 * @example http://www.hello.com/?SYS_STAT
-	 */
-	private function autoStatistics(){
-		$SESSION_KEY = '_SYS_STATIC_INFO_';
-		$STATIC_KEY = 'SYS';
-		$GLOBALS['__DB_QUERY_COUNT__'] = 0;
-		$GLOBALS['__DB_QUERY_TIME__'] = 0;
-		$GLOBALS['__DB_QUERY_MEM__'] = 0;
-		$GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__'] = 0;
-
-		Hooker::add(DBAbstract::EVENT_BEFORE_DB_QUERY, function ($sql) use ($STATIC_KEY){
-			$GLOBALS['__DB_QUERY_COUNT__']++;
-			Statistics::instance($STATIC_KEY)->mark('BEFORE DB QUERY', $sql);
-		});
-
-		Hooker::add(DBAbstract::EVENT_AFTER_DB_QUERY, function ($sql) use ($STATIC_KEY){
-			Statistics::instance($STATIC_KEY)->markAfter('AFTER DB QUERY', $sql);
-			$tmp = Statistics::instance($STATIC_KEY)->getTimeTrackList();
-			$tt = array_last($tmp);
-			$GLOBALS['__DB_QUERY_TIME__'] += $tt['time_used'];
-			$GLOBALS['__DB_QUERY_MEM__'] += $tt['mem_used'];
-		});
-
-		Hooker::add(DBAbstract::EVENT_ON_DB_QUERY_DISTINCT, function(){
-			$GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__']++;
-		});
-
-		Hooker::add(self::EVENT_AFTER_APP_SHUTDOWN, function() use ($SESSION_KEY, $STATIC_KEY){
-			if(Router::get('SYS_STAT')){
-				return;
-			}
-			$pc = 0;
-			if($GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__'] + $GLOBALS['__DB_QUERY_COUNT__']){
-				$pc = number_format($GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__'] / ($GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__'] + $GLOBALS['__DB_QUERY_COUNT__'])*100, 2, null, '');
-			}
-
-			$msg = 'DB QUERY COUNT:'.$GLOBALS['__DB_QUERY_COUNT__'].
-				"\t\t\tDB QUERY TIME:".$GLOBALS['__DB_QUERY_TIME__']."ms\n".
-				"DEDUPLICATION QUERY:".$GLOBALS['__DB_QUERY_DEDUPLICATION_COUNT__']."($pc%)".
-				"\t\tDB QUERY COST MEM:".format_size($GLOBALS['__DB_QUERY_MEM__'])."\n\n";
-
-			$msg .= "[PROCESS USED TIME] ".number_format((microtime(true)-$_SERVER['REQUEST_TIME_FLOAT'])*1000, 1)."ms";
-			Statistics::instance($STATIC_KEY)->mark($msg, str_repeat('=', 120)."\nAPP SHUTDOWN");
-			if(!headers_sent()){
-				session_start();
-			}
-			$_SESSION[$SESSION_KEY] = Statistics::instance($STATIC_KEY)->_toString();
-		});
-
-		//OUTPUT
-		Hooker::add(Router::EVENT_AFTER_ROUTER_INIT, function ($ctrl, $act, $get) use ($SESSION_KEY, $STATIC_KEY){
-			if(isset($get['SYS_STAT'])){
-				if(!headers_sent()){
-					session_start();
-				}
-				echo $_SESSION[$SESSION_KEY];
-				exit;
-			}
-		});
 	}
 
 	/**
