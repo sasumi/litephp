@@ -990,8 +990,9 @@ abstract class Model extends DAO{
 
 		//如果当前属性未定义，或者未从数据库中获取相应字段
 		//则抛异常
-		if(!isset($v)){
-			throw new Exception('model property no found', null, $key);
+		$kvs = array_keys($this->getValues());
+		if(!isset($v) && !in_array($key, $kvs)){
+			throw new Exception('model fields not set in query result', null, $key);
 		}
 		return $v;
 	}
