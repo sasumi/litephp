@@ -46,7 +46,7 @@ class Application{
 	private static $include_paths = array();
 
 	//project namespace
-	private $namespace;
+	private static $namespace;
 
 	/**
 	 * 框架初始化方法
@@ -57,7 +57,7 @@ class Application{
 	 * @internal param null $app_root
 	 */
 	private function __construct($namespace, $app_root = null, $mode){
-		$this->namespace = $namespace;
+		self::$namespace = $namespace;
 
 		//注册项目文件自动加载逻辑
 		spl_autoload_register(array($this, 'autoload'));
@@ -115,7 +115,7 @@ class Application{
 	 * @throws Exception
 	 * @return Application
 	 */
-	public static function init($namespace, $app_root = null, $mode=self::MODE_WEB){
+	public static function init($namespace=null, $app_root = null, $mode=self::MODE_WEB){
 		if(!self::$instance){
 			//BIND APP ERROR
 			set_error_handler(function ($code, $message, $file, $line, $context){
@@ -148,6 +148,7 @@ class Application{
 	 * @throws \Exception
 	 */
 	private static function handleException(\Exception $ex){
+		dump($ex, 1);
 		//调试模式
 		if(Config::get('app/debug')){
 			print_exception($ex);
@@ -233,18 +234,13 @@ class Application{
 	 * @throws \Lite\Exception\RouterException
 	 */
 	private function dispatch(){
-		$path = Router::getPath();
-		$path = ltrim($path, "/");
 		$controller = Router::getController();
 		$action = Router::getAction();
 		$get = Router::get();
 		$post = Router::post();
 
-		$ctrl_class = $this->namespace.'\\controller\\'.Config::get('app/controller_pattern');
-		$ctrl_class = str_replace('{CONTROLLER}', ucfirst($controller), $ctrl_class);
-		$ctrl_class = str_replace('{PATH}', str_replace('/', '\\', $path), $ctrl_class);
-
-		self::loadControllerCaseInsensitive($ctrl_class);
+		self::loadControllerCaseInsensitive($controller);
+		$ctrl_class = $controller;
 
 		/** @var Controller $ctrl */
 		$ctrl = new $ctrl_class($controller, $action);
@@ -326,8 +322,8 @@ class Application{
 	 * 获取初始化应用ID
 	 * @return string
 	 */
-	public function getNamespace(){
-		return $this->namespace;
+	public static function getNamespace(){
+		return self::$namespace;
 	}
 
 	/**
@@ -353,8 +349,8 @@ class Application{
 	private function autoload($class){
 		$paths = self::getIncludePaths();
 		foreach($paths as $path){
-			if(stripos($class, $this->namespace) === 0){
-				$file = substr($class, strlen($this->namespace)+1);
+			if(stripos($class, self::$namespace) === 0){
+				$file = substr($class, strlen(self::$namespace)+1);
 				$file = str_replace('\\', DIRECTORY_SEPARATOR, $file);
 				$file = $path.$file.'.php';
 				if(is_file($file)){
@@ -379,7 +375,7 @@ class Application{
 		$controller_root = Config::get('app/path').'controller/';
 		$files = glob_recursive($controller_root.'*.php', GLOB_NOSORT);
 
-		$ns = $this->namespace;
+		$ns = self::$namespace;
 		$c = preg_replace('/^'.$ns.'\\\\/', '', $ctrl_class);
 		$class_file = str_replace('\\', '/', Config::get('app/path').$c.'.php');
 

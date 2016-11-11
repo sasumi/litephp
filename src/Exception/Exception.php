@@ -2,6 +2,7 @@
 namespace Lite\Exception;
 
 use Exception as OrgException;
+use function Lite\func\dump;
 
 /**
  * Lite框架通用异常类
@@ -29,6 +30,7 @@ class Exception extends OrgException{
 	 * @param null $prev_exception
 	 */
 	public function __construct($message = null, $code = 0, $data = null, $prev_exception = null){
+		dump(debug_backtrace(), 1);
 		parent::__construct($message, $code, $prev_exception);
 		$this->data = $data;
 	}

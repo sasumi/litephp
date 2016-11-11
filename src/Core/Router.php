@@ -2,10 +2,15 @@
 namespace Lite\Core;
 
 use Lite\Component\Http;
+use Lite\Component\Server;
+use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
 use function Lite\func\array_clear_empty;
 use function Lite\func\array_clear_null;
+use function Lite\func\decodeURIComponent;
 use function Lite\func\dump;
+use function Lite\func\encodeURIComponent;
+use function Lite\func\glob_recursive;
 
 /**
  * 路由基础类。当前路由路由基础类
@@ -20,15 +25,16 @@ abstract class Router{
 	const EVENT_GET_STATIC_URL = 'EVENT_ROUTER_GET_STATIC_URL';
 	
 	const DEFAULT_ROUTER_KEY = 'r';
-	const MODE_NORMAL = 'normal';
-	const MODE_REWRITE = 'rewrite';
-	
+
+	const MODE_NORMAL = 0x01;
+	const MODE_PATH = 0x02;
+	const MODE_REWRITE = 0x03;
+
 	public static $ROUTER_KEY;
 	public static $DEFAULT_PATH = '/';
 	public static $DEFAULT_CONTROLLER = '';
 	public static $DEFAULT_ACTION = '';
 	
-	private static $PATH = '';
 	private static $CONTROLLER = '';
 	private static $ACTION = '';
 
@@ -102,10 +108,6 @@ abstract class Router{
 		return self::$CONTROLLER;
 	}
 
-	public static function getPath(){
-		return self::$PATH;
-	}
-	
 	/**
 	 * 获取当前调用action
 	 * @return string
@@ -168,30 +170,19 @@ abstract class Router{
 	 * @return array
 	 */
 	private static function parseCurrentRequest(){
-		$get = $_GET;
-
+   		$get = $_GET;
 		$path = $controller = $action = '';
+		$param = array();
+		$router_mode = Config::get('router/mode');
 
-		if($get[self::$ROUTER_KEY]){
-			$tmp = explode('/', $get[self::$ROUTER_KEY]) ?: array();
-			if($tmp){
-				switch(count($tmp)){
-					case 1:
-						$controller = $tmp[0];
-						break;
-
-					case 2:
-						list($controller, $action) = $tmp;
-						break;
-
-					default:
-						$action = array_pop($tmp);
-						$controller = array_pop($tmp);
-						$path = join('/', $tmp).'/';
-
-				}
-			}
+		//优先query参数
+		if($get[self::$ROUTER_KEY] || $router_mode == self::MODE_NORMAL){
+			list($path, $controller, $action) = self::resolveUri($get[self::$ROUTER_KEY]);
 			unset($get[self::$ROUTER_KEY]);
+		} else {
+			$path_info = self::getPathInfo();
+			list($path, $controller, $action, $param) = self::resolvePath($path_info);
+			$get = array_merge($get, $param);
 		}
 
 		$path = $path ?: self::$DEFAULT_PATH;
@@ -199,7 +190,8 @@ abstract class Router{
 		$action = $action ?: self::$DEFAULT_ACTION;
 
 		//安全保护
-		if(!preg_match('/^\w+$/', $controller) || !preg_match('/^\w+$/', $action)){
+		if(!preg_match('/^[\w|\\\]+$/', $controller) || !preg_match('/^\w+$/', $action)){
+			dump($controller, 1);
 			throw new RouterException('PARAMETER ILLEGAL', array('path' => $path, 'controller'=>$controller, 'action' => $action));
 		}
 		
@@ -230,7 +222,6 @@ abstract class Router{
 		self::$DEFAULT_CONTROLLER = Config::get('router/default_controller');
 		self::$DEFAULT_ACTION = Config::get('router/default_action');
 		$ret = self::parseCurrentRequest();
-		self::$PATH = $ret['path'];
 		self::$CONTROLLER = $ret['controller'];
 		self::$ACTION = $ret['action'];
 		self::$GET = $ret['get'];
@@ -243,7 +234,7 @@ abstract class Router{
 	 * 获取path信息
 	 * @return string
 	 **/
-	public static function getPathInfo(){
+	private static function getPathInfo(){
 		if($_SERVER['PATH_INFO']){
 			if(stripos($_SERVER['PATH_INFO'], '/index.php/') == 0){
 				$_SERVER['PATH_INFO'] = str_replace('/index.php/', '', $_SERVER['PATH_INFO']);
@@ -334,45 +325,186 @@ abstract class Router{
 		}
 		return $url;
 	}
+
+	/**
+	 * 解析URI
+	 * @param string $uri
+	 * @return array
+	 */
+	private static function resolveUri($uri=''){
+		$path = self::$DEFAULT_PATH;
+		$controller = self::$DEFAULT_CONTROLLER;
+		$action = self::$DEFAULT_ACTION;
+		$uri = trim($uri, '/ ');
+		if($uri){
+			$tmp = explode('/', $uri);
+			switch(count($tmp)){
+				case 1:
+					list($controller) = $tmp;
+					break;
+
+				case 2:
+					list($controller, $action) = $tmp;
+					break;
+
+				default:
+					$action = array_shift($tmp);
+					$controller = array_shift($tmp);
+					$path = join('/', $tmp);
+					break;
+			}
+		}
+		return array($path, $controller, $action);
+	}
+
+	private static function isDirCase($path, $fold){
+		$path = str_replace('\\', '/', $path);
+		if(Server::inWindows() && false){
+			//
+		} else {
+			$dir_list = glob_recursive($path.'*', GLOB_ONLYDIR);
+			foreach($dir_list as $dir){
+				$dir = str_replace('\\', '/', $dir);
+				if(strcasecmp($dir, $path.$fold) == 0){
+					return $dir;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * resolve param from path info
+	 * @param $path_arr
+	 * @return array
+	 */
+	private static function resolveParamFromPath($path_arr){
+		$param = array();
+		for($i=0; $i<count($path_arr); $i+=2){
+			$param[$path_arr[$i]] = decodeURIComponent($path_arr[$i+1]);
+		}
+		return $param;
+	}
+
+	/**
+	 * resolve pathinfo to path,controller,action,param
+	 * @param $path_info
+	 * @return array
+	 * @throws \Lite\Exception\RouterException
+	 */
+	private static function resolvePath($path_info){
+		$tmp = explode('/', $path_info);
+		$controller_path = Config::get('app/path')."controller/";
+		$p = $controller_path;
+		$ns_prefix = Application::getNamespace();
+		$ns_prefix = $ns_prefix.'\controller\\';
+		while(is_dir($p) && count($tmp)){
+			if(self::isDirCase($p, $tmp[0])){
+				$ns_prefix = $ns_prefix.strtolower($tmp[0]).'\\';
+				$p = $p.array_shift($tmp).'/';
+				continue;
+			}
+
+			$c = "$ns_prefix{$tmp[0]}Controller";
+			if(class_exists($c)){
+				array_shift($tmp);
+				$path = $p;
+				$controller = $c;
+				$action = array_shift($tmp);
+				$param = self::resolveParamFromPath($tmp);
+				return array($path, $controller, $action, $param);
+				break;
+			}
+		}
+		return array(null, null, null, self::resolveParamFromPath($tmp));
+	}
+
+	/**
+	 * 合成参数
+	 * @param $param
+	 * @param $mode
+	 * @return string
+	 * @throws \Lite\Exception\Exception
+	 */
+	private static function buildParam($param, $mode){
+		switch($mode){
+			case self::MODE_NORMAL:
+				return http_build_query($param);
+
+			case self::MODE_REWRITE:
+			case self::MODE_PATH:
+				$str = '';
+				foreach($param as $k => $v){
+					$str .= "$k=".encodeURIComponent($v);
+				}
+				return $str;
+			default:
+				throw new Exception('no router mode support');
+		}
+	}
 	
 	/**
 	 * 路由
-	 * @param string $target
+	 * @param string $uri
 	 * @param array $params
 	 * @return string
+	 * @throws \Lite\Exception\Exception
 	 */
-	public static function getUrl($target = '', $params = array()){
-		if(stripos($target, 'http://') === 0 || stripos($target, 'https://') === 0){
-			return $target.(stripos($target, '?') === false ? '?' : '&').http_build_query($params);
+	public static function getUrl($uri = '', $params = array()){
+		if(stripos($uri, 'http://') === 0 || stripos($uri, 'https://') === 0){
+			return $uri.(stripos($uri, '?') === false ? '?' : '&').http_build_query($params);
 		}
 		
 		$app_url = Config::get('app/url');
-		list($controller, $action) = explode('/', trim($target, '/'));
-		$controller = $controller ?: self::$DEFAULT_CONTROLLER;
-		$action = $action ?: self::$DEFAULT_ACTION;
+		$router_mode = Config::get('router/mode');
+		list($path, $controller, $action) = self::resolveUri($uri);
 		
 		//首页
 		if(empty($params) &&
-			strtolower($controller) == strtolower(self::$DEFAULT_CONTROLLER) &&
-			strtolower($action) == strtolower(self::$DEFAULT_ACTION)){
+			strcasecmp($path, self::$DEFAULT_PATH) == 0 &&
+			strcasecmp($controller, self::$DEFAULT_CONTROLLER) == 0 &&
+			strcasecmp($action, self::$DEFAULT_ACTION) == 0){
 			return $app_url;
 		}
 
-		$query_string = http_build_query($params);
-		$url = rtrim($app_url, '/').'/index.php';
-		if(!$query_string){
-			if(strtolower($action) == strtolower(self::$DEFAULT_ACTION)){
-				$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$controller;
+		$url = $app_url;
+		if($router_mode == self::MODE_NORMAL){
+			$query_string = http_build_query($params);
+			if(!$query_string){
+				if($path == '/'){
+					if($action == self::$DEFAULT_ACTION){
+						$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$controller;
+					} else {
+						$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$controller.'%2F'.$action;
+					}
+				} else {
+					$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$path.'%2F'.$controller.'%2F'.$action;
+				}
 			} else{
-				$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$controller.'%2F'.$action;
+				$params[self::$ROUTER_KEY] = $controller.'/'.$action;
+				$url .= '?'.http_build_query($params);
 			}
-		} else{
-			$params[self::$ROUTER_KEY] = $controller.'/'.$action;
-			$url .= '?'.http_build_query($params);
+		} else if($router_mode == self::MODE_REWRITE || $router_mode == self::MODE_PATH){
+			if($router_mode == self::MODE_PATH){
+				$url .= stripos($url, '.php') !== false ? '' : 'index.php/';
+			}
+			if($path == '/'){
+				if($action == self::$DEFAULT_ACTION){
+					$p = $controller;
+				} else {
+					$p = "$controller/$action";
+				}
+			} else {
+				$p = "$path/$controller/$action";
+			}
+			$str = self::buildParam($params, $router_mode);
+			$url = $url.($str ? "$p/$str" : $p);
+		} else {
+			throw new Exception('no router mode found');
 		}
 		return self::patchHostPreset($url);
 	}
-	
+
 	/**
 	 * 静态资源url规则
 	 * 规则：/ 为开始的url，直接返回应用根目录
