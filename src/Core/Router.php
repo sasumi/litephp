@@ -218,6 +218,7 @@ abstract class Router{
 		self::$DEFAULT_ACTION = Config::get('router/default_action');
 
 		$ret = self::parseCurrentRequest();
+
 		self::$CONTROLLER = $ret['controller'];
 		self::$ACTION = $ret['action'];
 		self::$GET = $ret['get'];
@@ -382,8 +383,8 @@ abstract class Router{
 	 */
 	public static function resolveNameFromController($controller){
 		$ns = Application::getNamespace();
-		$controller = str_replace('\\', '/', $controller);
-		$ctrl = preg_replace("/^$ns\\/controller\\/(.*?)Controller/", '$1', $controller);
+		$preg = "/^".preg_quote($ns)."\\\\controller\\\\(.*?)Controller/";
+		$ctrl = preg_replace($preg, '$1', $controller);
 		return $ctrl;
 	}
 

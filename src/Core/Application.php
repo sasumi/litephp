@@ -144,7 +144,9 @@ class Application{
 	 * @param \Exception $ex
 	 * @throws \Exception
 	 */
-	private static function handleException(\Exception $ex){		
+	private static function handleException(\Exception $ex){
+
+		dump($ex, 1);
 		//调试模式
 		if(Config::get('app/debug')){
 			print_exception($ex);
@@ -186,6 +188,7 @@ class Application{
 	 */
 	private function initWebMode(){
 		self::sendCharset();
+
 		//router init
 		Router::init();
 
@@ -370,13 +373,13 @@ class Application{
 		$controller_root = Config::get('app/path').'controller/';
 		$files = glob_recursive($controller_root.'*.php', GLOB_NOSORT);
 
-		$ns = self::$namespace;
-		$c = preg_replace('/^'.$ns.'\\\\/', '', $ctrl_class);
+		$ns = self::getNamespace();
+		$c = preg_replace('/^'.preg_quote($ns).'\\\\/', '', $ctrl_class);
 		$class_file = str_replace('\\', '/', Config::get('app/path').$c.'.php');
 
 		foreach($files as $f){
 			$f = str_replace('\\','/',$f);
-			if(strcasecmp($f, $class_file) === 0){
+			if(strcasecmp($f, $class_file) == 0){
 				include_once $f;
 				if(!class_exists($ctrl_class)){
 					throw new RouterException('controller class not found:'.$ctrl_class);
