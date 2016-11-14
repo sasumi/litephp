@@ -82,12 +82,6 @@ class Application{
 		//绑定项目数据库定义目录
 		self::addIncludePath(Config::get('app/database_source'));
 
-		register_shutdown_function(function (){
-			Hooker::fire(Application::EVENT_AFTER_APP_SHUTDOWN);
-		});
-
-		Hooker::fire(self::EVENT_AFTER_APP_INIT);
-
 		//启用相应的应用模式
 		switch($mode){
 			case self::MODE_WEB:
@@ -134,7 +128,10 @@ class Application{
 				if($error && ($error['type'] == E_ERROR || $error['type'] == E_WARNING)){
 					self::handleException(new Exception($error['message'], null, $error));
 				}
+				Hooker::fire(Application::EVENT_AFTER_APP_SHUTDOWN);
 			});
+
+			Hooker::fire(self::EVENT_AFTER_APP_INIT);
 
 			//init app
 			self::$instance = new self($namespace, $app_root, $mode);
@@ -147,8 +144,7 @@ class Application{
 	 * @param \Exception $ex
 	 * @throws \Exception
 	 */
-	private static function handleException(\Exception $ex){
-		dump($ex, 1);
+	private static function handleException(\Exception $ex){		
 		//调试模式
 		if(Config::get('app/debug')){
 			print_exception($ex);
@@ -209,6 +205,7 @@ class Application{
 			//controller有可能因为construct失败，导致没有实例化
 			$ctrl_ins = self::getController();
 			$tpl_file = $ctrl_ins ? $ctrl_ins::__getTemplate(Router::getController(), Router::getAction()) : null;
+
 			if($result instanceof View){
 				$result->render($tpl_file);
 			} else {
@@ -240,36 +237,34 @@ class Application{
 		$post = Router::post();
 
 		self::loadControllerCaseInsensitive($controller);
-		$ctrl_class = $controller;
 
-		/** @var Controller $ctrl */
-		$ctrl = new $ctrl_class($controller, $action);
-		self::$controller = $ctrl;
-		$is_ctrl_prototype = $ctrl instanceof Controller;
+		/** @var Controller $ctrl_instance */
+		$ctrl_instance = new $controller($controller, $action);
+		self::$controller = $ctrl_instance;
+		$is_ctrl_prototype = $ctrl_instance instanceof Controller;
 
 		//support some class non extends lite\controller
 		if($is_ctrl_prototype){
-			$cancel = $ctrl->__beforeExecute($controller, $action);
+			$cancel = $ctrl_instance->__beforeExecute($controller, $action);
 			if($cancel === false){
 				die;
 			}
 		}
 
-		if(!method_exists($ctrl, $action)){
+		if(!method_exists($ctrl_instance, $action)){
 			throw new RouterException('Controller Method No Exists: '.$controller.'/'.$action);
 		}
 
 		//禁止私有方法、静态方法被当做action访问
-		$rc = new ReflectionClass($ctrl_class);
+		$rc = new ReflectionClass($controller);
 		$m = $rc->getMethod($action);
 		if(!$m->isPublic() || $m->isStatic()){
 			throw new RouterException('Action Should Be Public And Non Static');
 		}
 
-		$result = call_user_func(array($ctrl, $action), $get, $post);
-
+		$result = call_user_func(array($ctrl_instance, $action), $get, $post);
 		if($is_ctrl_prototype){
-			$ctrl->__afterExecute($controller, $action, $result);
+			$ctrl_instance->__afterExecute($controller, $action, $result);
 		}
 		return $result;
 	}

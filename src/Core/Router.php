@@ -171,28 +171,24 @@ abstract class Router{
 	 */
 	private static function parseCurrentRequest(){
    		$get = $_GET;
-		$path = $controller = $action = '';
-		$param = array();
 		$router_mode = Config::get('router/mode');
 
 		//优先query参数
 		if($get[self::$ROUTER_KEY] || $router_mode == self::MODE_NORMAL){
-			list($path, $controller, $action) = self::resolveUri($get[self::$ROUTER_KEY]);
+			list($_, $controller, $action) = self::resolveUri($get[self::$ROUTER_KEY]);
 			unset($get[self::$ROUTER_KEY]);
 		} else {
 			$path_info = self::getPathInfo();
-			list($path, $controller, $action, $param) = self::resolvePath($path_info);
+			list($_, $controller, $action, $param) = self::resolvePath($path_info);
 			$get = array_merge($get, $param);
 		}
 
-		$path = $path ?: self::$DEFAULT_PATH;
 		$controller = $controller ?: self::$DEFAULT_CONTROLLER;
 		$action = $action ?: self::$DEFAULT_ACTION;
 
 		//安全保护
 		if(!preg_match('/^[\w|\\\]+$/', $controller) || !preg_match('/^\w+$/', $action)){
-			dump($controller, 1);
-			throw new RouterException('PARAMETER ILLEGAL', array('path' => $path, 'controller'=>$controller, 'action' => $action));
+			throw new RouterException('PARAMETER ILLEGAL', array('controller'=>$controller, 'action' => $action));
 		}
 		
 		//自动decode
@@ -205,7 +201,6 @@ abstract class Router{
 		}
 		
 		return array(
-			'path'       => $path,
 			'controller' => $controller,
 			'action'     => $action,
 			'get'        => $get
@@ -219,13 +214,15 @@ abstract class Router{
 		Hooker::fire(self::EVENT_BEFORE_ROUTER_INIT);
 		self::$ROUTER_KEY = Config::get('router/router_key');
 		self::$DEFAULT_PATH = Config::get('router/default_path');
-		self::$DEFAULT_CONTROLLER = Config::get('router/default_controller');
+		self::$DEFAULT_CONTROLLER = Application::getNamespace().'\\controller\\'.Config::get('router/default_controller').'Controller';
 		self::$DEFAULT_ACTION = Config::get('router/default_action');
+
 		$ret = self::parseCurrentRequest();
 		self::$CONTROLLER = $ret['controller'];
 		self::$ACTION = $ret['action'];
 		self::$GET = $ret['get'];
 		self::$POST = $_POST;
+
 		$_GET = $ret['get'];
 		Hooker::fire(self::EVENT_AFTER_ROUTER_INIT, self::$CONTROLLER, self::$ACTION, self::$GET, self::$POST);
 	}
@@ -333,26 +330,31 @@ abstract class Router{
 	 */
 	private static function resolveUri($uri=''){
 		$path = self::$DEFAULT_PATH;
-		$controller = self::$DEFAULT_CONTROLLER;
+		$c = '';
 		$action = self::$DEFAULT_ACTION;
 		$uri = trim($uri, '/ ');
 		if($uri){
 			$tmp = explode('/', $uri);
 			switch(count($tmp)){
 				case 1:
-					list($controller) = $tmp;
+					list($c) = $tmp;
 					break;
 
 				case 2:
-					list($controller, $action) = $tmp;
+					list($c, $action) = $tmp;
 					break;
 
 				default:
 					$action = array_shift($tmp);
-					$controller = array_shift($tmp);
+					$c = array_shift($tmp);
 					$path = join('/', $tmp);
 					break;
 			}
+		}
+		if($c){
+			$controller = Application::getNamespace()."\\controller\\{$c}Controller";
+		} else {
+			$controller = self::$DEFAULT_CONTROLLER;
 		}
 		return array($path, $controller, $action);
 	}
@@ -371,6 +373,18 @@ abstract class Router{
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 从controller类名中解析对应名称（包含子级目录）
+	 * @param $controller
+	 * @return string
+	 */
+	public static function resolveNameFromController($controller){
+		$ns = Application::getNamespace();
+		$controller = str_replace('\\', '/', $controller);
+		$ctrl = preg_replace("/^$ns\\/controller\\/(.*?)Controller/", '$1', $controller);
+		return $ctrl;
 	}
 
 	/**
@@ -393,18 +407,17 @@ abstract class Router{
 	 * @throws \Lite\Exception\RouterException
 	 */
 	private static function resolvePath($path_info){
-		$tmp = explode('/', $path_info);
+		$tmp = array_clear_empty(explode('/', $path_info));
 		$controller_path = Config::get('app/path')."controller/";
 		$p = $controller_path;
-		$ns_prefix = Application::getNamespace();
-		$ns_prefix = $ns_prefix.'\controller\\';
+		$ns_prefix = Application::getNamespace().'\controller\\';
+
 		while(is_dir($p) && count($tmp)){
 			if(self::isDirCase($p, $tmp[0])){
 				$ns_prefix = $ns_prefix.strtolower($tmp[0]).'\\';
 				$p = $p.array_shift($tmp).'/';
 				continue;
 			}
-
 			$c = "$ns_prefix{$tmp[0]}Controller";
 			if(class_exists($c)){
 				array_shift($tmp);
@@ -458,7 +471,7 @@ abstract class Router{
 		$app_url = Config::get('app/url');
 		$router_mode = Config::get('router/mode');
 		list($path, $controller, $action) = self::resolveUri($uri);
-		
+
 		//首页
 		if(empty($params) &&
 			strcasecmp($path, self::$DEFAULT_PATH) == 0 &&
@@ -467,21 +480,22 @@ abstract class Router{
 			return $app_url;
 		}
 
+		$ctrl = self::resolveNameFromController($controller);
 		$url = $app_url;
 		if($router_mode == self::MODE_NORMAL){
 			$query_string = http_build_query($params);
 			if(!$query_string){
 				if($path == '/'){
 					if($action == self::$DEFAULT_ACTION){
-						$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$controller;
+						$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$ctrl;
 					} else {
-						$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$controller.'%2F'.$action;
+						$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$ctrl.'%2F'.$action;
 					}
 				} else {
-					$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$path.'%2F'.$controller.'%2F'.$action;
+					$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$path.'%2F'.$ctrl.'%2F'.$action;
 				}
 			} else{
-				$params[self::$ROUTER_KEY] = $controller.'/'.$action;
+				$params[self::$ROUTER_KEY] = $ctrl.'/'.$action;
 				$url .= '?'.http_build_query($params);
 			}
 		} else if($router_mode == self::MODE_REWRITE || $router_mode == self::MODE_PATH){
@@ -490,12 +504,12 @@ abstract class Router{
 			}
 			if($path == '/'){
 				if($action == self::$DEFAULT_ACTION){
-					$p = $controller;
+					$p = $ctrl;
 				} else {
-					$p = "$controller/$action";
+					$p = "$ctrl/$action";
 				}
 			} else {
-				$p = "$path/$controller/$action";
+				$p = "$path/$ctrl/$action";
 			}
 			$str = self::buildParam($params, $router_mode);
 			$url = $url.($str ? "$p/$str" : $p);
