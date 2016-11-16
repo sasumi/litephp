@@ -176,12 +176,10 @@ class Paginate implements PaginateInterface {
 		if($this->page_size_flag && $page_size){
 			$gets[$this->config['page_size_key']] = $page_size;
 		}
-		$controller = Router::getController();
-		$action = Router::getAction();
 
 		/** @var Router $render */
 		$render = Config::get('app/render');
-		return $render::getUrl("$controller/$action", $gets);
+		return $render::getUrl($render::getCurrentUri(), $gets);
 	}
 
 	/**
@@ -207,7 +205,7 @@ class Paginate implements PaginateInterface {
 				}
 			}
 		}
-		$form_action = Router::getUrl(Router::getController().'/'.Router::getAction(), $gets);
+		$form_action = Router::getUrl(Router::getCurrentUri(), $gets);
 
 		foreach($page_modes as $mode){
 			//first page

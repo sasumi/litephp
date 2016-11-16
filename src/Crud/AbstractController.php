@@ -277,7 +277,7 @@ abstract class AbstractController extends CoreController{
 
 		//导出
 		$export_format = $support_list[CI::OP_INDEX]['export'];
-		$export_link = $export_format ? Router::getUrl(Router::getController().'/index', array_merge($search, array(
+		$export_link = $export_format ? Router::getUrl(Router::getControllerAbbr().'/index', array_merge($search, array(
 			'_export_' => $export_format
 		))) : '';
 

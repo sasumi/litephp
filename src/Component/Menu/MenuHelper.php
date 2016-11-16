@@ -107,7 +107,7 @@ class MenuHelper {
 	public function getMenuData($type){
 		if(!$this->menu_data[$type]){
 			$mnu = $this->data;
-			$current_ctrl = strtolower(Router::getController());
+			$current_ctrl = strtolower(Router::getControllerAbbr());
 			$current_action = strtolower(Router::getAction());
 
 			//权限清理
