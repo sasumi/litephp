@@ -109,24 +109,6 @@ abstract class Router{
 	}
 
 	/**
-	 * 获取controller常用缩写（去除app命名空间，翻转斜杠）
-	 * @return string
-	 */
-	public static function getControllerAbbr(){
-		$controller = self::getController();
-		$ctrl = self::resolveNameFromController($controller);
-		return $ctrl;
-	}
-
-	/**
-	 * 获取当前路径URI
-	 * @return string
-	 */
-	public static function getCurrentUri(){
-		return self::getControllerAbbr().'/'.self::getAction();
-	}
-
-	/**
 	 * 获取当前调用action
 	 * @return string
 	 */
@@ -324,6 +306,23 @@ abstract class Router{
 		}
 		return $html;
 	}
+	
+	/**
+	 * 追加host到url里面,主要为了seo优化
+	 * @param $url
+	 * @return string
+	 */
+	private static function patchHostPreset($url){
+		$app_url = Config::get('app/url');
+		if(stripos($app_url, 'http://') === false){
+			return $url;
+		}
+		if(strpos($url, '/') === 0){
+			$tmp = parse_url($app_url);
+			return $tmp['scheme'].'://'.$tmp['host'].$url;
+		}
+		return $url;
+	}
 
 	/**
 	 * 解析URI
@@ -379,7 +378,6 @@ abstract class Router{
 
 	/**
 	 * 从controller类名中解析对应名称（包含子级目录）
-	 * 同时转换namespace里面的反斜杠\ 成斜杠 /
 	 * @param $controller
 	 * @return string
 	 */
@@ -387,7 +385,7 @@ abstract class Router{
 		$ns = Application::getNamespace();
 		$preg = "/^".preg_quote($ns)."\\\\controller\\\\(.*?)Controller/";
 		$ctrl = preg_replace($preg, '$1', $controller);
-		return str_replace('\\','/',$ctrl);
+		return $ctrl;
 	}
 
 	/**
@@ -451,7 +449,7 @@ abstract class Router{
 			case self::MODE_PATH:
 				$str = '';
 				foreach($param as $k => $v){
-					$str .= "$k/".encodeURIComponent($v);
+					$str .= "$k=".encodeURIComponent($v);
 				}
 				return $str;
 			default:
@@ -483,21 +481,22 @@ abstract class Router{
 			return $app_url;
 		}
 
-		$ctrl_name = self::resolveNameFromController($controller);
+		$ctrl = self::resolveNameFromController($controller);
 		$url = $app_url;
 		if($router_mode == self::MODE_NORMAL){
-			if(!$params){
+			$query_string = http_build_query($params);
+			if(!$query_string){
 				if($path == '/'){
 					if($action == self::$DEFAULT_ACTION){
-						$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$ctrl_name;
+						$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$ctrl;
 					} else {
-						$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$ctrl_name.'%2F'.$action;
+						$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$ctrl.'%2F'.$action;
 					}
 				} else {
-					$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$path.'%2F'.$ctrl_name.'%2F'.$action;
+					$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$path.'%2F'.$ctrl.'%2F'.$action;
 				}
 			} else{
-				$params[self::$ROUTER_KEY] = $ctrl_name.'/'.$action;
+				$params[self::$ROUTER_KEY] = $ctrl.'/'.$action;
 				$url .= '?'.http_build_query($params);
 			}
 		} else if($router_mode == self::MODE_REWRITE || $router_mode == self::MODE_PATH){
@@ -505,21 +504,20 @@ abstract class Router{
 				$url .= stripos($url, '.php') !== false ? '' : 'index.php/';
 			}
 			if($path == '/'){
-				$p = "$ctrl_name";
+				if($action == self::$DEFAULT_ACTION){
+					$p = $ctrl;
+				} else {
+					$p = "$ctrl/$action";
+				}
 			} else {
-				$p = "$path/$ctrl_name";
-			}
-			
-			if($params || strcasecmp($action, self::$DEFAULT_ACTION) != 0){
-				$p .= "/$action";
+				$p = "$path/$ctrl/$action";
 			}
 			$str = self::buildParam($params, $router_mode);
 			$url = $url.($str ? "$p/$str" : $p);
 		} else {
 			throw new Exception('no router mode found');
 		}
-
-		return $url;
+		return self::patchHostPreset($url);
 	}
 
 	/**

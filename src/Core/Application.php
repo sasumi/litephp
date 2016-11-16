@@ -145,6 +145,8 @@ class Application{
 	 * @throws \Exception
 	 */
 	private static function handleException(\Exception $ex){
+
+		dump($ex, 1);
 		//调试模式
 		if(Config::get('app/debug')){
 			print_exception($ex);
