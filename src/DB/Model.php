@@ -992,7 +992,8 @@ abstract class Model extends DAO{
 		//则抛异常
 		$kvs = array_keys($this->getValues());
 		if(!isset($v) && !in_array($key, $kvs)){
-			throw new Exception('model fields not set in query result', null, $key);
+			//@todo 这里由于在update/add模板共用情况下，很可能使用 $model->$field 进行直接拼接action，需要重新审视这里抛出exception是否合理
+//			throw new Exception('model fields not set in query result', null, $key);
 		}
 		return $v;
 	}
