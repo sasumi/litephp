@@ -190,7 +190,7 @@ abstract class Router{
 
 		//优先query参数
 		if($get[self::$ROUTER_KEY] || $router_mode == self::MODE_NORMAL){
-			list($controller, $action) = self::resolveUri($get[self::$ROUTER_KEY]);
+			list($controller, $action) = self::resolveUri($get[self::$ROUTER_KEY], true);
 			unset($get[self::$ROUTER_KEY]);
 		} else {
 			$path_info = self::getPathInfo();
@@ -324,10 +324,11 @@ abstract class Router{
 	/**
 	 * 解析URI
 	 * @param string $uri
+	 * @param bool $throw_exception
 	 * @return array
 	 * @throws \Lite\Exception\RouterException
 	 */
-	private static function resolveUri($uri=''){
+	private static function resolveUri($uri='', $throw_exception=false){
 		$c = '';
 		$action = self::$DEFAULT_ACTION;
 		$uri = trim($uri, '/ ');
@@ -350,7 +351,7 @@ abstract class Router{
 		}
 
 		$controller = $c ? self::loadControllerFile($c) : self::$DEFAULT_CONTROLLER;
-		if(!$controller){
+		if(!$controller && $throw_exception){
 			throw new RouterException('Controller Not Found:'.$c);
 		}
 		return array($controller, $action);
