@@ -473,6 +473,9 @@ abstract class Router{
 		$app_url = Config::get('app/url');
 		$router_mode = Config::get('router/mode');
 		list($controller, $action) = self::resolveUri($uri);
+		if(!$controller){
+			return '#NO_ROUTER_FOUND:'.$uri;
+		}
 
 		//首页
 		if(empty($params) &&
