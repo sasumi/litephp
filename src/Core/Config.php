@@ -187,8 +187,7 @@ abstract class Config {
 				self::assignConfig($config['router_key'], Router::DEFAULT_ROUTER_KEY);
 				self::assignConfig($config['controller_key'], 'mod');
 				self::assignConfig($config['action_key'], 'act');
-				self::assignConfig($config['default_path'], '/');
-				self::assignConfig($config['default_controller'], 'index');
+				self::assignConfig($config['default_controller'], 'Index');
 				self::assignConfig($config['default_action'], 'index');
 				break;
 

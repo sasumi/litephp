@@ -3,7 +3,7 @@ namespace Lite\Core;
 
 use Lite\Api\Daemon;
 use Lite\Component\Http;
-use Lite\DB\Driver\DBAbstract;
+use Lite\Component\Server;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
@@ -14,6 +14,7 @@ use ReflectionClass;
 use function Lite\func\array_last;
 use function Lite\func\decodeURI;
 use function Lite\func\dump;
+use function Lite\func\file_real_exists;
 use function Lite\func\format_size;
 use function Lite\func\glob_recursive;
 use function Lite\func\print_exception;
@@ -168,7 +169,8 @@ class Application{
 			};
 		}
 		//即使上面页面跳转了，这里还会继续输出错误信息，方便调试
-		die('<!-- '.htmlspecialchars($ex->getMessage()).'-->');
+		echo htmlspecialchars($ex->getMessage()),' #', $ex->getFile(), '[',$ex->getLine(),']';
+		die;
 	}
 
 	/**
@@ -237,7 +239,9 @@ class Application{
 		$get = Router::get();
 		$post = Router::post();
 
-		self::loadControllerCaseInsensitive($controller);
+		if(!class_exists($controller)){
+			throw new RouterException('Controller No Found: '.$controller);
+		}
 
 		/** @var Controller $ctrl_instance */
 		$ctrl_instance = new $controller($controller, $action);
@@ -343,48 +347,24 @@ class Application{
 	 * @param $class
 	 */
 	private function autoload($class){
+		$case_sensitive = Server::inWindows();
 		$paths = self::getIncludePaths();
 		foreach($paths as $path){
 			if(stripos($class, self::$namespace) === 0){
 				$file = substr($class, strlen(self::$namespace)+1);
 				$file = str_replace('\\', DIRECTORY_SEPARATOR, $file);
 				$file = $path.$file.'.php';
-				if(is_file($file)){
+				if(is_file($file) && (!$case_sensitive || file_real_exists($file))){
 					include_once $file;
 					return;
 				}
 			}
 			//不包含ns的情况
 			$file = $path.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
-			if(is_file($file)){
+			if(is_file($file) && (!$case_sensitive || file_real_exists($file))){
 				include_once $file;
 			}
 		}
 	}
 
-	/**
-	 * 不区分大小写加载controller文件，包括文件名和目录路径
-	 * @param $ctrl_class
-	 * @throws \Lite\Exception\RouterException
-	 */
-	private function loadControllerCaseInsensitive($ctrl_class){
-		$controller_root = Config::get('app/path').'controller/';
-		$files = glob_recursive($controller_root.'*.php', GLOB_NOSORT);
-
-		$ns = self::getNamespace();
-		$c = preg_replace('/^'.preg_quote($ns).'\\\\/', '', $ctrl_class);
-		$class_file = str_replace('\\', '/', Config::get('app/path').$c.'.php');
-
-		foreach($files as $f){
-			$f = str_replace('\\','/',$f);
-			if(strcasecmp($f, $class_file) == 0){
-				include_once $f;
-				if(!class_exists($ctrl_class)){
-					throw new RouterException('controller class not found:'.$ctrl_class);
-				}
-				return;
-			}
-		}
-		throw new RouterException('controller file not found:'.$ctrl_class);
-	}
 }

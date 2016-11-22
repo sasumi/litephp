@@ -27,6 +27,21 @@ namespace Lite\func {
 	}
 
 	/**
+	 * 判断文件是否真实存在（区分文件、目录大小写）
+	 * @param $file
+	 * @return bool
+	 */
+	function file_real_exists($file){
+		$file = str_replace('\\', '/', $file);
+		$real_path = str_replace('\\','/', realpath($file));
+		return strcmp($file, $real_path) == 0;
+	}
+
+	function file_path_compare_case_insensitive($f1, $f2){
+		return strcasecmp($f1, $f2) == 0;
+	}
+
+	/**
 	 * 递归拷贝目录
 	 * @param $src
 	 * @param $dst

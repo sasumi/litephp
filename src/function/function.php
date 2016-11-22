@@ -295,6 +295,10 @@ function dump(){
 			echo "File:".($cli ? '' : '<b style="color:gray">').$trace[0]['file'].($cli ? '' : '</b><br/>')." Line: ".($cli ? '' : '<b>').$trace[0]['line'].($cli ? "\n" : '"</b><br/>"');
 			$comma = $cli ? "\n" : '<div style="height:0; line-height:1px; font-size:1px; border-bottom:1px solid white; border-top:1px solid #ccc; margin:10px 0"></div>';
 		}
+		if(!$cli && $act){
+			echo "\n";
+			debug_print_backtrace();
+		}
 		echo $cli ? '' : '</pre>';
 		if($act){
 			die();
