@@ -397,7 +397,7 @@ abstract class Router{
 		while($p[] = array_shift($tmp)){
 			if($c = self::loadControllerFile(join('/',$p))){
 				$act = array_shift($tmp);
-				return array($c, $act, $tmp);
+				return array($c, $act, self::resolveParamFromPath($tmp));
 			}
 		}
 		return array(null, null, self::resolveParamFromPath($tmp));
