@@ -38,6 +38,45 @@ function substr_utf8($string, $length, $tail = '...'){
 }
 
 /**
+ * 格式化友好显示时间
+ * @param $timestamp
+ * @param bool $as_html 是否使用span包裹
+ * @return string
+ */
+function pretty_time($timestamp, $as_html = false){
+	$str = '';
+	$offset = time()-$timestamp;
+	$before = $offset>0;
+	$offset = abs($offset);
+	$unit_cal = array(
+		'年'  => 31104000,
+		'个月' => 2592000,
+		'天'  => 86400,
+		'小时' => 3600,
+		'分钟' => 60,
+	);
+	if($offset>30 && $offset<60){
+		$str = $before ? '刚才' : '等下';
+	} else if($offset<=30){
+		$str = $before ? '刚刚' : '马上';
+	} else{
+		$us = array();
+		foreach($unit_cal as $u){
+			$tmp = $offset>=$u ? floor($offset/$u) : 0;
+			$offset -= $tmp ? $u : 0;
+			$us[] = $tmp;
+		}
+		foreach($us as $k => $u){
+			if($u){
+				$str = $u.array_keys($unit_cal)[$k].($before ? '前' : '后');
+				break;
+			}
+		}
+	}
+	return $as_html ? '<span title="'.date('Y-m-d H:i:s', $timestamp).'">'.$str.'</span>' : $str;
+}
+
+/**
  * covert integer to string
  * @param $data
  * @return array|string

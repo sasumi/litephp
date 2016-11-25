@@ -233,7 +233,7 @@ abstract class Router{
 		self::$DEFAULT_ACTION = Config::get('router/default_action');
 
 		$ret = self::parseCurrentRequest();
-		
+
 		self::$CONTROLLER = $ret['controller'];
 		self::$ACTION = $ret['action'];
 		self::$GET = $ret['get'];
@@ -254,6 +254,7 @@ abstract class Router{
 			}
 			return trim($_SERVER['PATH_INFO'], '/');
 		}
+
 		$uri = $_SERVER['REQUEST_URI'];
 		$script_name = $_SERVER['SCRIPT_NAME'];
 		$path_info = '';
@@ -391,10 +392,11 @@ abstract class Router{
 	 * @throws \Lite\Exception\RouterException
 	 */
 	private static function resolvePath($path_info){
-		$tmp = array_clear_empty(explode('/', $path_info));
+		$tmp = explode('/', $path_info);
 		if(empty($tmp)){
 			return array(null, null, array());
 		}
+
 		$p = array();
 		while($p[] = array_shift($tmp)){
 			if($c = self::loadControllerFile(join('/',$p))){
@@ -451,7 +453,18 @@ abstract class Router{
 			case self::MODE_PATH:
 				$str = array();
 				foreach($param as $k => $v){
-					$str[] = "$k/".encodeURIComponent($v);
+					if(is_array($v)){
+						foreach($v as $sub_k=>$_v){
+							if(strlen($_v)){
+								$str[] = "{$k}[$sub_k]/".urlencode($_v);
+							} else {
+								//ignore empty
+							}
+						}
+					} else {
+
+						$str[] = "$k/".urlencode($v);
+					}
 				}
 				return join('/',$str);
 			default:
@@ -490,12 +503,12 @@ abstract class Router{
 		if($router_mode == self::MODE_NORMAL){
 			if(!$params){
 				if($action == self::$DEFAULT_ACTION){
-					$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$ctrl_name;
+					$url = $app_url.'index.php?'.self::$ROUTER_KEY."=$ctrl_name";
 				} else {
-					$url = $app_url.'index.php?'.self::$ROUTER_KEY.'='.$ctrl_name.'%2F'.$action;
+					$url = $app_url.'index.php?'.self::$ROUTER_KEY."={$ctrl_name}%2F{$action}";
 				}
 			} else{
-				$params[self::$ROUTER_KEY] = $ctrl_name.'/'.$action;
+				$params[self::$ROUTER_KEY] = "$ctrl_name/$action";
 				$url .= '?'.http_build_query($params);
 			}
 		} else if($router_mode == self::MODE_REWRITE || $router_mode == self::MODE_PATH){

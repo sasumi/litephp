@@ -1,5 +1,6 @@
 <?php
 namespace Lite\Component;
+use function Lite\func\dump;
 
 /**
  * 客户端信息获取类
@@ -26,7 +27,7 @@ class Client {
 		elseif(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
-		return preg_match('/[\d\.]{7,15}/', $ip, $matches) ? $matches [0] : '';
+		return preg_match('/[\d\.]{7,15}/', $ip, $matches) ? $matches [0] : $ip;
 	}
 
 	/**

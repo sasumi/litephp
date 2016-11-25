@@ -285,6 +285,25 @@ abstract class Model extends DAO{
 	}
 
 	/**
+	 * query where field between min & max (include equal)
+	 * @param $field
+	 * @param null $min
+	 * @param null $max
+	 * @return $this
+	 */
+	public function between($field, $min = null, $max = null){
+		if(isset($min)){
+			$min = addslashes($min);
+			$this->query->where($field, ">=", $min);
+		}
+		if(isset($max)){
+			$max = addslashes($max);
+			$this->query->where($field, "<=", $max);
+		}
+		return $this;
+	}
+
+	/**
 	 * 创建新对象
 	 * @param $data
 	 * @return bool| Model

@@ -19,11 +19,16 @@ class Query {
 	const OP_OR = 1;
 	const OP_AND = 2;
 
+	const LEFT_JOIN = 1;
+	const RIGHT_JOIN = 2;
+	const INNER_JOIN = 3;
+
 	private $sql = '';
 	private $table_prefix = '';
 	private $operation = self::SELECT;
 	private $fields = array('*');
 	private $tables = array();
+	private $joins = array();
 	private $where = array();
 	private $order = '';
 	private $group = '';
@@ -77,7 +82,49 @@ class Query {
 	}
 
 	/**
-	 * 更新
+	 * join table on condition
+	 * @param $table
+	 * @param null $on condition
+	 * @param mixed $type join type
+	 * @return $this
+	 */
+	public function join($table, $on=null, $type){
+		$this->joins[] = array($table, $on, $type);
+		return $this;
+	}
+
+	/**
+	 * left join
+	 * @param $table
+	 * @param null $on
+	 * @return \Lite\DB\Query
+	 */
+	public function leftJoin($table, $on = null){
+		return $this->join($table, $on, self::LEFT_JOIN);
+	}
+
+	/**
+	 * right join
+	 * @param $table
+	 * @param null $on
+	 * @return \Lite\DB\Query
+	 */
+	public function rightJoin($table, $on = null){
+		return $this->join($table, $on, self::RIGHT_JOIN);
+	}
+
+	/**
+	 * inner join
+	 * @param $table
+	 * @param null $on
+	 * @return \Lite\DB\Query
+	 */
+	public function innerJoin($table, $on = null){
+		return $this->join($table, $on, self::INNER_JOIN);
+	}
+
+	/**
+	 * update query
 	 * @return $this
 	**/
 	public function update(){
@@ -120,17 +167,16 @@ class Query {
 
 	/**
 	 * 字段
-	 * @param string $p1
-	 * @param string $p2
-	 * @return Query|Model
-	**/
-	public function field($p1='*', $p2=''){
-		$args = func_get_args();
-		$str = join(',', $args);
+	 * @param array $fields
+	 * @return \Lite\DB\Model|\Lite\DB\Query
+	 */
+	public function field(...$fields){
+		$str = join(',', $fields);
 		if($str == '*'){
 			return $this;
 		}
-		$this->fields = explode(',', $str);
+		$fs = explode(',', $str);
+		$this->fields = $fs;
 		$this->fields = self::escapeKey($this->fields);
 		return $this;
 	}
@@ -223,6 +269,36 @@ class Query {
 	 */
 	public function orWhere($field, $operator=null, $compare=null){
 		$this->addWhere(self::OP_OR, $field, $operator, $compare);
+	}
+
+	/**
+	 * get join query string
+	 * @param array $joins
+	 * @return mixed
+	 */
+	private function getJoinStr($joins=array()){
+		$str = array();
+		foreach($joins ?: $this->joins as $j){
+			list($table, $on, $type) = $j;
+			switch($type){
+				case self::LEFT_JOIN:
+					$str[] = 'LEFT JOIN';
+					break;
+				case self::RIGHT_JOIN:
+					$str[] = 'RIGHT JOIN';
+					break;
+
+				case self::INNER_JOIN:
+				default:
+					$str[] = 'INNER JOIN';
+			}
+
+			$str[] = self::escapeKey($table);
+			if($on){
+				$str[] = "ON $on";
+			}
+		}
+		return join("", $str);
 	}
 
 	/**
@@ -341,6 +417,8 @@ class Query {
 			case self::SELECT:
 				$sql = 'SELECT '.implode(',', self::escapeKey($this->fields)).
 					' FROM '.implode(',', $this->tables).
+					$this->getJoinStr().
+					' '.
 					$this->getWhereStr().
 					($this->group ? ' GROUP BY '.$this->group : '').
 					($this->order ? ' ORDER BY '.join(',',$this->order) : '');

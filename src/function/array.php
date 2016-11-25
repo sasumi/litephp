@@ -315,6 +315,20 @@ namespace Lite\func {
 	}
 
 	/**
+	 * sum by array field
+	 * @param $arr
+	 * @param $field
+	 * @return int
+	 */
+	function array_sum_by($arr, $field){
+		$s = 0;
+		foreach($arr as $item){
+			$s += $item[$field];
+		}
+		return $s;
+	}
+	
+	/**
 	 * filter array by specified keys
 	 * @deprecated 请使用 array_clear_fields
 	 * @example array_filter_by_keys($data, array('key1','key2'));

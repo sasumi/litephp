@@ -414,8 +414,6 @@ function get_field_type($meta){
 			return $k;
 		}
 	}
-
-	var_dump($meta);
 	throw new \Exception('data type detected fail');
 }
 
