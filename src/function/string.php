@@ -113,6 +113,9 @@ function h($str, $len = null, $tail = '...'){
 	if($len){
 		$str = substr_utf8($str, $len, $tail);
 	}
+	if(is_numeric($str)){
+		return $str;
+	}
 	return htmlspecialchars($str);
 }
 

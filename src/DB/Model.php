@@ -7,6 +7,7 @@ use Lite\DB\Driver\DBAbstract;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;
 use function Lite\func\array_clear_fields;
+use function Lite\func\array_group;
 use function Lite\func\dump;
 
 /**
@@ -412,11 +413,15 @@ abstract class Model extends DAO{
 	/**
 	 * 获取所有记录
 	 * @param bool $as_array return as array
+	 * @param string $unique_key 用于组成返回数组的唯一性key
 	 * @return array
 	 */
-	public function all($as_array = false){
+	public function all($as_array = false, $unique_key = ''){
 		$list = $this->getDbDriver(self::DB_READ)->getAll($this->query);
 		if($as_array){
+			if($unique_key){
+				$list = array_group($list, $unique_key, true);
+			}
 			return $list;
 		}
 
@@ -426,7 +431,11 @@ abstract class Model extends DAO{
 				$tmp = clone $this;
 				$tmp->setValues($item);
 				$tmp->resetValueChangeState();
-				$result[] = $tmp;
+				if($unique_key){
+					$result[$item[$unique_key]] = $tmp;
+				} else {
+					$result[] = $tmp;
+				}
 			}
 		}
 		return $result;
@@ -469,26 +478,6 @@ abstract class Model extends DAO{
 	}
 
 	/**
-	 * 返回关联数组分页
-	 * @param $paginate
-	 * @param bool $as_array
-	 * @param null $key
-	 * @return array
-	 * @throws \Lite\Exception\Exception
-	 */
-	public function paginateAsAssoc($paginate, $as_array=false, $key=null){
-		$list = $this->paginate($paginate, $as_array);
-		$tmp = array();
-		if($list){
-			$key = $key ?: $this->getPrimaryKey();
-			foreach($list as $item){
-				$tmp[$item->{$key}] = $item;
-			}
-		}
-		return $tmp;
-	}
-
-	/**
 	 * 获取一个记录字段
 	 * @param $key
 	 * @return mixed|null
@@ -497,6 +486,17 @@ abstract class Model extends DAO{
 		$this->query->field($key);
 		$data = $this->getDbDriver(self::DB_READ)->getOne($this->query);
 		return $data ? array_pop($data) : null;
+	}
+
+	/**
+	 * 获取指定列
+	 * @param $key
+	 * @return array
+	 */
+	public function column($key){
+		$this->query->field($key);
+		$data = $this->getDbDriver(self::DB_READ)->getAll($this->query);
+		return $data ? array_column($data, $key) : array();
 	}
 
 	/**
@@ -514,14 +514,21 @@ abstract class Model extends DAO{
 			return false;
 		}
 
+		$ds = DBAbstract::distinctQueryState();
+		if($ds){
+			DBAbstract::distinctQueryOff();
+		}
 		$page_index = 0;
 		$page_total = ceil($total / $size);
-		while($total > 0){
+		while($start < $total){
 			$data = $this->paginate(array($start, $size), $as_array);
 			if(call_user_func($handler, $data, $page_index++, $page_total) === false){
 				break;
 			}
-			$total -= $size;
+			$start += $size;
+		}
+		if($ds){
+			DBAbstract::distinctQueryOn();
 		}
 		return true;
 	}
@@ -539,11 +546,15 @@ abstract class Model extends DAO{
 	 * 分页查询记录
 	 * @param string $page
 	 * @param bool $as_array return as array
-	 * @return array || null
+	 * @param string $unique_key 用于组成返回数组的唯一性key
+	 * @return array | null
 	 */
-	public function paginate($page = null, $as_array = false){
+	public function paginate($page = null, $as_array = false, $unique_key = ''){
 		$list = $this->getDbDriver(self::DB_READ)->getPage($this->query, $page);
 		if($as_array){
+			if($unique_key){
+				$list = array_group($list, $unique_key, true);
+			}
 			return $list;
 		}
 		$result = array();
@@ -552,7 +563,11 @@ abstract class Model extends DAO{
 				$tmp = clone $this;
 				$tmp->setValues($item);
 				$tmp->resetValueChangeState();
-				$result[] = $tmp;
+				if($unique_key){
+					$result[$item[$unique_key]] = $tmp;
+				} else {
+					$result[] = $tmp;
+				}
 			}
 		}
 		return $result;
@@ -885,10 +900,11 @@ abstract class Model extends DAO{
 					array_walk($val, function (&$item) use ($obj){
 						$item = $obj->getDbDriver(self::DB_READ)->quote($item);
 					});
+
 					if(!empty($val)){
 						$rst .= $arr[$key] . '(' . join(',', $val) . ')';
 					} else {
-						$rst .= $arr[$key] . '(' . $obj->getDbDriver(self::DB_READ)->quote('') . ')';
+						$rst .= $arr[$key] . '(NULL)'; //This will never match, since nothing is equal to null (not even null itself.)
 					}
 				} else {
 					$rst .= $arr[$key] . $obj->getDbDriver(self::DB_READ)->quote($val);

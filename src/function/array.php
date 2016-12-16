@@ -90,6 +90,20 @@ namespace Lite\func {
 		return $output;
 	}
 
+	/**
+	 * array copy by fields
+	 * @param array $array
+	 * @param array $fields
+	 * @return array
+	 */
+	function array_copy_by_fields(array $array, array $fields){
+		$tmp = array();
+		foreach($fields as $field){
+			$tmp[$field] = $array[$field];
+		}
+		return $tmp;
+	}
+
     /**
      * 检测KEY合并数组，增强array_merge
      * @param array $array1
@@ -315,19 +329,25 @@ namespace Lite\func {
 	}
 
 	/**
-	 * sum by array field
-	 * @param $arr
-	 * @param $field
-	 * @return int
+	 * Set default values to array
+	 * Usage:
+	 * <pre>
+	 * $_GET = array_default($_GET, array('page_size'=>10), true);
+	 * </pre>
+	 * @param array $arr
+	 * @param array $values
+	 * @param bool $reset_empty reset empty value in array
+	 * @return array
 	 */
-	function array_sum_by($arr, $field){
-		$s = 0;
-		foreach($arr as $item){
-			$s += $item[$field];
+	function array_default(array $arr, array $values, $reset_empty = false){
+		foreach($values as $k => $v){
+			if(!isset($arr[$k]) || ($reset_empty && empty($arr[$k]))){
+				$arr[$k] = $v;
+			}
 		}
-		return $s;
+		return $arr;
 	}
-	
+
 	/**
 	 * filter array by specified keys
 	 * @deprecated 请使用 array_clear_fields

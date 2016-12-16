@@ -149,7 +149,7 @@ abstract class AccessAdapter {
 
 	/**
 	 * 以用户信息登录
-	 * @param array $user_info
+	 * @param array|mixed $user_info
 	 * @return bool
 	 */
 	public function login($user_info){
@@ -166,8 +166,10 @@ abstract class AccessAdapter {
 		if($this->cookie_expired){
 			$uid = $this->getIdFromUserInfo($user_info);
 			$now = time();
-			setcookie($this->cookie_name, $uid, $this->cookie_expired+$now, $this->cookie_path, $this->cookie_domain);
-			setcookie($this->cookie_sid_name, $this->encryptUid($uid), $this->cookie_expired+$now, $this->cookie_path, $this->cookie_domain);
+			if(!headers_sent()){
+				setcookie($this->cookie_name, $uid, $this->cookie_expired+$now, $this->cookie_path, $this->cookie_domain);
+				setcookie($this->cookie_sid_name, $this->encryptUid($uid), $this->cookie_expired+$now, $this->cookie_path, $this->cookie_domain);
+			}
 		}
 	}
 

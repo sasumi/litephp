@@ -185,6 +185,7 @@ abstract class Config {
 			case 'router':
 				self::assignConfig($config['mode'], Router::MODE_PATH);
 				self::assignConfig($config['router_key'], Router::DEFAULT_ROUTER_KEY);
+				self::assignConfig($config['lower_case_uri'], true);
 				self::assignConfig($config['controller_key'], 'mod');
 				self::assignConfig($config['action_key'], 'act');
 				self::assignConfig($config['default_controller'], 'Index');

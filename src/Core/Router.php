@@ -6,6 +6,7 @@ use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
 use function Lite\func\array_clear_empty;
 use function Lite\func\array_clear_null;
+use function Lite\func\array_merge_recursive_distinct;
 use function Lite\func\decodeURIComponent;
 use function Lite\func\dump;
 use function Lite\func\encodeURIComponent;
@@ -309,16 +310,23 @@ abstract class Router{
 	
 	/**
 	 * 产生表单action
-	 * @deprecated 框架新版本已经支持路由混合解析，
-	 * 因此推荐使用 Router::getUrlInPathMode来产生表单使用的action
-	 * @param string $target
+	 * @param string $uri
 	 * @param array $params
+	 * @param array $fields_exclude_from_current_query 保留当前URL中的查询数据
 	 * @return string
 	 */
-	public static function getFormAction($target = '', $params = array()){
-		$html = '<input type="hidden" name="'.self::$ROUTER_KEY.'" value="'.$target.'"/>';
+	public static function getFormAction($uri = '', $params = array(), $fields_exclude_from_current_query = array()){
+		$params = $params ?: array();
+		if($fields_exclude_from_current_query){
+			$tmp = static::get();
+			foreach($fields_exclude_from_current_query as $field){
+				unset($tmp[$field]);
+			}
+			$params = array_merge($tmp, $params);
+		}
+		$html = '<input type="hidden" name="'.self::$ROUTER_KEY.'" value="'.$uri.'"/>'."\n";
 		foreach($params as $name => $p){
-			$html .= '<input type="hidden" name="'.$name.'" value="'.htmlspecialchars($p).'"/>';
+			$html .= '<input type="hidden" name="'.$name.'" value="'.htmlspecialchars($p).'"/>'."\n";
 		}
 		return $html;
 	}
@@ -330,7 +338,7 @@ abstract class Router{
 	 * @return array
 	 * @throws \Lite\Exception\RouterException
 	 */
-	private static function resolveUri($uri='', $throw_exception=false){
+	private static function resolveUri($uri = '', $throw_exception = false){
 		$c = '';
 		$action = self::$DEFAULT_ACTION;
 		$uri = trim($uri, '/ ');
@@ -375,12 +383,20 @@ abstract class Router{
 	/**
 	 * resolve param from path info
 	 * @param $path_arr
+	 * @param bool $resolve_array
 	 * @return array
 	 */
-	private static function resolveParamFromPath($path_arr){
+	private static function resolveParamFromPath($path_arr, $resolve_array = true){
 		$param = array();
 		for($i=0; $i<count($path_arr); $i+=2){
-			$param[$path_arr[$i]] = decodeURIComponent($path_arr[$i+1]);
+			$k = $path_arr[$i];
+			$v = decodeURIComponent($path_arr[$i+1]);
+			if($resolve_array && preg_match('/\[.*?\]/', $k)){
+				parse_str($k.'='.$v, $tmp);
+				$param = array_merge_recursive_distinct($param, $tmp);
+			} else {
+				$param[$k] = $v;
+			}
 		}
 		return $param;
 	}
@@ -452,21 +468,23 @@ abstract class Router{
 			case self::MODE_REWRITE:
 			case self::MODE_PATH:
 				$str = array();
+				$ext_param = array();
 				foreach($param as $k => $v){
 					if(is_array($v)){
 						foreach($v as $sub_k=>$_v){
 							if(strlen($_v)){
-								$str[] = "{$k}[$sub_k]/".urlencode($_v);
+								$str[] = urlencode("{$k}[$sub_k]")."/".urlencode($_v);
 							} else {
-								//ignore empty
+								$ext_param[$sub_k] = $_v;
 							}
 						}
-					} else {
-
+					} else if(strlen($v)){
 						$str[] = "$k/".urlencode($v);
+					} else {
+						$ext_param[$k] = $v;
 					}
 				}
-				return join('/',$str);
+				return join('/',$str).($ext_param ? '?'.http_build_query($ext_param) : '');
 			default:
 				throw new Exception('no router mode support');
 		}
@@ -486,6 +504,7 @@ abstract class Router{
 		
 		$app_url = Config::get('app/url');
 		$router_mode = Config::get('router/mode');
+		$lower_case_uri = Config::get('router/lower_case_uri') ?: false;
 		list($controller, $action) = self::resolveUri($uri);
 		if(!$controller){
 			return '#NO_ROUTER_FOUND:'.$uri;
@@ -503,12 +522,12 @@ abstract class Router{
 		if($router_mode == self::MODE_NORMAL){
 			if(!$params){
 				if($action == self::$DEFAULT_ACTION){
-					$url = $app_url.'index.php?'.self::$ROUTER_KEY."=$ctrl_name";
+					$url = $app_url.'index.php?'.self::$ROUTER_KEY."=".($lower_case_uri ? strtolower($ctrl_name) : $ctrl_name);
 				} else {
-					$url = $app_url.'index.php?'.self::$ROUTER_KEY."={$ctrl_name}%2F{$action}";
+					$url = $app_url.'index.php?'.self::$ROUTER_KEY."=".($lower_case_uri ? strtolower($ctrl_name) : $ctrl_name)."%2F".($lower_case_uri ? strtolower($action) : $action);
 				}
 			} else{
-				$params[self::$ROUTER_KEY] = "$ctrl_name/$action";
+				$params[self::$ROUTER_KEY] = $lower_case_uri ? strtolower("$ctrl_name/$action") : "$ctrl_name/$action";
 				$url .= '?'.http_build_query($params);
 			}
 		} else if($router_mode == self::MODE_REWRITE || $router_mode == self::MODE_PATH){
@@ -520,6 +539,9 @@ abstract class Router{
 			if($params || strcasecmp($action, self::$DEFAULT_ACTION) != 0){
 				$p .= "/$action";
 			}
+			if($lower_case_uri){
+				$p = strtolower($p);
+			}
 			$str = self::buildParam($params, $router_mode);
 			$url = $url.($str ? "$p/$str" : $p);
 		} else {
@@ -527,6 +549,25 @@ abstract class Router{
 		}
 
 		return $url;
+	}
+
+	/**
+	 * 产生表单action
+	 * @param string $uri
+	 * @param array $params
+	 * @param array $fields_exclude_from_current_query 保留当前URL中的查询数据
+	 * @return string
+	 */
+	public static function getUrlByFilter($uri = '', $params = array(), $fields_exclude_from_current_query = array()){
+		$params = $params ?: array();
+		if($fields_exclude_from_current_query){
+			$tmp = static::get();
+			foreach($fields_exclude_from_current_query as $field){
+				unset($tmp[$field]);
+			}
+			$params = array_merge($tmp, $params);
+		}
+		return static::getUrl($uri, $params);
 	}
 
 	/**

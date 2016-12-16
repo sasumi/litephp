@@ -3,6 +3,8 @@ namespace Lite\Component;
 use Lite\Core\Config;
 use Lite\Core\PaginateInterface;
 use Lite\Core\Router;
+use function Lite\func\array_merge_recursive_distinct;
+use function Lite\func\dump;
 
 /**
  * 分页
@@ -18,22 +20,22 @@ class Paginate implements PaginateInterface {
 	private $page_info;
 	private $page_size_flag = false;     //page_size是否来自于GET
 	private $config = array(
-		'show_dot' => true,
-		'num_offset' => 5,
-		'page_size' => 10,
-		'page_key' => 'page',
+		'show_dot'      => true,
+		'num_offset'    => 2,
+		'page_size'     => 10,
+		'page_key'      => 'page',
 		'page_size_key' => 'page_size',
-		'mode' => 'first,prev,num,next,last',
+		'mode'          => 'prev,num,next,info',
 
 		'lang' => array(
 			'page_first' => '首页',
-			'page_prev' => '上一页',
-			'page_next' => '下一页',
-			'page_last' => '末页',
-			'page_info' => '共%s条记录, %d 页, 每页%i条记录',
-			'page_jump' => '跳转',
-			'page_size' => '每页条数：',
-			'page_sel' => '第%s页',
+			'page_prev'  => '上一页',
+			'page_next'  => '下一页',
+			'page_last'  => '末页',
+			'page_info'  => '共 %s 条数据, 每页 %i 条',
+			'page_jump'  => '跳转',
+			'page_size'  => '每页条数：',
+			'page_sel'   => '第%s页',
 		),
 	);
 
@@ -65,7 +67,7 @@ class Paginate implements PaginateInterface {
 	 * @return $this
 	 */
 	public function setConfig($config){
-		$this->config = array_merge($this->config, $config);
+		$this->config = array_merge_recursive_distinct($this->config, $config);
 		return $this;
 	}
 
@@ -252,14 +254,21 @@ class Paginate implements PaginateInterface {
 			else if($mode == 'num'){
 				$offset_len = $page_config['num_offset'];
 				$html .= '<span class="page_num">';
-				$html .= (($page_info['page_index']-$offset_len>0) && $page_config['show_dot']) ? '<em class="page_dots">...</em>' : null;
+				if($page_info['page_index']-$offset_len > 1){
+					$html .= '<a href="'.$this->getUrl(1, $page_info['page_size']).'">1</a>';
+				}
+				$html .= ($page_info['page_index'] - $offset_len > 2) ? '<em class="page_dots">...</em>' : null;
 				for($i=$page_info['page_index']-$offset_len; $i<=$page_info['page_index']+$offset_len; $i++){
 					if($i>0 && $i<=$page_info['page_total']){
 						$html .= ($page_info['page_index'] != $i) ? '<a href="'.$this->getUrl($i, $page_info['page_size']).'">'.$i.'</a>':'<em class="page_current">'.$i.'</em>';
 					}
 				}
-				$html .= (($page_info['page_index'] + $offset_len < $page_info['page_total'])
-					&& $page_config['show_dot']) ? '<em class="page_dots">...</em>' : null;
+				$show_last_dots = ($page_info['page_index'] + $offset_len < $page_info['page_total']) && $page_config['show_dot'];
+				$html .= ($show_last_dots && ($page_info['page_total'] - $page_info['page_index'] - $offset_len) > 1) ? '<em class="page_dots">...</em>' : null;
+				if($show_last_dots){
+					$html .= '<a href="'.$this->getUrl($page_info['page_total'], $page_info['page_size']).'">'.$page_info['page_total'].'</a>';
+				}
+
 				$html .= '</span>';
 			}
 

@@ -2,6 +2,11 @@
 namespace Lite\Cache;
 use Lite\Core\Config;
 
+/**
+ * Class CacheFile
+ * @package Lite\Cache
+ * @method static CacheFile instance()
+ */
 class CacheFile extends CacheAdapter {
 	protected  function __construct(array $config = array()){
 		$config = array_merge(array(
@@ -28,7 +33,7 @@ class CacheFile extends CacheAdapter {
 		return false;
 	}
 
-	private function getFileName($cache_key){
+	public function getFileName($cache_key){
 		return $this->getConfig('dir').md5($cache_key);
 	}
 
@@ -47,7 +52,6 @@ class CacheFile extends CacheAdapter {
 		}
 		return null;
 	}
-
 
 	public function delete($cache_key){
 		$file = $this->getFileName($cache_key);

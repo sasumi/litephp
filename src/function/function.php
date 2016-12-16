@@ -35,6 +35,36 @@ const CLI_BACK_COLOR_MAGENTA = '45';
 const CLI_BACK_COLOR_CYAN = '46';
 const CLI_BACK_COLOR_LIGHT_GRAY = '47';
 
+$GLOBALS['_CLI_WEB_FORE_COLOR_MAP_'] = array(
+	CLI_FORE_COLOR_BLACK        => 'black',
+	CLI_FORE_COLOR_DARK_GRAY    => '#636363',
+	CLI_FORE_COLOR_BLUE         => 'blue',
+	CLI_FORE_COLOR_LIGHT_BLUE   => '#6d6dff',
+	CLI_FORE_COLOR_GREEN        => 'green',
+	CLI_FORE_COLOR_LIGHT_GREEN  => '#30ce30',
+	CLI_FORE_COLOR_CYAN         => 'cyan',
+	CLI_FORE_COLOR_LIGHT_CYAN   => '#7dffff',
+	CLI_FORE_COLOR_RED          => 'red',
+	CLI_FORE_COLOR_LIGHT_RED    => '#ff7f7f',
+	CLI_FORE_COLOR_PURPLE       => 'purple',
+	CLI_FORE_COLOR_LIGHT_PURPLE => '#d842d8',
+	CLI_FORE_COLOR_BROWN        => 'BROWN',
+	CLI_FORE_COLOR_YELLOW       => 'yellow',
+	CLI_FORE_COLOR_LIGHT_GRAY   => '#aaa',
+	CLI_FORE_COLOR_WHITE        => '#fff',
+);
+
+$GLOBALS['_CLI_WEB_BACK_COLOR_MAP_'] = array(
+	CLI_BACK_COLOR_BLACK      => 'black',
+	CLI_BACK_COLOR_RED        => 'red',
+	CLI_BACK_COLOR_GREEN      => 'green',
+	CLI_BACK_COLOR_YELLOW     => 'yellow',
+	CLI_BACK_COLOR_BLUE       => 'blue',
+	CLI_BACK_COLOR_MAGENTA    => 'MAGENTA',
+	CLI_BACK_COLOR_CYAN       => 'cyan',
+	CLI_BACK_COLOR_LIGHT_GRAY => '#aaa',
+);
+
 //options
 const OPTION_REQUIRED = 'required';
 const OPTION_OPTIONAL = 'optional';
@@ -189,9 +219,26 @@ function convert_exception(\Exception $e){
  * @return string
  */
 function get_cli_color_string($str, $foreground_color = null, $background_color = null){
-	if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' || PHP_SAPI != 'cli'){
+	if(PHP_SAPI != 'cli'){
+		$style = array();
+		if($foreground_color){
+			$style[] = "color:".$GLOBALS['_CLI_WEB_FORE_COLOR_MAP_'][$foreground_color];
+		}
+		if($background_color){
+			$style[] = "background-color:".$GLOBALS['_CLI_WEB_BACK_COLOR_MAP_'][$background_color];
+		}
+		if($style){
+			return '<span style="'.join(';', $style).'">'.$str.'</span>';
+		}
 		return $str;
 	}
+
+	//windows console no support ansi color mode
+	if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
+		return $str;
+	}
+
+	//linux cli
 	$color_str = '';
 	if($foreground_color){
 		$color_str .= "\033[".$foreground_color."m";
@@ -297,7 +344,6 @@ function dump(){
 		}
 		if(!$cli && $act){
 			echo "\n";
-			debug_print_backtrace();
 		}
 		echo $cli ? '' : '</pre>';
 		if($act){
@@ -310,27 +356,6 @@ function dump(){
 			echo '<pre style="display:block; font-size:12px; color:green; padding:2px 0; border-bottom:1px solid #ddd; clear:both;">'.'['.($GLOBALS['ONLY_FOR_DEBUG_INDEX']).'] <b>'.$trace[0]['file'].'</b> line:'.$trace[0]['line'].'</pre>';
 		}
 	}
-}
-
-/**
- * get cli console color output string
- * @param $str
- * @param null $foreground_color
- * @param null $background_color
- * @return string
- */
-function getCliColorOutput($str, $foreground_color = null, $background_color = null){
-	$color_str = '';
-	if($foreground_color){
-		$color_str .= "\033[".$foreground_color."m";
-	}
-	if($background_color){
-		$color_str .= "\033[".$background_color."m";
-	}
-	if($color_str){
-		return $str."\033[0m";
-	}
-	return $str;
 }
 
 /**

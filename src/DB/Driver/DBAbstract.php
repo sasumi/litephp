@@ -147,7 +147,15 @@ abstract class DBAbstract{
 	private static function getInstanceKey(array $config){
 		return md5(serialize($config));
 	}
-	
+
+	/**
+	 * get current distinct query switch state
+	 * @return bool
+	 */
+	public static function distinctQueryState(){
+		return self::$QUERY_DISTINCT;
+	}
+
 	/**
 	 * turn on distinct query cache
 	 */
@@ -253,11 +261,13 @@ abstract class DBAbstract{
 	
 	/**
 	 * get data by page
-	 * @param $query
+	 * @param \Lite\DB\Query $q
 	 * @param PaginateInterface|array|number $pager
 	 * @return array
+	 * @throws \Lite\Exception\Exception
 	 */
-	public function getPage(Query $query, $pager = null){
+	public function getPage(Query $q, $pager = null){
+		$query = clone($q);
 		if($pager instanceof PaginateInterface){
 			$total = $this->getCount($query);
 			$pager->setItemTotal($total);
