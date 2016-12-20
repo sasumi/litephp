@@ -18,7 +18,7 @@ class Paginate implements PaginateInterface {
 	private static $_guid_count = 1;
 	private $guid;
 	private $page_info;
-	private $page_size_flag = false;     //page_size是否来自于GET
+	public $page_size_flag = false;     //page_size是否来自于GET
 	private $config = array(
 		'show_dot'      => true,
 		'num_offset'    => 2,
@@ -279,6 +279,7 @@ class Paginate implements PaginateInterface {
 				$tmp = str_replace('%s', $page_info['item_total'], $tmp);
 				$tmp = str_replace('%d', $page_info['page_total'], $tmp);
 				$tmp = str_replace('%i', $page_info['page_size'], $tmp);
+				$tmp = str_replace('%p', htmlspecialchars($this->getUrl(1, '_ppp_')), $tmp);
 				$html .= $tmp;
     			$html .= '</span>';
 			}
