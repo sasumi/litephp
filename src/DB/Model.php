@@ -1,8 +1,10 @@
 <?php
 namespace Lite\DB;
 
+use Lite\Cache\CacheFile;
 use Lite\Core\Config;
 use Lite\Core\DAO;
+use Lite\Core\Hooker;
 use Lite\DB\Driver\DBAbstract;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;
@@ -62,19 +64,34 @@ abstract class Model extends DAO{
 	}
 
 	/**
-	 * 当前表名接口
+	 * records on change event
+	 */
+	protected static function onBeforeChanged(){
+		return true;
+	}
+
+	/**
+	 * get current model related table name
 	 * @return string
 	 */
 	abstract public function getTableName();
 
 	/**
-	 * 获取当前设置主键
+	 * get table full name
+	 * @return string
+	 */
+	public function getTableFullName(){
+		return $this->getDbTablePrefix().$this->getTableName();
+	}
+
+	/**
+	 * get current table primary key
 	 * @return string
 	 * @throws \Lite\Exception\Exception
 	 */
 	public function getPrimaryKey(){
 		$defines = $this->getEntityPropertiesDefine();
-		foreach($defines as $k=>$def){
+		foreach($defines as $k => $def){
 			if($def['primary']){
 				return $k;
 			}
@@ -143,12 +160,12 @@ abstract class Model extends DAO{
 			$read_list = $write_list = array(
 				$all_config
 			);
-		}else if($all_config['read']){
+		} else if($all_config['read']){
 			if($all_config['read'][$depKey]){
 				$read_list = array(
 					$all_config['read']
 				);
-			}else{
+			} else{
 				$read_list = $all_config['read'];
 			}
 		}
@@ -160,7 +177,7 @@ abstract class Model extends DAO{
 					$write_list = array(
 						$all_config['write']
 					);
-				}else{
+				} else{
 					$write_list = $all_config['write'];
 				}
 			}
@@ -180,8 +197,8 @@ abstract class Model extends DAO{
 		}
 
 		$host_config = array_merge($host_config, array(
-			'driver'  => 'pdo',
-			'type' => 'mysql',
+			'driver' => 'pdo',
+			'type'   => 'mysql',
 		), $all_config);
 
 		if(empty($host_config[$depKey])){
@@ -236,7 +253,7 @@ abstract class Model extends DAO{
 			DBAbstract::commitAll();
 		} catch(Exception $exception){
 			DBAbstract::rollbackAll();
-		} finally {
+		} finally{
 			DBAbstract::cancelTransactionStateAll();
 		}
 		if($exception){
@@ -252,6 +269,52 @@ abstract class Model extends DAO{
 		$type = Query::isWriteOperation($this->query) ? self::DB_WRITE : self::DB_READ;
 		$result = $this->getDbDriver($type)->query($this->query);
 		return $result;
+	}
+
+	/**
+	 * set model query cache
+	 * @param Model[] $model_list
+	 * @param callable $getter
+	 * @param callable $setter
+	 * @param callable $flusher
+	 */
+	public static function bindTableCacheHandler(array $model_list, callable $getter, callable $setter, callable $flusher){
+		$check_table_hit = function($param)use($model_list){
+			$query = $param['query'];
+			if($query && $query instanceof Query){
+				foreach($model_list as $model){
+					$tbl = Query::escapeKey($model::meta()->getTableFullName());
+					if($query->tables == [$tbl]){
+						return $model;
+					}
+				}
+			}
+			return false;
+		};
+		
+		//before get list, check cache
+		Hooker::add(DBAbstract::EVENT_BEFORE_DB_GET_LIST, function($param) use ($check_table_hit, $model_list, $getter){
+			if($model = $check_table_hit($param)){
+				$result = call_user_func($getter, $model, $param['query']);
+				if(isset($result)){
+					$param['result'] = $result;
+				}
+			}
+		});
+
+		//after get list, set cache
+		Hooker::add(DBAbstract::EVENT_AFTER_DB_GET_LIST, function($param) use ($check_table_hit, $model_list, $setter){
+			if($model = $check_table_hit($param)){
+				call_user_func($setter, $model, $param['query'], $param['result']);
+			}
+		});
+
+		//flush table cache
+		Hooker::add(DBAbstract::EVENT_AFTER_DB_QUERY, function($param) use($check_table_hit, $model_list, $flusher){
+			if($model = $check_table_hit($model_list) && Query::isWriteOperation($param['query'])){
+				call_user_func($flusher, $model, $param['query']);
+			}
+		});
 	}
 
 	/**
@@ -384,6 +447,10 @@ abstract class Model extends DAO{
 	 * @return bool;
 	 */
 	public static function updateWhere(array $data, $limit = 1, $statement){
+		if(self::onBeforeChanged() === false){
+			return false;
+		}
+
 		$args = func_get_args();
 		$args = array_slice($args, 2);
 		$obj = static::meta();
@@ -433,7 +500,7 @@ abstract class Model extends DAO{
 				$tmp->resetValueChangeState();
 				if($unique_key){
 					$result[$item[$unique_key]] = $tmp;
-				} else {
+				} else{
 					$result[] = $tmp;
 				}
 			}
@@ -447,7 +514,7 @@ abstract class Model extends DAO{
 	 * @return array
 	 * @throws \Lite\Exception\Exception
 	 */
-	public function allAsAssoc($as_array=false, $key=null){
+	public function allAsAssoc($as_array = false, $key = null){
 		$list = $this->all($as_array);
 		$tmp = array();
 		if($list){
@@ -507,7 +574,7 @@ abstract class Model extends DAO{
 	 * @return bool 是否执行了分块动作
 	 * @throws Exception
 	 */
-	public function chunk($size = 1, $handler, $as_array=false){
+	public function chunk($size = 1, $handler, $as_array = false){
 		$total = $this->count();
 		$start = 0;
 		if(!$total){
@@ -519,8 +586,8 @@ abstract class Model extends DAO{
 			DBAbstract::distinctQueryOff();
 		}
 		$page_index = 0;
-		$page_total = ceil($total / $size);
-		while($start < $total){
+		$page_total = ceil($total/$size);
+		while($start<$total){
 			$data = $this->paginate(array($start, $size), $as_array);
 			if(call_user_func($handler, $data, $page_index++, $page_total) === false){
 				break;
@@ -565,7 +632,7 @@ abstract class Model extends DAO{
 				$tmp->resetValueChangeState();
 				if($unique_key){
 					$result[$item[$unique_key]] = $tmp;
-				} else {
+				} else{
 					$result[] = $tmp;
 				}
 			}
@@ -580,7 +647,7 @@ abstract class Model extends DAO{
 	 * @return number
 	 */
 	public function update(){
-		if($this->onBeforeUpdate() === false){
+		if($this->onBeforeUpdate() === false || self::onBeforeChanged() === false){
 			return false;
 		}
 
@@ -600,7 +667,7 @@ abstract class Model extends DAO{
 	 * @return string | bool 返回插入的id，或者失败(false)
 	 */
 	public function insert(){
-		if($this->onBeforeInsert() === false){
+		if($this->onBeforeInsert() === false || self::onBeforeChanged() === false){
 			return false;
 		}
 
@@ -642,7 +709,7 @@ abstract class Model extends DAO{
 	 * @param array ...$args
 	 * @return int
 	 */
-	public static function increase($field, $offset, $limit=0, ...$args){
+	public static function increase($field, $offset, $limit = 0, ...$args){
 		$obj = self::meta();
 		$statement = self::parseConditionStatement($args, $obj);
 
@@ -661,13 +728,13 @@ abstract class Model extends DAO{
 	 * @throws \Lite\Exception\BizException
 	 * @throws \Lite\Exception\Exception
 	 */
-	private static function validate($src_data=array(), $query_type=Query::INSERT, $pk_val=null, $throw_exception=true){
+	private static function validate($src_data = array(), $query_type = Query::INSERT, $pk_val = null, $throw_exception = true){
 		$obj = self::meta();
 		$pro_defines = $obj->getEntityPropertiesDefine();
 		$pk = $obj->getPrimaryKey();
 
 		//转换set数据
-		foreach($src_data as $k=>$d){
+		foreach($src_data as $k => $d){
 			if($pro_defines[$k]['type'] == 'set' && is_array($d)){
 				$src_data[$k] = join(',', $d);
 			}
@@ -679,11 +746,11 @@ abstract class Model extends DAO{
 		});
 
 		//unique校验
-		foreach($pro_defines as $field=>$def){
+		foreach($pro_defines as $field => $def){
 			if($def['unique']){
 				if($query_type == Query::INSERT){
 					$count = $obj->find("`$field`=?", $data[$field])->count();
-				} else {
+				} else{
 					$count = $obj->find("`$field`=? AND `$pk` <> ?", $data[$field], $pk_val)->count();
 				}
 				if($count){
@@ -706,17 +773,14 @@ abstract class Model extends DAO{
 
 		//插入时填充default值
 		if($query_type == Query::INSERT){
-			array_walk($pro_defines, function($def, $k)use(&$data){
-				if((!isset($data[$k]) || strlen($data[$k]) == 0)
-					&& isset($def['default'])){
+			array_walk($pro_defines, function($def, $k) use (&$data){
+				if((!isset($data[$k]) || strlen($data[$k]) == 0) && isset($def['default'])){
 					$data[$k] = $def['default'];
 				}
 			});
-		}
-
-		//更新时，只需要处理更新数据的属性
+		} //更新时，只需要处理更新数据的属性
 		else if($query_type == Query::UPDATE || $query_type == Query::REPLACE){
-			foreach($pro_defines as $k=>$define){
+			foreach($pro_defines as $k => $define){
 				if(!isset($data[$k])){
 					unset($pro_defines[$k]);
 				}
@@ -725,22 +789,24 @@ abstract class Model extends DAO{
 
 
 		//处理date日期默认为NULL情况
-		foreach($data as $k=>$val){
-			if(in_array($pro_defines[$k]['type'], array('date', 'datetime', 'time')) &&
-				array_key_exists('default', $pro_defines[$k]) && $pro_defines[$k]['default'] === null &&
-				!$data[$k]
+		foreach($data as $k => $val){
+			if(in_array($pro_defines[$k]['type'], array(
+					'date',
+					'datetime',
+					'time'
+				)) && array_key_exists('default', $pro_defines[$k]) && $pro_defines[$k]['default'] === null && !$data[$k]
 			){
 				$data[$k] = null;
 			}
 		}
 
 		//属性校验
-		foreach($pro_defines as $k=>$def){
+		foreach($pro_defines as $k => $def){
 			if(!$def['readonly']){
 				if($msg = self::validateField($data[$k], $k)){
 					if($throw_exception){
-						throw new BizException($msg, null, array('data'=>$data, 'key' => $k));
-					} else {
+						throw new BizException($msg, null, array('data' => $data, 'key' => $k));
+					} else{
 						return array($data, $msg);
 					}
 				}
@@ -786,7 +852,7 @@ abstract class Model extends DAO{
 					break;
 
 				case 'enum':
-					$err =  !(!$required && !strlen($val.'')) && !isset($define['options'][$val]) ? '请选择'.$name : '';
+					$err = !(!$required && !strlen($val.'')) && !isset($define['options'][$val]) ? '请选择'.$name : '';
 					break;
 
 				//string暂不校验
@@ -802,7 +868,7 @@ abstract class Model extends DAO{
 
 		//length
 		if(!$err && $define['length'] && $define['type'] != 'datetime' && $define['type'] != 'date' && $define['type'] != 'time'){
-			$err = strlen($val) > $define['length'] ? "{$name}长度超出" :'';
+			$err = strlen($val)>$define['length'] ? "{$name}长度超出" : '';
 		}
 
 		if(!$err){
@@ -816,42 +882,29 @@ abstract class Model extends DAO{
 	 * 由于这里插入会涉及到数据检查，最终效果还是一条一条的插入
 	 * @param $data_list
 	 * @param bool $break_on_fail
-	 * @throws \Lite\Exception\BizException
+	 * @return array|bool
+	 * @throws \Exception
 	 * @throws \Lite\Exception\Exception
-	 * @return array | bool
 	 */
 	public static function insertMany($data_list, $break_on_fail = true){
 		if(count($data_list, COUNT_RECURSIVE) == count($data_list)){
 			throw new Exception('2 dimension array needed');
 		}
-
 		$obj = static::meta();
 		$return_list = array();
 		foreach($data_list as $data){
-			$tmp = clone($obj);
-			$tmp->setValues($data);
-			if($tmp->onBeforeInsert() === false){
-				if($break_on_fail){
-					return false;
-				}else{
-					continue;
+			try{
+				$tmp = clone($obj);
+				$tmp->setValues($data);
+				$result = $tmp->insert();
+				if($result){
+					$pk_val = $tmp->getDbDriver(self::DB_WRITE)->getLastInsertId();
+					$return_list[] = $pk_val;
 				}
-			}
-
-			list($data, $errors) = self::validate($data, Query::INSERT, null, $break_on_fail);
-			if($errors){
-				continue;
-			}
-
-			$result = $tmp->getDbDriver(self::DB_WRITE)->insert($tmp->getTableName(), $data);
-			if(!$result && $break_on_fail){
-				return false;
-			}
-
-			if($result){
-				$pk_val = $tmp->getDbDriver(self::DB_WRITE)->getLastInsertId();
-				$tmp->setValue($tmp->getPrimaryKey(), $pk_val);
-				$return_list[] = $pk_val;
+			} catch(\Exception $e){
+				if($break_on_fail){
+					throw $e;
+				}
 			}
 		}
 		return $return_list;
@@ -864,6 +917,9 @@ abstract class Model extends DAO{
 	 * @throws \Lite\Exception\Exception
 	 */
 	public static function insertManyQuick($data_list){
+		if(self::onBeforeChanged() === false){
+			return false;
+		}
 		$obj = static::meta();
 		$result = $obj->getDbDriver(self::DB_WRITE)->insert($obj->getTableName(), $data_list);
 		return $result;
@@ -875,12 +931,7 @@ abstract class Model extends DAO{
 	 */
 	public function delete(){
 		$pk_val = $this[$this->getPrimaryKey()];
-		if(!$pk_val){
-			return false;
-		}
-		$statement = $this->getPrimaryKey().'='.$pk_val;
-		$result = $this->getDbDriver(self::DB_WRITE)->delete($this->getTableName(), $statement, 1);
-		return !!$result;
+		return self::delByPk($pk_val);
 	}
 
 	/**
@@ -895,19 +946,19 @@ abstract class Model extends DAO{
 		if(!empty($args)){
 			$arr = explode('?', $statement);
 			$rst = '';
-			foreach($args as $key => $val) {
+			foreach($args as $key => $val){
 				if(is_array($val)){
-					array_walk($val, function (&$item) use ($obj){
+					array_walk($val, function(&$item) use ($obj){
 						$item = $obj->getDbDriver(self::DB_READ)->quote($item);
 					});
 
 					if(!empty($val)){
-						$rst .= $arr[$key] . '(' . join(',', $val) . ')';
-					} else {
-						$rst .= $arr[$key] . '(NULL)'; //This will never match, since nothing is equal to null (not even null itself.)
+						$rst .= $arr[$key].'('.join(',', $val).')';
+					} else{
+						$rst .= $arr[$key].'(NULL)'; //This will never match, since nothing is equal to null (not even null itself.)
 					}
-				} else {
-					$rst .= $arr[$key] . $obj->getDbDriver(self::DB_READ)->quote($val);
+				} else{
+					$rst .= $arr[$key].$obj->getDbDriver(self::DB_READ)->quote($val);
 				}
 			}
 			$rst .= array_pop($arr);
@@ -929,7 +980,7 @@ abstract class Model extends DAO{
 		$has_pk = !empty($data[$this->getPrimaryKey()]);
 		if($has_pk){
 			return $this->update();
-		}else if(!empty($data)){
+		} else if(!empty($data)){
 			return $this->insert();
 		}
 		return false;
@@ -973,12 +1024,10 @@ abstract class Model extends DAO{
 	 *          'source_key' => 默认当前对象PK)
 	 * 支持：'name' => array(
 	 *          'getter' => function($k){
-
 	 *          }
 	 *      )
 	 * 支持：'name' => array(
 	 *          'setter' => function($k, $v){
-
 	 *          }
 	 *      )
 	 * </p>
@@ -992,8 +1041,7 @@ abstract class Model extends DAO{
 		if($define){
 			if($define['getter']){
 				return call_user_func($define['getter'], $this);
-			}
-			else if($define['has_one'] || $define['has_many']){
+			} else if($define['has_one'] || $define['has_many']){
 				$source_key = $define['source_key'];
 				$target_key = $define['target_key'];
 
@@ -1006,7 +1054,7 @@ abstract class Model extends DAO{
 					$class = $define['has_one'];
 					if(!$target_key){
 						return $class::findOneByPk($match_val);
-					}else{
+					} else{
 						return $class::find("$target_key = ?", $match_val)->one();
 					}
 				}
@@ -1028,7 +1076,7 @@ abstract class Model extends DAO{
 		$kvs = array_keys($this->getValues());
 		if(!isset($v) && !in_array($key, $kvs)){
 			//@todo 这里由于在update/add模板共用情况下，很可能使用 $model->$field 进行直接拼接action，需要重新审视这里抛出exception是否合理
-//			throw new Exception('model fields not set in query result', null, $key);
+			//			throw new Exception('model fields not set in query result', null, $key);
 		}
 		return $v;
 	}

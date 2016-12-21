@@ -23,17 +23,17 @@ class Query {
 	const RIGHT_JOIN = 2;
 	const INNER_JOIN = 3;
 
-	private $sql = '';
-	private $table_prefix = '';
-	private $operation = self::SELECT;
-	private $fields = array('*');
-	private $tables = array();
-	private $joins = array();
-	private $where = array();
-	private $order = '';
-	private $group = '';
-	private $limit;
-	private $data;
+	public $sql = '';
+	public $table_prefix = '';
+	public $operation = self::SELECT;
+	public $fields = array('*');
+	public $tables = array();
+	public $joins = array();
+	public $where = array();
+	public $order = '';
+	public $group = '';
+	public $limit;
+	public $data;
 
 	/**
 	 * 构造方法，初始化SQL语句
@@ -378,11 +378,11 @@ class Query {
 
 	/**
 	 * 判断当前操作语句是否为写入语句
-	 * @param string $sql
+	 * @param string|Query $query
 	 * @return int
 	 */
-	public static function isWriteOperation($sql=''){
-		return !preg_match('/^select\s/i', trim($sql));
+	public static function isWriteOperation($query = ''){
+		return !preg_match('/^select\s/i', trim($query.''));
 	}
 
 	/**
@@ -391,7 +391,7 @@ class Query {
 	 * @param $field
 	 * @return string
 	 */
-	private static function escapeKey($field){
+	public static function escapeKey($field){
 		if(is_array($field)){
 			$ret = array();
 			foreach($field as $val){

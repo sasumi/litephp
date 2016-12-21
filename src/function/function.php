@@ -3,8 +3,13 @@
  * Lite杂项操作函数
  */
 namespace Lite\func;
+
 use Exception;
 use Lite\Component\Client;
+use Lite\Core\Application;
+use Lite\Core\Hooker;
+use Lite\Core\Router;
+use Lite\DB\Driver\DBAbstract;
 use Lite\Exception\Exception as LException;
 
 //CLI前景色
@@ -468,29 +473,53 @@ function get_last_exit_trace(){
 
 /**
  * 时间打点标记，用于性能调试
- * @param bool $return 是否返回结果
- * @return string
+ * @param array $tags
+ * @return array
  */
-function time_mark($return = false){
-	$str = '';
+function performance_mark($tag = '', $data = null, $trace = array()){
 	$tm = microtime(true);
-	if(!$GLOBALS['__last_time_mark_time__']){
-		$GLOBALS['__init_time_mark_time__'] = $tm;
-		$GLOBALS['__last_time_mark_time__'] = $tm;
-		$str = "<PRE>";
-	}
+	$mem = memory_get_usage(true);
+	$trace = $trace ?: debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
 
-	list($info) = debug_backtrace();
-	$offset = str_pad(number_format(($tm-$GLOBALS['__last_time_mark_time__'])*1000, 2), 7, ' ', STR_PAD_LEFT);
-	$start_offset = str_pad(number_format(($tm-$GLOBALS['__init_time_mark_time__'])*1000, 2), 7, ' ', STR_PAD_LEFT);
-	$GLOBALS['__last_time_mark_time__'] = $tm;
-	$tm = str_pad($tm, 15, ' ', STR_PAD_RIGHT);
-	$str .= "\n[{$offset}ms -{$start_offset}ms] $tm {$info['file']} #{$info['line']}\n";
-	if($return){
-		return $str;
-	}
-	echo $str;
-	return null;
+	global $c6trpVZUNR7G;
+	$c6trpVZUNR7G[] = array($tm, $mem, $trace, $tag, $data);
+	return $c6trpVZUNR7G;
+}
+
+function lite_auto_performance_mark(){
+	//app init
+	Hooker::add(Application::EVENT_BEFORE_APP_INIT, function(){
+		performance_mark('EVENT_BEFORE_APP_INIT', null, debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]);
+	});
+	Hooker::add(Application::EVENT_AFTER_APP_INIT, function(){
+		performance_mark('EVENT_AFTER_APP_INIT', null, debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]);
+	});
+
+	//router init
+	Hooker::add(Router::EVENT_BEFORE_ROUTER_INIT, function(){
+		performance_mark('EVENT_BEFORE_ROUTER_INIT', null, debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]);
+	});
+	Hooker::add(Router::EVENT_AFTER_ROUTER_INIT, function(){
+		performance_mark('EVENT_AFTER_ROUTER_INIT', null, debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]);
+	});
+
+	$filter_trace = function($traces){
+		$traces = array_filter($traces, function($item){
+			if(!$item['file'] || stripos($item['file'], 'Litephp') !== false){
+				return false;
+			}
+			return true;
+		});
+		return array_first($traces);
+	};
+
+	//db query
+	Hooker::add(DBAbstract::EVENT_BEFORE_DB_QUERY, function($query)use($filter_trace){
+		performance_mark('EVENT_BEFORE_DB_QUERY', '', $filter_trace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 15)));
+	});
+	Hooker::add(DBAbstract::EVENT_AFTER_DB_QUERY, function($query)use($filter_trace){
+		performance_mark('EVENT_AFTER_DB_QUERY', $query.'', $filter_trace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 15)));
+	});
 }
 
 /**
@@ -539,7 +568,7 @@ function pdog($fun, $handler){
  * get GUID
  * @return mixed
  */
-$GLOBALS['__guid__'] = 1;
 function guid(){
-	return $GLOBALS['__guid__']++;
+	global $__guid__;
+	return $__guid__++;
 }

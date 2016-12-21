@@ -465,7 +465,6 @@ abstract class DBAbstract{
 	 * @throws \Lite\Exception\Exception
 	 */
 	final public function query($query){
-		$query .= '';
 		try{
 			Hooker::fire(self::EVENT_BEFORE_DB_QUERY, $query, $this->config);
 			$result = $this->dbQuery($query);

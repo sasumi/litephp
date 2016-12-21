@@ -42,10 +42,10 @@ class CacheMemcache extends CacheAdapter{
 	 * @brief  写入缓存
 	 * @param  string $key 缓存的唯一key值
 	 * @param  mixed $data 要写入的缓存数据
-	 * @param int|string $expire 缓存数据失效时间,单位：秒
+	 * @param int $expire 缓存数据失效时间,单位：秒
 	 * @return bool   true:成功;false:失败;
 	 */
-	public function set($key, $data, $expire = ''){
+	public function set($key, $data, $expire = 0){
 		return $this->cache->set($key, $data, MEMCACHE_COMPRESSED, $expire);
 	}
 

@@ -139,12 +139,17 @@ function rand_string($len = 6, $source = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPR
  * @return string
  */
 function format_size($size, $dot = 2){
+	$obs = '';
+	if($size < 0){
+		$obs = '-';
+		$size = abs($size);
+	}
 	$mod = 1024;
 	$units = explode(' ', 'B KB MB GB TB PB');
 	for($i = 0; $size>$mod; $i++){
 		$size /= $mod;
 	}
-	return round($size, $dot).''.$units[$i];
+	return $obs.round($size, $dot).''.$units[$i];
 }
 
 /*
