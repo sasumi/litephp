@@ -1,16 +1,17 @@
 <?php
 namespace Lite\Cache;
+
 use Lite\Core\Config;
 
 /**
  * Class CacheFile
  * @package Lite\Cache
- * @method static CacheFile instance()
+ * @method static CacheFile instance($param = array())
  */
-class CacheFile extends CacheAdapter {
-	protected  function __construct(array $config = array()){
+class CacheFile extends CacheAdapter{
+	protected function __construct(array $config = array()){
 		$config = array_merge(array(
-			'dir' => Config::get('app/root').'tmp'.DS.'filecache'.DS
+			'dir' => Config::get('app/root') . 'tmp' . DS . 'filecache' . DS
 		), $config);
 
 		if(!is_dir($config['dir'])){
@@ -34,7 +35,7 @@ class CacheFile extends CacheAdapter {
 	}
 
 	public function getFileName($cache_key){
-		return $this->getConfig('dir').md5($cache_key);
+		return $this->getConfig('dir') . md5($cache_key);
 	}
 
 	public function get($cache_key){
@@ -43,11 +44,11 @@ class CacheFile extends CacheAdapter {
 			$string = file_get_contents($file);
 			if($string){
 				$data = unserialize($string);
-				if($data && $data['expired'] > time()){
+				if($data && $data['expired']>time()){
 					return $data['data'];
 				}
 			}
-			//清空cache，放置cache膨胀
+			//清空cache，防止cache膨胀
 			$this->delete($cache_key);
 		}
 		return null;
@@ -62,17 +63,17 @@ class CacheFile extends CacheAdapter {
 	}
 
 	/**
-	 * @todo test...
+	 * flush cache dir
 	 */
 	public function flush(){
 		$dir = $this->getConfig('dir');
 		if(is_dir($dir)){
-			array_map('unlink', glob($dir.'*'));
+			array_map('unlink', glob($dir . '/*'));
 		}
 	}
 
-    public function getAll(){
-        $dir=$this->getConfig('dir');
-        return $dir;
-    }
+	public function getAll(){
+		$dir = $this->getConfig('dir');
+		return $dir;
+	}
 }

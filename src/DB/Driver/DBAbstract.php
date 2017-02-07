@@ -4,6 +4,7 @@ namespace Lite\DB\Driver;
 use Lite\Core\Hooker;
 use Lite\Core\PaginateInterface;
 use Lite\Core\RefParam;
+use Lite\DB\Model;
 use Lite\DB\Query;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;
@@ -28,9 +29,14 @@ abstract class DBAbstract{
 	
 	// select查询去重
 	// 这部分逻辑可能针对某些业务逻辑有影响，如：做某些操作之后立即查询这种
-	// so，如果程序需要，可以通过 Record::distinctQueryOff() 关闭这个选项
+	// so，如果程序需要，可以通过 DBAbstract::distinctQueryOff() 关闭这个选项
 	private static $QUERY_DISTINCT = true;
 	private static $query_cache = array();
+
+	/**
+	 * @var Query current processing db query, support for exception handle
+	 */
+	private static $processing_query;
 	
 	/**
 	 * database config
@@ -64,6 +70,18 @@ abstract class DBAbstract{
 		Hooker::add(self::EVENT_BEFORE_DB_QUERY, function($query){
 			dump($query);
 		});
+	}
+
+	/**
+	 * @param $sql
+	 * @return array
+	 * @throws Exception
+	 */
+	public function explain($sql){
+		$sql = "EXPLAIN $sql";
+		$rst = $this->query($sql);
+		$data = $this->fetchAll($rst);
+		return $data[0];
 	}
 	
 	/**
@@ -223,7 +241,14 @@ abstract class DBAbstract{
 		self::$in_transaction_mode = false;
 		return $result_list;
 	}
-	
+
+	/**
+	 * @return mixed
+	 */
+	public static function getProcessingQuery(){
+		return self::$processing_query;
+	}
+
 	/**
 	 * quote param by database connector
 	 * @param string $data
@@ -446,7 +471,7 @@ abstract class DBAbstract{
 		$query = $this->genQuery()->insert()->from($table)->setData($data)->where($condition);
 		return $this->query($query);
 	}
-	
+
 	/**
 	 * 产生Query对象
 	 * @return Query
@@ -467,13 +492,15 @@ abstract class DBAbstract{
 	final public function query($query){
 		try{
 			Hooker::fire(self::EVENT_BEFORE_DB_QUERY, $query, $this->config);
+			self::$processing_query = $query;
 			$result = $this->dbQuery($query);
+			self::$processing_query = null;
 			Hooker::fire(self::EVENT_AFTER_DB_QUERY, $query, $result);
 			return $result;
 		} catch(\Exception $ex){
 			Hooker::fire(self::EVENT_DB_QUERY_ERROR, $ex, $query, $this->config);
 			throw new Exception($ex->getMessage(), 0, array(
-				'query' => $query,
+				'query' => $query.'',
 				'host'  => $this->getConfig('host')
 			));
 		}

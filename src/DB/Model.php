@@ -1,7 +1,6 @@
 <?php
 namespace Lite\DB;
 
-use Lite\Cache\CacheFile;
 use Lite\Core\Config;
 use Lite\Core\DAO;
 use Lite\Core\Hooker;
@@ -108,6 +107,15 @@ abstract class Model extends DAO{
 		$configs = $this->getDbConfig();
 		$config = $this->parseConfig($operate_type, $configs);
 		return DBAbstract::instance($config);
+	}
+
+	/**
+	 * @param $query
+	 * @return array
+	 */
+	public static function explainQuery($query){
+		$obj = self::meta();
+		return $obj->getDbDriver(self::DB_READ)->explain($query);
 	}
 
 	/**
@@ -279,12 +287,11 @@ abstract class Model extends DAO{
 	 * @param callable $flusher
 	 */
 	public static function bindTableCacheHandler(array $model_list, callable $getter, callable $setter, callable $flusher){
-		$check_table_hit = function($param)use($model_list){
-			$query = $param['query'];
+		$check_table_hit = function ($query, $full_compare = true) use ($model_list){
 			if($query && $query instanceof Query){
 				foreach($model_list as $model){
 					$tbl = Query::escapeKey($model::meta()->getTableFullName());
-					if($query->tables == [$tbl]){
+					if(($full_compare && $query->tables == [$tbl]) || in_array($tbl, $query->tables)){
 						return $model;
 					}
 				}
@@ -294,7 +301,8 @@ abstract class Model extends DAO{
 		
 		//before get list, check cache
 		Hooker::add(DBAbstract::EVENT_BEFORE_DB_GET_LIST, function($param) use ($check_table_hit, $model_list, $getter){
-			if($model = $check_table_hit($param)){
+			$model = $check_table_hit($param['query']);
+			if($model){
 				$result = call_user_func($getter, $model, $param['query']);
 				if(isset($result)){
 					$param['result'] = $result;
@@ -304,15 +312,17 @@ abstract class Model extends DAO{
 
 		//after get list, set cache
 		Hooker::add(DBAbstract::EVENT_AFTER_DB_GET_LIST, function($param) use ($check_table_hit, $model_list, $setter){
-			if($model = $check_table_hit($param)){
+			$model = $check_table_hit($param['query']);
+			if($model){
 				call_user_func($setter, $model, $param['query'], $param['result']);
 			}
 		});
 
 		//flush table cache
-		Hooker::add(DBAbstract::EVENT_AFTER_DB_QUERY, function($param) use($check_table_hit, $model_list, $flusher){
-			if($model = $check_table_hit($model_list) && Query::isWriteOperation($param['query'])){
-				call_user_func($flusher, $model, $param['query']);
+		Hooker::add(DBAbstract::EVENT_AFTER_DB_QUERY, function($query) use($check_table_hit, $model_list, $flusher){
+			$model = $check_table_hit($query);
+			if($model && Query::isWriteOperation($query)){
+				call_user_func($flusher, $model, $query);
 			}
 		});
 	}

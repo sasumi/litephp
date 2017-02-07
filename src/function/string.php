@@ -77,6 +77,51 @@ function pretty_time($timestamp, $as_html = false){
 }
 
 /**
+ * check string start with string
+ * @param $str
+ * @param $starts
+ * @param bool $case_sensitive
+ * @return bool
+ */
+function str_start_with($str, $starts, $case_sensitive = false){
+	$starts = is_array($starts) ? $starts : array($starts);
+	foreach($starts as $st){
+		if($case_sensitive && strpos($str, $st) === 0){
+			return true;
+		}
+		if(!$case_sensitive && stripos($str, $st) === 0){
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * print assoc table to table
+ * @param array $data
+ * @param string $css_class
+ * @param bool $as_return
+ * @return string
+ */
+function print_table(array $data, $css_class='', $as_return = false){
+	$html = '';
+	if(!empty($data)){
+		$data = count($data) == count($data, COUNT_RECURSIVE) ? array($data) : $data;
+		$caps = array_keys(array_first($data));
+		$html .= '<table'.($css_class ? ' class="'.$css_class.'"' : '').'>';
+		$html .= '<thead><tr><th>'.join('</th><th>', $caps).'</th></tr></thead><tbody>';
+		foreach($data as $item){
+			$html .= '<tr><td>'.join('</td><td>', array_values($item)).'</td></tr>';
+		}
+		$html .= '</tbody></table>';
+	}
+	if($as_return){
+		return $html;
+	}
+	echo $html;
+}
+
+/**
  * covert integer to string
  * @param $data
  * @return array|string

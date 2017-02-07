@@ -12,6 +12,7 @@ use function Lite\func\dump;
 use function Lite\func\encodeURIComponent;
 use function Lite\func\file_path_compare_case_insensitive;
 use function Lite\func\glob_recursive;
+use function Lite\func\str_start_with;
 
 /**
  * 路由基础类。当前路由路由基础类
@@ -498,10 +499,10 @@ abstract class Router{
 	 * @throws \Lite\Exception\Exception
 	 */
 	public static function getUrl($uri = '', $params = array()){
-		if(stripos($uri, 'http://') === 0 || stripos($uri, 'https://') === 0){
+		if(str_start_with($uri, array('http://', 'https://', '//'))){
 			return $uri.(stripos($uri, '?') === false ? '?' : '&').http_build_query($params);
 		}
-		
+
 		$app_url = Config::get('app/url');
 		$router_mode = Config::get('router/mode');
 		$lower_case_uri = Config::get('router/lower_case_uri') ?: false;

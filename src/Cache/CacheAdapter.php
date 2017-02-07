@@ -23,7 +23,7 @@ abstract class CacheAdapter implements CacheInterface{
 	public static function cache($key, callable $fetcher, $expired_seconds = 60){
 		$cache_class = get_called_class();
 		if($cache_class == self::class){
-			throw new Exception('cache method not calledable in '.self::class);
+			throw new Exception('cache method not callable in '.self::class);
 		}
 
 		/** @var self $instance */
@@ -55,9 +55,10 @@ abstract class CacheAdapter implements CacheInterface{
 	 */
 	public static function instance(array $config = array()){
 		$class = get_called_class();
-		if(!self::$instances[$class]){
-			self::$instances[$class] = new $class($config);
+		$key = $class.serialize($config);
+		if(!self::$instances[$key]){
+			self::$instances[$key] = new $class($config);
 		}
-		return self::$instances[$class];
+		return self::$instances[$key];
 	}
 }
