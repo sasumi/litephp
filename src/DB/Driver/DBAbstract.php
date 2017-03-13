@@ -23,10 +23,14 @@ abstract class DBAbstract{
 	const EVENT_BEFORE_DB_GET_LIST = 'EVENT_BEFORE_DB_GET_LIST';
 	const EVENT_AFTER_DB_GET_LIST = 'EVENT_AFTER_DB_GET_LIST';
 	const EVENT_ON_DB_QUERY_DISTINCT = 'EVENT_ON_DB_QUERY_DISTINCT';
-	
+	const EVENT_ON_DB_RECONNECT = 'EVENT_ON_DB_RECONNECT';
+
+	//最大重试次数，如果该数据配置为0，将不进行重试
+	public static $MAX_RECONNECT_COUNT = 10;
+
 	private static $in_transaction_mode = false;
 	private static $instance_list = array();
-	
+
 	// select查询去重
 	// 这部分逻辑可能针对某些业务逻辑有影响，如：做某些操作之后立即查询这种
 	// so，如果程序需要，可以通过 DBAbstract::distinctQueryOff() 关闭这个选项
@@ -43,7 +47,7 @@ abstract class DBAbstract{
 	 * @var array
 	 */
 	private $config = array();
-	
+
 	/**
 	 * db record construct, connect to database
 	 * @param array $config
@@ -186,60 +190,6 @@ abstract class DBAbstract{
 	 */
 	public static function distinctQueryOff(){
 		self::$QUERY_DISTINCT = false;
-	}
-	
-	/**
-	 * begin all transaction
-	 * @return array
-	 */
-	public static function beginTransactionAll(){
-		self::$in_transaction_mode = true;
-		$result_list = array();
-		
-		/* @var self $ins * */
-		foreach(self::$instance_list as $ins){
-			$result_list[] = $ins->beginTransaction();
-		}
-		return $result_list;
-	}
-	
-	/**
-	 * rollback all transaction
-	 */
-	public static function rollbackAll(){
-		/* @var self $ins * */
-		$result_list = array();
-		foreach(self::$instance_list as $ins){
-			$result_list[] = $ins->rollback();
-		}
-		return $result_list;
-	}
-	
-	/**
-	 * commit all transaction
-	 * @return array
-	 */
-	public static function commitAll(){
-		/* @var self $ins * */
-		$result_list = array();
-		foreach(self::$instance_list as $ins){
-			$result_list[] = $ins->commit();
-		}
-		return $result_list;
-	}
-	
-	/**
-	 * cancel all transaction state
-	 * @return array
-	 */
-	public static function cancelTransactionStateAll(){
-		/* @var self $ins * */
-		$result_list = array();
-		foreach(self::$instance_list as $ins){
-			$ins->cancelTransactionState();
-		}
-		self::$in_transaction_mode = false;
-		return $result_list;
 	}
 
 	/**
@@ -498,6 +448,13 @@ abstract class DBAbstract{
 			Hooker::fire(self::EVENT_AFTER_DB_QUERY, $query, $result);
 			return $result;
 		} catch(\Exception $ex){
+			static $reconnect_count;
+			if($reconnect_count < self::$MAX_RECONNECT_COUNT && stripos($ex->getMessage(), 'server has gone away')){
+				Hooker::fire(self::EVENT_ON_DB_RECONNECT, $ex->getMessage(), $this->config);
+				$this->connect($this->config);
+				$reconnect_count++;
+				return $this->query($query);
+			}
 			Hooker::fire(self::EVENT_DB_QUERY_ERROR, $ex, $query, $this->config);
 			throw new Exception($ex->getMessage(), 0, array(
 				'query' => $query.'',

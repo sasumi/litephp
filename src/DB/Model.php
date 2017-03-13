@@ -252,19 +252,15 @@ abstract class Model extends DAO{
 	 * @throws null
 	 */
 	public static function transaction($handler){
-		$exception = null;
+		$driver = self::meta()->getDbDriver(Model::DB_READ);
 		try{
-			DBAbstract::beginTransactionAll();
+			$driver->beginTransaction();
 			if(call_user_func($handler) === false){
 				throw new Exception('database transaction interrupt');
 			}
-			DBAbstract::commitAll();
+			$driver->commit();
 		} catch(Exception $exception){
-			DBAbstract::rollbackAll();
-		} finally{
-			DBAbstract::cancelTransactionStateAll();
-		}
-		if($exception){
+			$driver->rollback();
 			throw $exception;
 		}
 	}
@@ -352,9 +348,41 @@ abstract class Model extends DAO{
 	 * @param array $args
 	 * @return mixed
 	 */
-	public function andFind(...$args){
+	public function where(...$args){
 		$statement = self::parseConditionStatement($args, $this);
 		$this->query->where($statement);
+		return $this;
+	}
+
+	/**
+	 * 快速查询用户请求过来的信息，只有第二个参数为不为空的时候才去查询。
+	 * @param $st
+	 * @param $val
+	 * @return $this
+	 */
+	public function whereOnSet($st, $val){
+		$args = func_get_args();
+		foreach($args as $k=>$arg){
+			$args[$k] = trim($arg);
+		}
+		if(strlen($args[1])){
+			$statement = self::parseConditionStatement($args, $this);
+			$this->query->where($statement);
+		}
+		return $this;
+	}
+	
+	/**
+	 * 快速LIKE查询用户请求过来的信息，当LIKE内容为空时，不执行查询，如 %%。
+	 * @param $st
+	 * @param $val
+	 * @return $this
+	 */
+	public function whereLikeOnSet($st, $val){
+		$args = func_get_args();
+		if(strlen(trim(str_replace('%','',$val)))){
+			return call_user_func_array(array($this, 'whereOnSet'), $args);
+		}
 		return $this;
 	}
 
@@ -530,7 +558,7 @@ abstract class Model extends DAO{
 		if($list){
 			$key = $key ?: $this->getPrimaryKey();
 			foreach($list as $item){
-				$tmp[$item->{$key}] = $item;
+				$tmp[$item[$key]] = $item;
 			}
 		}
 		return $tmp;
@@ -782,14 +810,20 @@ abstract class Model extends DAO{
 		$data = array_clear_fields(array_keys($pro_defines), $data);
 
 		//插入时填充default值
-		if($query_type == Query::INSERT){
-			array_walk($pro_defines, function($def, $k) use (&$data){
-				if((!isset($data[$k]) || strlen($data[$k]) == 0) && isset($def['default'])){
+		array_walk($pro_defines, function($def, $k) use (&$data, $query_type){
+			if(isset($def['default'])){
+				if($query_type == Query::INSERT){
+					if((!isset($data[$k]) || strlen($data[$k]) == 0)){
+						$data[$k] = $def['default'];
+					}
+				} else if(isset($data[$k]) && !strlen($data[$k])){
 					$data[$k] = $def['default'];
 				}
-			});
-		} //更新时，只需要处理更新数据的属性
-		else if($query_type == Query::UPDATE || $query_type == Query::REPLACE){
+			}
+		});
+
+		//更新时，只需要处理更新数据的属性
+		if($query_type == Query::UPDATE || $query_type == Query::REPLACE){
 			foreach($pro_defines as $k => $define){
 				if(!isset($data[$k])){
 					unset($pro_defines[$k]);

@@ -1,7 +1,7 @@
 <?php
 namespace {$namespace};
 use Lite\Crud\ModelInterface;
-use {$namespace}\table\{$table_model};
+use {$table_namespace}\{$table_model};
 
 /**
  * User: Lite Scaffold
@@ -19,13 +19,5 @@ class {$model_name} extends {$table_model} implements ModelInterface {
 	*/
 	public function getStateKey(){
 		return 'state';
-	}
-
-	/**
-	 * 获取模块名称
-	 * @return string
-	 */
-	public function getModelDesc(){
-		return "{$model_desc}";
 	}
 }

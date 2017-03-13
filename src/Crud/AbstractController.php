@@ -11,6 +11,7 @@ use Lite\DB\Query;
 use Lite\Exception\Exception;
 use function Lite\func\array_clear_fields;
 use function Lite\func\array_filter_subtree;
+use function Lite\func\array_group;
 use function Lite\func\dump;
 
 /**
@@ -204,7 +205,7 @@ abstract class AbstractController extends CoreController{
 	 * @throws Exception
 	 */
 	public function index($search){
-		/** @var CI|self $this */
+		/** @var CI|AbstractController $this */
 		$this->checkSupport(CI::OP_INDEX);
 
 		$ins = $this->getModelInstance();
@@ -291,12 +292,12 @@ abstract class AbstractController extends CoreController{
 				'parent_id_key' => $parent_id_field,
 				'id_key' => $ins->getPrimaryKey()
 			));
-
 			$tmp_list = array();
 			foreach($list as $item){
 				$item[$display_field] = static::buildMultiLevelDisplay($item[$display_field], $item['tree_level']);
 				$tmp = clone($ins);
 				$tmp->setValues($item);
+				$this->fixMultiLevelCategoryDefines($tmp);
 				$tmp_list[] = $tmp;
 			}
 			$list = $tmp_list;
@@ -325,20 +326,19 @@ abstract class AbstractController extends CoreController{
 	/**
 	 * 更新单个字段
 	 * @param $get
-	 * @param $post
 	 * @return \Lite\Core\Result
 	 * @throws \Lite\Exception\Exception
 	 */
-	public function updateField($get, $post){
+	public function updateField($get){
 		/** @var self|CI $this */
 		$quick_update_fields = $this->getQuickUpdateFields(CI::OP_INDEX);
 		$quick_update_fields = array_merge($quick_update_fields, $this->getQuickUpdateFields(CI::OP_INFO));
 
 		/** @var AbstractController $this */
 		$ins = $this->getModelInstance();
-		$pk_val = $post['pk_val'];
-		$field = $post['field'];
-		$val = $post['value'];
+		$pk_val = $get['pk_val'];
+		$field = $get['field'];
+		$val = $get['value'];
 
 		if(in_array($field, $quick_update_fields)){
 			$ins = $ins::findOneByPk($pk_val);
@@ -357,7 +357,7 @@ abstract class AbstractController extends CoreController{
 	 * @throws Exception
 	 */
 	public function update($get, $post){
-		/** @var CI|self $this */
+		/** @var CI|AbstractController $this */
 		$this->checkSupport(CI::OP_UPDATE);
 
 		$ins = $this->getModelInstance();
@@ -383,17 +383,36 @@ abstract class AbstractController extends CoreController{
 			$parent_id_field = $ins->getParentIdField();
 			$def = $ins->getPropertiesDefine($parent_id_field);
 			if(!isset($def['options'])){
-				$list = $ins::find()->all(true);
-				$parent_id_field = $ins->getParentIdField();
 				$display_field = $ins->getDisplayField();
+				$list = $ins::find()->all(true);
 				$list = array_filter_subtree(0, $list, array(
 					'parent_id_key' => $parent_id_field,
-					'id_key' => $ins->getPrimaryKey()
+					'id_key' => $pk
 				));
+
+				//unset掉以下层级
+				$found_level = null;
+				$options = array();
 				foreach($list as $k=>$item){
-					$list[$k][$display_field] = static::buildMultiLevelDisplay($item[$display_field], $item['tree_level']);
+					$disabled = false;
+					if($item[$pk] == $ins->$pk){
+						$found_level = $item['tree_level'];
+						$disabled = true;
+					} else if($found_level !== null){
+						if($found_level < $item['tree_level']){
+							$disabled = true;
+						} else {
+							$found_level = null;
+						}
+					}
+					$dis = static::buildMultiLevelDisplay($item[$display_field], $item['tree_level']);
+
+					$options[$item[$pk]] = array(
+						'name' => $dis,
+						'value' => $item[$pk],
+						'disabled' => $disabled
+					);
 				}
-				$options = array_combine(array_column($list, $ins->getPrimaryKey()), array_column($list, $display_field));
 				$ins->setPropertiesDefine(array(
 					$parent_id_field => array(
 						'options' => $options
@@ -422,7 +441,7 @@ abstract class AbstractController extends CoreController{
 	 * @return string
 	 */
 	public static function buildMultiLevelDisplay($string, $level){
-		return str_repeat('&nbsp;', $level*5).'|-- '.$string;
+		return str_repeat('　', $level*2).'|-- '.$string;
 	}
 
 	/**
@@ -475,7 +494,7 @@ abstract class AbstractController extends CoreController{
 	 * @return array
 	 */
 	public function info($get){
-		/** @var CI|self $this */
+		/** @var CI|AbstractController $this */
 		$this->checkSupport(CI::OP_INFO);
 
 		$ins = $this->getModelInstance();
@@ -489,12 +508,38 @@ abstract class AbstractController extends CoreController{
 		if(!$ins){
 			throw new Exception('DATA NO FOUND');
 		}
-
+		$this->fixMultiLevelCategoryDefines($ins);
 		return array(
 			'defines' => $defines,
 			'display_fields' => $this->getOpFields(CI::OP_INFO),
 			'model_instance' => $ins,
 			'operation_list' => $operation_list,
 		);
+	}
+
+	/**
+	 * 修正多层级分类名称显示
+	 * @param null $ins
+	 * @throws Exception
+	 */
+	private function fixMultiLevelCategoryDefines($ins = null){
+		if($this instanceof CI && $ins instanceof MultiLevelModelInterface){
+			/** @var MultiLevelModelInterface|Model $ins */
+			$parent_key = $ins->getParentIdField();
+			$pk = $ins->getPrimaryKey();
+			$ds = $ins->getDisplayField();
+			$ins->setPropertiesDefine(array(
+				$parent_key => array(
+					'display' => function()use($ins, $pk, $parent_key, $ds){
+						static $all;
+						if(!isset($all)){
+							$all = $ins::find()->allAsAssoc(true);
+						}
+						$parent_id = $ins->$parent_key;
+						return $all[$parent_id][$ds] ?: '/';
+					}
+				)
+			));
+		}
 	}
 }

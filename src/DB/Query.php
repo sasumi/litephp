@@ -338,7 +338,7 @@ class Query {
 	 * @return Query|Model
 	**/
 	public function order($str){
-		$this->order = explode(',', $str);
+		$this->order .= ($this->order ? ',' : '').$str;
 		return $this;
 	}
 
@@ -421,7 +421,7 @@ class Query {
 					' '.
 					$this->getWhereStr().
 					($this->group ? ' GROUP BY '.$this->group : '').
-					($this->order ? ' ORDER BY '.join(',',$this->order) : '');
+					($this->order ? ' ORDER BY '.$this->order : '');
 				break;
 
 			case self::DELETE:

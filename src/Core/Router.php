@@ -426,12 +426,12 @@ abstract class Router{
 
 	/**
 	 * load controller by controller uri string
-	 * @param $ctrl_uri
+	 * @param $ctrl_abs
 	 * @return string class name
 	 * @throws \Lite\Exception\RouterException
 	 */
-	private static function loadControllerFile($ctrl_uri){
-		$ctrl_its = explode('/', $ctrl_uri);
+	private static function loadControllerFile($ctrl_abs){
+		$ctrl_its = explode('/', $ctrl_abs);
 		$ps = '/';
 		$ctrl_path = Config::get('app/path').'controller';
 		$ns = Application::getNamespace();
@@ -443,7 +443,7 @@ abstract class Router{
 			foreach($fs as $f){
 				if(file_path_compare_case_insensitive($f, $test_file)){
 					include_once $f;
-					$class = str_replace('/','\\',$ns.'\\controller\\'.$ctrl_uri).'Controller';
+					$class = str_replace('/','\\',$ns.'\\controller\\'.$ctrl_abs).'Controller';
 					if(class_exists($class)){
 						return $class;
 					}
@@ -522,10 +522,10 @@ abstract class Router{
 		$url = $app_url;
 		if($router_mode == self::MODE_NORMAL){
 			if(!$params){
-				if($action == self::$DEFAULT_ACTION){
+				if($action == self::$DEFAULT_ACTION && !strpos($ctrl_name, '/')){
 					$url = $app_url.'index.php?'.self::$ROUTER_KEY."=".($lower_case_uri ? strtolower($ctrl_name) : $ctrl_name);
 				} else {
-					$url = $app_url.'index.php?'.self::$ROUTER_KEY."=".($lower_case_uri ? strtolower($ctrl_name) : $ctrl_name)."%2F".($lower_case_uri ? strtolower($action) : $action);
+					$url = $app_url.'index.php?'.self::$ROUTER_KEY."=".($lower_case_uri ? strtolower($ctrl_name) : $ctrl_name)."/".($lower_case_uri ? strtolower($action) : $action);
 				}
 			} else{
 				$params[self::$ROUTER_KEY] = $lower_case_uri ? strtolower("$ctrl_name/$action") : "$ctrl_name/$action";
@@ -600,7 +600,6 @@ abstract class Router{
 				$url = Config::get('app/static').$file_name;
 			}
 		}
-		
 		//event
 		$ref = new RefParam(array('url' => $url, 'type' => $type));
 		Hooker::fire(self::EVENT_GET_STATIC_URL, $ref);
@@ -613,7 +612,7 @@ abstract class Router{
 	 * @return string
 	 **/
 	public static function getJsUrl($file_name){
-		return self::getStaticUrl($file_name, 'js');
+		return static::getStaticUrl($file_name, 'js');
 	}
 	
 	/**
@@ -622,7 +621,7 @@ abstract class Router{
 	 * @return string
 	 **/
 	public static function getCssUrl($file_name){
-		return self::getStaticUrl($file_name, 'css');
+		return static::getStaticUrl($file_name, 'css');
 	}
 	
 	/**
@@ -631,7 +630,7 @@ abstract class Router{
 	 * @return string
 	 **/
 	public static function getImgUrl($file_name){
-		return self::getStaticUrl($file_name, 'img');
+		return static::getStaticUrl($file_name, 'img');
 	}
 	
 	/**
@@ -640,7 +639,7 @@ abstract class Router{
 	 * @return string
 	 **/
 	public static function getFlashUrl($file_name){
-		return self::getStaticUrl($file_name, 'flash');
+		return static::getStaticUrl($file_name, 'flash');
 	}
 	
 	/**

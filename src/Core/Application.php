@@ -7,6 +7,7 @@ use Lite\Component\Server;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
+use function Lite\func\encodeURIComponent;
 use Lite\Logger\Logger;
 use Lite\Logger\LoggerLevel;
 use Lite\Logger\Message\CommonMessage;
@@ -159,15 +160,18 @@ class Application{
 		if($ex instanceof RouterException){
 			Http::sendHttpStatus(404);
 			if($page404 = Config::get('app/page404')){
-				Http::redirect($page404);
+				$url = $page404.(strpos($page404, '?') ? '&':'?').'err='.encodeURIComponent($ex->getMessage());
+				Http::redirect($url);
 			}
 		}
 		//其他类型错误
 		else {
 			if($page_error = Config::get('app/pageError')){
-				Http::redirect($page_error);
+				$url = $page_error.(strpos($page_error, '?') ? '&':'?').'err='.encodeURIComponent($ex->getMessage());
+				Http::redirect($url);
 			};
 		}
+
 		//即使上面页面跳转了，这里还会继续输出错误信息，方便调试
 		echo htmlspecialchars($ex->getMessage()),' #', $ex->getFile(), '[',$ex->getLine(),']';
 		die;

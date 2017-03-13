@@ -1,6 +1,6 @@
 <?php
 namespace {$namespace};
-use www\model\{$model_name};
+use {$model_namespace}\{$model_name};
 use Lite\Crud\ControllerInterface;
 
 /**
