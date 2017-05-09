@@ -69,12 +69,11 @@ class Query {
 	public function isFRQuery(){
 		return !$this->sql && $this->fields == array('*');
 	}
-
+	
 	/**
-	 * 查询
 	 * @param string $str
 	 * @return $this
-	**/
+	 */
 	public function select($str='*'){
 		$this->operation = self::SELECT;
 		$this->field($str);
@@ -125,7 +124,7 @@ class Query {
 
 	/**
 	 * update query
-	 * @return $this
+	 * @return \Lite\DB\Query $this
 	**/
 	public function update(){
 		$this->operation = self::UPDATE;
@@ -139,7 +138,7 @@ class Query {
 
 	/**
 	 * 插入
-	 * @return $this
+	 * @return \Lite\DB\Query $this
 	 */
 	public function insert(){
 		$this->operation = self::INSERT;
@@ -148,7 +147,7 @@ class Query {
 
 	/**
 	 * 删除
-	 * @return $this
+	 * @return \Lite\DB\Query $this
 	 */
 	public function delete(){
 		$this->operation = self::DELETE;
@@ -158,7 +157,7 @@ class Query {
 	/**
 	 * 设置数据（仅对update, replace, insert有效)
 	 * @param array $data
-	 * @return $this
+	 * @return \Lite\DB\Query $this
 	 */
 	public function setData(array $data){
 		$this->data = $data;
@@ -176,15 +175,14 @@ class Query {
 			return $this;
 		}
 		$fs = explode(',', $str);
-		$this->fields = $fs;
-		$this->fields = self::escapeKey($this->fields);
+		$this->fields = self::escapeKey($fs);
 		return $this;
 	}
 
 	/**
 	 * 表
 	 * @param string $str
-	 * @return $this
+	 * @return \Lite\DB\Query $this
 	**/
 	public function from($str){
 		$tables = explode(',', $str);
@@ -334,10 +332,13 @@ class Query {
 
 	/**
 	 * 排序
-	 * @param string $str
+	 * @param string|array $str
 	 * @return Query|Model
 	**/
 	public function order($str){
+		if(is_array($str)){
+			$str = join(' ', $str);
+		}
 		$this->order .= ($this->order ? ',' : '').$str;
 		return $this;
 	}
@@ -369,7 +370,7 @@ class Query {
 
 		if($this->sql && $this->limit){
 			if(preg_match('/\slimit\s/i', $this->sql)){
-				throw new Exception('SQL LIMIT SET:' . $this->sql);
+				$this->sql = preg_replace('/\slimit\s.*$/i', '', $this->sql); //移除原有limit限制信息
 			}
 			$this->sql = $this->sql . ' LIMIT ' . $this->limit[0] . ',' . $this->limit[1];
 		}

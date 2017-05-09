@@ -36,14 +36,10 @@ abstract class AbstractController extends CoreController{
 	 * @throws \Lite\Exception\Exception
 	 */
 	private function checkSupport($op){
-		$ins = $this->getModelInstance();
 		if($this instanceof CI){
 			$sps = $this->supportCRUDList();
 			$sps = array_keys($sps);
 			if(in_array(CI::OP_ALL, $sps, true) || in_array($op, $sps, true)) {
-				if($op == CI::OP_STATE && !$ins->getStateKey()){
-					throw new Exception('no state key return');
-				}
 				return true;
 			}
 		}
@@ -58,11 +54,7 @@ abstract class AbstractController extends CoreController{
 	protected function getModelInstance(){
 		if($this instanceof CI){
 			$model = $this->getModelClass();
-			$ins = $model::meta();
-			if($ins instanceof ModelInterface){
-				return $ins;
-			}
-			throw new Exception('CRUD数据模型必须继承 ModelInterface接口');
+			return $model::meta();
 		}
 		throw new Exception('CRUD控制器必须继承 ControllerInterface接口');
 	}
@@ -120,16 +112,16 @@ abstract class AbstractController extends CoreController{
 
 	/**
 	 * get quick update fields
-	 * @param string $op
 	 * @return mixed
 	 */
-	protected function getQuickUpdateFields($op = CI::OP_INDEX){
+	protected function getQuickUpdateFields(){
 		/** @var CI $this */
 		$support_list = $this->supportCRUDList();
-		$fields = $support_list[$op]['quick_update_fields'];
+		$fields = $support_list[CI::OP_QUICK_UPDATE]['fields'];
 		if(!$fields){
 			return array();
 		}
+
 		if(in_array('*', $fields)){
 			/** @var Model $model */
 			$model = $this->getModelClass();
@@ -139,6 +131,10 @@ abstract class AbstractController extends CoreController{
 		return $fields;
 	}
 
+	/**
+	 * 查询支持的操作
+	 * @return mixed
+	 */
 	protected function getSupportOperationList(){
 		/** @var CI $this */
 		$support_list = $this->supportCRUDList();
@@ -216,7 +212,7 @@ abstract class AbstractController extends CoreController{
 		$defines = $ins->getPropertiesDefine();
 
 		$paginate = Paginate::instance();
-		$query = $ins::find()->order("$pk DESC");
+		$query = $ins::find();
 
 		$quick_search_defines = array();
 		foreach($support_list[CI::OP_QUICK_SEARCH]['fields']?:array() as $field){
@@ -268,12 +264,24 @@ abstract class AbstractController extends CoreController{
 
 		//排序
 		$order_fields = $support_list[CI::OP_INDEX]['order_fields'] ?: array();
+		$default_order = '';
+		$default_order_dir = '';
+		if($ins instanceof ListOrderInterface){
+			$default_order = $ins->getListOrderField();
+			$default_order_dir = 'desc';
+			$order_fields[] = $default_order;
+		}
 		if($order_fields){
-			View::setOrderConfig($order_fields);
+			View::setOrderConfig($order_fields, $default_order, $default_order_dir);
 			list($order_field, $order_dir) = View::getCurrentOrderSet();
 			if($order_field && $order_dir){
 				$query->order("`".addslashes($order_field)."` $order_dir");
 			}
+		}
+
+		//默认使用ID递减排序
+		if(!$query->getQuery()->order){
+			$query->order("$pk DESC");
 		}
 
 		//导出
@@ -282,7 +290,7 @@ abstract class AbstractController extends CoreController{
 			'_export_' => $export_format
 		))) : '';
 
-		/** @var MultiLevelModelInterface|ModelInterface|Model $ins */
+		/** @var MultiLevelModelInterface|Model $ins */
 		if($ins instanceof MultiLevelModelInterface){
 			$list = $query->all(true);
 			$display_field = $ins->getDisplayField();
@@ -315,7 +323,7 @@ abstract class AbstractController extends CoreController{
 			'defines'              => $defines,
 			'order_fields'         => $order_fields,
 			'display_fields'       => $this->getOpFields(CI::OP_INDEX),
-			'quick_update_fields'  => $this->getQuickUpdateFields(CI::OP_INDEX),
+			'quick_update_fields'  => $this->getQuickUpdateFields(),
 			'export_link'          => $export_link,
 			'export_format'        => $export_format,
 			'model_instance'       => $ins,
@@ -330,23 +338,27 @@ abstract class AbstractController extends CoreController{
 	 * @throws \Lite\Exception\Exception
 	 */
 	public function updateField($get){
+		$this->checkSupport(CI::OP_QUICK_UPDATE);
+		
 		/** @var self|CI $this */
-		$quick_update_fields = $this->getQuickUpdateFields(CI::OP_INDEX);
-		$quick_update_fields = array_merge($quick_update_fields, $this->getQuickUpdateFields(CI::OP_INFO));
+		$quick_update_fields = $this->getQuickUpdateFields();
 
-		/** @var AbstractController $this */
 		$ins = $this->getModelInstance();
-		$pk_val = $get['pk_val'];
-		$field = $get['field'];
-		$val = $get['value'];
+		$pk = $ins->getPrimaryKey();
+		$pk_val = (int)$get[$pk];
+		$defs = $ins->getPropertiesDefine();
 
-		if(in_array($field, $quick_update_fields)){
-			$ins = $ins::findOneByPk($pk_val);
-			$ins->setValue($field, $val);
-			$ins->save();
-			return $this->getCommonResult(true);
+		foreach($quick_update_fields as $field){
+			if(isset($get[$field])){
+				$instance = $ins::findOneByPk($pk_val);
+				if($instance) {
+					$instance->setValue($field, $get[$field]);
+					$instance->save();
+					return new Result($ins->getModelDesc().$defs[$field]['alias'].'更新成功', true);
+				}
+			}
 		}
-		return new Result('非法操作');
+		return new Result('操作失败，请刷新页面后重试');
 	}
 
 	/**
@@ -445,30 +457,6 @@ abstract class AbstractController extends CoreController{
 	}
 
 	/**
-	 * 更新状态
-	 * @param $get
-	 * @return Result
-	 */
-	public function state($get){
-		$this->checkSupport(CI::OP_STATE);
-
-		$ins = $this->getModelInstance();
-		$pk = $ins->getPrimaryKey();
-		$pk_val = (int)$get[$pk];
-
-		$stateKey = $ins->getStateKey();
-		$toState = $get[$stateKey];
-		$instance = $ins::findOneByPk($pk_val);
-
-		if($instance) {
-			$instance->{$stateKey} = $toState;
-			$instance->save();
-			return new Result($ins->getModelDesc().'状态更新成功', true);
-		}
-		return new Result('操作失败，请刷新页面后重试');
-	}
-
-	/**
 	 * 删除记录
 	 * @param $get
 	 * @return Result
@@ -512,6 +500,7 @@ abstract class AbstractController extends CoreController{
 		return array(
 			'defines' => $defines,
 			'display_fields' => $this->getOpFields(CI::OP_INFO),
+			'quick_update_fields'  => $this->getQuickUpdateFields(),
 			'model_instance' => $ins,
 			'operation_list' => $operation_list,
 		);

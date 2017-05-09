@@ -35,7 +35,7 @@ class CacheMemcache extends CacheAdapter{
 	private function addServe($address){
 		list($host, $port) = explode(':', $address);
 		$port = $port ?: $this->defaultPort;
-		return $this->cache->addServer($host, $port);
+		return $this->cache->addserver($host, $port);
 	}
 
 	/**

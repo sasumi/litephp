@@ -1,6 +1,7 @@
 <?php
 namespace Lite\Component;
 use Lite\Core\Config;
+use Lite\Core\Hooker;
 use function Lite\func\dump;
 
 /**
@@ -42,8 +43,7 @@ abstract class AccessAdapter {
 	 */
 	public static function instance(array $config=array()){
 		if(!static::$instance){
-			$class = get_called_class();
-			static::$instance = new $class($config);
+			static::$instance = new static($config);
 		}
 		return static::$instance;
 	}
@@ -61,14 +61,14 @@ abstract class AccessAdapter {
 	 * @param $user
 	 * @return mixed
 	 */
-	abstract public function getIdFromUserInfo($user);
+	abstract protected function getIdFromUserInfo($user);
 
 	/**
 	 * 从用户ID中获取用户信息
 	 * @param $user_id
 	 * @return array | null
 	 */
-	abstract public function getUserInfoFromId($user_id);
+	abstract protected function getUserInfoFromId($user_id);
 
 	/**
 	 * 设置cookie过期时间
@@ -136,6 +136,7 @@ abstract class AccessAdapter {
 	 * @return bool
 	 */
 	public function loginById($uid){
+		Hooker::fire(self::EVENT_BEFORE_LOGIN, $uid);
 		$_SESSION[$this->session_name] = $uid;
 
 		$result = null;
@@ -144,6 +145,7 @@ abstract class AccessAdapter {
 			$result = setcookie($this->cookie_name, $uid, $this->cookie_expired+$now, $this->cookie_path, $this->cookie_domain);
 			$result = $result && setcookie($this->cookie_sid_name, $this->encryptUid($uid), $this->cookie_expired+$now, $this->cookie_path, $this->cookie_domain);
 		}
+		Hooker::fire(self::EVENT_AFTER_LOGIN, $uid);
 		return $result;
 	}
 
@@ -177,9 +179,11 @@ abstract class AccessAdapter {
 	 * 注销
 	 */
 	public function logout(){
+		Hooker::fire(self::EVENT_BEFORE_LOGOUT);
 		unset($_SESSION[$this->session_name]);
 		setcookie($this->cookie_name, '', 0, $this->cookie_path, $this->cookie_domain);
 		setcookie($this->cookie_sid_name, '', 0, $this->cookie_path, $this->cookie_domain);
+		Hooker::fire(self::EVENT_AFTER_LOGOUT);
 		return true;
 	}
 

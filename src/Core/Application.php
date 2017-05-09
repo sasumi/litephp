@@ -7,7 +7,6 @@ use Lite\Component\Server;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
-use function Lite\func\encodeURIComponent;
 use Lite\Logger\Logger;
 use Lite\Logger\LoggerLevel;
 use Lite\Logger\Message\CommonMessage;
@@ -15,6 +14,8 @@ use ReflectionClass;
 use function Lite\func\array_last;
 use function Lite\func\decodeURI;
 use function Lite\func\dump;
+use function Lite\func\encodeURIComponent;
+use function Lite\func\file_exists_ci;
 use function Lite\func\file_real_exists;
 use function Lite\func\format_size;
 use function Lite\func\glob_recursive;
@@ -32,11 +33,11 @@ class Application{
 	const MODE_API = 0x02; //HTTP API模式
 	const MODE_CLI = 0x03; //CLI命令模式（该模式提供代码加载逻辑等，不进行初始化Controller）
 
-	const EVENT_BEFORE_APP_INIT = 'EVENT_BEFORE_APP_INIT';
-	const EVENT_AFTER_APP_INIT = 'EVENT_AFTER_APP_INIT';
-	const EVENT_AFTER_APP_SHUTDOWN = 'EVENT_AFTER_APP_SHUTDOWN';
-	const EVENT_ON_APP_EX = 'EVENT_ON_APP_EX';
-	const EVENT_ON_APP_ERR = 'EVENT_ON_APP_ERR';
+	const EVENT_BEFORE_APP_INIT = __CLASS__ . 'EVENT_BEFORE_APP_INIT';
+	const EVENT_AFTER_APP_INIT = __CLASS__ . 'EVENT_AFTER_APP_INIT';
+	const EVENT_AFTER_APP_SHUTDOWN = __CLASS__ . 'EVENT_AFTER_APP_SHUTDOWN';
+	const EVENT_ON_APP_EX = __CLASS__ . 'EVENT_ON_APP_EX';
+	const EVENT_ON_APP_ERR = __CLASS__ . 'EVENT_ON_APP_ERR';
 
 	//application instance
 	private static $instance;
@@ -70,7 +71,7 @@ class Application{
 		Config::init($app_root);
 
 		//绑定项目根目录
-		self::addIncludePath(Config::get('app/path'), true);
+		self::addIncludePath(Config::get('app/path'));
 
 		//绑定项目include目录
 		self::addIncludePath(Config::get('app/path').'include/');
@@ -118,21 +119,6 @@ class Application{
 				Hooker::fire(Application::EVENT_ON_APP_ERR, $code, $message, $file, $line, $context);
 			}, E_USER_ERROR | E_USER_WARNING);
 
-			//BIND APP EXCEPTION
-			set_exception_handler(function ($exception){
-				self::handleException($exception);
-				Hooker::fire(Application::EVENT_ON_APP_EX, $exception);
-			});
-
-			//BIND LAST ERROR
-			register_shutdown_function(function(){
-				$error = error_get_last();
-				if($error && ($error['type'] == E_ERROR || $error['type'] == E_WARNING)){
-					self::handleException(new Exception($error['message'], null, $error));
-				}
-				Hooker::fire(Application::EVENT_AFTER_APP_SHUTDOWN);
-			});
-
 			Hooker::fire(self::EVENT_AFTER_APP_INIT);
 
 			//init app
@@ -146,35 +132,52 @@ class Application{
 	 * @param \Exception $ex
 	 * @throws \Exception
 	 */
-	private static function handleException(\Exception $ex){
-		//调试模式
-		if(Config::get('app/debug')){
-			print_exception($ex);
-		}
+	private static function handleWebException(\Exception $ex){
+		$render = Config::get('app/render');
+
+		//page request mode
+		/** @var View $tmp */
+		$tmp = new $render;
+		$page_mode = $tmp->getRequestType() == View::REQ_PAGE;
 
 		$log_level = ($ex instanceof RouterException) ? LoggerLevel::INFO : LoggerLevel::WARNING;
 		Logger::instance('LITE')->log($log_level, new CommonMessage('APP EX:'.$ex->getMessage(),
 			array('referer'=> $_SERVER['HTTP_REFERER'], 'exception'=>$ex->__toString())));
 
-		//找不到路由
-		if($ex instanceof RouterException){
+		//business exception
+		if(($ex instanceof BizException) || !$page_mode){
+			$result = new Result($ex->getMessage());
+			$tmp = new $render($result);
+			$tmp->render();
+		}
+
+		//router exception
+		else if($ex instanceof RouterException){
 			Http::sendHttpStatus(404);
 			if($page404 = Config::get('app/page404')){
-				$url = $page404.(strpos($page404, '?') ? '&':'?').'err='.encodeURIComponent($ex->getMessage());
-				Http::redirect($url);
+				if(is_callable($page404)){
+					call_user_func($page404, $ex->getMessage(), $ex);
+				} else {
+					Http::redirect($page404, 301);
+				}
 			}
 		}
 		//其他类型错误
 		else {
 			if($page_error = Config::get('app/pageError')){
-				$url = $page_error.(strpos($page_error, '?') ? '&':'?').'err='.encodeURIComponent($ex->getMessage());
-				Http::redirect($url);
+				if(is_callable($page_error)){
+					call_user_func($page_error, $ex->getMessage(), $ex);
+				} else {
+					Http::redirect($page_error);
+				}
 			};
 		}
 
-		//即使上面页面跳转了，这里还会继续输出错误信息，方便调试
-		echo htmlspecialchars($ex->getMessage()),' #', $ex->getFile(), '[',$ex->getLine(),']';
-		die;
+		//调试模式
+		if(Config::get('app/debug')){
+			print_exception($ex);
+		}
+		exit;
 	}
 
 	/**
@@ -191,20 +194,18 @@ class Application{
 	 * @throws \Exception
 	 */
 	private function initWebMode(){
-		self::sendCharset();
-
-		//router init
-		Router::init();
-
+		$result = null;
 		try {
+			//init charset
+			self::sendCharset();
+
+			//init router
+			Router::init();
+
+			//start controller dispatch
 			$result = self::dispatch();
-		} catch(Exception $ex){
-			if(($ex instanceof BizException) || //业务限制逻辑，直接使用友好输出格式
-				(!Config::get('app/debug') && Config::get('app/auto_process_logic_error') && !($ex instanceof RouterException))){
-				$result = new Result($ex->getMessage(), false, $ex);
-			} else {
-				throw $ex;
-			}
+		} catch(\Exception $ex){
+			$this->handleWebException($ex);
 		}
 
 		//auto render
@@ -342,7 +343,7 @@ class Application{
 	 * 添加include path
 	 * @param string $path
 	 */
-	public static function addIncludePath($path, $case_sensitive=true){
+	public static function addIncludePath($path){
 		self::$include_paths[] = $path;
 	}
 
@@ -358,7 +359,7 @@ class Application{
 				$file = substr($class, strlen(self::$namespace)+1);
 				$file = str_replace('\\', DIRECTORY_SEPARATOR, $file);
 				$file = $path.$file.'.php';
-				if(is_file($file) && (!$case_sensitive || file_real_exists($file))){
+				if(is_file($file) || (!Server::inWindows() && $file = file_exists_ci($file))){
 					include_once $file;
 					return;
 				}
@@ -367,8 +368,8 @@ class Application{
 			$file = $path.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
 			if(is_file($file) && (!$case_sensitive || file_real_exists($file))){
 				include_once $file;
+				return;
 			}
 		}
 	}
-
 }

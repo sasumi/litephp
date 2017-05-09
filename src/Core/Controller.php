@@ -56,8 +56,8 @@ abstract class Controller {
 	 */
 	protected function getCommonResult($success=false, $jump_url=null){
 		if($success){
-			return new Result(self::$common_success_message, true, null, $jump_url);
+			return new Result(static::$common_success_message, true, null, $jump_url);
 		}
-		return new Result(self::$common_fail_message);
+		return new Result(static::$common_fail_message);
 	}
 }

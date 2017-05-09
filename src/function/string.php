@@ -9,12 +9,13 @@ namespace Lite\func;
 
 /**
  * utf-8中英文截断（两个英文一个数量单位）
- * @param $string
- * @param $length
- * @param $tail
+ * @param string $string 串
+ * @param int $length 切割长度
+ * @param string $tail 尾部追加字符串
+ * @param bool $over_length 是否超长
  * @return string
  */
-function substr_utf8($string, $length, $tail = '...'){
+function substr_utf8($string, $length, $tail = '...', &$over_length = false){
 	$chars = $string;
 	$i = 0;
 	$n = 0;
@@ -31,8 +32,11 @@ function substr_utf8($string, $length, $tail = '...'){
 		$i++;
 	} while($k<$length);
 	$str1 = mb_substr($string, 0, $l, 'utf-8');
-	if($str1 != $string && $tail){
-		$str1 .= $tail;
+	if($str1 != $string){
+		$over_length = true;
+		if($tail){
+			$str1 .= $tail;
+		}
 	}
 	return $str1;
 }
@@ -142,9 +146,10 @@ function int2str($data){
  * @param array|string $str
  * @param $len
  * @param null|string $tail
+ * @param bool $over_length
  * @return string
  */
-function h($str, $len = null, $tail = '...'){
+function h($str, $len = null, $tail = '...', &$over_length = false){
 	if(is_object($str)){
 		return $str;
 	}
@@ -156,7 +161,7 @@ function h($str, $len = null, $tail = '...'){
 		return $ret;
 	}
 	if($len){
-		$str = substr_utf8($str, $len, $tail);
+		$str = substr_utf8($str, $len, $tail, $over_length);
 	}
 	if(is_numeric($str)){
 		return $str;

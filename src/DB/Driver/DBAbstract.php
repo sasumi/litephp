@@ -362,15 +362,17 @@ abstract class DBAbstract{
 		if(empty($data)){
 			throw new BizException('NO REPLACE DATA FOUND');
 		}
-		$query = $this->genQuery()->update()->from($table)->setData($data)->where($condition)->limit($limit);
-		$this->query($query);
-		$affect_num = $this->getAffectNum();
-		if(!$affect_num){
+
+		$count = $this->getCount($this->genQuery()->select()->from($table)->where($condition)->limit(1));
+		if($count){
+			$query = $this->genQuery()->update()->from($table)->setData($data)->where($condition)->limit($limit);
+			$this->query($query);
+			return $count;
+		} else {
 			$query = $this->genQuery()->insert()->from($table)->setData($data);
 			$this->query($query);
 			return $this->getAffectNum();
 		}
-		return $affect_num;
 	}
 	
 	/**

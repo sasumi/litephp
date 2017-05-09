@@ -218,19 +218,17 @@ abstract class Model extends DAO{
 	/**
 	 * 设置查询SQL语句
 	 * @param string | Query $query
-	 * @param array $db_config
 	 * @throws Exception
 	 * @return Model
 	 */
-	public static function setQuery($query = null, $db_config = array()){
+	public static function setQuery($query){
 		if(is_string($query)){
-			$query = new Query($query);
+			$obj = self::meta();
+			$args = func_get_args();
+			$query = new Query(self::parseConditionStatement($args, $obj));
 		}
 		if($query){
 			$obj = self::meta();
-			if($db_config){
-				$obj->setDbConfig($db_config);
-			}
 			$obj->query = $query;
 			return $obj;
 		}
@@ -523,6 +521,9 @@ abstract class Model extends DAO{
 	 */
 	public function all($as_array = false, $unique_key = ''){
 		$list = $this->getDbDriver(self::DB_READ)->getAll($this->query);
+		if(!$list){
+			return array();
+		}
 		if($as_array){
 			if($unique_key){
 				$list = array_group($list, $unique_key, true);
@@ -531,37 +532,30 @@ abstract class Model extends DAO{
 		}
 
 		$result = array();
-		if($list){
-			foreach($list as $item){
-				$tmp = clone $this;
-				$tmp->setValues($item);
-				$tmp->resetValueChangeState();
-				if($unique_key){
-					$result[$item[$unique_key]] = $tmp;
-				} else{
-					$result[] = $tmp;
-				}
+		foreach($list as $item){
+			$tmp = clone $this;
+			$tmp->setValues($item);
+			$tmp->resetValueChangeState();
+			if($unique_key){
+				$result[$item[$unique_key]] = $tmp;
+			} else{
+				$result[] = $tmp;
 			}
 		}
 		return $result;
 	}
 
 	/**
+	 * 以关联数组方式返回
+	 * @deprecated 请使用 all，第二个参数已经支持
 	 * @param bool $as_array
 	 * @param null $key
 	 * @return array
 	 * @throws \Lite\Exception\Exception
 	 */
 	public function allAsAssoc($as_array = false, $key = null){
-		$list = $this->all($as_array);
-		$tmp = array();
-		if($list){
-			$key = $key ?: $this->getPrimaryKey();
-			foreach($list as $item){
-				$tmp[$item[$key]] = $item;
-			}
-		}
-		return $tmp;
+		$key = $key ?: $this->getPrimaryKey();
+		return $this->all($as_array, $key);
 	}
 
 	/**
@@ -584,13 +578,25 @@ abstract class Model extends DAO{
 
 	/**
 	 * 获取一个记录字段
-	 * @param $key
+	 * @param string|null $key 如字段为空，则取第一个结果
 	 * @return mixed|null
 	 */
-	public function ceil($key){
-		$this->query->field($key);
+	public function ceil($key = ''){
+		$obj = self::meta();
+		$pro_defines = $obj->getEntityPropertiesDefine();
+		if($key && $pro_defines[$key]){
+			$this->query->field($key);
+		}
 		$data = $this->getDbDriver(self::DB_READ)->getOne($this->query);
 		return $data ? array_pop($data) : null;
+	}
+
+	public function sum($field){
+		$k = '__SUM__';
+		$str = "SUM($field) AS $k";
+		$this->query->field($str);
+		$data = $this->getDbDriver(self::DB_READ)->getOne($this->query);
+		return $data[$k];
 	}
 
 	/**
@@ -599,7 +605,11 @@ abstract class Model extends DAO{
 	 * @return array
 	 */
 	public function column($key){
-		$this->query->field($key);
+		$obj = self::meta();
+		$pro_defines = $obj->getEntityPropertiesDefine();
+		if($pro_defines[$key]){
+			$this->query->field($key);
+		}
 		$data = $this->getDbDriver(self::DB_READ)->getAll($this->query);
 		return $data ? array_column($data, $key) : array();
 	}
@@ -1120,9 +1130,13 @@ abstract class Model extends DAO{
 		$kvs = array_keys($this->getValues());
 		if(!isset($v) && !in_array($key, $kvs)){
 			//@todo 这里由于在update/add模板共用情况下，很可能使用 $model->$field 进行直接拼接action，需要重新审视这里抛出exception是否合理
-			//			throw new Exception('model fields not set in query result', null, $key);
+			//throw new Exception('model fields not set in query result', null, $key);
 		}
 		return $v;
+	}
+
+	public function getModelDesc(){
+		return $this->getTableName();
 	}
 
 	/**

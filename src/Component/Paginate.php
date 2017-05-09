@@ -278,6 +278,7 @@ class Paginate implements PaginateInterface {
 				$tmp = $lang['page_info'];
 				$tmp = str_replace('%s', $page_info['item_total'], $tmp);
 				$tmp = str_replace('%d', $page_info['page_total'], $tmp);
+				$tmp = str_replace('%k', $page_info['page_index'], $tmp);
 				$tmp = str_replace('%i', $page_info['page_size'], $tmp);
 				$tmp = str_replace('%p', htmlspecialchars($this->getUrl(1, '_ppp_')), $tmp);
 				$html .= $tmp;
@@ -288,7 +289,7 @@ class Paginate implements PaginateInterface {
 			//need javascript enabled supporting
 			else if($mode == 'input' && $page_info['page_total'] > 0){
 				$html .= '<form action="'.$form_action.'" method="get" class="page_input_form">';
-				$html .= '<input type="number" class="page_input" name="'.$this->config['page_key'].'" size="2" value="">';
+				$html .= '<input type="number" class="page_input" name="'.$this->config['page_key'].'" size="2" min="1" step="1" value="" required="required">';
 
 				if($this->page_size_flag){
 					$html .= '<input type="hidden" class="page_input" name="'.$this->config['page_size_key'].'" size="2" value="'.$page_info['page_size'].'">';
@@ -303,7 +304,7 @@ class Paginate implements PaginateInterface {
 				if($this->page_size_flag){
 					$html .= '<input type="hidden" class="page_input" name="'.$this->config['page_size_key'].'" size="2" value="'.$page_info['page_size'].'">';
 				}
-				$html .= '<select onchange="this.parentNode.submit()" name="'.$this->config['page_key'].'">';
+				$html .= '<select onchange="this.parentNode.submit()" name="'.$this->config['page_key'].'" required="required">';
 				for($i=1; $i<=$page_info['page_total']; $i++){
 					$html .= '<option value="'.$i.'" '.($page_info['page_index']  == $i ? 'selected':'').'>'.
 						str_replace('%s', $i, $lang['page_sel']).'</option>';

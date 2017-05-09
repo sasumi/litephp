@@ -192,8 +192,8 @@ abstract class DAO implements Iterator, ArrayAccess{
 	public static function convertObjectListToArray(array $object_list, $fields=array()){
 		$ret = array();
 		/** @var DAO $obj */
-		foreach($object_list as $obj){
-			$ret[] = $obj->toArray($fields);
+		foreach($object_list as $k=>$obj){
+			$ret[$k] = $obj->toArray($fields);
 		}
 		return $ret;
 	}

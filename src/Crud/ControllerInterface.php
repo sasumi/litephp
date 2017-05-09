@@ -13,9 +13,13 @@ interface ControllerInterface{
 	const OP_ALL = 'all';
 	const OP_INDEX = 'index';
 	const OP_UPDATE = 'update';
+	const OP_QUICK_UPDATE = 'quick_update';
+
+	/** @deprecated drop */
 	const OP_STATE = 'state';
 	const OP_DELETE = 'delete';
 	const OP_INFO = 'info';
+
 	const OP_QUICK_SEARCH = 'quick_search';
 
 	/**

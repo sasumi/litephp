@@ -41,6 +41,15 @@ namespace Lite\func {
 	}
 
 	/**
+	 * @param array $keys
+	 * @param array $arr
+	 * @return bool
+	 */
+	function array_keys_exists(array $keys, array $arr) {
+		return !array_diff_key(array_flip($keys), $arr);
+	}
+
+	/**
 	 * 将多重数组值取出来
 	 * @param $arr
 	 * @param string $original_key
@@ -329,6 +338,19 @@ namespace Lite\func {
 	}
 
 	/**
+	 * array sum by key
+	 * @param $arr
+	 * @param string $key
+	 * @return mixed
+	 */
+	function array_sumby($arr, $key=''){
+		if(!$key){
+			return array_sum($arr);
+		}
+		return array_sum(array_column($arr, $key));
+	}
+
+	/**
 	 * Set default values to array
 	 * Usage:
 	 * <pre>
@@ -355,7 +377,7 @@ namespace Lite\func {
 	 * array_filter_by_keys($data, 'key1', 'key2');
 	 * @param $arr
 	 * @param $keys
-	 * @return array
+	 * @return array 
 	 */
 	function array_filter_by_keys($arr, $keys) {
 		$args = is_array($keys) ? $keys : array_slice(func_get_args(), 1);
@@ -364,6 +386,14 @@ namespace Lite\func {
 			$data[$k] = $arr[$k];
 		}
 		return $data;
+	}
+
+	function assert_array_has_keys($arr, $keys){
+		foreach($keys as $key){
+			if(!array_key_exists($key, $arr)){
+				throw new Exception('Array key no exists:'.$key);
+			}
+		}
 	}
 
 	/**

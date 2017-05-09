@@ -315,7 +315,6 @@ abstract class CodeGenerator{
 
 		//文本判断
 		switch($t){
-
 			case 'tinytext':
 				return 'text';
 
@@ -336,7 +335,7 @@ abstract class CodeGenerator{
 				return $k;
 			}
 		}
-		throw new \Exception('data type detected fail');
+		throw new \Exception('data type detected fail:'.var_export($meta, true));
 	}
 
 	protected static function getPropertiesDefines($meta_list){

@@ -37,6 +37,24 @@ namespace Lite\func {
 		return strcmp($file, $real_path) == 0;
 	}
 
+	/**
+	 * check file exists case file name insensitive
+	 * @param $file
+	 * @return bool
+	 */
+	function file_exists_ci($file){
+		if(file_exists($file)){
+			return $file;
+		}
+		$lower_file = strtolower($file);
+		foreach(glob(dirname($file) . '/*') as $file){
+			if(strtolower($file) == $lower_file){
+				return $file;
+			}
+		}
+		return false;
+	}
+
 	function file_path_compare_case_insensitive($f1, $f2){
 		return strcasecmp($f1, $f2) == 0;
 	}
