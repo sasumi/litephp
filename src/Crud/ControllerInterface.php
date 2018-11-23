@@ -1,14 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Sasumi
- * Date: 2015/10/19
- * Time: 20:32
- */
 namespace Lite\Crud;
 
 use Lite\DB\Model;
 
+/**
+ * CURL控制器接口
+ * User: Sasumi
+ * Date: 2015/10/19
+ * Time: 20:32
+ */
 interface ControllerInterface{
 	const OP_ALL = 'all';
 	const OP_INDEX = 'index';
@@ -30,7 +30,7 @@ interface ControllerInterface{
 
 	/**
 	 * get relate model name
-	 * @return Model
+	 * @return string|Model
 	 */
 	public function getModelClass();
 }

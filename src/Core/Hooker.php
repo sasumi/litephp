@@ -60,7 +60,7 @@ abstract class Hooker {
 	/**
 	 * 触发事件
 	 * @param string $key
-	 * @return array
+	 * @return array|false
 	 **/
 	public static function fire($key/** , $param1, $param2 **/){
 		$args = array_slice(func_get_args(), 1) ?: array();

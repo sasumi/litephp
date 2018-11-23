@@ -4,7 +4,6 @@ use Lite\Core\Config;
 use Lite\Core\PaginateInterface;
 use Lite\Core\Router;
 use function Lite\func\array_merge_recursive_distinct;
-use function Lite\func\dump;
 
 /**
  * 分页
@@ -76,7 +75,10 @@ class Paginate implements PaginateInterface {
 	 * @param array $data
 	 * @return bool
 	 */
-	public function paginateData(array &$data=array()){
+	public function paginateData(array &$data=null){
+		if(!is_array($data)){
+			debug_print_backtrace();die;
+		}
 		$this->setItemTotal(count($data));
 		$limit = $this->getLimit();
 		$data = array_slice($data, $limit[0], $limit[1]);
@@ -153,14 +155,15 @@ class Paginate implements PaginateInterface {
 		$this->page_info['page_total'] = $page_total;
 		return $this;
 	}
-
+	
 	/**
 	 * 获取分页链接URL
 	 * @param int $num 页码(1开始)
 	 * @param null $page_size
 	 * @return string
+	 * @throws \Lite\Exception\Exception
 	 */
-	private function getUrl($num = null, $page_size=null){
+	public function getUrl($num = null, $page_size=null){
 		$gets = Router::get();
 		if(!empty($gets)){
 			foreach($gets as $key=>$get){
@@ -183,10 +186,11 @@ class Paginate implements PaginateInterface {
 		$render = Config::get('app/render');
 		return $render::getUrl($render::getCurrentUri(), $gets);
 	}
-
+	
 	/**
 	 * 转换字符串
 	 * @return string
+	 * @throws \Lite\Exception\Exception
 	 */
 	public function __toString(){
 		$page_modes = array_map('trim', explode(',', $this->config['mode']));

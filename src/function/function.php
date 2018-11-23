@@ -171,11 +171,11 @@ function get_options($param, $description = '', $support_cgi = true){
 		echo "\n[Parameter]:\n";
 		foreach($param as $k => $define){
 			list($required, $desc) = $define;
-			echo "$k [$required] $desc\n";
+			echo "$k\t[$required] $desc\n";
 		}
 
 		if($description){
-			echo "\n[Usage]:\n";
+			echo "\n[Description]:\n";
 			$call = debug_backtrace(null, 1);
 			$f = basename($call[0]['file']);
 			echo "$f $description\n";
@@ -225,7 +225,7 @@ function convert_exception(\Exception $e){
  * @return string
  */
 function get_cli_color_string($str, $foreground_color = null, $background_color = null){
-	if(PHP_SAPI != 'cli'){
+	if(!Client::inCli()){
 		$style = array();
 		if($foreground_color){
 			$style[] = "color:".$GLOBALS['_CLI_WEB_FORE_COLOR_MAP_'][$foreground_color];

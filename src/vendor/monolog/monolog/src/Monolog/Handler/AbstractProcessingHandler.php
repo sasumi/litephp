@@ -11,10 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
-use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\LineFormatter;
-
 /**
  * Base Handler class providing the Handler structure
  *

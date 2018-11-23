@@ -16,7 +16,7 @@ class Calendar {
 		$this->init_date = !empty($date) ? date('Y-m-d', strtotime($date)) : date('Y-m-d');
 
 		$this->config = array(
-			'week_str' => 'sun,mon,tue,wed,the,fri,sat,wk',
+			'week_str' => 'sun,mon,tue,wed,thu,fri,sat,wk',
 			'month_str' => 'january,february,march,april,may,june,july,august,september,october,november,december',
 			'class' => 'calendar',
 			'class_pre' => 'cc_',
@@ -220,14 +220,19 @@ class Calendar {
 
 			//prev month style
 			if($i%8!=0 && $i<=8 && $dates[$i] > 8){
+				list($y, $m) = array_map('intval',explode('-',$this->getLastMonth($this->init_date)));
 				$cls = ' class="prev_month"';
-				$html .= '<td'.$cls.'><span>'.intval($dates[$i]).'</span></td>';
+				$date = "$y-$m-".$dates[$i];
+				
+				$html .= '<td'.$cls.' data-date="'.$date.'"><span>'.intval($dates[$i]).'</span></td>';
 			}
 
 			//next month style
 			else if($i%8!=0 && $i>=24 && $dates[$i] < 15){
+				list($y, $m) = array_map('intval',explode('-',$this->getNextMonth($this->init_date)));
 				$cls = ' class="next_month"';
-				$html .= '<td'.$cls.'><span>'.intval($dates[$i]).'</span></td>';
+				$date = "$y-$m-".$dates[$i];
+				$html .= '<td'.$cls.' data-date="'.$date.'"><span>'.intval($dates[$i]).'</span></td>';
 			}
 
 			//no wi
@@ -243,8 +248,9 @@ class Calendar {
 			//normal
 			else {
 				list($y, $m) = array_map('intval',explode('-',$this->init_date));
+				$date = "$y-$m-".$dates[$i];
 				$today = $dates[$i] == date('d') && $y == date('Y') && $m == date('m') ? 'today' : null;
-				$html .= '<td class="'.$today.'"><span>'.intval($dates[$i]).'</span></td>';
+				$html .= '<td class="'.$today.'" data-date="'.$date.'"><span>'.intval($dates[$i]).'</span></td>';
 			}
 		}
 		$html .= '</tbody></table>';

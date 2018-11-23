@@ -1,7 +1,6 @@
 <?php
 namespace Lite\Cache;
 use Lite\Exception\Exception;
-use function Lite\func\dump;
 
 abstract class CacheAdapter implements CacheInterface{
 	private static $instances;
@@ -29,6 +28,7 @@ abstract class CacheAdapter implements CacheInterface{
 		/** @var self $instance */
 		$instance = new $cache_class();
 		$expired_seconds = $expired_seconds ?: 60;
+		$key .= ':'.$expired_seconds;
 		$data = $instance->get($key);
 		if(!isset($data)){
 			$data = call_user_func($fetcher);
@@ -49,7 +49,7 @@ abstract class CacheAdapter implements CacheInterface{
 	}
 
 	/**
-	 * singleton instance
+	 * 单例
 	 * @param array $config
 	 * @return CacheAdapter
 	 */

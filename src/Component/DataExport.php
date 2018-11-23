@@ -1,5 +1,7 @@
 <?php
 namespace Lite\Component;
+use Lite\DB\Model;
+use function Lite\func\is_assoc_array;
 
 /**
  * 数据输出处理
@@ -118,5 +120,77 @@ abstract class DataExport {
 		header('Content-Disposition: attachment; filename="'.$config['filename'].'"');
 		echo $xls;
 		exit;
+	}
+
+	/**
+	 * 分块输出CSV文件
+	 * 该方法会记录上次调用文件句柄，因此仅允许单个进程执行单个输出。
+	 * @param $data
+	 * @param array $fields 字段列表，格式如：['id','name'] 或  ['id'=>'编号', 'name'=>'名称'] 暂不支持其他方式
+	 * @param $file_name
+	 * @return bool
+	 */
+	public static function exportCSVChunk($data, $fields, $file_name){
+		static $_csv_chunk_fp;
+		$fields = is_assoc_array($fields) ? $fields : array_combine($fields, $fields);
+		if(!isset($_csv_chunk_fp)){
+			header('Content-Type: application/csv');
+			header('Content-Disposition: attachment; filename='.$file_name);
+			$_csv_chunk_fp = fopen('php://output', 'a');
+			$head = null;
+			foreach($fields as $i => $v){
+				$head[$i] = iconv('utf-8', 'gbk', $v);
+			}
+			fputcsv($_csv_chunk_fp, $head);
+		}
+
+		$cnt = 0;   // 计数器
+		$limit = 1000;  // 每隔$limit行，刷新一下输出buffer，不要太大，也不要太小
+		$count = count($data);  // 逐行取出数据，不浪费内存
+
+		for($t = 0; $t<$count; $t++){
+			$cnt++;
+			if($limit == $cnt){ //刷新一下输出buffer，防止由于数据过多造成问题
+				ob_flush();
+				flush();
+				$cnt = 0;
+			}
+			$row = [];
+			foreach($fields as $f=>$n){
+				$row[] = mb_convert_encoding($data[$t][$f], 'gbk', 'utf-8');
+			}
+			fputcsv($_csv_chunk_fp, $row);
+			unset($row);
+		}
+		return true;
+	}
+	
+	/**
+	 * 根据DBModel自动分块导出CSV文件
+	 * @param \Lite\DB\Model $query_model
+	 * @param array $fields 字段列表，格式如：['id','name'] 或  ['id'=>'编号', 'name'=>'名称'] 暂不支持其他方式
+	 * @param $file_name
+	 * @example 例：<p>
+	 * DataExport::exportCSVChunkByModel(User::find('status=1'), [], 'user.csv');
+	 * </p>
+	 */
+	public static function exportCSVChunkByModel(Model $query_model, $fields = [], $file_name){
+		$entity_fields = $query_model->getEntityFieldAliasMap();
+		$spec_fields = [];
+		if(!$fields){
+			$spec_fields = $entity_fields;
+		} else {
+			$has_label = is_assoc_array($fields);
+			if(!$has_label){
+				foreach($fields as $k){
+					$spec_fields[$k] = $entity_fields[$k];
+				}
+			} else {
+				$spec_fields = $fields;
+			}
+		}
+		$query_model->chunk(100, function($data) use ($spec_fields, $file_name){
+			self::exportCSVChunk($data, $spec_fields, $file_name);
+		}, true);
 	}
 }

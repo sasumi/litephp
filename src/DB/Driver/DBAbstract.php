@@ -4,14 +4,13 @@ namespace Lite\DB\Driver;
 use Lite\Core\Hooker;
 use Lite\Core\PaginateInterface;
 use Lite\Core\RefParam;
-use Lite\DB\Model;
 use Lite\DB\Query;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;
 use function Lite\func\dump;
 
 /**
- * Created by PhpStorm.
+ * 数据库接口抽象类
  * User: sasumi
  * Date: 2016/6/11
  * Time: 17:50
@@ -22,13 +21,16 @@ abstract class DBAbstract{
 	const EVENT_DB_QUERY_ERROR = 'EVENT_DB_QUERY_ERROR';
 	const EVENT_BEFORE_DB_GET_LIST = 'EVENT_BEFORE_DB_GET_LIST';
 	const EVENT_AFTER_DB_GET_LIST = 'EVENT_AFTER_DB_GET_LIST';
+	const EVENT_ON_DB_CONNECT = 'EVENT_ON_DB_CONNECT';
 	const EVENT_ON_DB_QUERY_DISTINCT = 'EVENT_ON_DB_QUERY_DISTINCT';
 	const EVENT_ON_DB_RECONNECT = 'EVENT_ON_DB_RECONNECT';
 
 	//最大重试次数，如果该数据配置为0，将不进行重试
 	public static $MAX_RECONNECT_COUNT = 10;
+	
+	//重新连接间隔时间（毫秒）
+	public static $RECONNECT_INTERVAL = 1000;
 
-	private static $in_transaction_mode = false;
 	private static $instance_list = array();
 
 	// select查询去重
@@ -49,11 +51,20 @@ abstract class DBAbstract{
 	private $config = array();
 
 	/**
-	 * db record construct, connect to database
+	 * 数据库连接初始化，连接数据库，设置查询字符集，设置时区
 	 * @param array $config
 	 */
 	private function __construct($config){
 		$this->config = $config;
+		if(!$this->config['type']){
+			$this->config['type'] = 'mysql';
+		}
+		
+		if($this->config['charset']){
+			$this->config['charset'] = static::fixCharsetCode($this->config['charset'], $this->config['type']);
+		}
+		
+		Hooker::fire(self::EVENT_ON_DB_CONNECT, $this->config);
 		$this->connect($this->config);
 		
 		//charset
@@ -71,12 +82,16 @@ abstract class DBAbstract{
 	 * debug sql
 	 */
 	public static function debug(){
+		Hooker::add(self::EVENT_ON_DB_CONNECT, function($config){
+			dump('DB connecting: '.json_encode($config));
+		});
 		Hooker::add(self::EVENT_BEFORE_DB_QUERY, function($query){
-			dump($query);
+			dump($query.'');
 		});
 	}
 
 	/**
+	 * 解析SQL语句
 	 * @param $sql
 	 * @return array
 	 * @throws Exception
@@ -89,18 +104,32 @@ abstract class DBAbstract{
 	}
 	
 	/**
-	 * set charset to connection session
+	 * 设置查询字符集
 	 * @param $charset
 	 * @throws \Lite\Exception\Exception
 	 */
 	public function setCharset($charset){
-		$charset = str_replace('-', '', $charset);
 		$this->query("SET NAMES '".$charset."'");
 	}
 	
 	/**
-	 * set timezone to connection session
-	 * @param $timezone
+	 * 修正MySQL数据库驱动编码问题
+	 * @param $charset
+	 * @param $type
+	 * @return string
+	 */
+	public static function fixCharsetCode($charset, $type){
+		if($type == 'mysql'){
+			$charset = str_replace('-', '', $charset);
+		} else if($charset == 'utf8'){
+			$charset = 'utf-8';
+		}
+		return $charset;
+	}
+	
+	/**
+	 * 设置时区
+	 * @param string $timezone
 	 * @throws \Lite\Exception\Exception
 	 */
 	public function setTimeZone($timezone){
@@ -137,7 +166,7 @@ abstract class DBAbstract{
 					break;
 				
 				case 'mysqli':
-					$ins = new DriverMysqli($config);
+					$ins = new DriverMySQLi($config);
 					break;
 				
 				case 'pdo':
@@ -153,7 +182,7 @@ abstract class DBAbstract{
 	}
 	
 	/**
-	 * get database config
+	 * 获取数据库配置
 	 * @param null $key
 	 * @return array|mixed
 	 */
@@ -162,7 +191,7 @@ abstract class DBAbstract{
 	}
 	
 	/**
-	 * get instance key
+	 * 获取单例键值
 	 * @param array $config
 	 * @return string
 	 */
@@ -171,7 +200,7 @@ abstract class DBAbstract{
 	}
 
 	/**
-	 * get current distinct query switch state
+	 * 获取当前去重查询开启状态
 	 * @return bool
 	 */
 	public static function distinctQueryState(){
@@ -179,20 +208,32 @@ abstract class DBAbstract{
 	}
 
 	/**
-	 * turn on distinct query cache
+	 * 打开去重查询模式
 	 */
 	public static function distinctQueryOn(){
 		self::$QUERY_DISTINCT = true;
 	}
 	
 	/**
-	 * turn off distinct query cache
+	 * 关闭去重查询模式
 	 */
 	public static function distinctQueryOff(){
 		self::$QUERY_DISTINCT = false;
 	}
-
+	
 	/**
+	 * 以非去重模式（强制查询模式）进行查询
+	 * @param callable $callback
+	 */
+	public static function noDistinctQuery(callable $callback){
+		$st = self::$QUERY_DISTINCT;
+		self::distinctQueryOn();
+		call_user_func($callback);
+		self::$QUERY_DISTINCT = $st;
+	}
+	
+	/**
+	 * 获取正在提交中的查询
 	 * @return mixed
 	 */
 	public static function getProcessingQuery(){
@@ -200,7 +241,7 @@ abstract class DBAbstract{
 	}
 
 	/**
-	 * quote param by database connector
+	 * 转义数据，缺省为统一使用字符转义
 	 * @param string $data
 	 * @param string $type
 	 * @return mixed
@@ -222,7 +263,7 @@ abstract class DBAbstract{
 	}
 	
 	/**
-	 * quote array
+	 * 转义数组
 	 * @param $data
 	 * @param array $types
 	 * @return mixed
@@ -235,7 +276,7 @@ abstract class DBAbstract{
 	}
 	
 	/**
-	 * get data by page
+	 * 获取一页数据
 	 * @param \Lite\DB\Query $q
 	 * @param PaginateInterface|array|number $pager
 	 * @return array
@@ -279,7 +320,7 @@ abstract class DBAbstract{
 	}
 	
 	/**
-	 * get all
+	 * 获取所有查询记录
 	 * @param Query $query
 	 * @return mixed
 	 */
@@ -288,7 +329,7 @@ abstract class DBAbstract{
 	}
 	
 	/**
-	 * get one row
+	 * 获取一条查询记录
 	 * @param Query $query
 	 * @return array | null
 	 */
@@ -345,6 +386,7 @@ abstract class DBAbstract{
 		}
 		$query = $this->genQuery()->update()->from($table)->setData($data)->where($condition)->limit($limit);
 		$this->query($query);
+		
 		return $this->getAffectNum();
 	}
 	
@@ -384,7 +426,7 @@ abstract class DBAbstract{
 	 * @return int
 	 */
 	public function increase($table, $field, $offset = 1, $statement = '', $limit = 0){
-		$off = $offset>0 ? "+ $offset" : "- $offset";
+		$off = $offset>0 ? "+ $offset" : "$offset";
 		$where = $statement ? "WHERE $statement" : '';
 		$limit_str = $limit>0 ? "LIMIT $limit" : '';
 		$query = "UPDATE `$table` SET `$field` = `$field` $off $where $limit_str";
@@ -451,10 +493,18 @@ abstract class DBAbstract{
 			return $result;
 		} catch(\Exception $ex){
 			static $reconnect_count;
-			if($reconnect_count < self::$MAX_RECONNECT_COUNT && stripos($ex->getMessage(), 'server has gone away')){
+			if($reconnect_count<static::$MAX_RECONNECT_COUNT && static::isConnectionLost($ex)){
+				//间隔时间之后重新连接
+				if(static::$RECONNECT_INTERVAL){
+					usleep(static::$RECONNECT_INTERVAL*1000);
+				}
 				Hooker::fire(self::EVENT_ON_DB_RECONNECT, $ex->getMessage(), $this->config);
-				$this->connect($this->config);
 				$reconnect_count++;
+				try{
+					$this->connect($this->config, true);
+				} catch(\Exception $e){
+					//ignore reconnect exception
+				}
 				return $this->query($query);
 			}
 			Hooker::fire(self::EVENT_DB_QUERY_ERROR, $ex, $query, $this->config);
@@ -463,6 +513,31 @@ abstract class DBAbstract{
 				'host'  => $this->getConfig('host')
 			));
 		}
+	}
+	
+	/**
+	 * 根据message检测服务器是否丢失、断开、重置链接
+	 * @param \Exception $exception
+	 * @return bool
+	 */
+	protected static function isConnectionLost($exception){
+		//pdo exception
+		if($exception instanceof \PDOException){
+			if($exception->getCode() == '08S01' || $exception->getCode() == 'HY000'){
+				return true;
+			}
+		}
+		$error_message = $exception->getMessage();
+		$ms = [
+			'server has gone away',
+			'shut down'
+		];
+		foreach($ms as $kw){
+			if(stripos($kw, $error_message) !== false){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -478,7 +553,24 @@ abstract class DBAbstract{
 	 * @param $sql
 	 * @return mixed
 	 */
-	public abstract function getCount($sql);
+	public function getCount($sql){
+		$sql .= '';
+		$sql = str_replace(array("\n", "\r"), '', trim($sql));
+		if(preg_match('/^\s*SELECT.*?\s+FROM\s+/i', $sql)){
+			if(preg_match('/\sGROUP\s+by\s/i', $sql) ||
+				preg_match('/^\s*SELECT\s+DISTINCT\s/i', $sql)){
+				$sql = "SELECT COUNT(*) AS __NUM_COUNT__ FROM ($sql) AS cnt_";
+			} else {
+				$sql = preg_replace('/^\s*select.*?\s+from/i', 'SELECT COUNT(*) AS __NUM_COUNT__ FROM', $sql);
+				$sql = preg_replace('/\sorder\s+by\s.*$/i', '', $sql); //为了避免order中出现field，在select里面定义，select里面被删除了，导致order里面的field未定义。
+			}
+			$result = $this->getOne(new Query($sql));
+			if($result){
+				return (int) $result['__NUM_COUNT__'];
+			}
+		}
+		return 0;
+	}
 	
 	/**
 	 * 获取操作影响条数
@@ -532,8 +624,10 @@ abstract class DBAbstract{
 	public abstract function cancelTransactionState();
 	
 	/**
-	 * connect to specified config database
-	 * @param array $config
+	 * 连接数据库接口
+	 * @param array $config <p>数据库连接配置，
+	 * 格式为：['type'=>'', 'driver'=>'', 'charset' => '', 'host'=>'', 'database'=>'', 'user'=>'', 'password'=>'', 'port'=>'']
+	 * </p>
 	 * @param boolean $re_connect 是否重新连接
 	 * @throws Exception
 	 * @return resource

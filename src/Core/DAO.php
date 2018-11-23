@@ -2,7 +2,6 @@
 namespace Lite\Core;
 use ArrayAccess as ArrayAccess;
 use Iterator as Iterator;
-use function Lite\func\dump;
 
 /**
  * 数据库元数据抽象类
@@ -18,6 +17,7 @@ abstract class DAO implements Iterator, ArrayAccess{
 
 	private $_values = array();
 	private $_values_change_keys = array();
+	private $_original_values_for_change = array();
 
 	/**
 	 * 构造方法,设置元数据
@@ -103,7 +103,7 @@ abstract class DAO implements Iterator, ArrayAccess{
 	 * 批量设置数据
 	 * @param array $data
 	 */
-	final public function setValues(array $data=array()){
+	public function setValues(array $data=array()){
 		foreach($data as $key=>$value){
 			$this->setValue($key, $value);
 		}
@@ -114,7 +114,7 @@ abstract class DAO implements Iterator, ArrayAccess{
 	 * @param $key
 	 * @param $value
 	 */
-	final public function setValue($key, $value){
+	public function setValue($key, $value){
 		$this->$key = $value;
 	}
 
@@ -156,11 +156,36 @@ abstract class DAO implements Iterator, ArrayAccess{
 	}
 
 	/**
+	 * 转换当前数据为JSON
+	 * @param array $fields
+	 * @return array
+	 */
+	final public function toJSON($fields=array()){
+		$data = $this->toArray($fields);
+		return json_encode($data);
+	}
+
+	/**
 	 * 获取被变更过的key
 	 * @return array
 	 */
 	protected function getValueChangeKeys(){
 		return $this->_values_change_keys;
+	}
+
+	/**
+	 * 获取Data变更数据
+	 * @param array $original_values
+	 * @return array
+	 */
+	public function getValueChanges(&$original_values = array()){
+		$keys = $this->getValueChangeKeys();
+		$changes = [];
+		foreach($keys as $k){
+			$changes[$k] = $this->_values[$k];
+			$original_values[$k] = $this->_original_values_for_change[$k];
+		}
+		return $changes;
 	}
 
 	/**
@@ -170,8 +195,10 @@ abstract class DAO implements Iterator, ArrayAccess{
 	public function resetValueChangeState($key=''){
 		if($key){
 			unset($this->_values_change_keys[$key]);
+			unset($this->_original_values_for_change[$key]);
 		} else {
 			$this->_values_change_keys = array();
+			$this->_original_values_for_change = array();
 		}
 	}
 
@@ -220,6 +247,7 @@ abstract class DAO implements Iterator, ArrayAccess{
 		if($this->onBeforeSetValue($key, $value) === false){
 			return;
 		}
+		$this->_original_values_for_change[$key] = $this->_values[$key];
 		$this->_values[$key] = $value;
 		$this->_values_change_keys[$key] = $key;
 	}

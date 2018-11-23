@@ -1,11 +1,11 @@
 <?php
+/**
+ * 字符串相关操作函数
+ * User: sasumi
+ * Date: 2015/3/30
+ * Time: 11:19
+ */
 namespace Lite\func;
-	/**
-	 * 字符串相关操作函数
-	 * User: sasumi
-	 * Date: 2015/3/30
-	 * Time: 11:19
-	 */
 
 /**
  * utf-8中英文截断（两个英文一个数量单位）
@@ -42,49 +42,48 @@ function substr_utf8($string, $length, $tail = '...', &$over_length = false){
 }
 
 /**
- * 格式化友好显示时间
- * @param $timestamp
- * @param bool $as_html 是否使用span包裹
- * @return string
+ * 按照指定边界字符列表，拆分字符串
+ * @param array|string $delimiters eg: [',', '-'] or ",-"
+ * @param $str
+ * @param bool $clear_empty 是否清除空值
+ * @return array
  */
-function pretty_time($timestamp, $as_html = false){
-	$str = '';
-	$offset = time()-$timestamp;
-	$before = $offset>0;
-	$offset = abs($offset);
-	$unit_cal = array(
-		'年'  => 31104000,
-		'个月' => 2592000,
-		'天'  => 86400,
-		'小时' => 3600,
-		'分钟' => 60,
-	);
-	if($offset>30 && $offset<60){
-		$str = $before ? '刚才' : '等下';
-	} else if($offset<=30){
-		$str = $before ? '刚刚' : '马上';
-	} else{
-		$us = array();
-		foreach($unit_cal as $u){
-			$tmp = $offset>=$u ? floor($offset/$u) : 0;
-			$offset -= $tmp ? $u : 0;
-			$us[] = $tmp;
-		}
-		foreach($us as $k => $u){
-			if($u){
-				$str = $u.array_keys($unit_cal)[$k].($before ? '前' : '后');
-				break;
-			}
-		}
+function explode_by($delimiters, $str, $clear_empty = true){
+	if(is_string($delimiters)){
+		$delimiters = str_split_by_charset($delimiters);
 	}
-	return $as_html ? '<span title="'.date('Y-m-d H:i:s', $timestamp).'">'.$str.'</span>' : $str;
+	if(count($delimiters) > 1){
+		$des = $delimiters;
+		array_shift($des);
+		$replacements = array_fill(0, count($delimiters)-1, $delimiters[0]);
+		$str = str_replace($des, $replacements, $str);
+	}
+	
+	$tmp = explode($delimiters[0], $str);
+	return $clear_empty ? array_clear_empty($tmp) : $tmp;
 }
 
 /**
- * check string start with string
+ * 按照指定字符编码拆分字符串
  * @param $str
- * @param $starts
- * @param bool $case_sensitive
+ * @param int $len
+ * @param string $charset
+ * @return array
+ */
+function str_split_by_charset($str, $len = 1, $charset = 'UTF-8'){
+	$arr = array();
+	$strLen = mb_strlen($str, $charset);
+	for($i = 0; $i<$strLen; $i++){
+		$arr[] = mb_substr($str, $i, $len, $charset);
+	}
+	return $arr;
+}
+
+/**
+ * 检测字符串是否以另一个字符串开始
+ * @param string $str 待检测字符串
+ * @param string|array $starts 匹配字符串或字符串数组
+ * @param bool $case_sensitive 是否大小写敏感
  * @return bool
  */
 function str_start_with($str, $starts, $case_sensitive = false){
@@ -101,11 +100,11 @@ function str_start_with($str, $starts, $case_sensitive = false){
 }
 
 /**
- * print assoc table to table
- * @param array $data
- * @param string $css_class
- * @param bool $as_return
- * @return string
+ * 打印输出关联数组到html表格
+ * @param array $data 二维关联数组数据
+ * @param string $css_class css类名
+ * @param bool $as_return 是否作为返回值返回
+ * @return string|null
  */
 function print_table(array $data, $css_class='', $as_return = false){
 	$html = '';
@@ -123,10 +122,11 @@ function print_table(array $data, $css_class='', $as_return = false){
 		return $html;
 	}
 	echo $html;
+	return null;
 }
 
 /**
- * covert integer to string
+ * 转换整型（整型数组）到字符串（字符串数组）
  * @param $data
  * @return array|string
  */
@@ -144,12 +144,40 @@ function int2str($data){
 /**
  * 输出html变量
  * @param array|string $str
- * @param $len
- * @param null|string $tail
- * @param bool $over_length
- * @return string
+ * @param number|null $len 截断长度，为空表示不截断
+ * @param null|string $tail 追加尾串字符
+ * @param bool $over_length 超长长度
+ * @return string|array
  */
 function h($str, $len = null, $tail = '...', &$over_length = false){
+	if(is_object($str)){
+		return $str;
+	}
+	if(is_array($str)){
+		$ret = array();
+		foreach($str as $k => $s){
+			$ret[$k] = h($s, $len, $tail, $over_length);
+		}
+		return $ret;
+	}
+	if($len){
+		$str = substr_utf8($str, $len, $tail, $over_length);
+	}
+	if(is_numeric($str)){
+		return $str;
+	}
+	return htmlspecialchars($str, ENT_IGNORE);
+}
+
+/**
+ * 输出html节点属性变量
+ * @param array|string $str
+ * @param number|null $len 截断长度，为空表示不截断
+ * @param null|string $tail 追加尾串字符
+ * @param bool $over_length 超长长度
+ * @return string|array
+ */
+function ha($str, $len = null, $tail = '...', &$over_length = false){
 	if(is_object($str)){
 		return $str;
 	}
@@ -166,13 +194,13 @@ function h($str, $len = null, $tail = '...', &$over_length = false){
 	if(is_numeric($str)){
 		return $str;
 	}
-	return htmlspecialchars($str);
+	return htmlspecialchars($str, ENT_QUOTES);
 }
 
 /**
  * 随机字符串
- * @param int $len
- * @param string $source
+ * @param int $len 长度
+ * @param string $source 字符源
  * @return string
  */
 function rand_string($len = 6, $source = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ23456789'){
@@ -184,6 +212,7 @@ function rand_string($len = 6, $source = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPR
 }
 
 /**
+ * 格式化大小
  * @param $size
  * @param int $dot
  * @return string

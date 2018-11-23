@@ -4,14 +4,8 @@ namespace Lite\Core;
 use Lite\Component\Http;
 use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
-use function Lite\func\array_clear_empty;
-use function Lite\func\array_clear_null;
 use function Lite\func\array_merge_recursive_distinct;
 use function Lite\func\decodeURIComponent;
-use function Lite\func\dump;
-use function Lite\func\encodeURIComponent;
-use function Lite\func\file_path_compare_case_insensitive;
-use function Lite\func\glob_recursive;
 use function Lite\func\str_start_with;
 
 /**
@@ -27,12 +21,13 @@ abstract class Router{
 	const EVENT_BEFORE_PARSE_CURRENT_REQUEST = __CLASS__ . 'EVENT_BEFORE_PARSE_CURRENT_REQUEST';
 	
 	const DEFAULT_ROUTER_KEY = 'r';
-
+	
 	const MODE_NORMAL = 0x01;
 	const MODE_PATH = 0x02;
 	const MODE_REWRITE = 0x03;
 
 	public static $ROUTER_KEY;
+	public static $RETURN_URL_KEY = '_ret_';
 	public static $DEFAULT_CONTROLLER = '';
 	public static $DEFAULT_ACTION = '';
 	
@@ -45,7 +40,7 @@ abstract class Router{
 	public static $DELETE = array();
 	
 	/**
-	 * read php input data
+	 * 读取PHP输入源
 	 * @return string
 	 */
 	public static function readInputData(){
@@ -54,7 +49,7 @@ abstract class Router{
 	}
 	
 	/**
-	 * read php input by chunk
+	 * 分块读取PHP输入源
 	 * @param $handler
 	 * @param int $chunk_size
 	 */
@@ -127,7 +122,42 @@ abstract class Router{
 	public static function getCurrentUri(){
 		return self::getControllerAbbr().'/'.self::getAction();
 	}
-
+	
+	/**
+	 * 获取附带返回当前页面地址的URL
+	 * @param string $uri
+	 * @param array $param
+	 * @param bool $force_current_page 是否锁定返回当前页面，如设置为true，则忽略当前页面传入的返回URL参数
+	 * @return string
+	 * @throws \Lite\Exception\Exception
+	 */
+	public static function getUrlWithReturnUrl($uri = '', $param = [], $force_current_page = false){
+		if($force_current_page){
+			$param[static::$RETURN_URL_KEY] = Router::getCurrentPageUrl();
+		} else {
+			$param[static::$RETURN_URL_KEY] = Router::get(static::$RETURN_URL_KEY) ?: Router::getCurrentPageUrl();
+		}
+		return static::getUrl($uri, $param);
+	}
+	
+	/**
+	 * 获取返回URL
+	 * 获取当前页面路径中的返回URL地址，若为空（或非法传入），则返回指定uri、param页面
+	 * @param $uri
+	 * @param $param
+	 * @return string
+	 */
+	public static function getReturnUrl($uri = '', $param = []){
+		$return_url = Router::get(static::$RETURN_URL_KEY);
+		if($return_url){
+			$tmp = parse_url($return_url);
+			if($tmp['host'] === $_SERVER['HTTP_HOST']) {
+				return $return_url;
+			}
+		}
+		return static::getUrl($uri, $param);
+	}
+	
 	/**
 	 * 获取当前调用action
 	 * @return string
@@ -139,7 +169,7 @@ abstract class Router{
 	/**
 	 * 获取$_GET变量
 	 * @param null $key
-	 * @return array
+	 * @return mixed
 	 */
 	public static function get($key = null){
 		return !$key ? self::$GET : self::$GET[$key];
@@ -186,25 +216,26 @@ abstract class Router{
 	 * 解析路由请求到指定的C/A
 	 * @throws \Lite\Exception\RouterException
 	 * @return array
+	 * @throws \Lite\Exception\Exception
 	 */
 	private static function parseCurrentRequest(){
    		$get = $_GET;
 		$router_mode = Config::get('router/mode');
 		$path_info = self::getPathInfo();
 
-		//rewrite hits
+		//检查重写规则是否命中
 		if($router_mode == self::MODE_REWRITE &&
 			list($uri, $param) = Rewrite::onParseRequest($path_info, $get)){
-			list($ctrl, $act) = self::resolveUri($uri);
-			return [$ctrl, $act, $param];
+			list($controller, $action) = self::resolveUri($uri, true);
+			return [$controller, $action, $param];
 		}
 
 		//优先query参数
 		if($get[self::$ROUTER_KEY] || $router_mode == self::MODE_NORMAL){
-			list($controller, $action) = self::resolveUri($get[self::$ROUTER_KEY]);
+			list($controller, $action) = self::resolveUri($get[self::$ROUTER_KEY], true);
 			unset($get[self::$ROUTER_KEY]);
 		} else {
-			list($controller, $action, $param) = self::resolvePath($path_info);
+			list($controller, $action, $param) = self::resolveCurrentRequestPath($path_info);
 			$get = array_merge($param, $get);
 		}
 
@@ -226,6 +257,7 @@ abstract class Router{
 	
 	/**
 	 * 解析请求参数到当前环境的Controller、Action、GET、POST
+	 * @throws \Lite\Exception\Exception
 	 */
 	public static function init(){
 		Hooker::fire(self::EVENT_BEFORE_ROUTER_INIT);
@@ -329,10 +361,10 @@ abstract class Router{
 	/**
 	 * 解析URI
 	 * @param string $uri
-	 * @return array[string,string] Controller类名（包含命名空间），action方法名称
-	 * @throws \Lite\Exception\RouterException
+	 * @param bool $force_class_exists
+	 * @return array [string,string] Controller类名（包含命名空间），action方法名称
 	 */
-	private static function resolveUri($uri = ''){
+	private static function resolveUri($uri = '', $force_class_exists = false){
 		$c = null;
 		$a = self::$DEFAULT_ACTION;
 		$uri = trim($uri, '/ ');
@@ -353,7 +385,7 @@ abstract class Router{
 					break;
 			}
 		}
-		$c = $c ? self::patchControllerFullName($c) : self::$DEFAULT_CONTROLLER;
+		$c = $c ? self::patchControllerFullName($c, $force_class_exists) : self::$DEFAULT_CONTROLLER;
 		return [$c, $a];
 	}
 
@@ -371,7 +403,7 @@ abstract class Router{
 	}
 
 	/**
-	 * resolve param from path info
+	 * 从pathinfo中解析参数（pathinfo已去除URI信息）
 	 * @param $path_arr
 	 * @param bool $resolve_array
 	 * @return array
@@ -392,40 +424,45 @@ abstract class Router{
 	}
 
 	/**
-	 * resolve pathinfo to path,controller,action,param
+	 * 从pathinfo中解析出控制器、动作以及参数
 	 * @param $path_info
 	 * @return array[string,string,array]
 	 * @throws \Lite\Exception\RouterException
 	 */
-	private static function resolvePath($path_info){
-		$tmp = explode('/', $path_info);
+	private static function resolveCurrentRequestPath($path_info){
+		$tmp = $path_info ? explode('/', $path_info) : [];
 		if(empty($tmp)){
 			return array(self::$DEFAULT_CONTROLLER, self::$DEFAULT_ACTION, array());
 		}
-
 		$p = array();
 		while($p[] = array_shift($tmp)){
-			if($c = self::patchControllerFullName(join('/', $p))){
+			if($c = self::patchControllerFullName(join('/', $p), true)){
 				$act = array_shift($tmp);
 				return array(
-					$c ?: self::$DEFAULT_CONTROLLER,
+					$c,
 					$act ?: self::$DEFAULT_ACTION,
 					self::resolveParamFromPath($tmp)
 				);
 			}
 		}
-		return array(self::$DEFAULT_CONTROLLER, self::$DEFAULT_ACTION, self::resolveParamFromPath($tmp));
+		throw new RouterException('Page Not Found', null, "Path: $path_info");
 	}
 
 	/**
-	 * load controller by controller uri string
-	 * @param $ctrl_abs
-	 * @return string class name
-	 * @throws \Lite\Exception\RouterException
+	 * 获取控制器类名全称
+	 * @param string $ctrl_abs 控制器短名称
+	 * @param bool $force_class_exists
+	 * @return null|string class name
 	 */
-	private static function patchControllerFullName($ctrl_abs){
+	public static function patchControllerFullName($ctrl_abs, $force_class_exists = false){
+		if(!$ctrl_abs){
+			return Router::getDefaultController();
+		}
 		$ns = Application::getNamespace();
 		$controller = str_replace('/','\\',$ns.'\\controller\\'.$ctrl_abs).'Controller';
+		if($force_class_exists && !class_exists($controller)){
+			return null;
+		}
 		return $controller;
 	}
 
@@ -437,10 +474,11 @@ abstract class Router{
 	 * @throws \Lite\Exception\Exception
 	 */
 	private static function buildParam($param, $mode){
+		$param = $param ?: [];
 		switch($mode){
 			case self::MODE_NORMAL:
 				return http_build_query($param);
-
+			
 			case self::MODE_REWRITE:
 			case self::MODE_PATH:
 				$str = array();
@@ -448,14 +486,14 @@ abstract class Router{
 				foreach($param as $k => $v){
 					if(is_array($v)){
 						foreach($v as $sub_k=>$_v){
-							if(strlen($_v)){
-								$str[] = urlencode("{$k}[$sub_k]")."/".urlencode($_v);
+							if(strlen($_v) && strpos($_v, '/') === false && strpos($_v, ' ') === false){
+								$str[] = urlencode($k).'['.urlencode($sub_k).']'.'/'.rawurlencode($_v);
 							} else {
-								$ext_param[$sub_k] = $_v;
+								$ext_param[$k][$sub_k] = $_v;
 							}
 						}
-					} else if(strlen($v)){
-						$str[] = "$k/".urlencode($v);
+					} else if(strlen($v) && strpos($v, '/') === false && strpos($v, ' ') === false){
+						$str[] = urlencode($k)."/".rawurlencode($v);
 					} else {
 						$ext_param[$k] = $v;
 					}
@@ -467,7 +505,7 @@ abstract class Router{
 	}
 	
 	/**
-	 * url generator
+	 * 获取URL链接
 	 * @param string $uri
 	 * @param array $params
 	 * @return string
@@ -481,7 +519,7 @@ abstract class Router{
 		$app_url = Config::get('app/url');
 		$router_mode = Config::get('router/mode');
 		$lower_case_uri = Config::get('router/lower_case_uri') ?: false;
-		list($controller, $action) = self::resolveUri($uri);
+		list($controller, $action) = self::resolveUri($uri, false);
 		if(!$controller){
 			return '#NO_ROUTER_FOUND:'.$uri;
 		}
@@ -497,13 +535,12 @@ abstract class Router{
 
 		$ns_ctrl_mode = strpos($ctrl_name, '/'); //controller 里面包含命名空间模式
 		$url = $app_url;
-
 		if($router_mode == self::MODE_NORMAL){
 			if(!$params){
 				if($action == self::$DEFAULT_ACTION && !$ns_ctrl_mode){
-					$url = $app_url.'index.php?'.self::$ROUTER_KEY."=".($lower_case_uri ? strtolower($ctrl_name) : $ctrl_name);
+					$url = $app_url."?".self::$ROUTER_KEY."=".($lower_case_uri ? strtolower($ctrl_name) : $ctrl_name);
 				} else {
-					$url = $app_url.'index.php?'.self::$ROUTER_KEY."=".($lower_case_uri ? strtolower($ctrl_name) : $ctrl_name)."/".($lower_case_uri ? strtolower($action) : $action);
+					$url = $app_url."?".self::$ROUTER_KEY."=".($lower_case_uri ? strtolower($ctrl_name) : $ctrl_name)."/".($lower_case_uri ? strtolower($action) : $action);
 				}
 			} else{
 				$params[self::$ROUTER_KEY] = $lower_case_uri ? strtolower("$ctrl_name/$action") : "$ctrl_name/$action";
@@ -511,13 +548,12 @@ abstract class Router{
 			}
 			return $url;
 		}
-
-		if($router_mode == self::MODE_REWRITE && $rewrite_url = Rewrite::onGetUrl($uri, $params)){
+		if($router_mode == self::MODE_REWRITE && $rewrite_url = Rewrite::onGetUrl("$ctrl_name/$action", $params)){
 			return $rewrite_url;
 		}
-		//normal mode
+		//path模式，检测url中是否包含？，如果不包含，则后缀添加斜杠
 		if($router_mode == self::MODE_PATH){
-			$url .= stripos($url, '.php') !== false ? '' : 'index.php/';
+			$url .= stripos($url, '?') !== false ? '' : "/";
 		}
 		$p = "$ctrl_name";
 		if($params || strcasecmp($action, self::$DEFAULT_ACTION) != 0 || $ns_ctrl_mode){
@@ -529,13 +565,14 @@ abstract class Router{
 		$str = self::buildParam($params, $router_mode);
 		return $url.($str ? "$p/$str" : $p);
 	}
-
+	
 	/**
 	 * 产生表单action
 	 * @param string $uri
 	 * @param array $params
 	 * @param array $fields_exclude_from_current_query 保留当前URL中的查询数据
 	 * @return string
+	 * @throws \Lite\Exception\Exception
 	 */
 	public static function getUrlByFilter($uri = '', $params = array(), $fields_exclude_from_current_query = array()){
 		$params = $params ?: array();
@@ -548,7 +585,7 @@ abstract class Router{
 		}
 		return static::getUrl($uri, $params);
 	}
-
+	
 	/**
 	 * 静态资源url规则
 	 * 规则：/ 为开始的url，直接返回应用根目录
@@ -558,12 +595,13 @@ abstract class Router{
 	 * @param  string $file_name
 	 * @param  string $type
 	 * @return string
+	 * @throws \Lite\Exception\Exception
 	 */
 	public static function getStaticUrl($file_name, $type = 'static'){
-		if(strpos($file_name, '/') === 0){
-			$url = Config::get('app/url').substr($file_name, 1);
-		} else if(strpos($file_name, 'http://') === 0){
+		if(str_start_with($file_name, ['http://', 'https://', '//'])){
 			$url = $file_name;
+		} else if(strpos($file_name, '/') === 0){
+			$url = Config::get('app/url') . substr($file_name, 1);
 		} else{
 			$map = array(
 				'css'    => Config::get('app/css'),
@@ -573,9 +611,9 @@ abstract class Router{
 				'static' => Config::get('app/static')
 			);
 			if($map[strtolower($type)]){
-				$url = $map[strtolower($type)].$file_name;
+				$url = $map[strtolower($type)] . $file_name;
 			} else{
-				$url = Config::get('app/static').$file_name;
+				$url = Config::get('app/static') . $file_name;
 			}
 		}
 		//event
@@ -588,7 +626,8 @@ abstract class Router{
 	 * 调用js路径
 	 * @param string $file_name
 	 * @return string
-	 **/
+	 * @throws \Lite\Exception\Exception
+	 */
 	public static function getJsUrl($file_name){
 		return static::getStaticUrl($file_name, 'js');
 	}
@@ -597,7 +636,8 @@ abstract class Router{
 	 * 调用css路径
 	 * @param string $file_name
 	 * @return string
-	 **/
+	 * @throws \Lite\Exception\Exception
+	 */
 	public static function getCssUrl($file_name){
 		return static::getStaticUrl($file_name, 'css');
 	}
@@ -606,7 +646,8 @@ abstract class Router{
 	 * 调用img路径
 	 * @param string $file_name
 	 * @return string
-	 **/
+	 * @throws \Lite\Exception\Exception
+	 */
 	public static function getImgUrl($file_name){
 		return static::getStaticUrl($file_name, 'img');
 	}
@@ -615,7 +656,8 @@ abstract class Router{
 	 * 调用flash路径
 	 * @param string $file_name
 	 * @return string
-	 **/
+	 * @throws \Lite\Exception\Exception
+	 */
 	public static function getFlashUrl($file_name){
 		return static::getStaticUrl($file_name, 'flash');
 	}
@@ -643,6 +685,7 @@ abstract class Router{
 	 * 获取当前action页面url
 	 * @param array $param
 	 * @return string
+	 * @throws \Lite\Exception\Exception
 	 */
 	public static function getCurrentActionPageUrl($param = array()){
 		$ctrl = static::getController();
@@ -654,7 +697,7 @@ abstract class Router{
 	 * 页面302, 301跳转
 	 * @param string $uri 控制url
 	 * @param array|string $args2 query参数
-	 * @param int $status_code
+	 * @param int $status_code 状态
 	 */
 	public static function jumpTo($uri = null, $args2 = null, $status_code = 302){
 		$args = func_get_args();

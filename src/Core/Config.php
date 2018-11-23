@@ -1,7 +1,6 @@
 <?php
 namespace Lite\Core;
 use Lite\Exception\Exception;
-use function Lite\func\dump;
 
 /**
  * 配置项基础类
@@ -23,7 +22,7 @@ abstract class Config {
 	 * @param string $uri 配置项key，格式如：myconfig/configitem
 	 * @param bool $force_exists 是否要求配置项必须存在，如果为true，则配置项不存在时，系统会抛异常
 	 * @param bool $refresh
-	 * @return array|null
+	 * @return mixed
 	 * @throws \Lite\Exception\Exception
 	 */
 	public static function get($uri, $force_exists=false, $refresh=false){
@@ -46,7 +45,7 @@ abstract class Config {
 		}
 		return null;
 	}
-
+	
 	/**
 	 * 设置配置到文件
 	 * @todo 当前方法未设定 self::$CONFIGS，应当需要设定
@@ -54,6 +53,7 @@ abstract class Config {
 	 * @param mixed $data 数据
 	 * @param bool $over_write_all 是否全部设置覆盖，缺省为部分覆盖
 	 * @return bool
+	 * @throws \Lite\Exception\Exception
 	 */
 	public static function set($uri, $data, $over_write_all=false){
 		$keys = explode('/', $uri);
@@ -88,12 +88,13 @@ abstract class Config {
 			"return ".var_export($config, true).";";
 		return !!file_put_contents($file, $content);
 	}
-
+	
 	/**
 	 * @param $uri
 	 * @param $data
 	 * @param null $over_write_all
 	 * @return bool
+	 * @throws \Lite\Exception\Exception
 	 */
 	public static function save($uri, $data, $over_write_all=null){
 		if(self::set($uri, $data, $over_write_all)){
@@ -183,7 +184,7 @@ abstract class Config {
 				break;
 
 			case 'router':
-				self::assignConfig($config['mode'], Router::MODE_PATH);
+				self::assignConfig($config['mode'], Router::MODE_NORMAL);
 				self::assignConfig($config['router_key'], Router::DEFAULT_ROUTER_KEY);
 				self::assignConfig($config['lower_case_uri'], true);
 				self::assignConfig($config['controller_key'], 'mod');

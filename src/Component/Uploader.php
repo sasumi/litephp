@@ -1,7 +1,6 @@
 <?php
 namespace Lite\Component;
 use Lite\Exception\Exception;
-use function Lite\func\dump;
 use function Lite\func\format_size;
 use function Lite\func\plain_items;
 use function Lite\func\restructure_files;

@@ -9,10 +9,7 @@ use Lite\Crud\ControllerInterface as CI;
 use Lite\DB\Model;
 use Lite\DB\Query;
 use Lite\Exception\Exception;
-use function Lite\func\array_clear_fields;
 use function Lite\func\array_filter_subtree;
-use function Lite\func\array_group;
-use function Lite\func\dump;
 
 /**
  * CRUD访问模式基类
@@ -48,7 +45,7 @@ abstract class AbstractController extends CoreController{
 
 	/**
 	 * 获取关联模型实例
-	 * @return Model|ModelInterface
+	 * @return Model
 	 * @throws Exception
 	 */
 	protected function getModelInstance(){
@@ -193,14 +190,15 @@ abstract class AbstractController extends CoreController{
 		}
 		return array();
 	}
-
+	
 	/**
 	 * 列表
 	 * @param $search
-	 * @return Result
-	 * @throws Exception
+	 * @param array|null $post
+	 * @return array
+	 * @throws \Lite\Exception\Exception
 	 */
-	public function index($search){
+	public function index($search, $post=null){
 		/** @var CI|AbstractController $this */
 		$this->checkSupport(CI::OP_INDEX);
 
@@ -347,25 +345,23 @@ abstract class AbstractController extends CoreController{
 		$pk = $ins->getPrimaryKey();
 		$pk_val = (int)$get[$pk];
 		$defs = $ins->getPropertiesDefine();
-
+		$instance = $ins::findOneByPkOrFail($pk_val);
+		
 		foreach($quick_update_fields as $field){
 			if(isset($get[$field])){
-				$instance = $ins::findOneByPk($pk_val);
-				if($instance) {
-					$instance->setValue($field, $get[$field]);
-					$instance->save();
-					return new Result($ins->getModelDesc().$defs[$field]['alias'].'更新成功', true);
-				}
+				$instance->setValue($field, $get[$field]);
+				$instance->save();
+				return new Result($ins->getModelDesc().$defs[$field]['alias'].'更新成功', true);
 			}
 		}
 		return new Result('操作失败，请刷新页面后重试');
 	}
-
+	
 	/**
 	 * 更新
 	 * @param $get
 	 * @param $post
-	 * @return Result
+	 * @return array|\Lite\Core\Result
 	 * @throws Exception
 	 */
 	public function update($get, $post){
@@ -380,17 +376,15 @@ abstract class AbstractController extends CoreController{
 
 		$pk_val = (int)$get[$pk];
 		if($pk_val) {
-			$ins = $ins::findOneByPk($pk_val);
+			$ins = $ins::findOneByPkOrFail($pk_val);
 		}
 		if($post) {
 			$ins->setValues($post);
 			$ins->save();
-			return new Result(($pk_val ? $ins->getModelDesc().'更新' : '新增').'成功', true, array(
-				$pk => $ins->$pk,
-			), $this->getBackUrl());
+			return new Result(($pk_val ? $ins->getModelDesc().'更新' : '新增').'成功', true, $ins->toArray(), $this->getBackUrl());
 		}
 
-		/** @var MultiLevelModelInterface|ModelInterface|Model $ins */
+		/** @var MultiLevelModelInterface|Model $ins */
 		if($ins instanceof MultiLevelModelInterface){
 			$parent_id_field = $ins->getParentIdField();
 			$def = $ins->getPropertiesDefine($parent_id_field);
@@ -437,12 +431,12 @@ abstract class AbstractController extends CoreController{
 		unset($extra_params[Router::$ROUTER_KEY]);
 		unset($extra_params['ref']);
 		$defines = $ins->getEntityPropertiesDefine();
-
+		
 		return array(
-			'defines' => $defines,
-			'update_fields' => $this->getOpFields(CI::OP_UPDATE),
+			'defines'        => $defines,
+			'update_fields'  => $this->getOpFields(CI::OP_UPDATE),
 			'model_instance' => $ins,
-			'extra_params' => $extra_params,
+			'extra_params'   => $extra_params,
 			'operation_list' => $operation_list,
 		);
 	}
@@ -492,7 +486,7 @@ abstract class AbstractController extends CoreController{
 		$defines = $ins->getEntityPropertiesDefine();
 
 		$pk_val = (int)$get[$pk];
-		$ins = $ins::findOneByPk($pk_val);
+		$ins = $ins::findOneByPkOrFail($pk_val);
 		if(!$ins){
 			throw new Exception('DATA NO FOUND');
 		}

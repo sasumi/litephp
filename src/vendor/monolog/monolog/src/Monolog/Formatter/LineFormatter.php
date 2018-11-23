@@ -11,8 +11,6 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
-
 /**
  * Formats incoming records into a one-line string
  *

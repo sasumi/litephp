@@ -1,6 +1,5 @@
 <?php
 namespace Lite\Component;
-use function Lite\func\dump;
 
 /**
  * 客户端信息获取类

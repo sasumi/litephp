@@ -5,7 +5,6 @@ namespace Lite\Core;
 use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
 use function Lite\func\array_keys_exists;
-use function Lite\func\dump;
 use function Lite\func\is_function;
 
 /**
@@ -32,6 +31,9 @@ final class Rewrite{
 	const HOLDER_REG_DIG = '(\d+)';
 	const HOLDER_REG_WORD = '(\w+)';
 	
+	/**
+	 * 占位符类型表
+	 */
 	const HOLDER_MAP = array(
 		self::HOLDER_TYPE_DIG  => self::HOLDER_REG_DIG,
 		self::HOLDER_TYPE_ANY  => self::HOLDER_REG_ANY,
@@ -39,9 +41,10 @@ final class Rewrite{
 	);
 	
 	/**
-	 * instance mode
+	 * 单例化
 	 * @param array $rules
 	 * @return Rewrite
+	 * @throws \Lite\Exception\Exception
 	 */
 	private static function instance($rules = array()){
 		static $ins;
@@ -66,28 +69,31 @@ final class Rewrite{
 	 * @param $path_info
 	 * @param $get
 	 * @return array
-	 * @throws RouterException
+	 * @throws \Lite\Exception\Exception
 	 */
 	public static function onParseRequest($path_info, $get){
 		return self::instance()->parseRequest($path_info, $get);
 	}
 	
 	/**
+	 * 获取链接事件
 	 * @param $uri
 	 * @param $params
 	 * @return array|mixed|null|string
 	 * @throws RouterException
+	 * @throws \Lite\Exception\Exception
 	 */
 	public static function onGetUrl($uri, $params){
 		return self::instance()->buildUrl($uri, $params);
 	}
 	
 	/**
-	 * build url by rewrite rules
+	 * 根据规则构建URL链接
 	 * @param $uri
 	 * @param $params
 	 * @return array|mixed|null|string
 	 * @throws RouterException
+	 * @throws \Lite\Exception\Exception
 	 */
 	public function buildUrl($uri, $params){
 		if(!$this->rules){
@@ -115,7 +121,6 @@ final class Rewrite{
 							$ext_params[$k] = $v;
 						}
 					}
-					
 					if($full_match && $ext_params){
 						throw new RouterException('Rule did not match extra params', null, $ext_params);
 					}
@@ -309,35 +314,35 @@ final class Rewrite{
 	
 	/**
 	 * 替换占位符
-	 * @param $data
+	 * @param array|string $url_mode
 	 * @param $param
 	 * @param array $hit_keys
-	 * @return array
+	 * @return string
 	 */
-	private static function replaceParamHolder($data, $param, &$hit_keys = array()){
-		if(is_array($data)){
-			foreach($data as $k => $v){
-				$data[$k] = self::replaceParamHolder($v, $param, $hit_keys);
+	private static function replaceParamHolder($url_mode, $param, &$hit_keys = array()){
+		if(is_array($url_mode)){
+			foreach($url_mode as $k => $v){
+				$url_mode[$k] = self::replaceParamHolder($v, $param, $hit_keys);
 			}
 		} else{
 			$ks = array();
 			$vs = array();
 			$hit_keys = array();
 			foreach($param as $k => $v){
-				$ks[] = '/\{\$' . preg_quote($k) . '[\:.*]*\}/';
+				$ks[] = '/\{\$' . preg_quote($k) . '[\:\S+]*\}/';
 				$vs[] = str_replace('$', '\$', $v);
-				if(stripos($data, '{$' . $k . '}') !== false){
+				if(stripos($url_mode, '{$' . $k . '}') !== false){
 					$hit_keys[] = $k;
 				}
 			}
-			$data = preg_replace($ks, $vs, $data);
-			$data = preg_replace(self::HOLDER_REG, '', $data); //cleanup left holder
+			$url_mode = preg_replace($ks, $vs, $url_mode);
+			$url_mode = preg_replace(self::HOLDER_REG, '', $url_mode); //cleanup left holder
 		}
-		return $data;
+		return $url_mode;
 	}
 	
 	/**
-	 * add rewrite rule
+	 * 添加重写规则
 	 * @param string $url_mode 路由URL表示，
 	 * <pre>
 	 * 如：news/{$year}/{$month}/{$day} 默认分隔符定义为 \w
@@ -353,7 +358,7 @@ final class Rewrite{
 	}
 	
 	/**
-	 * add rewrite rules
+	 * 批量添加重写规则
 	 * @param $rules
 	 * @param bool $case_sensitive
 	 * @param bool $full_match

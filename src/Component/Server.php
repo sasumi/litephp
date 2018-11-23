@@ -2,7 +2,7 @@
 namespace Lite\Component;
 
 /**
- * 锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷息锟斤拷取锟斤拷
+ * 服务器环境集成类
  * User: sasumi
  */
 class Server {

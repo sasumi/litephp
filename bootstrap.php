@@ -1,6 +1,5 @@
 <?php
 //php version check
-use function Lite\func\dump;
 
 if(version_compare(PHP_VERSION, '5.5.0') < 0){
 	throw new Exception("Required PHP 5.5 or above", 1);

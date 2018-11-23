@@ -18,8 +18,8 @@ spl_autoload_register(function($class)
     }
 });
 
-use Monolog\Logger;
 use Monolog\Handler\FirePHPHandler;
+use Monolog\Logger;
 
 $logger = new Logger('firephp');
 $logger->pushHandler(new FirePHPHandler);

@@ -3,7 +3,8 @@ namespace Lite\Core;
 use Exception;
 
 /**
- * 框架标准返回结果封装，所有Controller的执行结果返回建议使用。尽量避免在controller中echo、die出字符串
+ * 框架标准返回结果封装，所有Controller的执行结果返回建议使用。
+ * 尽量避免在controller中echo、die出字符串
  * User: sasumi
  * Date: 2014/11/18
  * Time: 9:49
@@ -13,7 +14,14 @@ class Result {
 	private $message;
 	private $data;
 	private $jump_url;
-
+	
+	/**
+	 * 对象构造函数
+	 * @param string $message
+	 * @param int $code
+	 * @param null $data
+	 * @param string $jump_url
+	 */
 	public function __construct($message='', $code=1, $data=null, $jump_url=''){
 		$this->data = $data;
 		$this->code = is_bool($code) ? ($code ? 0 : 1) : (int)$code;
@@ -22,7 +30,7 @@ class Result {
 	}
 
 	/**
-	 * quick convert
+	 * 快速转换
 	 * @param $mix
 	 * @param int $code
 	 * @param null $data

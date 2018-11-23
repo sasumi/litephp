@@ -1,5 +1,6 @@
 <ul id="main-nav" class="main-nav">
 	<?php
+	
 	use Lite\Core\Config;
 	use Lite\Core\View;
 	use const Lite\Component\Menu\MENU_KEY_ACTIVE;
@@ -7,7 +8,6 @@
 	use const Lite\Component\Menu\MENU_KEY_TITLE;
 	use const Lite\Component\Menu\MENU_KEY_URI;
 	use function Lite\func\array_first;
-	use function Lite\func\dump;
 	
 	/**
 	 * @var View $viewer

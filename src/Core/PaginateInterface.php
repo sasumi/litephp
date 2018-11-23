@@ -2,7 +2,7 @@
 namespace Lite\Core;
 
 /**
- * 分页抽象类
+ * 分页抽象接口
  */
 interface PaginateInterface {
 	/**

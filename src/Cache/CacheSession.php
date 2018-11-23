@@ -1,11 +1,14 @@
 <?php
 namespace Lite\Cache;
 
+use function Lite\func\session_start_once;
+use function Lite\func\session_write_once;
+
 class CacheSession extends CacheAdapter {
 	private $cache_prefix = 'lp_cs_';
 
 	protected function __construct(array $config=array()){
-		session_start();
+		session_start_once();
 		parent::__construct($config);
 	}
 
@@ -15,6 +18,7 @@ class CacheSession extends CacheAdapter {
 			'data' => $data,
 			'expired' => time()+$expired
 		);
+		session_write_once();
 	}
 
 	private function getName($cache_key){
@@ -34,6 +38,7 @@ class CacheSession extends CacheAdapter {
 		$name = $this->getName($cache_key);
 		if($_SESSION[$name]){
 			unset($_SESSION[$name]);
+			session_write_once();
 		}
 	}
 
@@ -41,6 +46,7 @@ class CacheSession extends CacheAdapter {
 		foreach($_SESSION as $key=>$val){
 			if(strstr($key, $this->cache_prefix)){
 				unset($_SESSION[$key]);
+				session_write_once();
 			}
 		}
 	}

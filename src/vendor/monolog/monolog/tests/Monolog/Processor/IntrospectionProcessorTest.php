@@ -11,8 +11,8 @@
 
 namespace Monolog\Processor;
 
-use Monolog\TestCase;
 use Monolog\Handler\TestHandler;
+use Monolog\TestCase;
 
 class IntrospectionProcessorTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
+ * 又拍云短信发送接口
  * User: sasumi
  * Date: 2014/10/31
  * Time: 10:27

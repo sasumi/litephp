@@ -2,7 +2,6 @@
 namespace Lite\Exception;
 
 use Exception as OrgException;
-use function Lite\func\dump;
 
 /**
  * Lite框架通用异常类

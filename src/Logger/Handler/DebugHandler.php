@@ -33,6 +33,7 @@ class DebugHandler extends AbstractHandler{
 			$data[] = $msg->serialize();
 		}
 		$_SESSION[self::$_SESSION_GUID] = array_merge($_SESSION[self::$_SESSION_GUID], $data);
+		session_write_close();
 	}
 
 	public function read($start, $count){
@@ -42,6 +43,7 @@ class DebugHandler extends AbstractHandler{
 
 	public static function reset(){
 		unset($_SESSION[self::$_SESSION_GUID]);
+		session_write_close();
 	}
 
 	public static function output(){

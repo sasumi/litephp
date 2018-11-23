@@ -1,7 +1,6 @@
 <?php
 namespace Lite\DB;
 use Lite\Exception\Exception;
-use function Lite\func\dump;
 
 /**
  * 数据库查询语句抽象类
@@ -71,12 +70,13 @@ class Query {
 	}
 	
 	/**
-	 * @param string $str
+	 * @param array $fields
 	 * @return $this
 	 */
-	public function select($str='*'){
+	public function select(...$fields){
 		$this->operation = self::SELECT;
-		$this->field($str);
+		$fields = $fields ? $fields : ['*'];
+		call_user_func_array([$this, 'field'], $fields);
 		return $this;
 	}
 
@@ -96,7 +96,7 @@ class Query {
 	 * left join
 	 * @param $table
 	 * @param null $on
-	 * @return \Lite\DB\Query
+	 * @return static
 	 */
 	public function leftJoin($table, $on = null){
 		return $this->join($table, $on, self::LEFT_JOIN);
@@ -166,16 +166,17 @@ class Query {
 
 	/**
 	 * 字段
-	 * @param array $fields
+	 * @param array $fields 字符串，或者只使用第一个数组参数
 	 * @return \Lite\DB\Model|\Lite\DB\Query
 	 */
 	public function field(...$fields){
-		$str = join(',', $fields);
-		if($str == '*'){
+		if(is_array($fields[0])){
+			$fields = $fields[0];
+		}
+		if(join(',', $fields) == '*'){
 			return $this;
 		}
-		$fs = explode(',', $str);
-		$this->fields = self::escapeKey($fs);
+		$this->fields = $fields;
 		return $this;
 	}
 
@@ -316,12 +317,12 @@ class Query {
 						foreach($w['compare'] as $_=>$item){
 							$w['compare'][$_] = addslashes($item);
 						}
-						$str .= ($str ? " $k ":'').'`'.$f.'` '.$w['operator'].' (\''.join("','",$w['compare']).'\')';
+						$str .= ($str ? " $k ":'').self::escapeKey($f).' '.$w['operator'].' (\''.join("','",$w['compare']).'\')';
 					} else {
 						$str .= ($str ? " $k ":'').' FALSE';
 					}
 				} else {
-					$str .= ($str ? " $k ":'').'`'.$f.'` '.$w['operator'].' \''.addslashes($w['compare']).'\'';
+					$str .= ($str ? " $k ":'').self::escapeKey($f).' '.$w['operator'].' \''.addslashes($w['compare']).'\'';
 				}
 			} else {
 				$str .= ($str ? " $k (":'(').$f.')';
@@ -333,8 +334,8 @@ class Query {
 	/**
 	 * 排序
 	 * @param string|array $str
-	 * @return Query|Model
-	**/
+	 * @return static|Query|Model
+	 **/
 	public function order($str){
 		if(is_array($str)){
 			$str = join(' ', $str);
@@ -355,7 +356,6 @@ class Query {
 
 	/**
 	 * 设置查询限制，如果提供的参数为0，则表示不进行限制
-	 * @throws Exception
 	 * @return $this
 	 */
 	public function limit(/**$p1,$p2**/){
@@ -387,20 +387,20 @@ class Query {
 	}
 
 	/**
-	 * 给字段名称添加保护（注意，该保护仅为保护SQL关键字，而非SQL注入保护
+	 * 给字段名称添加保护（注意，该保护仅为保护SQL关键字，而非SQL注入保护）
 	 * 自动忽略存在空格、其他查询语句的情况
 	 * @param $field
-	 * @return string
+	 * @return string|array
 	 */
 	public static function escapeKey($field){
 		if(is_array($field)){
 			$ret = array();
 			foreach($field as $val){
-				$ret[] = (strpos($val, '`') === false && strpos($val, ' ') === false && $val != '*') ? "`$val`" : $val;
+				$ret[] = (strpos($val, '`') === false && strpos($val, '.') === false && strpos($val, ' ') === false && $val != '*') ? "`$val`" : $val;
 			}
 			return $ret;
 		} else {
-			return (strpos($field, '`') === false && strpos($field, ' ') === false && $field != '*') ? "`$field`" : $field;
+			return (strpos($field, '`') === false && strpos($field, '.') === false && strpos($field, ' ') === false && $field != '*') ? "`$field`" : $field;
 		}
 	}
 

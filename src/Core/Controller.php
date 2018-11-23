@@ -1,9 +1,8 @@
 <?php
 namespace Lite\Core;
-use function Lite\func\dump;
 
 /**
- * 控制器基础类.,
+ * 控制器基础类
  * User: sasumi
  * Date: 2014/11/18
  * Time: 9:49

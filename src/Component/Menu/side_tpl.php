@@ -1,10 +1,10 @@
 <?php
+
 use Lite\Core\Config;
 use Lite\Core\View;
 use const Lite\Component\Menu\MENU_KEY_ACTIVE;
 use const Lite\Component\Menu\MENU_KEY_TITLE;
 use const Lite\Component\Menu\MENU_KEY_URI;
-use function Lite\func\dump;
 
 /** @var View $view */
 $view = Config::get('app/render');

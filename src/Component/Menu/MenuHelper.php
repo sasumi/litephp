@@ -7,9 +7,6 @@
  */
 namespace Lite\Component\Menu;
 use Lite\Core\Router;
-use function Lite\func\array_clear_empty;
-use function Lite\func\array_first;
-use function Lite\func\dump;
 
 function array_clear(&$array, $handler){
 	if(!$array){

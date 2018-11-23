@@ -319,18 +319,4 @@ abstract class Curl {
 		curl_close($curl);
 		return $content;
 	}
-
-	/**
-	 * 输出HTTP状态
-	 * @param $code
-	 * @return bool
-	 */
-	public static function sendHttpStatus($code){
-		if(isset(Http::$HTTP_STATUS[$code])) {
-			header('HTTP/1.1 '.$code.' '.Http::$HTTP_STATUS[$code]);
-			header('Status:'.$code.' '.Http::$HTTP_STATUS[$code]);        //确保FastCGI模式下正常
-			return true;
-		}
-		return false;
-	}
 }

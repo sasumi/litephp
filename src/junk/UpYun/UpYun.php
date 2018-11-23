@@ -252,7 +252,7 @@ class UpYun {
 	 * @param string $method HTTP REQUEST方法，包括PUT、POST、GET、OPTIONS、DELETE
 	 * @param string $path 除Bucketname之外的请求路径，包括get参数
 	 * @param array $headers 请求需要的特殊HTTP HEADERS
-	 * @param array $body 需要POST发送的数据
+	 * @param string $body 需要POST发送的数据
 	 * @param null $file_handle
 	 * @throws \UpYunAuthorizationException
 	 * @throws \UpYunException
@@ -349,11 +349,6 @@ class UpYun {
                 $data = $this->_getHeadersData($header_string);
                 return count($data) > 0 ? $data : true;
             }
-            //elseif ($method == 'HEAD') {
-            //    //return $this->_get_headers_data(substr($response, 0 , $header_size));
-            //    return $this->_getHeadersData($header_string);
-            //}
-            //return True;
         }
         else {
             $message = $this->_getErrorMessage($header_string);
@@ -433,7 +428,7 @@ class UpYun {
      * @return boolean
      */
     public function deleteFile($path) {
-        $rsp = $this->_do_request('DELETE', $path);
+        return $this->_do_request('DELETE', $path);
     }
 
     /**
@@ -486,7 +481,7 @@ class UpYun {
 	* 设置待上传文件的 Content-MD5 值（如又拍云服务端收到的文件MD5值与用户设置的不一致，将回报 406 Not Acceptable 错误）
     *
     * @deprecated
-	* @param $str （文件 MD5 校验码）
+	* @param string $str （文件 MD5 校验码）
 	* return null;
 	*/
 	public function setContentMD5($str){
@@ -498,7 +493,7 @@ class UpYun {
 	* 如缩略图间隔标志符为 ! ，密钥为 bac，上传文件路径为 /folder/test.jpg ，那么该图片的对外访问地址为： http://空间域名/folder/test.jpg!bac
     *
     * @deprecated
-	* @param $str （文件 MD5 校验码）
+	* @param string $str （文件 MD5 校验码）
 	* return null;
 	*/
 	public function setFileSecret($str){

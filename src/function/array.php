@@ -41,6 +41,21 @@ namespace Lite\func {
 	}
 
 	/**
+	 * shuffle objects, key original assoc key
+	 * @param $objects
+	 * @return array
+	 */
+	function object_shuffle($objects){
+		$keys = array_keys($objects);
+		shuffle($keys);
+		$tmp = [];
+		foreach($keys as $k){
+			$tmp[$k] = $objects[$k];
+		}
+		return $tmp;
+	}
+
+	/**
 	 * @param array $keys
 	 * @param array $arr
 	 * @return bool
@@ -313,7 +328,7 @@ namespace Lite\func {
 	/**
 	 * array sort by specified key
 	 * @example: array_orderby($data, 'volume', SORT_DESC, 'edition', SORT_ASC);
-	 * @param mix
+	 * @param mixed
 	 * @return mixed
 	 */
 	function array_orderby($src_arr) {
@@ -335,6 +350,30 @@ namespace Lite\func {
 		call_user_func_array('array_multisort', $args);
 		$src_arr = array_pop($args);
 		return $src_arr;
+	}
+	
+	/**
+	 * 数组按照指定key排序
+	 * @param $src_arr
+	 * @param $keys
+	 * @param bool $miss_match_in_head 未命中值是否排列在头部
+	 * @return array
+	 */
+	function array_orderby_keys($src_arr, $keys, $miss_match_in_head = false){
+		if(empty($src_arr)){
+			return $src_arr;
+		}
+		$tmp = [];
+		foreach($keys as $k){
+			if(isset($src_arr[$k])){
+				$tmp[$k] = $src_arr[$k];
+				unset($src_arr[$k]);
+			}
+		}
+		if($src_arr){
+			$tmp = $miss_match_in_head ? array_merge($src_arr, $tmp) : array_merge_after($tmp, $src_arr);
+		}
+		return $tmp;
 	}
 
 	/**
@@ -369,6 +408,25 @@ namespace Lite\func {
 		}
 		return $arr;
 	}
+	
+	/**
+	 * check null in array
+	 * matched exp: [], [null], ['',null]
+	 * mismatched exp: ['']
+	 * @param array $arr
+	 * @return bool
+	 */
+	function null_in_array(array $arr){
+		if(!$arr){
+			return true;
+		}
+		foreach($arr as $item){
+			if($item === null){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * filter array by specified keys
@@ -391,17 +449,18 @@ namespace Lite\func {
 	function assert_array_has_keys($arr, $keys){
 		foreach($keys as $key){
 			if(!array_key_exists($key, $arr)){
-				throw new Exception('Array key no exists:'.$key);
+				throw new \Exception('Array key no exists:'.$key);
 			}
 		}
 	}
-
+	
 	/**
 	 * 过滤子节点，以目录树方式返回
 	 * @param $parent_id
 	 * @param $all
 	 * @param array $opt
 	 * @param int $level
+	 * @param array $group_by_parents
 	 * @return array
 	 */
 	function array_filter_subtree($parent_id, $all, $opt = array(), $level = 0, $group_by_parents = array()){
@@ -534,5 +593,19 @@ namespace Lite\func {
 			}
 		}
 		return $ret_array;
+	}
+	
+	/**
+	 * 根据指定下标获取多维数组所有值，无下标时获取所有
+	 * @param $key
+	 * @param array $arr
+	 * @return array|mixed
+	 */
+	function array_value_recursive(array $arr,$key=''){
+		$val = array();
+		array_walk_recursive($arr, function($v, $k) use($key, &$val){
+			if(!$key || $k == $key) array_push($val, $v);
+		});
+		return $val;
 	}
 }

@@ -2,7 +2,10 @@
 namespace Lite\Component;
 use Lite\Core\Config;
 use Lite\Core\Hooker;
-use function Lite\func\dump;
+use function Lite\func\session_start_once;
+use function Lite\func\session_write_once;
+
+session_start_once();
 
 /**
  * 权限控制基类
@@ -39,7 +42,7 @@ abstract class AccessAdapter {
 	/**
 	 * 单例
 	 * @param array $config
-	 * @return self
+	 * @return static
 	 */
 	public static function instance(array $config=array()){
 		if(!static::$instance){
@@ -108,17 +111,17 @@ abstract class AccessAdapter {
 
 	/**
 	 * 获取登录用户信息
-	 * @return array | null
+	 * @return mixed
 	 */
 	public function getLoginInfo(){
 		$session_uid = $_SESSION[$this->session_name];
 		if($session_uid){
 			return $this->getUserInfoFromId($session_uid);
 		}
-
 		if($this->cookie_expired){
 			$cookie_uid = $_COOKIE[$this->cookie_name];
 			$cookie_sid = $_COOKIE[$this->cookie_sid_name];
+			
 			if($this->encryptUid($cookie_uid) == $cookie_sid){
 				$user_info = $this->getUserInfoFromId($cookie_uid);
 				if($user_info){
@@ -138,6 +141,7 @@ abstract class AccessAdapter {
 	public function loginById($uid){
 		Hooker::fire(self::EVENT_BEFORE_LOGIN, $uid);
 		$_SESSION[$this->session_name] = $uid;
+		session_write_close();
 
 		$result = null;
 		if($this->cookie_expired){
@@ -180,7 +184,11 @@ abstract class AccessAdapter {
 	 */
 	public function logout(){
 		Hooker::fire(self::EVENT_BEFORE_LOGOUT);
+		if(!headers_sent()){
+			session_start();
+		}
 		unset($_SESSION[$this->session_name]);
+		session_write_once();
 		setcookie($this->cookie_name, '', 0, $this->cookie_path, $this->cookie_domain);
 		setcookie($this->cookie_sid_name, '', 0, $this->cookie_path, $this->cookie_domain);
 		Hooker::fire(self::EVENT_AFTER_LOGOUT);

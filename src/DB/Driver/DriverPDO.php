@@ -5,7 +5,6 @@ use Lite\DB\Query;
 use Lite\Exception\Exception;
 use PDO as PDO;
 use PDOStatement as PDOStatement;
-use function Lite\func\dump;
 
 /**
  *
@@ -30,12 +29,13 @@ class DriverPDO extends DBAbstract {
 	 * @var array
 	 */
 	private static $PDO_TYPE_MAP = array(
-		'bool'   => PDO::PARAM_BOOL,
-		'null'   => PDO::PARAM_BOOL,
-		'int'    => PDO::PARAM_INT,
-		'float'  => PDO::PARAM_INT,
-		'double' => PDO::PARAM_INT,
-		'string' => PDO::PARAM_STR,
+		'bool'    => PDO::PARAM_BOOL,
+		'null'    => PDO::PARAM_BOOL,
+		'int'     => PDO::PARAM_INT,
+		'float'   => PDO::PARAM_INT,
+		'decimal' => PDO::PARAM_INT,
+		'double'  => PDO::PARAM_INT,
+		'string'  => PDO::PARAM_STR,
 	);
 
 	/**
@@ -47,24 +47,45 @@ class DriverPDO extends DBAbstract {
 		if(!$re_connect && $this->conn){
 			return $this->conn;
 		}
+		
+		//process dns
 		if($config['dns']){
 			$dns = $config['dns'];
-		}
-		else if($config['type'] == 'sqlite'){
-			$dns = 'sqlite:' . $config['host'];
-		}else{
+		} else if($config['type'] == 'sqlite'){
+			$dns = 'sqlite:'.$config['host'];
+		} else{
 			$dns = "{$config['type']}:dbname={$config['database']};host={$config['host']}";
 			if($config['port']){
 				$dns .= ";port={$config['port']}";
 			}
+			if($config['charset']){
+				$dns .= ";charset={$config['charset']}";
+			}
 		}
-		$opt  = array();
+		
+		//build connect attribute
+		$timeout = $config['connect_timeout'] ?: ini_get('max_execution_time');
+		$opt = [
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		];
+		if($timeout){
+			$opt[PDO::ATTR_TIMEOUT] = $timeout;
+		}
 		if($config['pconnect']){
 			$opt[PDO::ATTR_PERSISTENT] = true;
 		}
-
-		$conn = new PDO($dns, $config['user'], $config['password'], $opt);
-		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		
+		//connect & process windows encode issue
+		if(stripos(PHP_OS, 'win') !== false){
+			try{
+				$conn = new PDO($dns, $config['user'], $config['password'], $opt);
+			} catch(\PDOException $e){
+				$msg = '数据库连接失败：“'.mb_convert_encoding($e->getMessage(), 'utf-8', 'gb2312').'”，HOST：'.$config['host'];
+				throw new \PDOException($msg, $e->getCode(), $e);
+			}
+		} else{
+			$conn = new PDO($dns, $config['user'], $config['password'], $opt);
+		}
 		$this->conn = $conn;
 		return $conn;
 	}
@@ -82,7 +103,6 @@ class DriverPDO extends DBAbstract {
 	 * database query function
 	 * @param string|Query $sql
 	 * @return PDOStatement
-	 * @throws Exception
 	 */
 	public function dbQuery($sql){
 		$this->_last_query_result = null;
@@ -172,29 +192,6 @@ class DriverPDO extends DBAbstract {
 	 */
 	public static function fetchColumn(PDOStatement $rs) {
 		return $rs->fetchColumn();
-	}
-
-	/**
-	 * get data count
-	 * @param string $sql
-	 * @return integer
-	 */
-	public function getCount($sql) {
-		$sql .= '';
-		$sql = str_replace(array("\n", "\r"), '', $sql);
-		if(preg_match('/^\s*SELECT.*?\s+FROM\s+/i', $sql)){
-			if(preg_match('/\sGROUP\s+by\s/i', $sql) ||
-				preg_match('/^\s*SELECT\s+DISTINCT\s/i', $sql)){
-				$sql = "SELECT COUNT(*) AS __NUM_COUNT__ FROM ($sql) AS cnt_";
-			} else {
-				$sql = preg_replace('/^\s*select.*?\s+from/i', 'SELECT COUNT(*) AS __NUM_COUNT__ FROM', $sql);
-			}
-			$result = $this->getOne(new Query($sql));
-			if($result){
-                return (int) $result['__NUM_COUNT__'];
-			}
-		}
-		return 0;
 	}
 
 	/**

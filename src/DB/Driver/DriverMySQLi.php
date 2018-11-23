@@ -1,35 +1,20 @@
 <?php
 namespace Lite\DB\Driver;
 
-use Lite\DB\Query;
 use Lite\Exception\Exception;
 use mysqli;
 use mysqli_result;
 
-class DriverMysqli extends DBAbstract{
+/**
+ * MYSQLi驱动类
+ * @package Lite\DB\Driver
+ */
+class DriverMySQLi extends DBAbstract{
 	/** @var \mysqli $conn */
 	private $conn;
 
 	public function dbQuery($query){
 		return $this->conn->query($query.'');
-	}
-
-	public function getCount($sql){
-		$sql .= '';
-		$sql = str_replace(array("\n", "\r"), '', $sql);
-		if(preg_match('/^\s*SELECT.*?\s+FROM\s+/i', $sql)){
-			if(preg_match('/\sGROUP\s+by\s/i', $sql) ||
-				preg_match('/^\s*SELECT\s+DISTINCT\s/i', $sql)){
-				$sql = "SELECT COUNT(*) AS __NUM_COUNT__ FROM ($sql) AS cnt_";
-			} else {
-				$sql = preg_replace('/^\s*select.*?\s+from/i', 'SELECT COUNT(*) AS __NUM_COUNT__ FROM', $sql);
-			}
-			$result = $this->getOne(new Query($sql));
-			if($result){
-				return (int) $result['__NUM_COUNT__'];
-			}
-		}
-		return 0;
 	}
 
 	public function getAffectNum(){
@@ -56,7 +41,7 @@ class DriverMysqli extends DBAbstract{
 	}
 
 	public function getLastInsertId(){
-		$this->conn->insert_id;
+		return $this->conn->insert_id;
 	}
 
 	public function commit(){
@@ -74,13 +59,12 @@ class DriverMysqli extends DBAbstract{
 	public function cancelTransactionState(){
 		$this->conn->autocommit(false);
 	}
-
+	
 	/**
 	 * connect to specified config database
 	 * @param array $config
 	 * @param boolean $re_connect 是否重新连接
-	 * @throws Exception
-	 * @return resource
+	 * @return void
 	 */
 	public function connect(array $config, $re_connect = false){
 		$conn = new mysqli($config['host'], $config['user'], $config['password'], $config['database'], $config['port']);

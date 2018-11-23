@@ -3,7 +3,6 @@ namespace Lite\Cli;
 
 use Lite\Component\Server;
 use PDO;
-use function Lite\func\dump;
 
 abstract class CodeGenerator{
 	protected static function getPath($key){
@@ -34,6 +33,10 @@ abstract class CodeGenerator{
 
 	protected static function getModelNameSpace(){
 		return static::getNameSpace()."\\model";
+	}
+	
+	protected static function getTableTpl(){
+		return __DIR__ . '/table.tpl';
 	}
 
 	protected static function generateModel($table_name, $model_name = '', $overwrite){
@@ -161,7 +164,7 @@ abstract class CodeGenerator{
 
 		$class_const_string = static::getConstString($meta_list);
 
-		$str = static::parserTpl(file_get_contents(__DIR__ . '/table.tpl'), array(
+		$str = static::parserTpl(file_get_contents(static::getTableTpl()), array(
 			'namespace'          => static::getTableNameSpace(),
 			'generate_date'      => date('Y-m-d'),
 			'generate_time'      => date('H:i:s'),
@@ -213,7 +216,7 @@ abstract class CodeGenerator{
 
 	protected static function getTableDesc($table){
 		$conn = static::getDbConn();
-		$st = $conn->prepare('SHOW CREATE table ' . $table);
+		$st = $conn->prepare('SHOW CREATE table `' . $table.'`');
 		$st->execute();
 		$ret = array();
 		while($r = $st->fetch(PDO::FETCH_ASSOC)){
@@ -266,6 +269,8 @@ abstract class CodeGenerator{
 			$type = 'float';
 		} else if(stripos($meta_type, 'double') !== false){
 			$type = 'double';
+		} else if(stripos($meta_type, 'decimal') !== false){
+			$type = 'float';
 		}
 		return $type;
 	}
@@ -287,7 +292,7 @@ abstract class CodeGenerator{
 
 	protected static function getFieldPrecision($meta){
 		$type = static::getFieldType($meta);
-		if(in_array($type, array('float', 'double'))){
+		if(in_array($type, array('float', 'double', 'decimal'))){
 			if(preg_match('/,(\d+)\)/', $meta['Type'], $matches)){
 				return (int)$matches[1];
 			}
@@ -298,8 +303,16 @@ abstract class CodeGenerator{
 	protected static function getFieldType($meta){
 		$a = array(
 			'char',
+			'varchar',
+
 			'int',
+			'tinyint',
+			'smallint',
+			'mediumint',
+			'bigint',
+
 			'float',
+			'decimal',
 			'double',
 			'bool',
 			'enum',
@@ -308,7 +321,8 @@ abstract class CodeGenerator{
 			'datetime',
 			'date',
 			'time',
-			'blob'
+			'blob',
+			'json'
 		);
 
 		$t = $meta['Type'];
@@ -328,9 +342,12 @@ abstract class CodeGenerator{
 				return 'rich_text';
 		}
 		foreach($a as $k){
-			if(stripos($t, $k) !== false){
-				if($k == 'char'){
+			if(stripos($t, $k) === 0){
+				if(strpos($k, 'char') !== false){
 					return 'string';
+				}
+				if(strpos($k, 'int') !== false){
+					return 'int';
 				}
 				return $k;
 			}
@@ -378,14 +395,22 @@ abstract class CodeGenerator{
 			$str .= $unique ? "{$t}\t'unique' => true,\n" : '';
 
 			if($meta['Default'] !== null){
-				$def = addslashes($meta['Default']);
-				if($def == 'CURRENT_TIMESTAMP' && in_array($type, ['timestamp', 'datetime'])){
-					$str .= "{$t}\t'default' => date('Y-m-d H:i:s'),\n";
-				} else if(in_array($type, array('string', 'date', 'datetime', 'time', 'timestamp', 'enum'))){
-					$str .= "{$t}\t'default' => '$def',\n";
-				} else{
-					$str .= "{$t}\t'default' => $def,\n";
+				if($type == 'set' && false){
+					$def = explode(',', $meta['Default']) ?: array();
+					$def_str = $def ? "array('".join("','", $def)."')" : 'array()';
+					$str .= "{$t}\t'default' => $def_str,\n";
+				} else {
+					$def = addslashes($meta['Default']);
+					if($def == 'CURRENT_TIMESTAMP' && in_array($type, ['timestamp', 'datetime'])){
+						$str .= "{$t}\t'default' => date('Y-m-d H:i:s'),\n";
+					} else if(in_array($type, array('string', 'date', 'datetime', 'time', 'timestamp', 'enum', 'set'))){
+						$str .= "{$t}\t'default' => '$def',\n";
+					} else{
+						$str .= "{$t}\t'default' => $def,\n";
+					}
 				}
+			}else if($meta['Field'] == 'create_time'){
+				$str .= "{$t}\t'default' => date('Y-m-d H:i:s'),\n";
 			} else if($meta['Null'] != 'NO'){
 				$str .= "{$t}\t'default' => null,\n";
 			}
@@ -472,9 +497,10 @@ abstract class CodeGenerator{
 
 	protected static function getTableMeta($table){
 		$conn = static::getDbConn();
-		$st = $conn->prepare('SHOW FULL COLUMNS FROM ' . $table);
+		$st = $conn->prepare('SHOW FULL COLUMNS FROM `' . $table.'`');
 		$st->execute();
 		$ret = array();
+		$rc = $st->rowCount();
 		while($r = $st->fetch(PDO::FETCH_ASSOC)){
 			$r['Comment'] = trim($r['Comment']);
 			$ret[] = $r;

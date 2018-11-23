@@ -1,0 +1,61 @@
+
+html {height:100%;}
+body {height:100%; overflow:hidden; box-sizing:border-box; background-color:#eee; color:#444; font-family:Microsoft Yahei, SimSun, Courier new, Tahoma, Lucida Grande, serif; font-size:14px; line-height:1.6;}
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {margin:0;padding:0}
+label, input, select {vertical-align:middle}
+q:before, q:after {content:''}
+p {margin:0.5em 0;}
+a {color:#027db7; text-decoration:none;}
+a:hover {color:#00aeff; text-decoration:underline}
+a[target=_blank]:after {content:"◥"; color:gray;}
+a:hover img { outline:1px solid #00aeff;}
+ul {list-style-position:inside; padding:0 0.5em}
+ol {list-style-position:outside; margin-left:1em;}
+ol li {margin:0.5em 0;}
+.main {display:flex; height:100%; box-sizing:border-box;}
+aside {flex:1; max-width:250px; margin:1em 0; border-right:1px solid #fff; position:relative;}
+aside:after {content:""; display:block; height:100%; border-right:1px solid #ccc; position:absolute; right:0; top:0;}
+.article-wrap {flex:4; overflow-y:auto; }
+article {max-width:70%; min-width:960px; margin:1em 0; padding:5px 40px; box-sizing:border-box; counter-reset:h2}
+article h1, article h2, article h3, article h4, article h5, article h6 {font-weight:normal; margin:1em 0 0.5em;}
+article h1 {font-size:30px; margin-top:0;}
+article h2 {font-size:26px; counter-reset:h3}
+article h3 {font-size:20px; counter-reset:h4}
+article h4 {font-size:14px; color:#333;}
+article h2:before, article h3:before, article h4:before {display:inline-block; margin-right:0.5em}
+article h2:before {counter-increment:h2; content:counter(h2) ". "}
+article h3:before {counter-increment:h3; content:counter(h2) "." counter(h3) " "}
+article h4:before {counter-increment:h4; content:counter(h2) "." counter(h3) "." counter(h4) " "}
+article table {border-collapse:collapse; border-spacing:0; box-shadow:0 0 0 5px #e4e4e4; background-color:#fff;}
+article th, article td {border:1px solid #ccc; padding:0.25em 0.5em; text-align:left;}
+article thead tr {background-color:#ddd; text-shadow:1px 1px 1px white;}
+article tbody tr:nth-child(even) {background-color:#eeeeee59;}
+article th {white-space:nowrap;}
+article blockquote {padding:3px 10px; margin:1em 0; border-left:3px solid gray; background-color:#00000014}
+article img {max-width:90%; margin:1em 0; }
+article var {background-color:#a4e6ff; display:inline-block; padding:1px 5px; border-radius:3px; font-size:14px; font-style:normal}
+article sub {display:block; font-size:14px; color:gray;}
+article hr {display:block; height:0; border:none; border-top:1px solid #ccc; border-bottom:1px solid #eee; margin:10px 0;}
+article li ul,
+article li ol {margin-left:1em;}
+article strong {color:black; font-weight:bold}
+article code {color:green; transition:all 0.2s linear; background-color:#ffffff70 !important; max-height:500px; overflow-y:hidden; box-shadow:inset 1px 1px 1px #d2d2d2; display:block; padding:5px 10px; font-size:13px; font-family:Inconsolata, "Source Code Pro", serif;}
+article code:hover {overflow-y:auto; background-color:#fff !important;}
+article q {font-style:italic; color:gray; background-color:#fff;}
+article sup {font-size:8px}
+.x-arts {text-align:right; margin-top:2em}
+
+aside {padding:14px 1em;overflow-y:auto; overflow-x:hidden; text-shadow:1px 1px 1px #fff;}
+aside dl {margin-bottom:2em;}
+aside dt {padding:0.3em 0.5em; border-top:1px solid #ccc;}
+aside .ti {font-size:18px; font-weight:normal; display:block; margin:0 0 1em;}
+aside .ti:before {content:""; display:inline-block; vertical-align:middle; margin-right:0.3em; width:36px; height:36px; background:url("php-gray.png") no-repeat; background-size:contain;}
+aside a {display:block; padding:0.3em 0.5em;}
+aside .active {background-color:#ddd;}
+aside .active a {color:black;}
+@media print {
+	body { background:none; }
+	aside { display:none; }
+	.article-wrap { height:auto; overflow:visible }
+	article { margin:0 auto; padding:0; box-shadow:none; }
+}

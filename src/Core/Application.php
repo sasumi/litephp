@@ -1,7 +1,6 @@
 <?php
 namespace Lite\Core;
 
-use Lite\Api\Daemon;
 use Lite\Component\Http;
 use Lite\Component\Server;
 use Lite\Exception\BizException;
@@ -11,16 +10,11 @@ use Lite\Logger\Logger;
 use Lite\Logger\LoggerLevel;
 use Lite\Logger\Message\CommonMessage;
 use ReflectionClass;
-use function Lite\func\array_last;
 use function Lite\func\decodeURI;
-use function Lite\func\dump;
-use function Lite\func\encodeURIComponent;
 use function Lite\func\file_exists_ci;
 use function Lite\func\file_real_exists;
-use function Lite\func\format_size;
-use function Lite\func\glob_recursive;
+use function Lite\func\microtime_diff;
 use function Lite\func\print_exception;
-use function Lite\func\print_sys_error;
 
 /**
  * Lite框架应用初始化处理类
@@ -30,7 +24,6 @@ use function Lite\func\print_sys_error;
  */
 class Application{
 	const MODE_WEB = 0x01; //普通HTTP web模式
-	const MODE_API = 0x02; //HTTP API模式
 	const MODE_CLI = 0x03; //CLI命令模式（该模式提供代码加载逻辑等，不进行初始化Controller）
 
 	const EVENT_BEFORE_APP_INIT = __CLASS__ . 'EVENT_BEFORE_APP_INIT';
@@ -38,6 +31,8 @@ class Application{
 	const EVENT_AFTER_APP_SHUTDOWN = __CLASS__ . 'EVENT_AFTER_APP_SHUTDOWN';
 	const EVENT_ON_APP_EX = __CLASS__ . 'EVENT_ON_APP_EX';
 	const EVENT_ON_APP_ERR = __CLASS__ . 'EVENT_ON_APP_ERR';
+	
+	public static $init_microtime;
 
 	//application instance
 	private static $instance;
@@ -91,10 +86,6 @@ class Application{
 				$this->initWebMode();
 				break;
 
-			case self::MODE_API:
-				$this->initApiMode();
-				break;
-
 			case self::MODE_CLI:
 				$this->initCLIMode();
 				break;
@@ -102,18 +93,24 @@ class Application{
 			default:
 				throw new Exception('NO SPEC MODE');
 		}
+		
+		if(Hooker::exists(self::EVENT_AFTER_APP_SHUTDOWN)){
+			Hooker::fire(self::EVENT_AFTER_APP_SHUTDOWN, microtime_diff(self::$init_microtime));
+		}
 	}
-
+	
 	/**
 	 * 初始化框架逻辑
 	 * @param null $app_root 项目物理路径
 	 * @param string $namespace app namespace
 	 * @param int $mode app模式（web模式、API模式、cli模式, SRC源码模式）
-	 * @throws Exception
 	 * @return Application
+	 * @throws \Exception
 	 */
 	public static function init($namespace=null, $app_root = null, $mode=self::MODE_WEB){
 		if(!self::$instance){
+			self::$init_microtime = microtime();
+			
 			//BIND APP ERROR
 			set_error_handler(function ($code, $message, $file, $line, $context){
 				Hooker::fire(Application::EVENT_ON_APP_ERR, $code, $message, $file, $line, $context);
@@ -135,23 +132,24 @@ class Application{
 	private static function handleWebException(\Exception $ex){
 		$render = Config::get('app/render');
 
-		//page request mode
-		/** @var View $tmp */
-		$tmp = new $render;
-		$page_mode = $tmp->getRequestType() == View::REQ_PAGE;
-
 		$log_level = ($ex instanceof RouterException) ? LoggerLevel::INFO : LoggerLevel::WARNING;
 		Logger::instance('LITE')->log($log_level, new CommonMessage('APP EX:'.$ex->getMessage(),
 			array('referer'=> $_SERVER['HTTP_REFERER'], 'exception'=>$ex->__toString())));
 
 		//business exception
-		if(($ex instanceof BizException) || !$page_mode){
+		if(($ex instanceof BizException)){
 			$result = new Result($ex->getMessage());
+			/** @var View $tmp */
 			$tmp = new $render($result);
 			$tmp->render();
 		}
 
-		//router exception
+		//调试模式
+		else if(Config::get('app/debug')){
+			print_exception($ex);
+		}
+
+		//路由错误，重定向到404页面
 		else if($ex instanceof RouterException){
 			Http::sendHttpStatus(404);
 			if($page404 = Config::get('app/page404')){
@@ -162,7 +160,8 @@ class Application{
 				}
 			}
 		}
-		//其他类型错误
+
+		//其他类型错误，重定向到错误页
 		else {
 			if($page_error = Config::get('app/pageError')){
 				if(is_callable($page_error)){
@@ -170,18 +169,16 @@ class Application{
 				} else {
 					Http::redirect($page_error);
 				}
-			};
-		}
-
-		//调试模式
-		if(Config::get('app/debug')){
-			print_exception($ex);
+			} else {
+				die("Uncaught exception '".get_class($ex)."' with message '".$ex->getMessage()."'");
+			}
 		}
 		exit;
 	}
-
+	
 	/**
-	 * send http chartset
+	 * send http charset
+	 * @throws \Lite\Exception\Exception
 	 */
 	private static function sendCharset(){
 		if(!headers_sent()){
@@ -232,11 +229,12 @@ class Application{
 	public static function getController(){
 		return self::$controller;
 	}
-
+	
 	/**
 	 * 分发控制器
 	 * @return mixed
 	 * @throws \Lite\Exception\RouterException
+	 * @throws \ReflectionException
 	 */
 	private function dispatch(){
 		$controller = Router::getController();
@@ -245,7 +243,7 @@ class Application{
 		$post = Router::post();
 
 		if(!class_exists($controller)){
-			throw new RouterException('Controller No Found: '.$controller);
+			throw new RouterException('Controller no found: '.$controller);
 		}
 
 		/** @var Controller $ctrl_instance */
@@ -262,14 +260,22 @@ class Application{
 		}
 
 		if(!method_exists($ctrl_instance, $action)){
-			throw new RouterException('Controller Method No Exists: '.$controller.'/'.$action);
+			if(!method_exists($ctrl_instance, '__call')){
+				throw new RouterException('Method no exists: '.$controller.'/'.$action);
+			}
+			//支持__call魔术方法
+			$result = call_user_func(array($ctrl_instance, $action));
+			if($is_ctrl_prototype){
+				$ctrl_instance->__afterExecute($controller, $action, $result);
+			}
+			return $result;
 		}
 
 		//禁止私有方法、静态方法被当做action访问
 		$rc = new ReflectionClass($controller);
 		$m = $rc->getMethod($action);
 		if(!$m->isPublic() || $m->isStatic()){
-			throw new RouterException('Action Should Be Public And Non Static');
+			throw new RouterException('Action should be public and non static');
 		}
 
 		$result = call_user_func(array($ctrl_instance, $action), $get, $post);
@@ -277,25 +283,6 @@ class Application{
 			$ctrl_instance->__afterExecute($controller, $action, $result);
 		}
 		return $result;
-	}
-
-	/**
-	 * 初始化API模式
-	 */
-	private function initApiMode(){
-		Router::$GET = $_GET;
-		Router::$POST = $_POST;
-
-		if(Router::isPut()){
-			$tmp = Router::readInputData();
-			Router::$PUT = $tmp ? json_decode($tmp, true) : array();
-		}
-		if(Router::isDelete()){
-			$tmp = Router::readInputData();
-			Router::$DELETE = $tmp ? json_decode($tmp, true) : array();
-		}
-		self::sendCharset();
-		Daemon::start();
 	}
 
 	/**

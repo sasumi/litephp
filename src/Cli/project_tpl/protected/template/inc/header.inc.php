@@ -1,4 +1,5 @@
 <?php
+
 use Lite\Core\Config as Config;
 use www\ViewBase;
 
