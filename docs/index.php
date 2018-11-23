@@ -7,11 +7,11 @@ include_once dirname(__DIR__).'/bootstrap.php';
 $dir = __DIR__;
 $site = 'LitePHP使用帮助';
 $nav = [
-	'readme.md'  => '开始使用',
-	'install.md' => '安装说明',
-	'config.md'  => '配置说明',
-	'model.md'   => 'MySQL数据模型',
-	'file.md'    => '常规项目文件说明',
+	'../readme.md' => '开始使用',
+	'install.md'   => '安装说明',
+	'config.md'    => '配置说明',
+	'model.md'     => 'MySQL数据模型',
+	'file.md'      => '常规项目文件说明',
 ];
 
 $std_nav = [
@@ -43,7 +43,7 @@ function find_by_index($arr, $index){
 	return [];
 }
 
-$file = $_GET['f'] ?: 'readme.md';
+$file = $_GET['f'] ?: '../readme.md';
 $content = file_get_contents($dir.'/'.$file);
 $content = Parsedown::instance()->text($content);
 ?>
