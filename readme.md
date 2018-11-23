@@ -10,7 +10,7 @@ LitePHP为一款轻量化开发模式的PHP开发框架。框架除了提供快�
 市面第一款以显示声明定义数据库表结构模式进行ORM定义的PHP框架。
 
 ## 流程 
-![](doc/assert/flow.png)
+![](docs/assert/flow.png)
 
 ## HelloWorld
 
