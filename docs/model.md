@@ -119,24 +119,24 @@ class User extends TableUser {
 ## 数据模型操作
 ``` php
 <?php
-	//查找单个用户
-	$user = User::find('id=?',1)->one();
-	
-	//调用User方法
-	var_dump($user->isNormal());
-	
-	//查找单个客户（检测异常）
-	$user = User::find('id=?', 1)->oneOrFail();
-	
-	//批量查找用户 - 全量
-	$user_list = User::find('status="Normal"')->all();
-	
-	//批量查找用户 - 指定页码
-	$user_list = User::find('status="Normal"')->paginate(1);
-	
-	//批量查找用户 - 分页器
-	$paginate = Paginate::instance();
-	$user_list = User::find('status="Normal"')->paginage($paginate);
+//查找单个用户
+$user = User::find('id=?',1)->one();
+
+//调用User方法
+var_dump($user->isNormal());
+
+//查找单个客户（检测异常）
+$user = User::find('id=?', 1)->oneOrFail();
+
+//批量查找用户 - 全量
+$user_list = User::find('status="Normal"')->all();
+
+//批量查找用户 - 指定页码
+$user_list = User::find('status="Normal"')->paginate(1);
+
+//批量查找用户 - 分页器
+$paginate = Paginate::instance();
+$user_list = User::find('status="Normal"')->paginage($paginate);
 ```
 
 ## 字段类型转换规则
@@ -236,14 +236,13 @@ MySQL字段类型转换规则：
 ## 数据表其他处理方法
 * 数据表comment缺省被解析为模型(model)名称
 * 字段comment缺省被解析为alias(字段名称)
-* 未设置default=NULL的字段将被定义为required,	表单元素追加required="required"属性
+* 未设置default=NULL的字段将被定义为required，表单元素追加required="required"属性
 * 备注内包含括号部分,如:(note)，将被解析为字段补充描述(description),追加在输入表单后面,enum,set除外
 * default在不为null情况下,值将被填入默认表单值(新建页面)
 * primary key缺省为readonly，不产生表单元素
 
-## 非法规则
+## 不推荐类型规则
 	1. 声明timestamp类型，实际存储却为int类型
-	2. 声明
 
 ## MySQL数据库建议规范
 1. 数值	

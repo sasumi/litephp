@@ -17,6 +17,8 @@
 | static | 静态资源访问URL路径，以斜杠结尾 | - | 必填 | "/static/" |
 | debug | 是否开启debug调试 | false | 非必填 | true |
 | render | 应用访问URL路径，以斜杠结尾 | ViewBase::class | 非必填 | MyView::class |
+| page404 | 404页面地址，或处理回调 | - | 非必填 | 未配置该项值，项目404直接以message方式显示。如可配置为：<br /> function($err){ echo $err; } |
+| pageError | 程序错误统一地址（500），或处理回调 | - | 非必填 | 同上 |
 
 示例代码：
 ``` php
@@ -43,3 +45,30 @@ return [
 	'mode' => Router::MODE_REWRITE
 ];
 ```
+
+## 自定义配置项
+
+用户可自行新增代码使用配置数据。使用 `Lite\Core\Config` 类可通过多层路径访问获取配置数值。例：
+
+access.inc.php
+
+``` php
+<?php
+    return [
+    'MaxLoginCount' => 3,
+    'DefaultUser' => [
+        'name' => 'Jackson'
+    ]
+]
+```
+
+调用方式：
+
+``` php
+<?php
+    use \Lite\Core\Config;
+    $max_login_count = Config::get('access/MaxLoginCount');  //3
+	$def_user = Config::get('access/DefaultUser'); // ['name'=>'Jackson']
+	$def_user_name = Config::get('access/DefaultUser/name'); // Jackson
+```
+

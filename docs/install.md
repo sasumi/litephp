@@ -15,14 +15,31 @@ PHP 5.6 或以上，需安装以下扩展：
 - php_curl  *[网络请求场景需要]*
 
 PHP 需设置配置项：
-``` apacheconfig
+``` ini
 date.timezone = Asia/Shanghai
 short_open_tag = On
 error_reporting = E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED
 expose_php = Off
 ```
 
+如LitePHP被多个项目同时调用，建议将LitePHP所在目录设置为 PHP Include路径。即在php.ini中开启如下配置：
+
+``` ini
+; 如在windows环境，启用下面代码
+include_path = ".:/LitePHPDir"
+
+; 如在Linux环境，启用以下代码
+include_path = ".:/LitePHPDir"
+```
+
+项目中可统一使用简单方法引入：
+
+``` php
+include 'litephp/bootstrap.php';
+```
+
 ### WebServer环境
+
 如搭建项目为CGI服务（如网站），需假设WebServer服务。LitePHP对web服务无特别要求，仅在使用路由重写方式时，需
 Web服务器提供一下正确的环境配置：
 
@@ -68,8 +85,19 @@ b. 支持访问目录路由重写。
 ### 使用脚手架
 项目中需要自行构建脚手架脚本，在脚本中主动引入boostrap，调用CodeGenerator。
 实际代码如：
+
+script.php
+
 ``` PHP
 use Lite\Cli\CodeGenerator;
 include '../../../litephp/bootstrap.php';
 CodeGenerator::Load();
 ```
+
+实际执行：
+
+``` shell
+php script.php project Helloworld ./
+php script.php allmodel -o
+```
+

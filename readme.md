@@ -68,6 +68,7 @@ class IndexController extends Controller {
 - [配置说明](docs/config.md)
 - [数据模型](docs/model.md)
 - [项目文件范例](docs/file.md)
+- [API接口模式](docs/api.md)
 
 规范
 
