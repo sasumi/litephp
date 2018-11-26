@@ -1,4 +1,7 @@
 # 安装使用
+
+[TOC]
+
 ## 环境要求
 ### 操作系统
 框架对环境所在系统如特殊要求，可使用各种常见Linux发行版、Windows、Mac等环境，能正常运行PHP 5.6+环境即可。经验证过系统环境为 CentOS、Windows xp+。
@@ -36,6 +39,10 @@ b. 支持访问目录路由重写。
 	RewriteRule ^(.*)$ index.php/$1 [QSA,PT,L]
 </IfModule>
 ```
+
+## 代码获取
+
+最新代码请访问 [GitHub](https://github.com/sasumi/litephp) 获取最新代码，或从 [这里](https://github.com/sasumi/litephp/archive/master.zip) 直接下载代码压缩包。
 
 ## 安装初始化
 

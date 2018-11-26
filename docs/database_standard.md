@@ -1,6 +1,9 @@
 # MySQL数据库设计规范与原则
+
+[TOC]
+
 ## MYSQL数据库设计规范   
-  
+
 ### 数据库命名规范  
 * 采用26个英文字母(区分大小写)和0-9的自然数(经常不需要)加上下划线'_'组成;  
 * 命名简洁明确(长度不能超过30个字符);  
@@ -8,7 +11,7 @@
 例如：user, stat, log, 也可以wifi_user, wifi_stat, wifi_log给数据库加个前缀;  
 除非是备份数据库可以加0-9的自然数：user_db_20151210;  
 ```
-  
+
 ### 数据库表名命名规范  
 * 采用26个英文字母(区分大小写)和0-9的自然数(经常不需要)加上下划线'_'组成;  
 * 命名简洁明确,多个单词用下划线'_'分隔;  
@@ -17,7 +20,7 @@
 user_role_right, user_role_right_relation  
 表前缀'user_'可以有效的把相同关系的表显示在一起;  
 ```
-  
+
 ### 数据库表字段名命名规范  
 * 采用26个英文字母(区分大小写)和0-9的自然数(经常不需要)加上下划线'_'组成;  
 * 命名简洁明确,多个单词用下划线'_'分隔; 例如：user_login表字段 user_id, user_name, pass_word, email, ticket, status, mobile, add_time;  
@@ -50,11 +53,11 @@ user_role_right, user_role_right_relation
 
 ```
 备注：往往我们在设计表中不能遵守第三范式,因为合理的沉余字段将会给我们减少join的查询;  
-  例如：相册表中会添加图片的点击数字段,在相册图片表中也会添加图片的点击数字段;  
+例如：相册表中会添加图片的点击数字段,在相册图片表中也会添加图片的点击数字段;  
 ```
 
 ## MYSQL数据库设计原则  
-  
+
 ### 核心原则  
 * 不在数据库做运算;  
 * cpu计算务必移至业务层;  
@@ -90,7 +93,7 @@ select id from t where phone = ’159′ or name = ‘john’;
 select id from t where phone=’159′  
 union  
 select id from t where name=’jonh’  
-``` 
+```
 * 避免负向%;  
 * 慎用count( * );  
 * limit高效分页(limit越大，效率越低);  
