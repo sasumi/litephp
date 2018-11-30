@@ -54,12 +54,12 @@ access.inc.php
 
 ``` php
 <?php
-    return [
-    'MaxLoginCount' => 3,
+return [
+    'MaxLoginCount' => 3，
     'DefaultUser' => [
         'name' => 'Jackson'
     ]
-]
+];
 ```
 
 调用方式：

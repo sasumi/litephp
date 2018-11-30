@@ -40,14 +40,14 @@ include 'litephp/bootstrap.php';
 
 ### WebServer环境
 
-如搭建项目为CGI服务（如网站），需假设WebServer服务。LitePHP对web服务无特别要求，仅在使用路由重写方式时，需
-Web服务器提供一下正确的环境配置：
+如搭建项目为CGI服务（如网站），需假设WebServer服务。LitePHP对web服务无特别要求，仅在使用路由重写方式时，需Web服务器提供一下正确的环境配置：
 
 a. 支持正确URL PathInfo到PHP环境PathInfo的解析映射
 
 b. 支持访问目录路由重写。
 
-以下为Apache路由重写范例：
+以下为Apache路由重写范例（.htaccess 文件内容）：
+
 ``` apacheconfig
 <IfModule mod_rewrite.c>
 	RewriteEngine on

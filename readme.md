@@ -12,10 +12,10 @@ LitePHP为一款轻量化开发模式的PHP开发框架。框架除了提供快�
 3. 代码即数据结构。
 市面第一款以显示声明定义数据库表结构模式进行ORM定义的PHP框架。
 
-## 流程 
-![](docs/assert/flow.png)
+## 流程
+![LitePHP数据处理流程](docs/assert/flow.png)
 
-## HelloWorld
+## HelloWorld示例
 
 文件列表：
 ``` cmd
@@ -64,14 +64,13 @@ class IndexController extends Controller {
 ```
 
 ## 相关文档
+更多关于本框架文档信息，请访问 [GitHub](https://github.com/sasumi/litephp) 。
+
 - [安装说明](docs/install.md)
 - [配置说明](docs/config.md)
 - [数据模型](docs/model.md)
 - [项目文件范例](docs/file.md)
 - [API接口模式](docs/api.md)
-
-规范
-
 - [MySQL数据库规范](docs/DBDesign.md)
 - [PHP 编码检查](docs/inspection.md)
 - [PHPDoc 规范](http://docs.phpdoc.org/references/phpdoc/index.html)
