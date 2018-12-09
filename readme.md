@@ -74,4 +74,5 @@ class IndexController extends Controller {
 - [MySQL数据库规范](docs/DBDesign.md)
 - [PHP 编码检查](docs/inspection.md)
 - [PHPDoc 规范](http://docs.phpdoc.org/references/phpdoc/index.html)
+- [PSR-1 Basic Coding Standard](https://www.php-fig.org/psr/psr-1/) [(中文版)](https://laravel-china.org/topics/2078/psr-specification-psr-1-basic-coding-specification)
 - [PSR-2 Coding Style Guide](https://www.php-fig.org/psr/psr-2/)
