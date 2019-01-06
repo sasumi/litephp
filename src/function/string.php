@@ -42,6 +42,44 @@ function substr_utf8($string, $length, $tail = '...', &$over_length = false){
 }
 
 /**
+ * 转换普通文本到HTML
+ * @param string $text
+ * @param int|null $len
+ * @param string $tail tail string
+ * @param bool $over_length is text over length
+ * @return string html string
+ */
+function text2html($text, $len = null, $tail = '...', &$over_length = false){
+	if($len){
+		$text = substr_utf8($text, $len, $tail, $over_length);
+	}
+	$html = htmlspecialchars($text);
+	$html = str_replace("\r", '', $html);
+	$html = str_replace(array(' ', "\n", "\t"), array('&nbsp;', '<br/>', '&nbsp;&nbsp;&nbsp;&nbsp;'), $html);
+	return $html;
+}
+
+/**
+ * 截取html摘要
+ * @param $html
+ * @param int $len
+ * @return array|string
+ */
+function html_abs($html, $len = 400){
+	$str = str_replace(array("\n", "\r"), "", $html);
+	$str = preg_replace('/<br([^>]*)>/i', '$L', $str);
+	$str = strip_tags($str);
+	$str = html_entity_decode($str, ENT_QUOTES);
+	$str = h($str, $len);
+	$str = preg_replace('/[\\$L]+/', '<br/>', $str);
+
+	//移除头尾空白行
+	$str = preg_replace('/^(<br[^>]*>)*/i', '', $str);
+	$str = preg_replace('/(<br[^>]*>)*$/i', '', $str);
+	return $str;
+}
+
+/**
  * 按照指定边界字符列表，拆分字符串
  * @param array|string $delimiters eg: [',', '-'] or ",-"
  * @param $str
