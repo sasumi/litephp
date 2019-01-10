@@ -33,13 +33,12 @@ class Logger{
 	 * @return \Lite\Logger\Logger
 	 */
 	public static function getInstance($id){
-		/** @var self $ins */
 		foreach(self::$instances as $ins){
 			if($ins->getIdentify() == $id){
 				return $ins;
 			}
 		}
-		return array();
+		return null;
 	}
 
 	/**
@@ -183,7 +182,6 @@ class Logger{
 	 * 记录一个message日志
 	 * @param $level
 	 * @param InterfaceMessage $message
-	 * @return null
 	 */
 	public function log($level, InterfaceMessage $message){
 		$message->setIdentify($this->id);

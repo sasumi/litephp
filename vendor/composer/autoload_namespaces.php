@@ -6,5 +6,4 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = $vendorDir;
 
 return array(
-    'Monolog' => array($vendorDir . '/monolog/monolog/src'),
 );
