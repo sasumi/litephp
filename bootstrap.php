@@ -11,7 +11,6 @@ if(version_compare(PHP_VERSION, '5.5.0') < 0){
 
 //include loader
 include_once __DIR__.'/src/function/autoload.php';
-include_once __DIR__.'/vendor/autoload.php';
 
 //注册自动加载库文件
 spl_autoload_register(function($className){
