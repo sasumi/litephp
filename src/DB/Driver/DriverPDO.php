@@ -43,6 +43,11 @@ class DriverPDO extends DBAbstract {
 	 */
 	private $conn = null;
 
+	/**
+	 * @param array $config
+	 * @param bool $re_connect
+	 * @return \PDO
+	 */
 	public function connect(array $config, $re_connect = false) {
 		if(!$re_connect && $this->conn){
 			return $this->conn;
@@ -64,13 +69,25 @@ class DriverPDO extends DBAbstract {
 		}
 		
 		//build connect attribute
-		$timeout = $config['connect_timeout'] ?: ini_get('max_execution_time');
 		$opt = [
 			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 		];
-		if($timeout){
-			$opt[PDO::ATTR_TIMEOUT] = $timeout;
+
+		//PHP进程最大执行时间
+		$max_exec_time = ini_get('max_execution_time');
+
+		//最大连接超时时间与PHP进程超时时间差值
+		$ttf = 2;
+
+		//用户设定超时时间
+		if($config['connect_timeout'] > 0){
+			$opt[PDO::ATTR_TIMEOUT] = $config['connect_timeout'];
 		}
+		//用户未设定超时时间，使用系统默认超时时间
+		else if(!isset($config['connect_timeout']) && ($max_exec_time - $ttf > 0)){
+			$opt[PDO::ATTR_TIMEOUT] = $max_exec_time - $ttf;
+		}
+
 		if($config['pconnect']){
 			$opt[PDO::ATTR_PERSISTENT] = true;
 		}

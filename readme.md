@@ -57,7 +57,7 @@ IndexController.php
 namespace HelloWorld\controller;
 use Lite\Core\Controller;
 class IndexController extends Controller {
-	public function index(){
+	public function index($search = null, $post = null){
 		echo "Hello World!";
 	}
 }

@@ -351,7 +351,7 @@ namespace Lite\func {
 		$src_arr = array_pop($args);
 		return $src_arr;
 	}
-	
+
 	/**
 	 * 数组按照指定key排序
 	 * @param $src_arr
@@ -374,6 +374,22 @@ namespace Lite\func {
 			$tmp = $miss_match_in_head ? array_merge($src_arr, $tmp) : array_merge_after($tmp, $src_arr);
 		}
 		return $tmp;
+	}
+
+	/**
+	 * 获取数组元素key
+	 * @param $array
+	 * @param $compare_fn
+	 * @return bool|int|string
+	 */
+	function array_index($array, callable $compare_fn){
+		foreach($array as $k=>$v){
+			$ret = $compare_fn($v);
+			if($ret === true){
+				return $k;
+			}
+		}
+		return false;
 	}
 
 	/**

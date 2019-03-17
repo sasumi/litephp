@@ -143,12 +143,12 @@ class ImageProcessor {
 				return imagecreatefrompng($file);
 
 			default:
-				throw new Exception("image type error");
+				throw new Exception("image type error:".$type);
 		}
 	}
 
 	private function getImageTypeFromExt($file){
-		$ext = array_pop(explode('.',$file));
+		$ext = strtolower(array_pop(explode('.',$file)));
 		switch ($ext){
 			case 'jpg':
 			case 'jpeg':
@@ -163,16 +163,26 @@ class ImageProcessor {
 			case 'bmp':
 				return self::TYPE_BMP;
 		}
-		return '';
+		return $ext;
 	}
 
 	public function saveToFile($new_file, $file_type=''){
 		if(!$file_type){
 			$file_type = $this->getImageTypeFromExt($new_file);
 		}
+
 		switch($file_type){
 			case self::TYPE_JPG:
 				imagejpeg($this->image, $new_file);
+				break;
+			case self::TYPE_PNG:
+				imagepng($this->image, $new_file);
+				break;
+			case self::TYPE_GIF:
+				imagegif($this->image, $new_file);
+				break;
+			default:
+				throw new \Exception('image saving handler error:'.$file_type);
 		}
 	}
 }

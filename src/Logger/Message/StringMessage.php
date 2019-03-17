@@ -2,7 +2,6 @@
 namespace Lite\Logger\Message;
 
 /**
- * Created by PhpStorm.
  * User: sasumi
  * Date: 2015/4/15
  * Time: 9:20

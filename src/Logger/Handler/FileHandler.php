@@ -3,7 +3,6 @@ namespace Lite\Logger\Handler;
 use Lite\Logger\Message\AbstractMessage;
 
 /**
- * Created by PhpStorm.
  * User: sasumi
  * Date: 2015/4/15
  * Time: 13:16

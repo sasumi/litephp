@@ -172,7 +172,7 @@ abstract class Router{
 	 * @return mixed
 	 */
 	public static function get($key = null){
-		return !$key ? self::$GET : self::$GET[$key];
+		return !$key ? self::$GET : (isset(self::$GET[$key]) ? self::$GET[$key] : null);
 	}
 	
 	/**
@@ -231,7 +231,7 @@ abstract class Router{
 		}
 
 		//优先query参数
-		if($get[self::$ROUTER_KEY] || $router_mode == self::MODE_NORMAL){
+		if((isset($get[self::$ROUTER_KEY]) && $get[self::$ROUTER_KEY]) || $router_mode == self::MODE_NORMAL){
 			list($controller, $action) = self::resolveUri($get[self::$ROUTER_KEY], true);
 			unset($get[self::$ROUTER_KEY]);
 		} else {

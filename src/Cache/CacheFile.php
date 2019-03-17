@@ -11,7 +11,7 @@ use Lite\Core\Config;
 class CacheFile extends CacheAdapter{
 	protected function __construct(array $config = array()){
 		$config = array_merge(array(
-			'dir' => Config::get('app/root') . 'tmp' . DS . 'filecache' . DS
+			'dir' => Config::get('app/root') . 'tmp' . DIRECTORY_SEPARATOR . 'filecache' . DIRECTORY_SEPARATOR
 		), $config);
 
 		if(!is_dir($config['dir'])){

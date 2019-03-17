@@ -2,8 +2,7 @@
 
 namespace Lite\Component;
 /**
- * Created by PhpStorm.
- * User: cnsas
+ * User: sasumi
  * Date: 2018-07-25
  * Time: 14:40
  */

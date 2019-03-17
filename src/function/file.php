@@ -256,3 +256,18 @@ function log($file, $content, $max_size = 10*1024*1024, $max_files = 5, $pad_str
 	}
 	return file_put_contents($file, $content, FILE_APPEND);
 }
+
+/**
+ * log in temporary directory
+ * @param $filename
+ * @param $content
+ * @param int $max_size
+ * @param int $max_files
+ * @param null $pad_str
+ * @return bool|int
+ */
+function log_tmp_file($filename, $content, $max_size = 10*1024*1024, $max_files = 5, $pad_str = null){
+	$tmp_dir = sys_get_temp_dir();
+	$file = $tmp_dir.'/'.$filename;
+	return log($file, $content, $max_size, $max_files, $pad_str);
+}

@@ -5,7 +5,6 @@ use Lite\Logger\Message\AbstractMessage;
 use Lite\Logger\Message\InterfaceMessage;
 
 /**
- * Created by PhpStorm.
  * User: sasumi
  * Date: 2015/4/14
  * Time: 17:16

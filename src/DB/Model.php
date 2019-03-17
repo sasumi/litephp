@@ -11,6 +11,8 @@ use Lite\Exception\RouterException;
 use function Lite\func\array_clear_fields;
 use function Lite\func\array_first;
 use function Lite\func\array_group;
+use function Lite\func\array_index;
+use function Lite\func\array_orderby;
 use function Lite\func\time_range_v;
 
 /**
@@ -719,6 +721,63 @@ abstract class Model extends DAO{
 			return array_values(array_first($data));
 		}
 	}
+
+	/**
+	 * 对象重排序
+	 * 列表中以数值从大到小进行排序，每次调用将重新计算所有排序
+	 * 用法：<pre>
+	 * $category->render(true, 'sort', 'status=?', $enabled);
+	 * </pre>
+	 * @param bool $move_up 是否为向上移动
+	 * @param string $sort_key 排序字段名称，默认为sort
+	 * @param string $statement 排序范围过滤表达式，默认为所有数据
+	 * @return bool
+	 */
+	public function reorder($move_up, $sort_key = 'sort', $statement = ''){
+		$pk = $this->getPrimaryKey();
+		$pk_v = $this->{$pk};
+		$query = static::find()->field($pk, $sort_key);
+
+		//query statement
+		if($statement){
+			$statement_list = func_get_args();
+			$statement_list = array_slice($statement_list, 3);
+			if($statement_list){
+				call_user_func_array([$query, 'where'], $statement_list);
+			}
+		}
+
+		$sort_list = $query->all(true);
+		$count = count($sort_list);
+		$sort_list = array_orderby($sort_list, $sort_key, SORT_DESC);
+		$current_idx = array_index($sort_list, function($item) use ($pk, $pk_v){
+			return $item[$pk] == $pk_v;
+		});
+		if($current_idx === false){
+			return false;
+		}
+
+		//已经是置顶或者置底
+		if($move_up && $current_idx == 0 || (!$move_up && $current_idx == $count-1)){
+			return true;
+		}
+
+		if($move_up){
+			$tmp = $sort_list[$current_idx-1];
+			$sort_list[$current_idx-1] = $sort_list[$current_idx];
+			$sort_list[$current_idx] = $tmp;
+		} else {
+			$tmp = $sort_list[$current_idx+1];
+			$sort_list[$current_idx+1] = $sort_list[$current_idx];
+			$sort_list[$current_idx] = $tmp;
+		}
+
+		//force reordering
+		foreach($sort_list as $k => $v){
+			static::updateWhere([$sort_key => $count-$k-1], 1, "$pk = ?", $v[$pk]);
+		}
+		return true;
+	}
 	
 	/**
 	 * 获取指定列，作为一维数组返回
@@ -867,7 +926,13 @@ abstract class Model extends DAO{
 	 * @throws \Lite\Exception\Exception
 	 */
 	public function count(){
-		$count = $this->getDbDriver(self::DB_READ)->getCount($this->query);
+		$driver = $this->getDbDriver(self::DB_READ);
+		$count = $driver->getCount($this->query);
+
+		if($GLOBALS['ddd']){
+			dump('x', 1);
+		}
+
 		return $count;
 	}
 	

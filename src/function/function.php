@@ -346,7 +346,8 @@ function dump(){
 			echo $comma;
 			var_dump($var);
 			$trace = debug_backtrace();
-			echo "File:".($cli ? '' : '<b style="color:gray">').$trace[0]['file'].($cli ? '' : '</b><br/>')." Line: ".($cli ? '' : '<b>').$trace[0]['line'].($cli ? "\n" : '"</b><br/>"');
+			$idx = $trace[0]['function'] == 'Lite\func\dump' ? 1 : 0;
+			echo "File:".($cli ? '' : '<b style="color:gray">').$trace[$idx]['file'].($cli ? '' : '</b><br/>')." Line: ".($cli ? '' : '<b>').$trace[$idx]['line'].($cli ? "\n" : '"</b><br/>"');
 			$comma = $cli ? "\n" : '<div style="height:0; line-height:1px; font-size:1px; border-bottom:1px solid white; border-top:1px solid #ccc; margin:10px 0"></div>';
 		}
 		if(!$cli && $act){
@@ -506,7 +507,7 @@ function lite_print_performance_mark($qc_list, $config = array()){
 
 	$st = $qc_list[0][0];
 	$mt = $qc_list[0][1];
-	
+
 	echo '<style>',
 		'* {font-size:12px; font-family:helvetica, Microsoft Yahei, serif; line-height:1.8}',
 		'table {border-collapse:collapse; width:98%; margin:0 auto; background-color:white; border:1px solid #bbb;}',
@@ -616,16 +617,10 @@ function is_function($f){
 
 /**
  * tick debug
- * @param int $step_offset
+ * @param int $step
  * @param string $fun
  */
-function tick_dump($step_offset = 1, $fun = 'dump'){
-	$step_offset = (string)$step_offset;
-	if(strstr($step_offset, ',') !== false){
-		list($start, $step) = array_map('intval', explode(',', $step_offset));
-	} else{
-		$step = intval($step_offset);
-	}
+function tick_dump($step = 1, $fun = 'dump'){
 	register_tick_function($fun);
 	eval("declare(ticks = $step);");
 }
@@ -691,7 +686,7 @@ function generateGUID($trim = true){
 	$guidv4 = $lbrace .
 		substr($charid, 0, 8) . $hyphen .
 		substr($charid, 8, 4) . $hyphen .
-		substr($charid, 12, 4) . $hyphen . 
+		substr($charid, 12, 4) . $hyphen .
 		substr($charid, 16, 4) . $hyphen .
 		substr($charid, 20, 12) . $rbrace;
 	return $guidv4;

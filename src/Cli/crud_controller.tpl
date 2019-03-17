@@ -4,7 +4,6 @@ use {$model_namespace}\{$model_name};
 use Lite\Crud\ControllerInterface;
 
 /**
- * Created by PhpStorm.
  * User: sasumi
  * Date: 2014/11/5
  * Time: 12:25

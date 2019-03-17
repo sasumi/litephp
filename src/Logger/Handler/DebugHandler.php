@@ -1,6 +1,5 @@
 <?php
 /**
- * Created by PhpStorm.
  * User: sasumi
  * Date: 2015/4/16
  * Time: 15:55
@@ -13,7 +12,6 @@ if(session_status() === PHP_SESSION_NONE){
 }
 
 /**
- * Created by PhpStorm.
  * User: sasumi
  * Date: 2015/4/16
  * Time: 10:15

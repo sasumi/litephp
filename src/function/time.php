@@ -170,3 +170,33 @@ function pretty_time($timestamp, $as_html = false){
 	}
 	return $as_html ? '<span title="'.date('Y-m-d H:i:s', $timestamp).'">'.$str.'</span>' : $str;
 }
+
+/**
+ * 获取从$start开始经过$days个工作日后的日期
+ * 实际日期 = 工作日数 + 周末天数 -1
+ * @param string $start 开始日期
+ * @param int $days 工作日天数 正数为往后，负数为往前
+ * @return string Y-m-d 日期
+ */
+function calc_actual_date($start, $days){
+	$t = date('N', strtotime($start));
+	if($days == 0){
+		return $start;
+	}
+	if($days > 0){
+		//正推
+		$thisWeekWork = (6-$t)>0 ? (6-$t) : 0;//本周的工作日
+		$weeks = ($days-$thisWeekWork)%5 ? floor(($days-$thisWeekWork)/5)*2 : ((($days-$thisWeekWork)/5)-1)*2;//从下周一开始算的总周末数
+		$diff_days = $weeks+$days+1;//周末数+工作日+加上本周末-1
+		$expect = date("Y-m-d", strtotime($start)+$diff_days*24*3600);
+	} else{
+		$days = abs($days);
+		//逆推
+		$thisWeekWork = $t>5 ? 5 : $t;//本周的工作日
+		$thisWeekends = $t>5 ? ($t-5) : 0;//本周周末天数
+		$weeks = ceil(($days-$thisWeekWork)/5)*2;//剩下的周末数
+		$diff_days = $thisWeekends+$weeks+$days-1;//本周周末天数+剩余周末天数+工作日-1
+		$expect = date("Y-m-d", strtotime($start)-$diff_days*24*3600);
+	}
+	return $expect;
+}

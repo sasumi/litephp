@@ -3,7 +3,6 @@ namespace Lite\Logger\Message;
 use Lite\Logger\Logger;
 
 /**
- * Created by PhpStorm.
  * User: sasumi
  * Date: 2015/4/16
  * Time: 10:16

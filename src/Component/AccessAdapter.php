@@ -114,13 +114,13 @@ abstract class AccessAdapter {
 	 * @return mixed
 	 */
 	public function getLoginInfo(){
-		$session_uid = $_SESSION[$this->session_name];
+		$session_uid = isset($_SESSION[$this->session_name]) ? $_SESSION[$this->session_name] : null;
 		if($session_uid){
 			return $this->getUserInfoFromId($session_uid);
 		}
 		if($this->cookie_expired){
-			$cookie_uid = $_COOKIE[$this->cookie_name];
-			$cookie_sid = $_COOKIE[$this->cookie_sid_name];
+			$cookie_uid = isset($_COOKIE[$this->cookie_name]) ? $_COOKIE[$this->cookie_name] : null;
+			$cookie_sid = isset($_COOKIE[$this->cookie_sid_name]) ? $_COOKIE[$this->cookie_sid_name] : null;
 			
 			if($this->encryptUid($cookie_uid) == $cookie_sid){
 				$user_info = $this->getUserInfoFromId($cookie_uid);

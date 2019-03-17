@@ -52,7 +52,7 @@ function explode_by($delimiters, $str, $clear_empty = true){
 	if(is_string($delimiters)){
 		$delimiters = str_split_by_charset($delimiters);
 	}
-	if(count($delimiters) > 1){
+	if(count($delimiters)>1){
 		$des = $delimiters;
 		array_shift($des);
 		$replacements = array_fill(0, count($delimiters)-1, $delimiters[0]);
@@ -106,7 +106,7 @@ function str_start_with($str, $starts, $case_sensitive = false){
  * @param bool $as_return 是否作为返回值返回
  * @return string|null
  */
-function print_table(array $data, $css_class='', $as_return = false){
+function print_table(array $data, $css_class = '', $as_return = false){
 	$html = '';
 	if(!empty($data)){
 		$data = count($data) == count($data, COUNT_RECURSIVE) ? array($data) : $data;
@@ -197,6 +197,155 @@ function ha($str, $len = null, $tail = '...', &$over_length = false){
 	return htmlspecialchars($str, ENT_QUOTES);
 }
 
+
+/**
+ * 多语言翻译，支持多重变量替换
+ * 多重数组调用格式：{user.age.value}
+ * @param $text
+ * @param array $param
+ * @param string $domain
+ * @return string
+ */
+function t($text, $param = array(), $domain = 'default'){
+	if(!$param){
+		return dgettext($domain, $text);
+	}
+	$text = dgettext($domain, $text);
+	extract($param, EXTR_OVERWRITE);
+	$tmp = '';
+	$text = preg_replace('/"/', '\\"', $text);
+	$str = preg_replace_callback('/\{([^}]+)\}/', function($matches){
+		$vs = explode('.', $matches[1]);
+		list($vars) = $vs;
+		if(count($vs)>1){
+			for($i = 1; $i<count($vs); $i++){
+				$vars .= "['".$vs[$i]."']";
+			}
+		}
+		return '{$'.$vars.'}';
+	}, $text);
+	$str = "\$tmp = \"$str\";";
+	eval($str);
+	return $tmp;
+}
+
+/**
+ *数字金额转换成中文大写金额的函数
+ *String Int  $num  要转换的小写数字或小写字符串
+ *return 大写字母
+ *小数位为两位
+ * @param $num
+ * @return string
+ * @throws \Exception
+ */
+function get_traditional_currency($num){
+	$c1 = "零壹贰叁肆伍陆柒捌玖";
+	$c2 = "分角元拾佰仟万拾佰仟亿";
+	$num = round($num, 2);
+	$num = $num*100;
+	if(strlen($num)>10){
+		throw new \Exception('currency number overflow');
+	}
+	$i = 0;
+	$c = "";
+	while(1){
+		if($i == 0){
+			$n = substr($num, strlen($num)-1, 1);
+		} else{
+			$n = $num%10;
+		}
+		$p1 = substr($c1, 3*$n, 3);
+		$p2 = substr($c2, 3*$i, 3);
+		if($n != '0' || ($n == '0' && ($p2 == '亿' || $p2 == '万' || $p2 == '元'))){
+			$c = $p1.$p2.$c;
+		} else{
+			$c = $p1.$c;
+		}
+		$i = $i+1;
+		$num = $num/10;
+		$num = (int)$num;
+		if($num == 0){
+			break;
+		}
+	}
+	$j = 0;
+	$s_len = strlen($c);
+	while($j<$s_len){
+		$m = substr($c, $j, 6);
+		if($m == '零元' || $m == '零万' || $m == '零亿' || $m == '零零'){
+			$left = substr($c, 0, $j);
+			$right = substr($c, $j+3);
+			$c = $left.$right;
+			$j = $j-3;
+			$s_len = $s_len-3;
+		}
+		$j = $j+3;
+	}
+
+	if(substr($c, strlen($c)-3, 3) == '零'){
+		$c = substr($c, 0, strlen($c)-3);
+	}
+	if(empty($c)){
+		return "零元整";
+	} else{
+		return $c."整";
+	}
+}
+
+/**
+ * 密码检测
+ * @param $password
+ * @param array $rules
+ * @throws \Exception
+ */
+function password_check($password, $rules = array()){
+	$rules = array_merge(array(
+		'MIN_LEN' => 6,
+		'UC'      => true,
+		'LC'      => true,
+		'NUM'     => null,
+		'SYM'     => null,
+		'SPC'     => null,
+	), $rules);
+
+	$str_map = array(
+		'UC'  => ['ABCDEFGHIJKLMNOPQRSTUVWXYZ', '大写字母'],
+		'LC'  => ['abcdefghijklmnopqrstuvwxyz', '小写字母'],
+		'NUM' => ['0123456789', '数字'],
+		'SYM' => ['!@#$%^&*?[_~', '符号'],
+		'SPC' => [' ', '空格'],
+	);
+
+	if($rules['MIN_LEN'] && strlen($password)<$rules['MIN_LEN']){
+		throw new \Exception("密码长度至少{$rules['MIN_LEN']}位");
+	}
+	unset($rules['MIN_LEN']);
+
+	foreach($rules as $k => $set){
+		if($set !== null){
+			if(str_contains($password, $str_map[$k][0]) != $set){
+				$ex = $set ? "密码必须包含{$str_map[$k][1]}" : "密码不允许包含{$str_map[$k][1]}";
+				throw new \Exception($ex);
+			}
+		}
+	}
+}
+
+/**
+ * 检测字符串中是否包含指定字符集
+ * @param $str
+ * @param $char_list
+ * @return bool
+ */
+function str_contains($str, $char_list){
+	for($i = 0; $i<strlen($char_list); $i++){
+		if(strrchr($str, $char_list[$i]) !== false){
+			return true;
+		}
+	}
+	return false;
+}
+
 /**
  * 随机字符串
  * @param int $len 长度
@@ -219,7 +368,7 @@ function rand_string($len = 6, $source = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPR
  */
 function format_size($size, $dot = 2){
 	$obs = '';
-	if($size < 0){
+	if($size<0){
 		$obs = '-';
 		$size = abs($size);
 	}

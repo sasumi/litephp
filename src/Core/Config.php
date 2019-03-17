@@ -28,7 +28,7 @@ abstract class Config {
 	public static function get($uri, $force_exists=false, $refresh=false){
 		$keys = explode('/', $uri);
 		$key = $keys[0];
-		if(!self::$CONFIGS[$key] || $refresh){
+		if(!isset(self::$CONFIGS[$key]) || !self::$CONFIGS[$key] || $refresh){
 			$load_result = self::load($key, $force_exists);
 			if(!$load_result){
 				return null;
@@ -38,7 +38,7 @@ abstract class Config {
 
 		for($i=0; $i<count($keys); $i++){
 			if($i == (count($keys)-1)){
-				return $config[$keys[$i]];
+				return isset($config[$keys[$i]]) ? $config[$keys[$i]] : null;
 			} else {
 				$config = $config[$keys[$i]];
 			}

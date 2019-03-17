@@ -1,5 +1,6 @@
 <?php
 namespace Lite\Crud;
+
 use Lite\Component\Paginate;
 use Lite\Core\Controller as CoreController;
 use Lite\Core\Result;
@@ -36,7 +37,7 @@ abstract class AbstractController extends CoreController{
 		if($this instanceof CI){
 			$sps = $this->supportCRUDList();
 			$sps = array_keys($sps);
-			if(in_array(CI::OP_ALL, $sps, true) || in_array($op, $sps, true)) {
+			if(in_array(CI::OP_ALL, $sps, true) || in_array($op, $sps, true)){
 				return true;
 			}
 		}
@@ -80,19 +81,19 @@ abstract class AbstractController extends CoreController{
 					$fields = array_diff($fields, array(substr($f, 1)));
 				}
 			}
-		} else {
+		} else{
 			$fields = $tmp;
 		}
 
 		$defines = $ins->getPropertiesDefine();
 		$operate_fields = array();
 
-		foreach($fields as $k=>$v){
+		foreach($fields as $k => $v){
 			$alias = '';
 			if(is_string($k)){
 				$field = $k;
 				$alias = $v;
-			} else {
+			} else{
 				$field = $v;
 			}
 			if(!$alias){
@@ -146,10 +147,10 @@ abstract class AbstractController extends CoreController{
 	 * @param array $factors 因子（普通表单、textarea输入框、简单富文本、复杂富文本）
 	 * @return bool
 	 */
-	protected function checkNewWindowFlag($operate_type, $instance, $threshold=20, $factors=array(1, 4, 20, 20)){
+	protected function checkNewWindowFlag($operate_type, $instance, $threshold = 20, $factors = array(1, 4, 20, 20)){
 		$counts = $this->getOperateFieldCount($operate_type, $instance);
 		$sum = 0;
-		foreach($counts as $k=>$c){
+		foreach($counts as $k => $c){
 			$sum += $c*$factors[$k];
 		}
 		return $sum>=$threshold;
@@ -162,13 +163,13 @@ abstract class AbstractController extends CoreController{
 	 * @return array
 	 */
 	protected function getOperateFieldCount($operate_type, $instance){
-		/** @var ControllerInterface|self $this*/
+		/** @var ControllerInterface|self $this */
 		$support = $this->supportCRUDList()[$operate_type];
 		if($support){
 			$op_fields = $this->getOpFields($operate_type);
 			$def = $instance->getPropertiesDefine();
 			$nc = $tc = $sc = $lc = 0;
-			foreach($op_fields as $field=>$n){
+			foreach($op_fields as $field => $n){
 				switch($def[$field]['type']){
 					case 'text':
 						$tc++;
@@ -193,12 +194,12 @@ abstract class AbstractController extends CoreController{
 	
 	/**
 	 * 列表
-	 * @param $search
+	 * @param array|null $search
 	 * @param array|null $post
 	 * @return array
 	 * @throws \Lite\Exception\Exception
 	 */
-	public function index($search, $post=null){
+	public function index($search = null, $post = null){
 		/** @var CI|AbstractController $this */
 		$this->checkSupport(CI::OP_INDEX);
 
@@ -206,14 +207,14 @@ abstract class AbstractController extends CoreController{
 		$pk = $ins->getPrimaryKey();
 		$support_list = $this->supportCRUDList();
 		$operation_list = $this->getSupportOperationList();
-		$support_quick_search = in_array(CI::OP_QUICK_SEARCH,$operation_list);
+		$support_quick_search = in_array(CI::OP_QUICK_SEARCH, $operation_list);
 		$defines = $ins->getPropertiesDefine();
 
 		$paginate = Paginate::instance();
 		$query = $ins::find();
 
 		$quick_search_defines = array();
-		foreach($support_list[CI::OP_QUICK_SEARCH]['fields']?:array() as $field){
+		foreach($support_list[CI::OP_QUICK_SEARCH]['fields'] ?: array() as $field){
 			if($defines[$field]){
 				$quick_search_defines[$field] = $defines[$field];
 			}
@@ -223,7 +224,7 @@ abstract class AbstractController extends CoreController{
 		 * 快速搜索
 		 */
 		if($support_quick_search){
-			foreach($quick_search_defines as $field=>$def){
+			foreach($quick_search_defines as $field => $def){
 				if($search[$field] || strlen($search[$field])){
 					switch($def['type']){
 						case 'string':
@@ -296,7 +297,7 @@ abstract class AbstractController extends CoreController{
 
 			$list = array_filter_subtree(0, $list, array(
 				'parent_id_key' => $parent_id_field,
-				'id_key' => $ins->getPrimaryKey()
+				'id_key'        => $ins->getPrimaryKey()
 			));
 			$tmp_list = array();
 			foreach($list as $item){
@@ -307,7 +308,7 @@ abstract class AbstractController extends CoreController{
 				$tmp_list[] = $tmp;
 			}
 			$list = $tmp_list;
-		} else {
+		} else{
 			$list = $query->paginate($paginate);
 		}
 
@@ -375,10 +376,10 @@ abstract class AbstractController extends CoreController{
 		$operation_list = array_keys($support_list);
 
 		$pk_val = (int)$get[$pk];
-		if($pk_val) {
+		if($pk_val){
 			$ins = $ins::findOneByPkOrFail($pk_val);
 		}
-		if($post) {
+		if($post){
 			$ins->setValues($post);
 			$ins->save();
 			return new Result(($pk_val ? $ins->getModelDesc().'更新' : '新增').'成功', true, $ins->toArray(), $this->getBackUrl());
@@ -393,29 +394,29 @@ abstract class AbstractController extends CoreController{
 				$list = $ins::find()->all(true);
 				$list = array_filter_subtree(0, $list, array(
 					'parent_id_key' => $parent_id_field,
-					'id_key' => $pk
+					'id_key'        => $pk
 				));
 
 				//unset掉以下层级
 				$found_level = null;
 				$options = array();
-				foreach($list as $k=>$item){
+				foreach($list as $k => $item){
 					$disabled = false;
 					if($item[$pk] == $ins->$pk){
 						$found_level = $item['tree_level'];
 						$disabled = true;
 					} else if($found_level !== null){
-						if($found_level < $item['tree_level']){
+						if($found_level<$item['tree_level']){
 							$disabled = true;
-						} else {
+						} else{
 							$found_level = null;
 						}
 					}
 					$dis = static::buildMultiLevelDisplay($item[$display_field], $item['tree_level']);
 
 					$options[$item[$pk]] = array(
-						'name' => $dis,
-						'value' => $item[$pk],
+						'name'     => $dis,
+						'value'    => $item[$pk],
 						'disabled' => $disabled
 					);
 				}
@@ -464,7 +465,7 @@ abstract class AbstractController extends CoreController{
 
 		if($pk_val){
 			$ins::delByPk($pk_val);
-			return new Result($ins->getModelDesc().'删除成功',true, null, $this->getBackUrl());
+			return new Result($ins->getModelDesc().'删除成功', true, null, $this->getBackUrl());
 		}
 		return new Result('操作失败，请刷新页面后重试');
 	}
@@ -492,11 +493,11 @@ abstract class AbstractController extends CoreController{
 		}
 		$this->fixMultiLevelCategoryDefines($ins);
 		return array(
-			'defines' => $defines,
-			'display_fields' => $this->getOpFields(CI::OP_INFO),
-			'quick_update_fields'  => $this->getQuickUpdateFields(),
-			'model_instance' => $ins,
-			'operation_list' => $operation_list,
+			'defines'             => $defines,
+			'display_fields'      => $this->getOpFields(CI::OP_INFO),
+			'quick_update_fields' => $this->getQuickUpdateFields(),
+			'model_instance'      => $ins,
+			'operation_list'      => $operation_list,
 		);
 	}
 
@@ -513,7 +514,7 @@ abstract class AbstractController extends CoreController{
 			$ds = $ins->getDisplayField();
 			$ins->setPropertiesDefine(array(
 				$parent_key => array(
-					'display' => function()use($ins, $pk, $parent_key, $ds){
+					'display' => function() use ($ins, $pk, $parent_key, $ds){
 						static $all;
 						if(!isset($all)){
 							$all = $ins::find()->allAsAssoc(true);

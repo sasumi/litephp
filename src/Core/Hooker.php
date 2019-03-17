@@ -18,7 +18,7 @@ abstract class Hooker {
 	 * @return boolean
 	 **/
 	public static function add($key, $callback){
-		self::$HOOKS[$key] = self::$HOOKS[$key] ?: array();
+		self::$HOOKS[$key] = isset(self::$HOOKS[$key]) ? self::$HOOKS[$key] : array();
 		self::$HOOKS[$key][] = $callback;
 		return true;
 	}
@@ -54,7 +54,7 @@ abstract class Hooker {
 	 * @return boolean
 	 **/
 	public static function exists($key){
-		return self::$HOOKS[$key] ? count(self::$HOOKS[$key]) : false;
+		return (isset(self::$HOOKS[$key]) && self::$HOOKS[$key]) ? count(self::$HOOKS[$key]) : false;
 	}
 
 	/**
@@ -65,7 +65,7 @@ abstract class Hooker {
 	public static function fire($key/** , $param1, $param2 **/){
 		$args = array_slice(func_get_args(), 1) ?: array();
 		$returns = array();
-		if(self::$HOOKS[$key]){
+		if(isset(self::$HOOKS[$key]) && self::$HOOKS[$key]){
 			foreach(self::$HOOKS[$key] as $item){
 				$result = call_user_func_array($item, $args);
 				if($result === false){

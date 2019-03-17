@@ -1,6 +1,12 @@
 <?php
 namespace Lite\Component;
+
+use Exception;
 use Lite\DB\Model;
+use PHPExcel;
+use PHPExcel_IOFactory;
+use PHPExcel_Style_NumberFormat;
+use SpreadsheetReader;
 use function Lite\func\is_assoc_array;
 
 /**
@@ -9,19 +15,19 @@ use function Lite\func\is_assoc_array;
  * Date: 14-8-28
  * Time: 上午11:25
  */
-abstract class DataExport {
+abstract class DataExport{
 	/**
 	 * 输出csv格式数据
 	 * @param array $data
 	 * @param array $headers
 	 * @param array $config
 	 */
-	public static function exportCsv(array $data, array $headers=array(), array $config=array()){
+	public static function exportCsv(array $data, array $headers = array(), array $config = array()){
 		$config = array_merge(array(
-			'separator' => ',',
-			'filename' => date('YmdHis').'.csv',
+			'separator'     => ',',
+			'filename'      => date('YmdHis').'.csv',
 			'from_encoding' => 'utf-8',
-			'to_encoding' => 'gb2312'
+			'to_encoding'   => 'gb2312'
 		), $config);
 
 		if(empty($headers)){
@@ -41,7 +47,7 @@ abstract class DataExport {
 		$str = implode($config['separator'], $headers)."\r\n";
 		foreach($data as $item){
 			$com = '';
-			foreach($headers as $idx=>$hd){
+			foreach($headers as $idx => $hd){
 				$str .= $com.$item[$idx];
 				$com = $config['separator'];
 			}
@@ -58,12 +64,12 @@ abstract class DataExport {
 	 * @param array $config
 	 * @return array
 	 */
-	public static function readCsv($content, array $field_name=array(), array $config=array()){
+	public static function readCsv($content, array $field_name = array(), array $config = array()){
 		$config = array_merge(array(
-			'separator' => ',',
-			'start_offset' => 0,
+			'separator'     => ',',
+			'start_offset'  => 0,
 			'from_encoding' => 'gb2312',
-			'to_encoding' => 'utf-8'
+			'to_encoding'   => 'utf-8'
 		), $config);
 
 		$content = mb_convert_encoding($content, $config['to_encoding'], $config['from_encoding']);
@@ -76,7 +82,7 @@ abstract class DataExport {
 			if(!empty($tmp)){
 				$item = array();
 				if(!empty($field_name)){
-					foreach($field_name as $k=>$field){
+					foreach($field_name as $k => $field){
 						$item[$field] = $tmp[$k];
 					}
 				}
@@ -92,7 +98,7 @@ abstract class DataExport {
 	 * @param array $headers
 	 * @param array $config
 	 */
-	public static function exportExcel(array $data, array $headers=array(), array $config=array()) {
+	public static function exportExcelViaHtml(array $data, array $headers = array(), array $config = array()){
 		$config = array_merge(array(
 			'filename' => date('YmdHis').'.xls',
 		), $config);
@@ -107,19 +113,97 @@ abstract class DataExport {
 
 		$xls = array();
 		$xls[] = "<html><meta http-equiv=content-type content=\"text ml; charset=UTF-8\"><body><table border='1'>";
-		$xls[] = "<tr><td>" . implode("</td><td>", array_values($headers)) . '</td></tr>';
-		foreach($data As $o) {
+		$xls[] = "<tr><td>".implode("</td><td>", array_values($headers)).'</td></tr>';
+		foreach($data As $o){
 			$line = array();
-			foreach($headers AS $k=>$v) {
+			foreach($headers AS $k => $v){
 				$line[] = $o[$k];
 			}
-			$xls[] = '<tr><td style="vnd.ms-excel.numberformat:@">'. implode("</td><td style=\"vnd.ms-excel.numberformat:@\">", $line) . '</td></tr>';
+			$xls[] = '<tr><td style="vnd.ms-excel.numberformat:@">'.implode("</td><td style=\"vnd.ms-excel.numberformat:@\">", $line).'</td></tr>';
 		}
 		$xls[] = '</table></body>< ml>';
 		$xls = join("\r\n", $xls);
 		header('Content-Disposition: attachment; filename="'.$config['filename'].'"');
 		echo $xls;
 		exit;
+	}
+
+	/**
+	 * 取得$i列,$j行的对应单元格,如A1,B2,AA1,CC3
+	 * cell(1,1) ==> A1 为了容易理解这里从1开始
+	 * @param int $i 对应的列数 从第0格开始
+	 * @param int $j 对应的行数 从第0行开始
+	 * @return string
+	 * @throws Exception $e
+	 */
+	private static function getCell($i = 1, $j = 1){
+		if($i == 0 || $j == 0){
+			throw new Exception("Excel Cell Begin from 1");
+		}
+		if($i>26){
+			$num1 = floor(($i-1)/26)+64;
+			$num2 = ceil(($i-1)%26)+65;
+			$num = chr($num1).chr($num2);
+		} else{
+			$num = chr(64+$i);
+		}
+		return $num.$j;
+	}
+
+	/**
+	 * 导出excel并下载
+	 * @param array $data 数据
+	 * @param array $header 头部
+	 * @param string $file
+	 * @param array $meta
+	 * @return mixed
+	 * @throws \Exception
+	 * @throws \PHPExcel_Exception
+	 * @throws \PHPExcel_Reader_Exception
+	 */
+	public static function exportExcel($data, $header, $file = '', $meta = []){
+		$excel = new PHPExcel();
+		$meta = array_merge([
+			'Creator'        => '',
+			'LastModifiedBy' => '',
+			'Title'          => '',
+			'Subject'        => '',
+			'Description'    => '',
+			'Category'       => '',
+		], $meta);
+		$excel->getProperties();
+
+		foreach($meta as $field => $val){
+			if($val){
+				$excel->{'set'.$meta}($val);
+			}
+		}
+
+		$sheet = $excel->setActiveSheetIndex(0);
+		//设置头部
+		foreach($header as $key => $head_name){
+			$cell = self::getCell($key+1, 1);
+			$sheet->setCellValue($cell, $head_name);
+		}
+		//设置数据
+		foreach($data as $j => $row){
+			foreach($row as $x => $val){
+				$cell = self::getCell($x+1, $j+2);
+				if(is_numeric($val) && strlen($val.'')>8){
+					$val = " ".$val;
+				}
+				$sheet->setCellValue($cell, $val);
+				$sheet->getStyle($cell)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+			}
+		}
+		$sheet->setTitle("Sheet1");
+
+		if(!$file){
+			$file = tmpfile();
+		}
+		$writer = PHPExcel_IOFactory::createWriter($excel, "Excel2007");
+		$writer->save($file);
+		return $file;
 	}
 
 	/**
@@ -156,7 +240,7 @@ abstract class DataExport {
 				$cnt = 0;
 			}
 			$row = [];
-			foreach($fields as $f=>$n){
+			foreach($fields as $f => $n){
 				$row[] = mb_convert_encoding($data[$t][$f], 'gbk', 'utf-8');
 			}
 			fputcsv($_csv_chunk_fp, $row);
@@ -179,18 +263,59 @@ abstract class DataExport {
 		$spec_fields = [];
 		if(!$fields){
 			$spec_fields = $entity_fields;
-		} else {
+		} else{
 			$has_label = is_assoc_array($fields);
 			if(!$has_label){
 				foreach($fields as $k){
 					$spec_fields[$k] = $entity_fields[$k];
 				}
-			} else {
+			} else{
 				$spec_fields = $fields;
 			}
 		}
 		$query_model->chunk(100, function($data) use ($spec_fields, $file_name){
 			self::exportCSVChunk($data, $spec_fields, $file_name);
 		}, true);
+	}
+
+	/**
+	 * @param $name
+	 * @param string $file
+	 * @param int $sheet
+	 * @param bool $ignoreTitle
+	 * @return array
+	 */
+	public static function parseExcel($file, $name, $sheet = 0, $ignoreTitle = false){
+		$Spreadsheet = new SpreadsheetReader($file, $name, mime_content_type($file));
+		$data = [];
+		$Spreadsheet->Sheets();
+		$Spreadsheet->ChangeSheet($sheet);
+		$max_length = 0;
+		foreach($Spreadsheet as $key => $row){
+			if(!array_filter($row)){
+				continue;
+			}
+			$row_len = count($row);
+			if($row_len>$max_length){
+				$max_length = $row_len;
+			}
+			$data[] = $row;
+		}
+		//解析后的元数据保持每个子数组长度相同，为解析时的最长子数组长度
+		array_walk($data, function(&$row) use ($max_length){
+			$row = array_pad($row, $max_length, "");
+		});
+		if($ignoreTitle){
+			return $data;
+		}
+		//第一行作为标题时取第一行非false的数据作为数组长度
+		//后续子数组取标题相同长度，不过滤false值
+		$title = array_filter(array_shift($data));
+		$title_len = count($title);
+		$result = [];
+		foreach($data as $d){
+			$result[] = array_combine($title, array_slice($d, 0, $title_len));
+		}
+		return $result;
 	}
 }

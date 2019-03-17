@@ -11,7 +11,7 @@ use www\Auth;
 use www\model\User;
 
 class IndexController extends BaseController {
-	public function index(){
+	public function index($search = null, $post = null){
 		set_time_limit(0);
 		$fp = fopen('c:/pss.txt', 'a+');
 			$st = microtime(true);

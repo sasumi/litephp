@@ -2,7 +2,6 @@
 namespace Lite\Logger\Handler;
 
 /**
- * Created by PhpStorm.
  * User: sasumi
  * Date: 2015/4/15
  * Time: 13:29
