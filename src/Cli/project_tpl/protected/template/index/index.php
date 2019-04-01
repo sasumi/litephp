@@ -1,7 +1,7 @@
 <?php include $this->getTemplate('inc/header.inc.php');?>
 <div class="dashboard">
 <?php
-$cal = new Lite\Component\Calendar();
+$cal = new \Lite\Component\UI\Calendar();
 $cal->setConfig(array('show_week_index'=>true));
 echo $cal;
 ?>

@@ -380,6 +380,24 @@ function format_size($size, $dot = 2){
 	return $obs.round($size, $dot).''.$units[$i];
 }
 
+/**
+ * 解析文件实际大小表达式
+ * @param string $val 文件大小，如 12.3m, 43k
+ * @return int
+ */
+function resolve_size($val){
+	$last = strtolower($val{strlen($val)-1});
+	switch($last){
+		case 'g':
+			$val *= 1024;
+		case 'm':
+			$val *= 1024;
+		case 'k':
+			$val *= 1024;
+	}
+	return $val;
+}
+
 /*
 PHP URL encoding/decoding functions for Javascript interaction V3.0
 (C) 2006 www.captain.at - all rights reserved

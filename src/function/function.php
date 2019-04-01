@@ -6,7 +6,7 @@ namespace Lite\func;
 
 use Closure;
 use Exception;
-use Lite\Component\Client;
+use Lite\Component\Net\Client;
 use Lite\Core\Application;
 use Lite\Core\Hooker;
 use Lite\Core\Router;

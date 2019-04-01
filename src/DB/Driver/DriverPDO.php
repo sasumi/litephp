@@ -103,8 +103,25 @@ class DriverPDO extends DBAbstract {
 		} else{
 			$conn = new PDO($dns, $config['user'], $config['password'], $opt);
 		}
+		$this->toggleStrictMode($config['strict'], $conn);
 		$this->conn = $conn;
 		return $conn;
+	}
+
+	/**
+	 * 是否切换到严格模式
+	 * @param bool $to_strict
+	 * @param \PDO|null $conn
+	 */
+	public function toggleStrictMode($to_strict = false, PDO $conn = null){
+		if($to_strict){
+			$sql = "set session sql_mode='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'";
+		} else {
+			$sql = "set session sql_mode='NO_ENGINE_SUBSTITUTION'";
+		}
+
+		$conn = $conn ?: $this->conn;
+		$conn->prepare($sql);
 	}
 
 	/**

@@ -1,7 +1,7 @@
 <?php
 namespace Lite\Core;
 
-use Lite\Component\Http;
+use Lite\Component\Net\Http;
 use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
 use function Lite\func\array_merge_recursive_distinct;

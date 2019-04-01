@@ -1,7 +1,7 @@
 <?php
 namespace Lite\Core;
 
-use Lite\Component\Http;
+use Lite\Component\Net\Http;
 use Lite\Component\Server;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;

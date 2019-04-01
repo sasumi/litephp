@@ -1,8 +1,8 @@
 <?php
 namespace Lite\DB\Driver;
 
+use Lite\Component\UI\PaginateInterface;
 use Lite\Core\Hooker;
-use Lite\Core\PaginateInterface;
 use Lite\Core\RefParam;
 use Lite\DB\Query;
 use Lite\Exception\BizException;

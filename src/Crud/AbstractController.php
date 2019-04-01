@@ -1,7 +1,7 @@
 <?php
 namespace Lite\Crud;
 
-use Lite\Component\Paginate;
+use Lite\Component\UI\Paginate;
 use Lite\Core\Controller as CoreController;
 use Lite\Core\Result;
 use Lite\Core\Router;

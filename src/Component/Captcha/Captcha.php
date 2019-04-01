@@ -61,8 +61,8 @@ class Captcha{
 	 * - maxSize: max font size
 	 */
 	public $all_fonts = array(
-		'Time' => array('spacing' => 2, 'minSize' => 22, 'maxSize' => 24, 'font' => 'font.ttf'),
-		'AHGBold' => array('spacing' => 2, 'minSize' => 22, 'maxSize' => 24, 'font' => 'AHGBold.ttf'),
+		'Time'    => array('spacing' => 2, 'minSize' => 22, 'maxSize' => 24, 'font' => 'fonts/font.ttf'),
+		'AHGBold' => array('spacing' => 2, 'minSize' => 22, 'maxSize' => 24, 'font' => 'fonts/AHGBold.ttf'),
 	);
 	
 	public $font = 'AHGBold';
