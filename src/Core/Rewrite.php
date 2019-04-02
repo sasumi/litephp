@@ -89,8 +89,8 @@ final class Rewrite{
 	
 	/**
 	 * 根据规则构建URL链接
-	 * @param $uri
-	 * @param $params
+	 * @param string $uri
+	 * @param mixed $params
 	 * @return array|mixed|null|string
 	 * @throws RouterException
 	 * @throws \Lite\Exception\Exception

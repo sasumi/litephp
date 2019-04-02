@@ -66,10 +66,10 @@ class Application{
 		Config::init($app_root);
 
 		//绑定项目根目录
-		self::addIncludePath(Config::get('app/path'));
+		self::addIncludePath(Config::get('app/path'), self::$namespace);
 
 		//绑定项目include目录
-		self::addIncludePath(Config::get('app/path').'include/');
+		self::addIncludePath(Config::get('app/path').'include/', self::$namespace);
 
 		//绑定vendor目录loader
 		$vl = Config::get('app/root').'vendor/autoload.php';
@@ -78,7 +78,7 @@ class Application{
 		}
 
 		//绑定项目数据库定义目录
-		self::addIncludePath(Config::get('app/database_source'));
+		self::addIncludePath(Config::get('app/database_source'), self::$namespace);
 
 		//启用相应的应用模式
 		switch($mode){
@@ -322,16 +322,18 @@ class Application{
 	 * 获取当前 框架 include_paths
 	 * @return array
 	 */
-	public static function getIncludePaths(){
+	private static function getIncludePaths(){
 		return self::$include_paths;
 	}
 
 	/**
 	 * 添加include path
 	 * @param string $path
+	 * @param string $namespace
 	 */
-	public static function addIncludePath($path){
-		self::$include_paths[] = $path;
+	public static function addIncludePath($path, $namespace = '\\'){
+		$namespace = trim($namespace, '\\');
+		self::$include_paths[] = [$path, $namespace];
 	}
 
 	/**
@@ -339,23 +341,17 @@ class Application{
 	 * @param $class
 	 */
 	private function autoload($class){
-		$case_sensitive = Server::inWindows();
+		$case_sensitive = !Server::inWindows(); //文件名是否大小写敏感
 		$paths = self::getIncludePaths();
-		foreach($paths as $path){
-			if(stripos($class, self::$namespace) === 0){
+		foreach($paths as list($path, $ns)){
+			if(!$ns || stripos($class, $ns) === 0){
 				$file = substr($class, strlen(self::$namespace)+1);
-				$file = str_replace('\\', DIRECTORY_SEPARATOR, $file);
+				$file = str_replace('\\', '/', $file);
 				$file = $path.$file.'.php';
-				if(is_file($file) || (!Server::inWindows() && $file = file_exists_ci($file))){
+				if(is_file($file) || (!$case_sensitive && file_real_exists($file))){
 					include_once $file;
 					return;
 				}
-			}
-			//不包含ns的情况
-			$file = $path.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
-			if(is_file($file) && (!$case_sensitive || file_real_exists($file))){
-				include_once $file;
-				return;
 			}
 		}
 	}

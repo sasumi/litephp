@@ -2,6 +2,7 @@
 namespace Lite\Core;
 
 use Lite\Component\Net\Http;
+use Lite\Component\String\Html;
 use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
 use function Lite\func\array_merge_recursive_distinct;
@@ -351,9 +352,9 @@ abstract class Router{
 			}
 			$params = array_merge($tmp, $params);
 		}
-		$html = '<input type="hidden" name="'.self::$ROUTER_KEY.'" value="'.$uri.'"/>'."\n";
+		$html = Html::htmlHidden(self::$ROUTER_KEY, $uri);
 		foreach($params as $name => $p){
-			$html .= '<input type="hidden" name="'.$name.'" value="'.htmlspecialchars($p).'"/>'."\n";
+			$html .= Html::htmlHidden($name, $p);
 		}
 		return $html;
 	}
@@ -500,7 +501,7 @@ abstract class Router{
 				}
 				return join('/',$str).($ext_param ? '?'.http_build_query($ext_param) : '');
 			default:
-				throw new Exception('no router mode support');
+				throw new Exception('No router mode support');
 		}
 	}
 	
