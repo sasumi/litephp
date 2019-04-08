@@ -236,4 +236,45 @@ class DriverPDO extends DBAbstract {
 	public function getAffectNum() {
 		return $this->_last_query_result ? $this->_last_query_result->rowCount() : 0;
 	}
+
+	/**
+	 * 数据库数据字典
+	 * @return array
+	 */
+	public function getDictionary(){
+		$tables = self::getTables();
+		foreach($tables as $k=>$tbl_info){
+			$fields = self::getFields($tbl_info['TABLE_NAME']);
+			$tables[$k]['FIELDS'] = $fields;
+		}
+		return $tables;
+	}
+
+	/**
+	 * 获取数据库表清单
+	 * @return array
+	 */
+	public function getTables(){
+		$query = "SELECT `table_name`, `engine`, `table_collation`, `table_comment` FROM `information_schema`.`tables` WHERE `table_schema`=?";
+		$db = $this->getConfig('database');
+		$sth = $this->conn->prepare($query);
+		$sth->execute([$db]);
+		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
+		return $result;
+	}
+
+	/**
+	 * 获取数据库表字段清单
+	 * @param $table
+	 * @return array
+	 */
+	public function getFields($table){
+		$query = "SELECT `column_name`, `column_type`, `collation_name`, `is_nullable`, `column_key`, `column_default`, `extra`, `privileges`, `column_comment`
+				    FROM `information_schema`.`columns`
+				    WHERE `table_schema`=? AND `table_name`=?";
+		$sth = $this->conn->prepare($query);
+		$db = $this->getConfig('database');
+		$sth->execute([$db, $table]);
+		return $sth->fetchAll(PDO::FETCH_ASSOC);
+	}
 }

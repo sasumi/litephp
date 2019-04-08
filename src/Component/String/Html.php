@@ -259,7 +259,7 @@ trait Html{
 	 */
 	public static function htmlTable($data, $headers = [], $caption = '', $attributes = []){
 		$html = $caption ? static::htmlElement('caption', [], $caption) : '';
-		if(is_array($headers)){
+		if(is_array($headers) && $data){
 			$all_fields = array_keys(array_first($data));
 			$headers = $headers ?: array_combine($all_fields, $all_fields);
 			$html .= '<thead><tr>';
@@ -270,7 +270,7 @@ trait Html{
 		}
 
 		$html .= '<tbody>';
-		foreach($data as $row){
+		foreach($data ?: [] as $row){
 			$html .= '<tr>';
 			if($headers){
 				foreach($headers as $field => $alias){
@@ -282,7 +282,7 @@ trait Html{
 		$html .= '</tbody>';
 		return static::htmlElement('table', $attributes, $html);
 	}
-	
+
 	/**
 	 * 构建HTML节点属性
 	 * @param array $attributes

@@ -214,7 +214,7 @@ abstract class Config {
 		self::$app_root = $app_root;
 		self::$config_path = $app_root.'config/';
 		if(!is_dir(self::$config_path)){
-			throw new Exception('application config directory no found', null, self::$config_path);
+			throw new Exception('Application config directory no found', null, self::$config_path);
 		}
 	}
 }
