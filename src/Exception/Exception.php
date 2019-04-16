@@ -34,6 +34,31 @@ class Exception extends OrgException{
 	}
 
 	/**
+	 * 转化exception到数组
+	 * @param $e
+	 * @return array
+	 */
+	public static function convertExceptionToArray(\Exception $e){
+		$data = '';
+		if($e instanceof self){
+			$data = $e->getData();
+		}
+		$ret = array(
+			'message'      => $e->getMessage(),
+			'data'         => $data,
+			'file'         => $e->getFile(),
+			'code'         => $e->getCode(),
+			'line'         => $e->getLine(),
+			'trace_string' => $e->getTraceAsString(),
+		);
+		return $ret;
+	}
+
+	public function toArray(){
+		return self::convertExceptionToArray($this);
+	}
+
+	/**
 	 * 打印异常对象message
 	 * @return string
 	 */

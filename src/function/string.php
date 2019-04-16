@@ -52,8 +52,7 @@ function explode_by($delimiters, $str, $clear_empty = true){
 	if(is_string($delimiters)){
 		$delimiters = str_split_by_charset($delimiters);
 	}
-	if(count($delimiters)>1){
-		$des = $delimiters;
+	if(count($delimiters)>1){$des = $delimiters;
 		array_shift($des);
 		$replacements = array_fill(0, count($delimiters)-1, $delimiters[0]);
 		$str = str_replace($des, $replacements, $str);
@@ -100,32 +99,6 @@ function str_start_with($str, $starts, $case_sensitive = false){
 }
 
 /**
- * 打印输出关联数组到html表格
- * @param array $data 二维关联数组数据
- * @param string $css_class css类名
- * @param bool $as_return 是否作为返回值返回
- * @return string|null
- */
-function print_table(array $data, $css_class = '', $as_return = false){
-	$html = '';
-	if(!empty($data)){
-		$data = count($data) == count($data, COUNT_RECURSIVE) ? array($data) : $data;
-		$caps = array_keys(array_first($data));
-		$html .= '<table'.($css_class ? ' class="'.$css_class.'"' : '').'>';
-		$html .= '<thead><tr><th>'.join('</th><th>', $caps).'</th></tr></thead><tbody>';
-		foreach($data as $item){
-			$html .= '<tr><td>'.join('</td><td>', array_values($item)).'</td></tr>';
-		}
-		$html .= '</tbody></table>';
-	}
-	if($as_return){
-		return $html;
-	}
-	echo $html;
-	return null;
-}
-
-/**
  * 转换整型（整型数组）到字符串（字符串数组）
  * @param $data
  * @return array|string
@@ -150,23 +123,7 @@ function int2str($data){
  * @return string|array
  */
 function h($str, $len = null, $tail = '...', &$over_length = false){
-	if(is_object($str)){
-		return $str;
-	}
-	if(is_array($str)){
-		$ret = array();
-		foreach($str as $k => $s){
-			$ret[$k] = h($s, $len, $tail, $over_length);
-		}
-		return $ret;
-	}
-	if($len){
-		$str = substr_utf8($str, $len, $tail, $over_length);
-	}
-	if(is_numeric($str)){
-		return $str;
-	}
-	return htmlspecialchars($str, ENT_IGNORE);
+	return __h($str, $len, $tail, $over_length, ENT_IGNORE);
 }
 
 /**
@@ -178,6 +135,10 @@ function h($str, $len = null, $tail = '...', &$over_length = false){
  * @return string|array
  */
 function ha($str, $len = null, $tail = '...', &$over_length = false){
+	return __h($str, $len, $tail, $over_length, ENT_QUOTES);
+}
+
+function __h($str, $len = null, $tail = '...', &$over_length = false, $type){
 	if(is_object($str)){
 		return $str;
 	}
@@ -194,9 +155,8 @@ function ha($str, $len = null, $tail = '...', &$over_length = false){
 	if(is_numeric($str)){
 		return $str;
 	}
-	return htmlspecialchars($str, ENT_QUOTES);
+	return htmlspecialchars($str, $type);
 }
-
 
 /**
  * 多语言翻译，支持多重变量替换
@@ -2140,4 +2100,46 @@ function unEscapeByCharacter($str){
 	} else{
 		return array($char, 0);
 	}
+}
+
+
+/**
+ * Returns a GUIDv4 string
+ *
+ * Uses the best cryptographically secure method
+ * for all supported pltforms with fallback to an older,
+ * less secure version.
+ *
+ * @param bool $trim
+ * @return string
+ */
+function generate_guid($trim = true){
+	// Windows
+	if(function_exists('com_create_guid') === true){
+		if($trim === true)
+			return trim(com_create_guid(), '{}'); else
+			return com_create_guid();
+	}
+
+	// OSX/Linux
+	if(function_exists('openssl_random_pseudo_bytes') === true){
+		$data = openssl_random_pseudo_bytes(16);
+		$data[6] = chr(ord($data[6])&0x0f|0x40);    // set version to 0100
+		$data[8] = chr(ord($data[8])&0x3f|0x80);    // set bits 6-7 to 10
+		return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+	}
+
+	// Fallback (PHP 4.2+)
+	mt_srand((double)microtime()*10000);
+	$charid = strtolower(md5(uniqid(rand(), true)));
+	$hyphen = chr(45);                  // "-"
+	$lbrace = $trim ? "" : chr(123);    // "{"
+	$rbrace = $trim ? "" : chr(125);    // "}"
+	$guidv4 = $lbrace .
+		substr($charid, 0, 8) . $hyphen .
+		substr($charid, 8, 4) . $hyphen .
+		substr($charid, 12, 4) . $hyphen .
+		substr($charid, 16, 4) . $hyphen .
+		substr($charid, 20, 12) . $rbrace;
+	return $guidv4;
 }

@@ -9,8 +9,11 @@ namespace Lite\func;
 
 use DateTime;
 use Lite\Exception\Exception;
+
 const DATETIME_FMT = 'Y-m-d H:i:s';
 const ONE_DAY = 86400;
+const ONE_HOUR = 3600;
+const ONE_WEEK = 604800;
 
 /**
  * 获取制定开始时间、结束时间的上中下旬分段数组
@@ -199,4 +202,51 @@ function calc_actual_date($start, $days){
 		$expect = date("Y-m-d", strtotime($start)-$diff_days*24*3600);
 	}
 	return $expect;
+}
+
+/**
+ * 计算时间差到文本
+ * @param $start
+ * @param $end
+ * @return string
+ */
+function time_range($start, $end){
+	return time_range_v(strtotime($end)-strtotime($start));
+}
+
+/**
+ * 转化时间长度到字符串
+ * <pre>
+ * $str = time_range_v(3601);
+ * //1H 0M 1S
+ * @param $time
+ * @return string
+ */
+function time_range_v($time){
+	$d = floor($time/86400);
+	$time = $time-$d*86400;
+	$h = floor($time/3600);
+	$time = $time-$h*3600;
+	$m = floor($time/60);
+	$time = $time-$m*60;
+	$s = (int)$time;
+	$str = '';
+	$str .= $d ? $d.'d' : '';
+	$str .= $h ? $h.'h' : ($str ? '0h' : '');
+	$str .= $m ? $m.'m' : ($str ? '0m' : '');
+	$str .= $s ? $s.'s' : ($str ? '0s' : '');
+	$str = $str ?: '0';
+	return $str;
+}
+
+function mk_utc($timestamp = null, $short = false){
+	$timestamp = $timestamp ?: time();
+	if(!$short){
+		$str = date('Y-m-d H:i:s', $timestamp);
+		$str = str_replace(' ', 'T', $str).'.000Z';
+	} else{
+		$str = date('Y-m-d H:i', $timestamp);
+		$str = str_replace(' ', 'T', $str);
+	}
+	return $str;
 }

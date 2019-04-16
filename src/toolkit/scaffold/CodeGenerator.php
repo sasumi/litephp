@@ -1,5 +1,5 @@
 <?php
-namespace Lite\Cli;
+namespace Lite\toolkit\scaffold;
 
 use Lite\Component\Server;
 use PDO;
@@ -36,7 +36,7 @@ abstract class CodeGenerator{
 	}
 	
 	protected static function getTableTpl(){
-		return __DIR__ . '/table.tpl';
+		return __DIR__.'/table.tpl';
 	}
 
 	protected static function generateModel($table_name, $model_name = '', $overwrite){
@@ -53,7 +53,7 @@ abstract class CodeGenerator{
 			return;
 		}
 
-		$str = static::parserTpl(file_get_contents(__DIR__ . '/model.tpl'), array(
+		$str = static::parserTpl(file_get_contents(__DIR__.'/model.tpl'), array(
 			'namespace'       => static::getModelNameSpace(),
 			'table_namespace' => static::getTableNameSpace(). "\\{$table_model}",
 			'generate_date'   => date('Y-m-d'),
@@ -79,7 +79,7 @@ abstract class CodeGenerator{
 			return;
 		}
 
-		$str = static::parserTpl(file_get_contents(__DIR__ . '/crud_model.tpl'), array(
+		$str = static::parserTpl(file_get_contents(__DIR__.'/crud_model.tpl'), array(
 			'namespace'       => static::getModelNameSpace(),
 			'table_namespace' => static::getTableNameSpace(),
 			'generate_date'   => date('Y-m-d'),
@@ -114,7 +114,7 @@ abstract class CodeGenerator{
 			return;
 		}
 
-		$str = static::parserTpl(file_get_contents(__DIR__ . '/crud_controller.tpl'), array(
+		$str = static::parserTpl(file_get_contents(__DIR__.'/crud_controller.tpl'), array(
 			'namespace'         => static::getControllerNameSpace(),
 			'model_namespace'   => static::getModelNameSpace(),
 			'generate_date'     => date('Y-m-d'),

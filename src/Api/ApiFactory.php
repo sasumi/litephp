@@ -5,9 +5,9 @@ use Lite\Component\Server;
 use Lite\Core\Application;
 use Lite\Core\Config;
 use Lite\Exception\Exception;
+use Lite\Exception\Exception as LException;
 use Lite\Exception\RouterException;
 use function Lite\func\file_exists_ci;
-use function Lite\func\print_exception;
 
 /**
  * Api 工厂类，定义基本Api调用规则。
@@ -40,7 +40,7 @@ abstract class ApiFactory{
 	/**
 	 * 路径名称保护
 	 * @param $name
-	 * @throws \Lite\Exception\Exception
+	 * @throws LException
 	 */
 	protected static function nameProtection($name){
 		$reg = '/^[\w|\/]+$/';
@@ -55,7 +55,7 @@ abstract class ApiFactory{
 	/**
 	 * 解析调用路径，默认从PATH_INFO中识别
 	 * @return array[class, method] 返回类名、方法名
-	 * @throws \Lite\Exception\Exception
+	 * @throws LException
 	 * @throws \Lite\Exception\RouterException
 	 * @throws \ReflectionException
 	 */
@@ -134,7 +134,7 @@ abstract class ApiFactory{
 			return $this->formatResponse($response);
 		} catch(\Exception $e){
 			if(static::$debug){
-				print_exception($e);
+				LException::convertExceptionToArray($e);
 			}
 			if($this->onException($e) !== false){
 				throw $e;

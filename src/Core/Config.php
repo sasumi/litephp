@@ -152,6 +152,12 @@ abstract class Config {
 	 * @throws Exception
 	 */
 	private static function load($key, $force_exists){
+		if(!is_dir(self::$config_path)){
+			if($force_exists){
+				throw new Exception('Application config directory no found', null, self::$config_path);
+			}
+		}
+
 		$file = self::$config_path.$key.'.inc.php';
 		if(!file_exists($file)){
 			if($force_exists){
@@ -171,7 +177,6 @@ abstract class Config {
 				self::assignConfig($config['path'], $config['root'].'app/');
 				self::assignConfig($config['charset'], self::$default_charset);
 				self::assignConfig($config['auto_render'], true);
-				self::assignConfig($config['database_source'], $config['root'].'database/');
 				self::assignConfig($config['render'], __NAMESPACE__.'\\View');
 				self::assignConfig($config['tpl'], $config['path'].'template/');
 				self::assignConfig($config['include'], $config['path'].'include/');
@@ -213,8 +218,5 @@ abstract class Config {
 		}
 		self::$app_root = $app_root;
 		self::$config_path = $app_root.'config/';
-		if(!is_dir(self::$config_path)){
-			throw new Exception('Application config directory no found', null, self::$config_path);
-		}
 	}
 }

@@ -5,6 +5,7 @@ use Lite\Component\Net\Http;
 use Lite\Component\Server;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;
+use Lite\Exception\Exception as LException;
 use Lite\Exception\RouterException;
 use Lite\Logger\Logger;
 use Lite\Logger\LoggerLevel;
@@ -14,7 +15,6 @@ use function Lite\func\decodeURI;
 use function Lite\func\file_exists_ci;
 use function Lite\func\file_real_exists;
 use function Lite\func\microtime_diff;
-use function Lite\func\print_exception;
 
 /**
  * Lite框架应用初始化处理类
@@ -66,19 +66,14 @@ class Application{
 		Config::init($app_root);
 
 		//绑定项目根目录
-		self::addIncludePath(Config::get('app/path'), self::$namespace);
-
-		//绑定项目include目录
-		self::addIncludePath(Config::get('app/path').'include/', self::$namespace);
-
-		//绑定vendor目录loader
-		$vl = Config::get('app/root').'vendor/autoload.php';
-		if(is_file($vl)){
-			include_once $vl;
+		if($app_path = Config::get('app/path')){
+			self::addIncludePath($app_path, self::$namespace);
 		}
 
-		//绑定项目数据库定义目录
-		self::addIncludePath(Config::get('app/database_source'), self::$namespace);
+		//绑定项目include目录
+		if($include_path = Config::get('app/path').'include/'){
+			self::addIncludePath($include_path, self::$namespace);
+		}
 
 		//启用相应的应用模式
 		switch($mode){
@@ -146,7 +141,7 @@ class Application{
 
 		//调试模式
 		else if(Config::get('app/debug')){
-			print_exception($ex);
+			LException::convertExceptionToArray($ex);
 		}
 
 		//路由错误，重定向到404页面
@@ -178,7 +173,7 @@ class Application{
 	
 	/**
 	 * send http charset
-	 * @throws \Lite\Exception\Exception
+	 * @throws LException
 	 */
 	private static function sendCharset(){
 		if(!headers_sent()){
