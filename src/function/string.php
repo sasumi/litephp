@@ -63,6 +63,32 @@ function explode_by($delimiters, $str, $clear_empty = true){
 }
 
 /**
+ * do the same than parse_str without max_input_vars limitation:
+ * Parses $string as if it were the query string passed via a URL and sets variables in the current scope.
+ * @param $string array string to parse (not altered like in the original parse_str(), use the second parameter!)
+ * @param $result array  If the second parameter is present, variables are stored in this variable as array elements
+ * @return bool true or false if $string is an empty string
+ * @author rubo77 at https://gist.github.com/rubo77/6821632
+ **/
+function parse_str_without_limitation($string, &$result){
+	if($string === ''){
+		return false;
+	}
+	$result = array();
+	$pairs = explode('&', $string);
+	foreach($pairs as $pair){
+		parse_str($pair, $params);
+		$k = key($params);
+		if(!isset($result[$k])){
+			$result += $params;
+		} else {
+			$result[$k] = array_merge_recursive_distinct($result[$k], $params[$k]);
+		};
+	}
+	return true;
+}
+
+/**
  * 按照指定字符编码拆分字符串
  * @param $str
  * @param int $len
