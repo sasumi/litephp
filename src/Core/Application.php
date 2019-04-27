@@ -4,16 +4,15 @@ namespace Lite\Core;
 use Lite\Component\Net\Http;
 use Lite\Component\Server;
 use Lite\Exception\BizException;
-use Lite\Exception\Exception;
-use Lite\Exception\Exception as LException;
+use Lite\Exception\Exception as Exception;
 use Lite\Exception\RouterException;
 use Lite\Logger\Logger;
 use Lite\Logger\LoggerLevel;
 use Lite\Logger\Message\CommonMessage;
 use ReflectionClass;
 use function Lite\func\decodeURI;
-use function Lite\func\file_exists_ci;
-use function Lite\func\file_real_exists;
+use function Lite\func\file_exists_case_insensitive;
+use function Lite\func\file_exists_case_sensitive;
 use function Lite\func\microtime_diff;
 
 /**
@@ -67,6 +66,7 @@ class Application{
 
 		//绑定项目根目录
 		if($app_path = Config::get('app/path')){
+			self::addIncludePath($app_path.'controller/', self::$namespace.'\\controller', false);
 			self::addIncludePath($app_path, self::$namespace);
 		}
 
@@ -141,7 +141,7 @@ class Application{
 
 		//调试模式
 		else if(Config::get('app/debug')){
-			LException::convertExceptionToArray($ex);
+			Exception::convertExceptionToArray($ex);
 		}
 
 		//路由错误，重定向到404页面
@@ -173,7 +173,7 @@ class Application{
 	
 	/**
 	 * send http charset
-	 * @throws LException
+	 * @throws Exception
 	 */
 	private static function sendCharset(){
 		if(!headers_sent()){
@@ -322,30 +322,57 @@ class Application{
 	}
 
 	/**
-	 * 添加include path
-	 * @param string $path
-	 * @param string $namespace
+	 * 添加自动加载目录
+	 * @param string $path 搜索目录
+	 * @param string $namespace 命名空间
+	 * @param bool $case_sensitive 是否大小写敏感，缺省为大小写敏感
+	 * 一般项目中只有类似Controller才需要忽略大小写，缺省为严格匹配大小写。
+	 * 由于项目基本运行于Linux中，而Windows一般为开发者环境，因此在Windows中，
+	 * 默认自动加载的文件名、路径大小写将严格匹配，避免项目发布后在Linux环境出现文件无法访问情况。
 	 */
-	public static function addIncludePath($path, $namespace = '\\'){
+	public static function addIncludePath($path, $namespace = '\\', $case_sensitive = true){
 		$namespace = trim($namespace, '\\');
-		self::$include_paths[] = [$path, $namespace];
+		self::$include_paths[] = [$path, $namespace, $case_sensitive];
 	}
 
 	/**
 	 * 自动加载处理方法
 	 * @param $class
+	 * @throws \Lite\Exception\Exception
 	 */
 	private function autoload($class){
-		$case_sensitive = !Server::inWindows(); //文件名是否大小写敏感
 		$paths = self::getIncludePaths();
-		foreach($paths as list($path, $ns)){
+		foreach($paths as $item){
+			list($path, $ns, $case_sensitive) = $item;
 			if(!$ns || stripos($class, $ns) === 0){
-				$file = substr($class, strlen(self::$namespace)+1);
-				$file = str_replace('\\', '/', $file);
-				$file = $path.$file.'.php';
-				if(is_file($file) || (!$case_sensitive && file_real_exists($file))){
+				$file = $path.str_replace('\\', '/', substr($class, strlen($ns)+1)).'.php';
+
+				//大小写敏感
+				if($case_sensitive){
+					$ret = file_exists_case_sensitive($file);
+					if($ret){
+						include_once $file;
+						return;
+					} else if($ret === null){
+						throw new Exception("文件名大小写不一致，将可能导致代码发布到Linux环境之后不可用：\n".$file."\n".realpath($file));
+					} else {
+						//文件不存在
+					}
+				}
+
+				//大小写不敏感，优先通过系统判断文件是否存在
+				else if(is_file($file)){
 					include_once $file;
 					return;
+				}
+
+				//大小写不敏感，对目录进行枚举
+				else {
+					$file = file_exists_case_insensitive($file, $path);
+					if($file){
+						include $file;
+						return;
+					}
 				}
 			}
 		}

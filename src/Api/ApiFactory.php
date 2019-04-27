@@ -7,7 +7,7 @@ use Lite\Core\Config;
 use Lite\Exception\Exception;
 use Lite\Exception\Exception as LException;
 use Lite\Exception\RouterException;
-use function Lite\func\file_exists_ci;
+use function Lite\func\file_exists_case_insensitive;
 
 /**
  * Api 工厂类，定义基本Api调用规则。
@@ -69,7 +69,7 @@ abstract class ApiFactory{
 		static::nameProtection($dir, $class, $action);
 		
 		$file = Config::get('app/path').static::$relative_path."$dir/$class.php";
-		if((Server::inWindows() && !file_exists_ci($file)) || !is_file($file)){
+		if((Server::inWindows() && !file_exists_case_insensitive($file)) || !is_file($file)){
 			throw new RouterException('Request path no found', null, $file);
 		}
 		include_once $file;

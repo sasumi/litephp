@@ -6,6 +6,7 @@
  * Time: 14:07
  */
 namespace Lite\func;
+use Lite\Component\Server;
 
 /**
  * 递归的glob
@@ -28,29 +29,67 @@ function glob_recursive($pattern, $flags = 0){
 }
 
 /**
- * 判断文件是否真实存在（区分文件、目录大小写）
+ * 检查文件是否存在，且名称严格匹配大小写
  * @param $file
- * @return bool
+ * @return bool|null
+ * true：文件存在，false：文件不存在，null：文件存在但大小写不一致
  */
-function file_real_exists($file){
-	$file = str_replace('\\', '/', $file);
-	$real_path = str_replace('\\', '/', realpath($file));
-	return strcmp($file, $real_path) == 0;
+function file_exists_case_sensitive($file){
+	//Linux文件系统严格匹配大小写，因此直接使用is_file判断即可
+	if(!Server::inWindows()){
+		return !!is_file($file);
+	}
+
+	//windows如果文件不存在，不需要检查
+	if(!is_file($file)){
+		return false;
+	}
+	$r_file = str_replace('\\', '/', $file);
+	$realpath = str_replace('\\', '/', realpath($r_file));
+	return strcmp($r_file, $realpath) == 0 ? true : null;
 }
 
 /**
- * check file exists case file name insensitive
+ * 解析路径字符串真实路径，去除相对路径信息
+ * 相对于realpath，该函数不需要检查文件是否存在
+ * <pre>
+ * 调用格式：resolve_absolute_path("c:/a/b/./../../windows/system32");
+ * 返回：c:/windows/system32
+ * @param string $path 路径字符串
+ * @return string
+ */
+function resolve_absolute_path($path) {
+	$path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+	$parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
+	$absolutes = array();
+	foreach ($parts as $part) {
+		if ('.' == $part) continue;
+		if ('..' == $part) {
+			array_pop($absolutes);
+		} else {
+			$absolutes[] = $part;
+		}
+	}
+	return implode(DIRECTORY_SEPARATOR, $absolutes);
+}
+
+/**
+ * 检查文件是否存在，且名称允许大小写混淆
  * @param $file
+ * @param null $parent
  * @return bool
  */
-function file_exists_ci($file){
-	if(file_exists($file)){
+function file_exists_case_insensitive($file, $parent=null){
+	if(is_file($file)){
 		return $file;
 	}
-	$lower_file = strtolower($file);
-	foreach(glob(dirname($file).'/*') as $file){
-		if(strtolower($file) == $lower_file){
-			return $file;
+	static $fs = [];
+	if(!$fs[$parent]){
+		$fs[$parent] = glob_recursive($parent.'/*', GLOB_NOSORT);
+	}
+	foreach($fs[$parent] as $f){
+		if(strcasecmp($f, $file) === 0){
+			return $f;
 		}
 	}
 	return false;

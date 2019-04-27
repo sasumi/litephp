@@ -181,6 +181,7 @@ class Logger{
 	 * 记录一个message日志
 	 * @param $level
 	 * @param InterfaceMessage $message
+	 * @return bool
 	 */
 	public function log($level, InterfaceMessage $message){
 		$message->setIdentify($this->id);
@@ -196,6 +197,7 @@ class Logger{
 			}
 		}
 		$this->haystack[] = clone($message);
+		return true;
 	}
 
 	/**
