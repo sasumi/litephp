@@ -35,7 +35,6 @@ class IndexController extends BaseController {
 			$off = microtime(true) - $st;
 			fwrite($fp, $off."\n");
 		fclose($fp);
-		dump('x',1);
 	}
 
 	public function index2(){

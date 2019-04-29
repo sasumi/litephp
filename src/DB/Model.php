@@ -928,11 +928,6 @@ abstract class Model extends DAO{
 	public function count(){
 		$driver = $this->getDbDriver(self::DB_READ);
 		$count = $driver->getCount($this->query);
-
-		if($GLOBALS['ddd']){
-			dump('x', 1);
-		}
-
 		return $count;
 	}
 	
