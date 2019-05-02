@@ -689,9 +689,8 @@ abstract class Router{
 	 * @throws \Lite\Exception\Exception
 	 */
 	public static function getCurrentActionPageUrl($param = array()){
-		$ctrl = static::getController();
-		$act = static::getAction();
-		return static::getUrl("$ctrl/$act", $param);
+		$uri = static::getCurrentUri();
+		return static::getUrl("$uri", $param);
 	}
 	
 	/**
