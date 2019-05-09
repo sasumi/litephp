@@ -123,7 +123,7 @@ abstract class ApiFactory{
 	
 	/**
 	 * 开始监听请求
-	 * @return mixed
+	 * @return mixed|null
 	 * @throws \Exception
 	 */
 	final public function listen(){

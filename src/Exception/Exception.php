@@ -5,9 +5,6 @@ use Exception as OrgException;
 
 /**
  * Lite框架通用异常类
- * User: sasumi
- * Date: 2014/11/18
- * Time: 9:49
  */
 class Exception extends OrgException{
 	protected $message = 'Unknown exception';     // Exception message

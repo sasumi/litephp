@@ -3,9 +3,6 @@ namespace Lite\Component\Net;
 
 /**
  * Http协议辅助类
- * User: sasumi
- * Date: 2016/6/21
- * Time: 9:10
  */
 abstract class Http{
 	//HTTP状态码类型归类

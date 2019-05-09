@@ -10,24 +10,21 @@ use SpreadsheetReader;
 use function Lite\func\is_assoc_array;
 
 /**
- * 数据输出处理
- * User: sasumi
- * Date: 14-8-28
- * Time: 上午11:25
+ * 数据文件输出处理
  */
 abstract class DataExport{
 	/**
 	 * 输出csv格式数据
-	 * @param array $data
-	 * @param array $headers
-	 * @param array $config
+	 * @param array $data 二维数组数据
+	 * @param array $headers 指定显示字段以及转换后标题，格式如：['id'=>'编号','name'=>'名称']，缺省为数据所有字段
+	 * @param array $config 其他控制配置
 	 */
 	public static function exportCsv(array $data, array $headers = array(), array $config = array()){
 		$config = array_merge(array(
-			'separator'     => ',',
-			'filename'      => date('YmdHis').'.csv',
-			'from_encoding' => 'utf-8',
-			'to_encoding'   => 'gb2312'
+			'separator'     => ',', 					//分隔符
+			'filename'      => date('YmdHis').'.csv', 	//输出文件名
+			'from_encoding' => 'utf-8',					//输入字符编码
+			'to_encoding'   => 'gb2312'					//输入字符编码（默认为gb2312，中文windows Excel使用）
 		), $config);
 
 		if(empty($headers)){
@@ -221,7 +218,7 @@ abstract class DataExport{
 			header('Content-Type: application/csv');
 			header('Content-Disposition: attachment; filename='.$file_name);
 			$_csv_chunk_fp = fopen('php://output', 'a');
-			$head = null;
+			$head = [];
 			foreach($fields as $i => $v){
 				$head[$i] = iconv('utf-8', 'gbk', $v);
 			}
@@ -286,6 +283,7 @@ abstract class DataExport{
 	}
 
 	/**
+	 * 解析Excel文件
 	 * @param $name
 	 * @param string $file
 	 * @param int $sheet

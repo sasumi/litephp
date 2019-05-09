@@ -211,6 +211,8 @@ abstract class AbstractController extends CoreController{
 		$defines = $ins->getPropertiesDefine();
 
 		$paginate = Paginate::instance();
+
+		/** @var Query|Model $query */
 		$query = $ins::find();
 
 		$quick_search_defines = array();
@@ -517,7 +519,7 @@ abstract class AbstractController extends CoreController{
 					'display' => function() use ($ins, $pk, $parent_key, $ds){
 						static $all;
 						if(!isset($all)){
-							$all = $ins::find()->allAsAssoc(true);
+							$all = $ins::find()->all(true);
 						}
 						$parent_id = $ins->$parent_key;
 						return $all[$parent_id][$ds] ?: '/';

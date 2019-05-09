@@ -6,9 +6,6 @@
  * Time: 14:35
  */
 namespace Lite\func {
-
-	use Lite\Component\String\Html;
-
 	/**
 	 * Array group by function
 	 * group array(); by by_key

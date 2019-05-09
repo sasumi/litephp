@@ -1,7 +1,6 @@
 <?php
 namespace Lite\Component\Upload;
 
-use Lite\Component\Server;
 use Lite\Exception\Exception;
 
 /**

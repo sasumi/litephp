@@ -1,6 +1,7 @@
 <?php
 namespace Lite\Component\Mail\Mail;
 
+use Lite\Component\Mail\Mail;
 use Lite\Exception\Exception;
 use stdClass;
 
@@ -202,8 +203,9 @@ class IMAP{
 	 * This function uses imap_search() to perform a search on the mailbox currently opened in the given IMAP stream.
 	 * For example, to match all unanswered mails sent by Mom, you'd use: "UNANSWERED FROM mom".
 	 * @param string $criteria See http://php.net/imap_search for a complete list of available criteria
-	 * @param $options
+	 * @param int $options
 	 * @return array mailsIds (or empty array)
+	 * @throws Exception
 	 */
 	public function searchMailbox($criteria = 'ALL', $options = SE_UID){
 		$serverEncoding = $this->serverEncoding;
@@ -537,9 +539,9 @@ class IMAP{
 	
 	/**
 	 * 获取邮件正文/附件
-	 * @return \Lite\Component\Mail\Mail
+	 * @param Mail $mail
 	 * @param bool $markAsSeen
-	 * @param \Lite\Component\Mail\Mail $mail
+	 * @return Mail
 	 */
 	public function getMailContent(Mail $mail, $markAsSeen = false){
 		$mailStructure = imap_fetchstructure($this->getImapStream(), $mail->id, FT_UID);

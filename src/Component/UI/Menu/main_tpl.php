@@ -1,14 +1,15 @@
+<?php
+use Lite\Core\Config;
+use Lite\Core\View;
+use const Lite\Component\UI\Menu\MENU_KEY_ACTIVE;
+use const Lite\Component\UI\Menu\MENU_KEY_SUB;
+use const Lite\Component\UI\Menu\MENU_KEY_TITLE;
+use const Lite\Component\UI\Menu\MENU_KEY_URI;
+use function Lite\func\array_first;
+
+?>
 <ul id="main-nav" class="main-nav">
 	<?php
-	
-	use Lite\Core\Config;
-	use Lite\Core\View;
-	use const Lite\Component\Menu\MENU_KEY_ACTIVE;
-	use const Lite\Component\Menu\MENU_KEY_SUB;
-	use const Lite\Component\Menu\MENU_KEY_TITLE;
-	use const Lite\Component\Menu\MENU_KEY_URI;
-	use function Lite\func\array_first;
-	
 	/**
 	 * @var View $viewer
 	 * @var array $main_nav

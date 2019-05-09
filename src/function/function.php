@@ -284,7 +284,7 @@ function lite_auto_performance_mark(){
 	};
 
 	//db query
-	Hooker::add(DBAbstract::EVENT_BEFORE_DB_QUERY, function($query)use($filter_trace){
+	Hooker::add(DBAbstract::EVENT_BEFORE_DB_QUERY, function()use($filter_trace){
 		performance_mark('EVENT_BEFORE_DB_QUERY', '', $filter_trace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 15)));
 	});
 	Hooker::add(DBAbstract::EVENT_AFTER_DB_QUERY, function($query)use($filter_trace){

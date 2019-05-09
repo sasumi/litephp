@@ -2,7 +2,6 @@
 namespace Lite\Core;
 
 use Lite\Component\Net\Http;
-use Lite\Component\Server;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception as Exception;
 use Lite\Exception\RouterException;
@@ -17,9 +16,6 @@ use function Lite\func\microtime_diff;
 
 /**
  * Lite框架应用初始化处理类
- * User: sasumi
- * Date: 2015/01/08
- * Time: 9:00
  */
 class Application{
 	const MODE_WEB = 0x01; //普通HTTP web模式

@@ -1,7 +1,7 @@
 <?php
 
 use Lite\Core\Config as Config;
-use www\ViewBase;
+use Lite\Core\View;
 
 $cdn_url = Config::get('app/cdn_url');
 ?>
@@ -33,6 +33,6 @@ $cdn_url = Config::get('app/cdn_url');
 			<a href="<?php echo $this->getUrl();?>"><?php echo Config::get('app/site_name');?></a>
 		</h1>
 		<?php include 'shortcut.inc.php';?>
-		<?php echo ViewBase::getMainMenu();?>
+		<?php echo View::getMainMenu();?>
 	</div>
 	<div id="container">

@@ -44,7 +44,6 @@ abstract class CodeGenerator{
 		$model_name = $model_name ?: static::convertClassName($table_name);
 		$table_model = 'Table' . static::convertClassName($table_name);
 
-		$ns = static::getNameSpace();
 		$fold = static::getPath('model');
 		$file = $fold . $model_name . '.php';
 

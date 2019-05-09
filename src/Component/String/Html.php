@@ -5,7 +5,7 @@ use function Lite\func\array_clear_null;
 use function Lite\func\array_first;
 use function Lite\func\h;
 use function Lite\func\ha;
-use function Lite\func\is_assoc_array;
+use function Lite\func\substr_utf8;
 
 trait Html{
 	/**

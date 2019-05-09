@@ -1,11 +1,9 @@
 <?php
-/**
- * User: Sasumi
- * Date: 2015/12/18
- * Time: 17:57
- */
 namespace Lite\Component\String;
 
+/**
+ * 常用正则表达式
+ */
 abstract class RegExp {
 	const REG_MOBILE = '';
 	const REG_PHONE = '/^[0-9]{7,13}$/';

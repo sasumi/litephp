@@ -1,6 +1,5 @@
 	</div>
 	<div id="footer">
-		Copyright &copy; 2014-2015 Guojj.com All Rights Reserved
 		<a href="<?php echo $this->getUrl();?>?SYS_STAT=1" target="_blank">系统性能</a>
 	</div>
 </div>

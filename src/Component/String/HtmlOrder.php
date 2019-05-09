@@ -6,6 +6,10 @@ use function Lite\func\array_clear_null;
 use function Lite\func\array_first;
 use function Lite\func\ha;
 
+/**
+ * HTML排序功能
+ * 实现通过URL页面调用方式实现
+ */
 trait HtmlOrder{
 	//排序控制字段
 	//排序值

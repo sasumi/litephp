@@ -294,46 +294,46 @@ class SMTP{
 	 * @return array 附件信息 键: context:内容; filename:文件名; type:文件类型;
 	 */
 	public function get_attach_type($image_tag) {
-		$filedata = array();
+		$field_data = array();
 		$img_file_con = fopen($image_tag, "r");
 		$image_data = null;
-		while($tem_buffer = addSlashes(fread($img_file_con, filesize($image_tag)))){
+		while($tem_buffer = addslashes(fread($img_file_con, filesize($image_tag)))){
 			$image_data .= $tem_buffer;
 		}
 		fclose($img_file_con);
-		$filedata['context'] = $image_data;
-		$filedata['filename'] = basename($image_tag);
+		$field_data['context'] = $image_data;
+		$field_data['filename'] = basename($image_tag);
 		$extension = substr($image_tag, strrpos($image_tag, "."), strlen($image_tag) - strrpos($image_tag, "."));
 		switch($extension) {
 			case ".gif":
-				$filedata['type'] = "image/gif";
+				$field_data['type'] = "image/gif";
 				break;
 			case ".gz":
-				$filedata['type'] = "application/x-gzip";
+				$field_data['type'] = "application/x-gzip";
 				break;
 			case ".htm":
-				$filedata['type'] = "text/html";
+				$field_data['type'] = "text/html";
 				break;
 			case ".html":
-				$filedata['type'] = "text/html";
+				$field_data['type'] = "text/html";
 				break;
 			case ".jpg":
-				$filedata['type'] = "image/jpeg";
+				$field_data['type'] = "image/jpeg";
 				break;
 			case ".tar":
-				$filedata['type'] = "application/x-tar";
+				$field_data['type'] = "application/x-tar";
 				break;
 			case ".txt":
-				$filedata['type'] = "text/plain";
+				$field_data['type'] = "text/plain";
 				break;
 			case ".zip":
-				$filedata['type'] = "application/zip";
+				$field_data['type'] = "application/zip";
 				break;
 			default:
-				$filedata['type'] = "application/octet-stream";
+				$field_data['type'] = "application/octet-stream";
 				break;
 		}
-		return $filedata;
+		return $field_data;
 	}
 	
 	
@@ -419,6 +419,7 @@ class SMTP{
 	 * SMTP CODE 454 TLS not available due to temporary reason
 	 * @access public
 	 * @return bool success
+	 * @throws Exception
 	 */
 	public function startTLS(){
 		if(!$this->smtp_putcmd("STARTTLS".self::CRLF)){

@@ -3,9 +3,6 @@ namespace Lite\Component\Net;
 
 /**
  * 客户端信息获取类
- * User: sasumi
- * Date: 14-8-28
- * Time: 上午11:25
  */
 class Client {
 	/**

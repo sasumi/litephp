@@ -1,6 +1,6 @@
 <?php
 namespace Lite\Component\Process;
-use \Exception;
+use Exception;
 
 /**
  * Created by PhpStorm.

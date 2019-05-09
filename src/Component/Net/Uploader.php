@@ -11,8 +11,10 @@ use function Lite\func\restructure_files;
 /**
  * 文件上传类
  * @example
+ * <pre>
  * $up = new Uploader(array('upload_dir'=>'c:/'));
  * $up->upload();
+ * </pre>
  */
 class Uploader{
 	private $config;

@@ -9,7 +9,6 @@ use Lite\Logger\Message\AbstractMessage;
  */
 class FileHandler extends AbstractHandler{
 	private $file_prefix = '';
-	private $file_midfix = '';
 	private $file_path = '';
 	private $file_name = '';
 	private $file_max_size = 0;

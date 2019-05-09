@@ -1,11 +1,9 @@
 <?php
-/**
- * User: sasumi
- * Date: 2015/10/16
- * Time: 20:35
- */
 namespace Lite\Component\Net;
 
+/**
+ * ??CURL?????curl_multi_*??????
+ */
 abstract class ParallelCurl {
 	public static $SINGLE_DEFAULT_TIMEOUT = 10;
 	public static $DEFAULT_USER_AGENT = 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)';

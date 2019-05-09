@@ -5,9 +5,6 @@ use Lite\Exception\Exception;
 /**
  * HTTP请求基类
  * 提供http(curl)请求方法封装
- * User: sasumi
- * Date: 14-8-28
- * Time: 上午11:25
  */
 abstract class Curl {
 	const DEFAULT_TIMEOUT = 10;

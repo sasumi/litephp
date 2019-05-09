@@ -2,9 +2,9 @@
 
 use Lite\Core\Config;
 use Lite\Core\View;
-use const Lite\Component\Menu\MENU_KEY_ACTIVE;
-use const Lite\Component\Menu\MENU_KEY_TITLE;
-use const Lite\Component\Menu\MENU_KEY_URI;
+use const Lite\Component\UI\Menu\MENU_KEY_ACTIVE;
+use const Lite\Component\UI\Menu\MENU_KEY_TITLE;
+use const Lite\Component\UI\Menu\MENU_KEY_URI;
 
 /** @var View $view */
 $view = Config::get('app/render');

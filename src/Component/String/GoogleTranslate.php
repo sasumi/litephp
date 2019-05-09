@@ -4,9 +4,6 @@ namespace Lite\Component\String;
 /**
  * 谷歌（中国）翻译
  * 注意，谷歌翻译接口有防恶意调用功能，同一IP长时间调用可能会使该IP被列入黑名单。
- * User: sasumi
- * Date: 2016/6/21
- * Time: 9:10
  */
 abstract class GoogleTranslate{
 	public static $debug = false;
