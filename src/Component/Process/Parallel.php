@@ -71,6 +71,15 @@ class Parallel{
 	//回调列表
 	private $callback_list = [];
 
+	/**
+	 * Parallel constructor.
+	 * @param $cmd
+	 * @param array $params 参数集合，进程任务分配通过参数个数进行拆分。
+	 * 参数格式如:<pre>
+	 * $params = [['id'=>1], ['id'=>2]]，任务将被分配到两个进程中执行
+	 * </pre>
+	 * @throws Exception
+	 */
 	public function __construct($cmd, array $params){
 		if(count($params) < 1){
 			throw new Exception('Parameters count must grater than 1');

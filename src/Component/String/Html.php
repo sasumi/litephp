@@ -1,7 +1,6 @@
 <?php
 namespace Lite\Component\String;
 
-use Lite\Core\Router;
 use function Lite\func\array_clear_null;
 use function Lite\func\array_first;
 use function Lite\func\h;
@@ -210,6 +209,34 @@ trait Html{
 			'charset' => 'utf-8',
 			'src'     => $src,
 		], $attributes));
+	}
+
+	/**
+	 * html5 date input
+	 * @param $name
+	 * @param string $value
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function htmlDateInput($name, $value = '', $attributes = []){
+		$attributes['type'] = 'date';
+		$attributes['name'] = $name;
+		$attributes['value'] = ($value && strpos($value, '0000') !== false) ? date('Y-m-d', strtotime($value)) : '';
+		return static::htmlElement('input', $attributes);
+	}
+
+	/**
+	 * html5 datetime input
+	 * @param $name
+	 * @param string $value
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function htmlDateTimeInput($name, $value = '', $attributes = []){
+		$attributes['type'] = 'datetime-local';
+		$attributes['name'] = $name;
+		$attributes['value'] = ($value && strpos($value, '0000') !== false) ? date('Y-m-d H:i:s', strtotime($value)) : '';
+		return static::htmlElement('input', $attributes);
 	}
 
 	/**
