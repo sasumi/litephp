@@ -9,7 +9,11 @@ use Lite\Exception\Exception;
  * 通过按照最大并发数量，拆分输入的参数集合，实现并发任务动态调度。
  */
 class Parallel{
-	const PROCESS_INTERRUPT_FLAG = 0x20160928123001;
+	//中断标记 - 中断剩余任务执行
+	const PS_INT_CLEAN_LEFT_FLAG = 0x20160928123001;
+
+	//中断标记 - 强制清理当前运行进程，并中断剩余任务执行
+	const PS_INT_TERMINAL_FLAG = 0x20190509001;
 
 	//状态
 	const STATE_INIT = 'INIT';
@@ -79,6 +83,7 @@ class Parallel{
 	}
 
 	/**
+	 * 检测是否在调试过程中
 	 * @return boolean
 	 */
 	public function isDebug(){
@@ -96,10 +101,11 @@ class Parallel{
 	 * 关闭调试信息
 	 */
 	public function debugOff(){
-
+		$this->debug = false;
 	}
 
 	/**
+	 * 获取设置进程池最大执行时间
 	 * @return int
 	 */
 	public function getTotalMaxExecutionTime(){
@@ -107,6 +113,7 @@ class Parallel{
 	}
 
 	/**
+	 * 设置进程池最大执行时间
 	 * @param int $total_max_execution_time
 	 */
 	public function setTotalMaxExecutionTime($total_max_execution_time){
@@ -115,6 +122,7 @@ class Parallel{
 	}
 
 	/**
+	 * 获取设置单个进程最大执行时间
 	 * @return int
 	 */
 	public function getProcessMaxExecutionTime(){
@@ -122,6 +130,7 @@ class Parallel{
 	}
 
 	/**
+	 * 设置单个进程最大执行时间
 	 * @param int $process_max_execution_time
 	 */
 	public function setProcessMaxExecutionTime($process_max_execution_time){
@@ -129,6 +138,7 @@ class Parallel{
 	}
 
 	/**
+	 * 获取设置进程并发数量
 	 * @return int
 	 */
 	public function getParallelCount(){
@@ -136,6 +146,7 @@ class Parallel{
 	}
 
 	/**
+	 * 设置进程并发数量
 	 * @param int $parallel_count
 	 */
 	public function setParallelCount($parallel_count){
@@ -143,6 +154,7 @@ class Parallel{
 	}
 
 	/**
+	 * 获取检测间隔时间
 	 * @return int
 	 */
 	public function getCheckInterval(){
@@ -150,6 +162,7 @@ class Parallel{
 	}
 
 	/**
+	 * 获取进程统一执行命令
 	 * @return mixed
 	 */
 	public function getCmd(){
@@ -157,6 +170,7 @@ class Parallel{
 	}
 
 	/**
+	 * 设置进程状态检测时间
 	 * @param int $check_interval
 	 */
 	public function setCheckInterval($check_interval){
@@ -164,6 +178,7 @@ class Parallel{
 	}
 
 	/**
+	 * 获取进程池总状态
 	 * get master state
 	 * @return mixed
 	 */
@@ -184,6 +199,7 @@ class Parallel{
 
 	/**
 	 * 进程任务分发
+	 * @return bool 任务是否分派成功
 	 */
 	private function dispatch(){
 		if($this->params){
@@ -234,7 +250,7 @@ class Parallel{
 					$this->triggerEvent($ev, $index, $process);
 
 					unset($this->process_list[$k]);
-					if(strpos($output, self::PROCESS_INTERRUPT_FLAG) !== false){
+					if(strpos($output, self::PS_INT_CLEAN_LEFT_FLAG) !== false){
 						$this->triggerEvent(self::EVENT_ON_PROCESS_INTERRUPT, $index, $process);
 						$this->triggerEvent(self::EVENT_ON_ALL_DONE);
 						unset($this);
@@ -259,7 +275,7 @@ class Parallel{
 	}
 
 	/**
-	 * trigger events
+	 * 触发事件
 	 * @param $event
 	 */
 	private function triggerEvent($event){
@@ -271,7 +287,7 @@ class Parallel{
 	}
 
 	/**
-	 * listen event
+	 * 事件监听
 	 * @param string $event event name
 	 * @param callable $handler
 	 */
@@ -280,6 +296,7 @@ class Parallel{
 	}
 
 	/**
+	 * 等待结束（父进程阻塞）
 	 * @param int $int
 	 * @throws \Exception
 	 */
@@ -294,6 +311,7 @@ class Parallel{
 
 	/**
 	 * 绑定调试输出
+	 * （仅在开启调试时有效）
 	 */
 	private function bindDebug(){
 		$this->listen(self::EVENT_ON_START, function(){
@@ -320,7 +338,7 @@ class Parallel{
 	}
 
 	/**
-	 * debug
+	 * 输出调试信息
 	 */
 	private function debug(){
 		if(!$this->isDebug()){
