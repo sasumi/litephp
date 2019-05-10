@@ -27,8 +27,6 @@ abstract class AccessAdapter {
 	protected $cookie_path = '/';
 	protected $cookie_domain = null;
 
-	protected $config = array();
-
 	/**
 	 * 加密用户ID
 	 * @param $val
@@ -41,22 +39,20 @@ abstract class AccessAdapter {
 
 	/**
 	 * 单例
-	 * @param array $config
 	 * @return static
 	 */
-	public static function instance(array $config=array()){
-		if(!static::$instance){
-			static::$instance = new static($config);
+	public static function instance(){
+		static $ins;
+		if(!$ins){
+			$ins = new static();
 		}
-		return static::$instance;
+		return $ins;
 	}
 
 	/**
 	 * 构造方法
-	 * @param $config
 	 */
-	protected function __construct($config){
-		$this->config = array_merge($this->config, $config);
+	protected function __construct(){
 	}
 
 	/**
@@ -82,23 +78,6 @@ abstract class AccessAdapter {
 	}
 
 	/**
-	 * 获取配置
-	 * @param string $key
-	 * @return array | string
-	 */
-	protected function getConfig($key=''){
-		return $key ? $this->config[$key] : $this->config;
-	}
-
-	/**
-	 * 设置配置
-	 * @param array $config
-	 */
-	protected function setConfig(array $config){
-		$this->config = array_merge($this->config, $config);
-	}
-
-	/**
 	 * 获取登录用户ID
 	 */
 	public function getLoginUserId(){
@@ -121,7 +100,7 @@ abstract class AccessAdapter {
 		if($this->cookie_expired){
 			$cookie_uid = isset($_COOKIE[$this->cookie_name]) ? $_COOKIE[$this->cookie_name] : null;
 			$cookie_sid = isset($_COOKIE[$this->cookie_sid_name]) ? $_COOKIE[$this->cookie_sid_name] : null;
-			
+
 			if($this->encryptUid($cookie_uid) == $cookie_sid){
 				$user_info = $this->getUserInfoFromId($cookie_uid);
 				if($user_info){
@@ -200,6 +179,7 @@ abstract class AccessAdapter {
 	 * @return bool
 	 */
 	public function isLogin(){
-		return !!$this->getLoginUserId();
+		$ins = static::instance();
+		return $ins->getLoginUserId();
 	}
 }
