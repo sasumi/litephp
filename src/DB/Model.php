@@ -278,8 +278,8 @@ abstract class Model extends DAO{
 	}
 
 	/**
-	 * 开始一个事务
-	 * @param callable $handler 处理函数，若函数返回false，将终止事务处理
+	 * 事务处理
+	 * @param callable $handler 处理函数，若函数返回false或抛出Exception，将停止提交，执行事务回滚
 	 * @throws Exception
 	 * @throws null
 	 */
@@ -290,7 +290,6 @@ abstract class Model extends DAO{
 			if(call_user_func($handler) === false){
 				throw new Exception('database transaction interrupt');
 			}
-			
 			$driver->commit();
 		} catch(\Exception $exception){
 			$driver->rollback();
@@ -310,7 +309,7 @@ abstract class Model extends DAO{
 	}
 
 	/**
-	 * set model query cache
+	 * 批量Model缓存处理绑定
 	 * @param Model[] $model_list
 	 * @param callable $getter
 	 * @param callable $setter
@@ -378,7 +377,7 @@ abstract class Model extends DAO{
 	}
 	
 	/**
-	 * add more find condition
+	 * 添加更多查询条件
 	 * @param array $args 查询条件
 	 * @return static|Query
 	 * @throws \Lite\Exception\Exception
@@ -438,20 +437,22 @@ abstract class Model extends DAO{
 	}
 	
 	/**
-	 * query where field between min & max (include equal)
-	 * @param $field
-	 * @param null $min
-	 * @param null $max
-	 * @return static|Query
+	 * 检测字段是否处于指定范围之中
+	 * @param string $field
+	 * @param number|null $min 最小端
+	 * @param number|null $max 最大端
+	 * @param bool $equal_cmp 是否包含等于
+	 * @return Query|static
 	 */
-	public function between($field, $min = null, $max = null){
+	public function between($field, $min = null, $max = null, $equal_cmp = true){
+		$cmp = $equal_cmp ? '=' : '';
 		if(isset($min)){
 			$min = addslashes($min);
-			$this->query->where($field, ">=", $min);
+			$this->query->where($field, ">$cmp", $min);
 		}
 		if(isset($max)){
 			$max = addslashes($max);
-			$this->query->where($field, "<=", $max);
+			$this->query->where($field, "<$cmp", $max);
 		}
 		return $this;
 	}
