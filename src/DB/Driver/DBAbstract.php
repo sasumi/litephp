@@ -242,6 +242,7 @@ abstract class DBAbstract{
 
 	/**
 	 * 转义数据，缺省为统一使用字符转义
+	 * @todo quote by type
 	 * @param string $data
 	 * @param string $type
 	 * @return mixed
