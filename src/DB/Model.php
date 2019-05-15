@@ -94,6 +94,14 @@ abstract class Model extends DAO{
 	 * @return string
 	 */
 	abstract public function getTableName();
+
+	/**
+	 * 获取数据库表描述名称
+	 * @return string
+	 */
+	public function getModelDesc(){
+		return $this->getTableName();
+	}
 	
 	/**
 	 * 获取数据库表全名
@@ -1069,6 +1077,8 @@ abstract class Model extends DAO{
 	 * @param bool $throw_exception 是否在校验失败时抛出异常
 	 * @param null $model 元模型
 	 * @return array [data,error_message]
+	 * @throws BizException
+	 * @throws Exception
 	 */
 	private static function validate($src_data = array(), $query_type = Query::INSERT, $pk_val = null, $throw_exception = true, $model = null){
 		$obj = self::meta();
@@ -1352,6 +1362,22 @@ abstract class Model extends DAO{
 		}
 		return false;
 	}
+
+	/**
+	 * 获取影响条数
+	 * @return int
+	 */
+	public function getAffectNum(){
+		$type = Query::isWriteOperation($this->query) ? self::DB_WRITE : self::DB_READ;
+		return $this->getDbDriver($type)->getAffectNum();
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLastOperateType(){
+		return $this->last_operate_type;
+	}
 	
 	/**
 	 * 对象克隆，支持查询对象克隆
@@ -1466,14 +1492,6 @@ abstract class Model extends DAO{
 	}
 
 	/**
-	 * 获取数据库表描述名称
-	 * @return string
-	 */
-	public function getModelDesc(){
-		return $this->getTableName();
-	}
-
-	/**
 	 * 转换当前查询对象为字符串
 	 * @return string
 	 */
@@ -1482,18 +1500,18 @@ abstract class Model extends DAO{
 	}
 
 	/**
-	 * 获取影响条数
-	 * @return int
+	 * 打印Model调试信息
+	 * @return array
 	 */
-	public function getAffectNum(){
-		$type = Query::isWriteOperation($this->query) ? self::DB_WRITE : self::DB_READ;
-		return $this->getDbDriver($type)->getAffectNum();
-	}
-	
-	/**
-	 * @return string
-	 */
-	public function getLastOperateType(){
-		return $this->last_operate_type;
+	public function __debugInfo(){
+		$cfg = $this->getDbConfig();
+		$cfg['password'] = !$cfg['password'] ? '******' : '';
+
+		return [
+			'data'              => $this->getValues(),
+			'data_changed_keys' => $this->getValueChanges(),
+			'query'             => $this->getQuery().'',
+			'database'          => $cfg
+		];
 	}
 }

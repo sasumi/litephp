@@ -1,19 +1,17 @@
 <?php
 namespace Lite\Cache;
 
-use Lite\Core\Config;
-
 /**
  * Class CacheFile
  * @package Lite\Cache
  * @method static CacheFile instance($param = array())
  */
 class CacheFile extends CacheAdapter{
-	protected function __construct(array $config = array()){
-		$config = array_merge(array(
-			'dir' => Config::get('app/root') . 'tmp' . DIRECTORY_SEPARATOR . 'filecache' . DIRECTORY_SEPARATOR
-		), $config);
-
+	protected function __construct(array $config = []){
+		if(!$config['dir']){
+			$dir = sys_get_temp_dir();
+			$config['dir'] = $dir.'/litephp_cache/';
+		}
 		if(!is_dir($config['dir'])){
 			mkdir($config['dir'], null, true);;
 		}
