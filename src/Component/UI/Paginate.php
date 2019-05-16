@@ -180,12 +180,9 @@ class Paginate implements PaginateInterface {
 		if($this->page_size_flag && $page_size){
 			$gets[$this->config['page_size_key']] = $page_size;
 		}
-
-		/** @var Router $render */
-		$render = Config::get('app/render');
-		return $render::getUrl($render::getCurrentUri(), $gets);
+		return Router::getUrl(Router::getCurrentUri(), $gets);
 	}
-	
+
 	/**
 	 * 转换字符串
 	 * @return string
@@ -216,7 +213,7 @@ class Paginate implements PaginateInterface {
 			//first page
 			if($mode == 'first'){
 				if($page_info['page_index'] == 1){
-    				$html .= '<span class="page_first">'.$lang['page_first'].'</span>';
+					$html .= '<span class="page_first">'.$lang['page_first'].'</span>';
 				} else {
 					$html .= Html::htmlLink($lang['page_first'], $this->getUrl(1, $page_info['page_size']), ['class' => 'page_first']);
 				}
@@ -227,7 +224,7 @@ class Paginate implements PaginateInterface {
 				$tmp = $lang['page_last'];
 				$tmp = str_replace('%d', $page_info['page_total'], $tmp);
 				if(empty($page_info['page_total']) || $page_info['page_index'] == $page_info['page_total']){
-    				$html .= '<span class="page_last">'.$tmp.'</span>';
+					$html .= '<span class="page_last">'.$tmp.'</span>';
 				} else {
 					$html .= Html::htmlLink($tmp, $this->getUrl($page_info['page_total'], $page_info['page_size']), ['class' => 'page_last']);
 				}
@@ -239,7 +236,7 @@ class Paginate implements PaginateInterface {
 				if($page_info['page_index'] < $page_info['page_total']){
 					$html .= Html::htmlLink($tmp, $this->getUrl($page_info['page_index']+1, $page_info['page_size']), ['class' => 'page_next']);
 				} else {
-    				$html .= '<span class="page_next">'.$tmp.'</span>';
+					$html .= '<span class="page_next">'.$tmp.'</span>';
 				}
 			}
 
@@ -249,7 +246,7 @@ class Paginate implements PaginateInterface {
 				if($page_info['page_index'] > 1){
 					$html .= Html::htmlLink($tmp, $this->getUrl($page_info['page_index']-1, $page_info['page_size']), ['class' => 'page_prev']);
 				} else {
-    				$html .= '<span class="page_prev">'.$tmp.'</span>';
+					$html .= '<span class="page_prev">'.$tmp.'</span>';
 				}
 			}
 
@@ -260,11 +257,12 @@ class Paginate implements PaginateInterface {
 				if($page_info['page_index']-$offset_len > 1){
 					$html .= Html::htmlLink(1, $this->getUrl(1, $page_info['page_size']));
 				}
+
 				$html .= ($page_info['page_index'] - $offset_len > 2) ? '<em class="page_dots">...</em>' : null;
 				for($i=$page_info['page_index']-$offset_len; $i<=$page_info['page_index']+$offset_len; $i++){
 					if($i>0 && $i<=$page_info['page_total']){
 						$html .= ($page_info['page_index'] != $i) ?
-							Html::htmlLink(1, $this->getUrl($i, $page_info['page_size'])) :'<em class="page_current">'.$i.'</em>';
+							Html::htmlLink($i, $this->getUrl($i, $page_info['page_size'])) :'<em class="page_current">'.$i.'</em>';
 					}
 				}
 				$show_last_dots = ($page_info['page_index'] + $offset_len < $page_info['page_total']) && $page_config['show_dot'];
@@ -278,7 +276,7 @@ class Paginate implements PaginateInterface {
 
 			//total
 			else if($mode == 'info'){
-    			$html .= '<span class="page_info">';
+				$html .= '<span class="page_info">';
 				$tmp = $lang['page_info'];
 				$tmp = str_replace('%s', $page_info['item_total'], $tmp);
 				$tmp = str_replace('%d', $page_info['page_total'], $tmp);
@@ -286,7 +284,7 @@ class Paginate implements PaginateInterface {
 				$tmp = str_replace('%i', $page_info['page_size'], $tmp);
 				$tmp = str_replace('%p', htmlspecialchars($this->getUrl(1, '_ppp_')), $tmp);
 				$html .= $tmp;
-    			$html .= '</span>';
+				$html .= '</span>';
 			}
 
 			//page input
