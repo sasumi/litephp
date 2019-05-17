@@ -29,9 +29,6 @@ class Application{
 	
 	public static $init_microtime;
 
-	//application instance
-	private static $instance;
-
 	//current controller(only in web mode)
 	private static $controller;
 
@@ -99,7 +96,9 @@ class Application{
 	 * @throws \Exception
 	 */
 	public static function init($namespace=null, $app_root = null, $mode=self::MODE_WEB){
-		if(!self::$instance){
+		static $instance;
+
+		if(!$instance){
 			self::$init_microtime = microtime();
 			
 			//BIND APP ERROR
@@ -110,9 +109,9 @@ class Application{
 			Hooker::fire(self::EVENT_AFTER_APP_INIT);
 
 			//init app
-			self::$instance = new self($namespace, $app_root, $mode);
+			$instance = new self($namespace, $app_root, $mode);
 		}
-		return self::$instance;
+		return $instance;
 	}
 
 	/**

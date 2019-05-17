@@ -27,20 +27,6 @@ class Logger{
 	}
 
 	/**
-	 * get instance
-	 * @param $id
-	 * @return \Lite\Logger\Logger
-	 */
-	public static function getInstance($id){
-		foreach(self::$instances as $ins){
-			if($ins->getIdentify() == $id){
-				return $ins;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * 实例化
 	 * @param string $id
 	 * @return Logger

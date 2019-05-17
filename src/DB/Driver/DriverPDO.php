@@ -68,7 +68,7 @@ class DriverPDO extends DBAbstract {
 			}
 		}
 		
-		//build connect attribute
+		//build in connect attribute
 		$opt = [
 			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 		];
@@ -122,6 +122,21 @@ class DriverPDO extends DBAbstract {
 
 		$conn = $conn ?: $this->conn;
 		$conn->prepare($sql);
+	}
+
+	/**
+	 * PDO判别是否为连接丢失异常
+	 * @param \Exception $exception
+	 * @return bool
+	 */
+	protected static function isConnectionLost($exception){
+		if($exception instanceof \PDOException){
+			$lost_code_map = ['08S01', 'HY000'];
+			if(in_array($exception->getCode(), $lost_code_map)){
+				return true;
+			}
+		}
+		return parent::isConnectionLost($exception);
 	}
 
 	/**

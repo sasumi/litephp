@@ -31,8 +31,6 @@ abstract class DBAbstract{
 	//重新连接间隔时间（毫秒）
 	public static $RECONNECT_INTERVAL = 1000;
 
-	private static $instance_list = array();
-
 	// select查询去重
 	// 这部分逻辑可能针对某些业务逻辑有影响，如：做某些操作之后立即查询这种
 	// so，如果程序需要，可以通过 DBAbstract::distinctQueryOff() 关闭这个选项
@@ -151,7 +149,12 @@ abstract class DBAbstract{
 	 */
 	final public static function instance(array $config){
 		$key = self::getInstanceKey($config);
-		if(!self::$instance_list[$key]){
+		static $instance_list;
+		if(!$instance_list){
+			$instance_list = [];
+		}
+
+		if(!$instance_list[$key]){
 			/** @var self $class */
 			$db_type = strtolower($config['type']) ?: 'mysql';
 			$driver = strtolower($config['driver']) ?: 'pdo';
@@ -176,9 +179,9 @@ abstract class DBAbstract{
 				default:
 					throw new Exception("database config driver: [$driver] no support", 0, $config);
 			}
-			self::$instance_list[$key] = $ins;
+			$instance_list[$key] = $ins;
 		}
-		return self::$instance_list[$key];
+		return $instance_list[$key];
 	}
 	
 	/**
@@ -243,7 +246,7 @@ abstract class DBAbstract{
 	/**
 	 * 转义数据，缺省为统一使用字符转义
 	 * @param string $data
-	 * @param string $type
+	 * @param string $type @todo 支持数据库查询转义数据类型
 	 * @return mixed
 	 */
 	public function quote($data, $type = null){
@@ -520,20 +523,11 @@ abstract class DBAbstract{
 	 * @param \Exception $exception
 	 * @return bool
 	 */
-	protected static function isConnectionLost($exception){
-		//pdo exception
-		if($exception instanceof \PDOException){
-			if($exception->getCode() == '08S01' || $exception->getCode() == 'HY000'){
-				return true;
-			}
-		}
-		$error_message = $exception->getMessage();
-		$ms = [
-			'server has gone away',
-			'shut down'
-		];
+	protected static function isConnectionLost(\Exception $exception){
+		$error = $exception->getMessage();
+		$ms = ['server has gone away', 'shut down'];
 		foreach($ms as $kw){
-			if(stripos($kw, $error_message) !== false){
+			if(stripos($kw, $error) !== false){
 				return true;
 			}
 		}
