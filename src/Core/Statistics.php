@@ -14,7 +14,6 @@ use function Lite\func\microtime_to_date;
  */
 class Statistics {
 	public $id;
-	private static $instance_list = array();
 	private $time_track_list = array();
 
 	/**
@@ -31,10 +30,14 @@ class Statistics {
 	 * @return Statistics
 	 */
 	public static function instance($id='default'){
-		if(!self::$instance_list[$id]){
-			self::$instance_list[$id] = new self($id);
+		static $instance_list;
+		if(!$instance_list){
+			$instance_list = [];
 		}
-		return self::$instance_list[$id];
+		if(!$instance_list[$id]){
+			$instance_list[$id] = new self($id);
+		}
+		return $instance_list[$id];
 	}
 
 	/**

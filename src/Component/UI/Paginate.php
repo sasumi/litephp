@@ -1,7 +1,6 @@
 <?php
 namespace Lite\Component\UI;
 use Lite\Component\String\Html;
-use Lite\Core\Config;
 use Lite\Core\Router;
 use function Lite\func\array_merge_recursive_distinct;
 use function Lite\func\guid;

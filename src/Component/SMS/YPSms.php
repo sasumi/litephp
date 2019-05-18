@@ -14,7 +14,6 @@ class YPSms{
 	const SHORT_MSG = 0;
 	const LONG_MSG = 1;
 
-	private static $instance;
 	private $config;
 
 	private function __construct(array $config){
@@ -28,10 +27,11 @@ class YPSms{
 	}
 
 	public static function instance($config = array()){
-		if(!self::$instance){
-			self::$instance = new self($config);
+		static $instance;
+		if(!$instance){
+			$instance = new self($config);
 		}
-		return self::$instance;
+		return $instance;
 	}
 
 	public function getConfig(){

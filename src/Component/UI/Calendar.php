@@ -8,7 +8,6 @@ namespace Lite\Component\UI;
  * Time: 上午11:25
  */
 class Calendar {
-	private static $instance;
 	public $init_date;
 	private $config;
 
@@ -24,14 +23,24 @@ class Calendar {
 		);
 	}
 
-	public static function getSingleton($date = null){
-		if(!self::$instance){
-			self::$instance = new self($date);
+	/**
+	 * 单例方法
+	 * @param null $date
+	 * @return \Lite\Component\UI\Calendar
+	 */
+	public static function instance($date = null){
+		static $instance;
+		if(!$instance){
+			$instance = new self($date);
 		}
-
-		return self::$instance;
+		return $instance;
 	}
 
+	/**
+	 * 设置
+	 * @param $config
+	 * @return bool
+	 */
 	public function setConfig($config){
 		if(empty($config) || !is_array($config)){
 			return false;
@@ -41,6 +50,11 @@ class Calendar {
 		return true;
 	}
 
+	/**
+	 * 获取日历序列数据
+	 * @param $date
+	 * @return array
+	 */
 	public function getDateSerial($date){
 		$start_day = date('w',strtotime(date('Y-m-01', strtotime($date))));
 		$cur_month_date_num = date('t', strtotime($date));
