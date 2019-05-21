@@ -29,8 +29,8 @@ function dump(){
 			echo $comma;
 			var_dump($var);
 			$trace = debug_backtrace();
-			$idx = $trace[0]['function'] == 'Lite\func\dump' ? 1 : 0;
-			echo "File:".($cli ? '' : '<b style="color:gray">').$trace[$idx]['file'].($cli ? '' : '</b><br/>')." Line: ".($cli ? '' : '<b>').$trace[$idx]['line'].($cli ? "\n" : '"</b><br/>"');
+			$trace = array_slice($trace, defined('DUMP_ENTRANCE_LEVEL') ? DUMP_ENTRANCE_LEVEL+1 : 1); //remove closure calling
+			echo "File:".($cli ? '' : '<b style="color:gray">').$trace[0]['file'].($cli ? '' : '</b><br/>')." Line: ".($cli ? '' : '<b>').$trace[0]['line'].($cli ? "\n" : '"</b><br/>"');
 			$comma = $cli ? "\n" : '<div style="height:0; line-height:1px; font-size:1px; border-bottom:1px solid white; border-top:1px solid #ccc; margin:10px 0"></div>';
 		}
 		if(!$cli && $act){
