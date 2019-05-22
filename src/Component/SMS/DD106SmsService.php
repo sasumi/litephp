@@ -1,7 +1,6 @@
 <?php
 namespace oms\business;
 use Lite\Exception\Exception;
-use function Lite\func\dump;
 
 /**
  * 大地在线短信服务

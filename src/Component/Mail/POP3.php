@@ -1,7 +1,6 @@
 <?php
 
 namespace Lite\Component\Mail;
-use Lite\Exception;
 
 /**
  * User: sasumi

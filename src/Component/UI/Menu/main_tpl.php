@@ -1,11 +1,12 @@
 <?php
+
 use Lite\Core\Config;
 use Lite\Core\View;
+use function Lite\func\array_first;
 use const Lite\Component\UI\Menu\MENU_KEY_ACTIVE;
 use const Lite\Component\UI\Menu\MENU_KEY_SUB;
 use const Lite\Component\UI\Menu\MENU_KEY_TITLE;
 use const Lite\Component\UI\Menu\MENU_KEY_URI;
-use function Lite\func\array_first;
 
 ?>
 <ul id="main-nav" class="main-nav">

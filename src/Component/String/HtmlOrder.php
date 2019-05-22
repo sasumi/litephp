@@ -2,9 +2,6 @@
 namespace Lite\Component\String;
 
 use Lite\Core\Router;
-use function Lite\func\array_clear_null;
-use function Lite\func\array_first;
-use function Lite\func\ha;
 
 /**
  * HTML排序功能
