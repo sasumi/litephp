@@ -65,8 +65,8 @@ trait Html{
 	 */
 	public static function htmlOptions(array $options, $value = ''){
 		$html = '';
-		foreach($options as $k => $n){
-			$html .= static::htmlOption($n, $k, $value == $k);
+		foreach($options as $val => $ti){
+			$html .= static::htmlOption($ti, $val, $value == $val);
 		}
 		return $html;
 	}
@@ -119,6 +119,96 @@ trait Html{
 		$attributes['name'] = $name;
 		$attributes['value'] = $value;
 		return static::htmlElement('input', $attributes);
+	}
+
+	/**
+	 * @param string $name
+	 * @param array $options 选项[value=>title,...]格式
+	 * @param string $value
+	 * @param string $wrapper_tag 每个选项外部包裹标签，例如li、div等
+	 * @param array $radio_extra_attributes 每个radio额外定制属性
+	 * @return string
+	 */
+	public static function htmlRadioGroup($name, $options, $value = '', $wrapper_tag = '', $radio_extra_attributes = []){
+		$html = [];
+		foreach($options as $val=>$ti){
+			$html[] = static::htmlRadio($name, $val, $ti, $value == $val, $radio_extra_attributes);
+		}
+
+		if($wrapper_tag){
+			$rst = '';
+			foreach($html as $h){
+				$rst .= ' '.static::htmlElement($wrapper_tag, [], $h);
+			}
+			return $rst;
+		} else {
+			return join(' ', $html);
+		}
+	}
+
+	/**
+	 * 构建 radio按钮
+	 * 使用 label>(input:radio+{text}) 结构
+	 * @param $name
+	 * @param $value
+	 * @param string $title
+	 * @param bool $checked
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function htmlRadio($name, $value, $title='', $checked = false, $attributes = []){
+		$attributes['type'] = 'radio';
+		$attributes['name'] = $name;
+		$attributes['value'] = $value;
+		if($checked){
+			$attributes['checked'] = 'checked';
+		}
+		return static::htmlElement('label', [], static::htmlElement('input', $attributes).$title);
+	}
+
+	/**
+	 * @param string $name
+	 * @param array $options 选项[value=>title,...]格式
+	 * @param string $value
+	 * @param string $wrapper_tag 每个选项外部包裹标签，例如li、div等
+	 * @param array $radio_extra_attributes 每个radio额外定制属性
+	 * @return string
+	 */
+	public static function htmlCheckboxGroup($name, $options, $value = '', $wrapper_tag = '', $radio_extra_attributes = []){
+		$html = [];
+		foreach($options as $val=>$ti){
+			$html[] = static::htmlCheckbox($name, $val, $ti, $value == $val, $radio_extra_attributes);
+		}
+
+		if($wrapper_tag){
+			$rst = '';
+			foreach($html as $h){
+				$rst .= ' '.static::htmlElement($wrapper_tag, [], $h);
+			}
+			return $rst;
+		} else {
+			return join(' ', $html);
+		}
+	}
+
+	/**
+	 * 构建 checkbox按钮
+	 * 使用 label>(input:checkbox+{text}) 结构
+	 * @param $name
+	 * @param $value
+	 * @param string $title
+	 * @param bool $checked
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function htmlCheckbox($name, $value, $title = '', $checked = false, $attributes = []){
+		$attributes['type'] = 'checkbox';
+		$attributes['name'] = $name;
+		$attributes['value'] = $value;
+		if($checked){
+			$attributes['checked'] = 'checked';
+		}
+		return static::htmlElement('label', [], static::htmlElement('input', $attributes).$title);
 	}
 
 	/**
@@ -242,15 +332,15 @@ trait Html{
 	/**
 	 * datalist
 	 * @param $id
-	 * @param array $lv_data
+	 * @param array $data
 	 * @return string
 	 */
-	public static function htmlDataList($id, $lv_data = []){
+	public static function htmlDataList($id, $data = []){
 		$opts = '';
-		foreach($lv_data as $label=>$value){
-			$opts .= '<option label="'.ha($label).'">'.h($value).'</option>';
+		foreach($data as $item){
+			$opts .= '<option value="'.ha($item).'">';
 		}
-		return static::htmlElement('datalist', ['id'=>$id], $opts);
+		return static::htmlElement('datalist', ['id' => $id], $opts);
 	}
 
 	/**

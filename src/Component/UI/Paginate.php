@@ -322,12 +322,7 @@ class Paginate implements PaginateInterface {
 					'size'  => 2,
 					'min'   => 1
 				]);
-				$html .= Html::htmlDataList('page_number_list_'.$this->guid, [
-					'10'  => 10,
-					'20'  => 20,
-					'50'  => 50,
-					'100' => 100,
-				]);
+				$html .= Html::htmlDataList('page_number_list_'.$this->guid, ['10', '20', '50', '100']);
 				$html .= '</label>';
 				$html .= Html::htmlInputSubmit('提交', ['class'=>'page_size_submit']);
 				$html .= '</form>';
