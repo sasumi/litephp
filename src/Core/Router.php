@@ -27,7 +27,7 @@ abstract class Router{
 	const MODE_PATH = 0x02;
 	const MODE_REWRITE = 0x03;
 
-	public static $ROUTER_KEY;
+	public static $ROUTER_KEY = self::DEFAULT_ROUTER_KEY;
 	public static $RETURN_URL_KEY = '_ret_';
 	public static $DEFAULT_CONTROLLER = '';
 	public static $DEFAULT_ACTION = '';
@@ -220,7 +220,7 @@ abstract class Router{
 	 * @throws \Lite\Exception\Exception
 	 */
 	private static function parseCurrentRequest(){
-   		$get = $_GET;
+		$get = $_GET;
 		$router_mode = Config::get('router/mode');
 		$path_info = self::getPathInfo();
 
