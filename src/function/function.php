@@ -12,41 +12,34 @@ use Lite\Core\Router;
 use Lite\DB\Driver\DBAbstract;
 
 /**
- * 测试
- **/
+ * 变量调试函数，并输出当前调试点所在位置
+ * 用法：dump($var1, $var2, ..., 1)，当最后一个变量为1时，程序退出
+ */
 function dump(){
 	$params = func_get_args();
-	$tmp = $params;
 	$cli = Client::inCli();
-
-	//normal debug
-	if(count($params)>0){
-		$act = array_pop($tmp) === 1;
-		$params = $act ? array_slice($params, 0, -1) : $params;
-		echo $cli ? "\n" : '<pre style="font-size:12px; background-color:#eee; color:green; margin:0 0 10px 0; padding:0.5em; border-bottom:1px solid gray; width:100%; left:0; top:0; text-transform: none;">'."\n";
+	$exit = false;
+	echo !$cli ? PHP_EOL.'<pre style="color:green;">'.PHP_EOL : PHP_EOL;
+	
+	if(count($params)){
+		$tmp = $params;
+		$exit = array_pop($tmp) === 1;
+		$params = $exit ? array_slice($params, 0, -1) : $params;
 		$comma = '';
 		foreach($params as $var){
 			echo $comma;
 			var_dump($var);
-			$trace = debug_backtrace();
-			$trace = array_slice($trace, defined('DUMP_ENTRANCE_LEVEL') ? DUMP_ENTRANCE_LEVEL+1 : 1); //remove closure calling
-			echo "File:".($cli ? '' : '<b style="color:gray">').$trace[0]['file'].($cli ? '' : '</b><br/>')." Line: ".($cli ? '' : '<b>').$trace[0]['line'].($cli ? "\n" : '"</b><br/>"');
-			$comma = $cli ? "\n" : '<div style="height:0; line-height:1px; font-size:1px; border-bottom:1px solid white; border-top:1px solid #ccc; margin:10px 0"></div>';
-		}
-		if(!$cli && $act){
-			echo "\n";
-		}
-		echo $cli ? '' : '</pre>';
-		if($act){
-			die();
-		}
-	} //for tick debug
-	else{
-		if(++$GLOBALS['ONLY_FOR_DEBUG_INDEX']>=$GLOBALS['TICK_DEBUG_START_INDEX']){
-			$trace = debug_backtrace();
-			echo '<pre style="display:block; font-size:12px; color:green; padding:2px 0; border-bottom:1px solid #ddd; clear:both;">'.'['.($GLOBALS['ONLY_FOR_DEBUG_INDEX']).'] <b>'.$trace[0]['file'].'</b> line:'.$trace[0]['line'].'</pre>';
+			$comma = str_repeat('-',80).PHP_EOL;
 		}
 	}
+	
+	//remove closure calling & print out location.
+	$trace = debug_backtrace();
+	$trace = array_slice($trace, defined('DUMP_ENTRANCE_LEVEL') ? DUMP_ENTRANCE_LEVEL+1 : 1);
+	$last_stack = $trace[0];
+	echo "[ {$last_stack['file']} #{$last_stack['line']}]", PHP_EOL, str_repeat('=', 80), PHP_EOL;
+	echo !$cli ? '</pre>' : '';
+	$exit && exit();
 }
 
 /**

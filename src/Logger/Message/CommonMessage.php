@@ -1,5 +1,6 @@
 <?php
 namespace Lite\Logger\Message;
+use Lite\Component\Net\Client;
 use Lite\Logger\Logger;
 
 /**
@@ -52,7 +53,7 @@ class CommonMessage extends ArrayMessage {
 	public function __construct($message, $data=null){
 		parent::__construct($message, $data);
 		$this->ua = $_SERVER['HTTP_USER_AGENT'];
-		$this->client_ip = Logger::getIp();
+		$this->client_ip = Client::getIp();
 		$this->request_host = $_SERVER['HTTP_HOST'];
 		$this->request_uri = $_SERVER['REQUEST_URI'];
 		$this->callee = Logger::getCallee(2);

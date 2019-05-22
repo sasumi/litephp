@@ -1507,13 +1507,13 @@ abstract class Model extends DAO{
 	 */
 	public function __debugInfo(){
 		$cfg = $this->getDbConfig();
-		$cfg['password'] = !$cfg['password'] ? '******' : '';
+		$cfg['password'] = $cfg['password'] ? '***' : '';
 
 		return [
 			'data'              => $this->getValues(),
 			'data_changed_keys' => $this->getValueChanges(),
 			'query'             => $this->getQuery().'',
-			'database'          => $cfg
+			'database'          => json_encode($cfg)
 		];
 	}
 }
