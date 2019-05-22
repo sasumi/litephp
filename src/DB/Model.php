@@ -698,7 +698,7 @@ abstract class Model extends DAO{
 	 *
 	 * sum('price'); //10.00
 	 * sum(['price','count']); //[10.00, 14]
-	
+
 	 * sum(['price', 'count'], ['platform','order_type']); //
 	 * [
 	 *  ['platform,order_type'=>'amazon', 'price'=>10.00, 'count'=>14],
@@ -1099,7 +1099,8 @@ abstract class Model extends DAO{
 		});
 
 		//unique校验
-		foreach($pro_defines as $field => $def){
+		foreach($src_data as $field){
+			$def = $pro_defines[$field];
 			if($def['unique']){
 				if($query_type == Query::INSERT){
 					$count = $obj->find("`$field`=?", $data[$field])->count();
@@ -1486,9 +1487,9 @@ abstract class Model extends DAO{
 		//则抛异常
 		$kvs = array_keys($this->getValues());
 		if(!isset($v) && !in_array($key, $kvs)){
-			throw new Exception('model fields not set in query result', null, $key);
+		throw new Exception('model fields not set in query result', null, $key);
 		}
-		**/
+		 **/
 		return $v;
 	}
 
