@@ -3,6 +3,7 @@ namespace Lite\Component\String;
 
 use function Lite\func\array_clear_null;
 use function Lite\func\array_first;
+use function Lite\func\array_unshift_assoc;
 use function Lite\func\h;
 use function Lite\func\ha;
 use function Lite\func\substr_utf8;
@@ -46,6 +47,10 @@ trait Html{
 			'name'        => $name ?: null,
 			'placeholder' => $placeholder ?: null
 		]);
+
+		if($placeholder){
+			array_unshift_assoc($options, '', $placeholder);
+		}
 		if(count($options, COUNT_RECURSIVE) == count($options, COUNT_NORMAL)){
 			$option_html = static::htmlOptions($options, $value);
 		} else{
