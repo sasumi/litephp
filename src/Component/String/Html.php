@@ -71,7 +71,7 @@ trait Html{
 	public static function htmlOptions(array $options, $value = ''){
 		$html = '';
 		foreach($options as $val => $ti){
-			$html .= static::htmlOption($ti, $val, $value == $val);
+			$html .= static::htmlOption($ti, $val, is_numeric($val) ? $value === $val : $value == $val);
 		}
 		return $html;
 	}
@@ -101,6 +101,17 @@ trait Html{
 	public static function htmlOptionGroup($label, $options, $value = ''){
 		$option_html = static::htmlOptions($options, $value);
 		return static::htmlElement('optgroup', ['label' => $label], $option_html);
+	}
+
+	/**
+	 * @param $name
+	 * @param string $value
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function htmlTextArea($name, $value = '', $attributes = []){
+		$attributes['name'] = $name;
+		return static::htmlElement('textarea', $attributes, htmlspecialchars($value));
 	}
 
 	/**
