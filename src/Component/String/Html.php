@@ -37,12 +37,12 @@ trait Html{
 	 * 构建select节点，支持optgroup模式
 	 * @param $name
 	 * @param array $options 选项数据，如果是分组模式，为[group_name=>options, ...]格式
-	 * @param string $value
+	 * @param string|array $current_value
 	 * @param string $placeholder
 	 * @param array $attributes
 	 * @return string
 	 */
-	public static function htmlSelect($name, array $options, $value = '', $placeholder = '', $attributes = []){
+	public static function htmlSelect($name, array $options, $current_value = null, $placeholder = '', $attributes = []){
 		$attributes = array_merge($attributes, [
 			'name'        => $name ?: null,
 			'placeholder' => $placeholder ?: null
@@ -51,27 +51,38 @@ trait Html{
 		if($placeholder){
 			array_unshift_assoc($options, '', $placeholder);
 		}
+
+		//多选
+		if(is_array($current_value)){
+			$attributes['multiple'] = 'multiple';
+		}
+
+		//单层option
 		if(count($options, COUNT_RECURSIVE) == count($options, COUNT_NORMAL)){
-			$option_html = static::htmlOptions($options, $value);
-		} else{
+			$option_html = static::htmlOptions($options, $current_value);
+		}
+
+		//optgroup支持
+		else{
 			$option_html = '';
 			foreach($options as $group_name => $opts){
-				$option_html .= static::htmlOptionGroup($group_name, $opts);
+				$option_html .= static::htmlOptionGroup($group_name, $opts, $current_value);
 			}
 		}
+
 		return static::htmlElement('select', $attributes, $option_html);
 	}
 
 	/**
 	 * 构建select选项
-	 * @param array $options [value=>text,...] option data
-	 * @param mixed $value
+	 * @param array $options [value=>text,...] option data 选项数组
+	 * @param string|array $current_value 当前值
 	 * @return string
 	 */
-	public static function htmlOptions(array $options, $value = ''){
+	public static function htmlOptions(array $options, $current_value = null){
 		$html = '';
 		foreach($options as $val => $ti){
-			$html .= static::htmlOption($ti, $val, is_numeric($val) ? $value === $val : $value == $val);
+			$html .= static::htmlOption($ti, $val, self::htmlValueCompare($val, $current_value));
 		}
 		return $html;
 	}
@@ -95,15 +106,16 @@ trait Html{
 	 * 构建optgroup节点
 	 * @param $label
 	 * @param $options
-	 * @param string $value
+	 * @param string|array $current_value 当前值
 	 * @return string
 	 */
-	public static function htmlOptionGroup($label, $options, $value = ''){
-		$option_html = static::htmlOptions($options, $value);
+	public static function htmlOptionGroup($label, $options, $current_value = null){
+		$option_html = static::htmlOptions($options, $current_value);
 		return static::htmlElement('optgroup', ['label' => $label], $option_html);
 	}
 
 	/**
+	 * 构建textarea
 	 * @param $name
 	 * @param string $value
 	 * @param array $attributes
@@ -140,15 +152,15 @@ trait Html{
 	/**
 	 * @param string $name
 	 * @param array $options 选项[value=>title,...]格式
-	 * @param string $value
+	 * @param string $current_value
 	 * @param string $wrapper_tag 每个选项外部包裹标签，例如li、div等
 	 * @param array $radio_extra_attributes 每个radio额外定制属性
 	 * @return string
 	 */
-	public static function htmlRadioGroup($name, $options, $value = '', $wrapper_tag = '', $radio_extra_attributes = []){
+	public static function htmlRadioGroup($name, $options, $current_value = '', $wrapper_tag = '', $radio_extra_attributes = []){
 		$html = [];
 		foreach($options as $val=>$ti){
-			$html[] = static::htmlRadio($name, $val, $ti, $value == $val, $radio_extra_attributes);
+			$html[] = static::htmlRadio($name, $val, $ti, self::htmlValueCompare($val, $current_value), $radio_extra_attributes);
 		}
 
 		if($wrapper_tag){
@@ -185,15 +197,15 @@ trait Html{
 	/**
 	 * @param string $name
 	 * @param array $options 选项[value=>title,...]格式
-	 * @param string $value
+	 * @param string|array $current_value
 	 * @param string $wrapper_tag 每个选项外部包裹标签，例如li、div等
 	 * @param array $radio_extra_attributes 每个radio额外定制属性
 	 * @return string
 	 */
-	public static function htmlCheckboxGroup($name, $options, $value = '', $wrapper_tag = '', $radio_extra_attributes = []){
+	public static function htmlCheckboxGroup($name, $options, $current_value = null, $wrapper_tag = '', $radio_extra_attributes = []){
 		$html = [];
 		foreach($options as $val=>$ti){
-			$html[] = static::htmlCheckbox($name, $val, $ti, $value == $val, $radio_extra_attributes);
+			$html[] = static::htmlCheckbox($name, $val, $ti, self::htmlValueCompare($val, $current_value), $radio_extra_attributes);
 		}
 
 		if($wrapper_tag){
@@ -450,5 +462,24 @@ trait Html{
 		$html = str_replace("\r", '', $html);
 		$html = str_replace(array(' ', "\n", "\t"), array('&nbsp;', '<br/>', '&nbsp;&nbsp;&nbsp;&nbsp;'), $html);
 		return $html;
+	}
+
+	/**
+	 * HTML数值比较（通过转换成字符串之后进行严格比较）
+	 * @param string|number $str1
+	 * @param string|number|array $data
+	 * @return bool 是否相等
+	 */
+	public static function htmlValueCompare($str1, $data){
+		$str1 = (string)$str1;
+
+		if(is_array($data)){
+			foreach($data as $val){
+				if((string)$val === $str1){
+					return true;
+				}
+			}
+		}
+		return $str1 === (string)$data;
 	}
 }
