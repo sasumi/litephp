@@ -83,7 +83,17 @@ function file_exists_case_insensitive($file, $parent=null){
 	if(is_file($file)){
 		return $file;
 	}
-	$parent = $parent ? rtrim($parent, '/') : '';
+
+	$file = str_replace('\\', '/', $file);
+	if($parent && false){
+		$parent = str_replace('\\', '/', $parent);
+		$parent = rtrim($parent, '/');
+	} else {
+		$tmp = explode('/', $file);
+		array_pop($tmp);
+		$parent = join('/', $tmp);
+	}
+
 	static $fs = [];
 	if(!$fs[$parent]){
 		$fs[$parent] = glob_recursive($parent.'/*', GLOB_NOSORT);
