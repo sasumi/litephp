@@ -102,7 +102,7 @@ function string2error($string){
 	}
 	$value = 0;
 	$levels = explode('|', $string);
-
+	
 	foreach($levels as $level){
 		$level = trim($level);
 		if(defined($level)){
@@ -125,7 +125,7 @@ function print_sys_error($code, $msg, $file = null, $line = null, $trace_string 
 	$code = error2string($code);
 	echo "[$code] $msg\n\n";
 	echo "* $file #$line\n\n";
-
+	
 	if(!$trace_string){
 		$bs = debug_backtrace();
 		array_shift($bs);
@@ -164,7 +164,7 @@ function performance_mark($tag = '', $data = null, $trace = array()){
 	$tm = microtime(true);
 	$mem = memory_get_usage(true);
 	$trace = $trace ?: debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
-
+	
 	global $c6trpVZUNR7G;
 	$c6trpVZUNR7G[] = array($tm, $mem, $trace, $tag, $data);
 	return $c6trpVZUNR7G;
@@ -183,43 +183,43 @@ function lite_print_performance_mark($qc_list, $config = array()){
 		'page_time_threshold' => 3, //页面执行时间告警阀值
 		'page_memory_threshold' => 1024*1024*50 //页面内存告警阀值50M
 	), $config);
-
+	
 	$st = $qc_list[0][0];
 	$mt = $qc_list[0][1];
-
+	
 	echo '<style>',
-		'* {font-size:12px; font-family:helvetica, Microsoft Yahei, serif; line-height:1.8}',
-		'table {border-collapse:collapse; width:98%; margin:0 auto; background-color:white; border:1px solid #bbb;}',
-		'ul {padding:0 2em}',
-		'caption * {text-align:left; font-size:110%;}',
-		'td, th{padding:0.25em 0.5em; border-bottom:1px solid #ddd;}',
-		'th {white-space:nowrap; text-transform:capitalize; background-color:#ddd; padding:0.5em; text-align:left;}',
-		'tr:nth-child(even) {background-color:#efefef;}',
-		'tr:hover {background-color:#dedede;}',
-		'.cls_fun {color:#bbb; display:block;}',
-		'.pb, .ms {color:#eee}',
-		'.pbo, .mso {display:block; background-color:white; position:relative}',
-		'.tq-warn, .pbo-warn, .mso-warn {color:red}',
-		'.mso-warn {font-weight:bold;}',
-		'.loc {white-space:nowrap}',
-		'.brk {word-break:break-all;}',
-		'</style>';
-
+	'* {font-size:12px; font-family:helvetica, Microsoft Yahei, serif; line-height:1.8}',
+	'table {border-collapse:collapse; width:98%; margin:0 auto; background-color:white; border:1px solid #bbb;}',
+	'ul {padding:0 2em}',
+	'caption * {text-align:left; font-size:110%;}',
+	'td, th{padding:0.25em 0.5em; border-bottom:1px solid #ddd;}',
+	'th {white-space:nowrap; text-transform:capitalize; background-color:#ddd; padding:0.5em; text-align:left;}',
+	'tr:nth-child(even) {background-color:#efefef;}',
+	'tr:hover {background-color:#dedede;}',
+	'.cls_fun {color:#bbb; display:block;}',
+	'.pb, .ms {color:#eee}',
+	'.pbo, .mso {display:block; background-color:white; position:relative}',
+	'.tq-warn, .pbo-warn, .mso-warn {color:red}',
+	'.mso-warn {font-weight:bold;}',
+	'.loc {white-space:nowrap}',
+	'.brk {word-break:break-all;}',
+	'</style>';
+	
 	$total_query = 0;
 	array_walk($qc_list, function($item)use(&$total_query){
 		$total_query += $item[3] == DBAbstract::EVENT_BEFORE_DB_QUERY ? 1 : 0;
 	});
-
+	
 	echo '<table>',
-		"<caption><ul>",
-			"<li>Total DB Query: <b class=\"",($total_query > $config['max_query'] ? 'tq-warn':''),"\">$total_query</b></li>",
-			"<li>Time Cost: <b class=\"",(array_last($qc_list)[0] - $st > $config['page_time_threshold'] ? 'pbo-warn':''),"\">", round((array_last($qc_list)[0] - $st)*1000, 2), "ms</b></li>",
-			"<li>Mem Cost: <b class=\"",(array_last($qc_list)[1] - $mt > $config['page_memory_threshold'] ? 'mso-warn':''),"\">",format_size(array_last($qc_list)[1] - $mt),"</b></li>",
-		"</ul></caption>",
-		'<thead><tr>',
+	"<caption><ul>",
+	"<li>Total DB Query: <b class=\"",($total_query > $config['max_query'] ? 'tq-warn':''),"\">$total_query</b></li>",
+	"<li>Time Cost: <b class=\"",(array_last($qc_list)[0] - $st > $config['page_time_threshold'] ? 'pbo-warn':''),"\">", round((array_last($qc_list)[0] - $st)*1000, 2), "ms</b></li>",
+	"<li>Mem Cost: <b class=\"",(array_last($qc_list)[1] - $mt > $config['page_memory_threshold'] ? 'mso-warn':''),"\">",format_size(array_last($qc_list)[1] - $mt),"</b></li>",
+	"</ul></caption>",
+	'<thead><tr>',
 		'<th>'.join('</th><th>', ['IDX', 'tag / event', 'file call', 'data', 'pass by', 'mem stat']).'</th>',
-		'</tr></thead>';
-
+	'</tr></thead>';
+	
 	$lst = $st;
 	$lms = $mt;
 	foreach($qc_list as $k=>$item){
@@ -230,19 +230,19 @@ function lite_print_performance_mark($qc_list, $config = array()){
 		"<td>$k</td>",
 		"<td>$tag</td>",
 		"<td>",
-			"<span class=\"loc\">{$trace['file']} #{$trace['line']}</span>",
-			"<span class=\"cls_fun\">{$trace['class']}{$trace['type']}{$trace['function']}()</span>",
+		"<span class=\"loc\">{$trace['file']} #{$trace['line']}</span>",
+		"<span class=\"cls_fun\">{$trace['class']}{$trace['type']}{$trace['function']}()</span>",
 		"</td>",
 		"<td class=\"brk\">$data</td>",
 		"<td>",
-			"<span class=\"pbo\">",round($pass_by_offset*1000, 2),"ms</span>",
-			"<span class=\"pb\">",round(($pass_by - $st)*1000, 2),"ms</span>",
+		"<span class=\"pbo\">",round($pass_by_offset*1000, 2),"ms</span>",
+		"<span class=\"pb\">",round(($pass_by - $st)*1000, 2),"ms</span>",
 		"</td>",
 		"<td>",
-			"<span class=\"mso\">",format_size($mem_stat_offset),"</span>",
-			"<span class=\"ms\">",format_size($mem_stat),"</span>",
+		"<span class=\"mso\">",format_size($mem_stat_offset),"</span>",
+		"<span class=\"ms\">",format_size($mem_stat),"</span>",
 		"</td>";
-
+		
 		$lst = $pass_by;
 		$lms = $mem_stat;
 	}
@@ -257,7 +257,7 @@ function lite_auto_performance_mark(){
 	Hooker::add(Application::EVENT_AFTER_APP_INIT, function(){
 		performance_mark(Application::EVENT_AFTER_APP_INIT, null, debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]);
 	});
-
+	
 	//router init
 	Hooker::add(Router::EVENT_BEFORE_ROUTER_INIT, function(){
 		performance_mark(Router::EVENT_BEFORE_ROUTER_INIT, null, debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]);
@@ -265,7 +265,7 @@ function lite_auto_performance_mark(){
 	Hooker::add(Router::EVENT_AFTER_ROUTER_INIT, function(){
 		performance_mark(Router::EVENT_AFTER_ROUTER_INIT, null, debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]);
 	});
-
+	
 	$filter_trace = function($traces){
 		$traces = array_filter($traces, function($item){
 			if(!$item['file'] || stripos($item['file'], 'Litephp') !== false){
@@ -275,7 +275,7 @@ function lite_auto_performance_mark(){
 		});
 		return array_first($traces);
 	};
-
+	
 	//db query
 	Hooker::add(DBAbstract::EVENT_BEFORE_DB_QUERY, function()use($filter_trace){
 		performance_mark('EVENT_BEFORE_DB_QUERY', '', $filter_trace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 15)));

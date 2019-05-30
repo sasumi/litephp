@@ -24,19 +24,19 @@ abstract class DBAbstract{
 	const EVENT_ON_DB_CONNECT = 'EVENT_ON_DB_CONNECT';
 	const EVENT_ON_DB_QUERY_DISTINCT = 'EVENT_ON_DB_QUERY_DISTINCT';
 	const EVENT_ON_DB_RECONNECT = 'EVENT_ON_DB_RECONNECT';
-
+	
 	//最大重试次数，如果该数据配置为0，将不进行重试
 	public static $MAX_RECONNECT_COUNT = 10;
 	
 	//重新连接间隔时间（毫秒）
 	public static $RECONNECT_INTERVAL = 1000;
-
+	
 	// select查询去重
 	// 这部分逻辑可能针对某些业务逻辑有影响，如：做某些操作之后立即查询这种
 	// so，如果程序需要，可以通过 DBAbstract::distinctQueryOff() 关闭这个选项
 	private static $QUERY_DISTINCT = true;
 	private static $query_cache = array();
-
+	
 	/**
 	 * @var Query current processing db query, support for exception handle
 	 */
@@ -47,7 +47,7 @@ abstract class DBAbstract{
 	 * @var array
 	 */
 	private $config = array();
-
+	
 	/**
 	 * 数据库连接初始化，连接数据库，设置查询字符集，设置时区
 	 * @param array $config
@@ -75,7 +75,7 @@ abstract class DBAbstract{
 			$this->setTimeZone($this->config['timezone']);
 		}
 	}
-
+	
 	/**
 	 * debug sql
 	 */
@@ -87,7 +87,7 @@ abstract class DBAbstract{
 			dump($query.'');
 		});
 	}
-
+	
 	/**
 	 * 解析SQL语句
 	 * @param $sql
@@ -153,7 +153,7 @@ abstract class DBAbstract{
 		if(!$instance_list){
 			$instance_list = [];
 		}
-
+		
 		if(!$instance_list[$key]){
 			/** @var self $class */
 			$db_type = strtolower($config['type']) ?: 'mysql';
@@ -201,7 +201,7 @@ abstract class DBAbstract{
 	private static function getInstanceKey(array $config){
 		return md5(serialize($config));
 	}
-
+	
 	/**
 	 * 获取当前去重查询开启状态
 	 * @return bool
@@ -209,7 +209,7 @@ abstract class DBAbstract{
 	public static function distinctQueryState(){
 		return self::$QUERY_DISTINCT;
 	}
-
+	
 	/**
 	 * 打开去重查询模式
 	 */
@@ -242,7 +242,7 @@ abstract class DBAbstract{
 	public static function getProcessingQuery(){
 		return self::$processing_query;
 	}
-
+	
 	/**
 	 * 转义数据，缺省为统一使用字符转义
 	 * @param string $data
@@ -407,7 +407,7 @@ abstract class DBAbstract{
 		if(empty($data)){
 			throw new BizException('NO REPLACE DATA FOUND');
 		}
-
+		
 		$count = $this->getCount($this->genQuery()->select()->from($table)->where($condition)->limit(1));
 		if($count){
 			$query = $this->genQuery()->update()->from($table)->setData($data)->where($condition)->limit($limit);
@@ -468,7 +468,7 @@ abstract class DBAbstract{
 		$query = $this->genQuery()->insert()->from($table)->setData($data)->where($condition);
 		return $this->query($query);
 	}
-
+	
 	/**
 	 * 产生Query对象
 	 * @return Query
@@ -511,7 +511,7 @@ abstract class DBAbstract{
 				return $this->query($query);
 			}
 			Hooker::fire(self::EVENT_DB_QUERY_ERROR, $ex, $query, $this->config);
-			throw new Exception($ex->getMessage(), 0, array(
+			throw new Exception($ex->getMessage().$query.'', 0, array(
 				'query' => $query.'',
 				'host'  => $this->getConfig('host')
 			));

@@ -22,9 +22,9 @@ class DriverPDO extends DBAbstract {
 	/**
 	 * @var PDOStatement
 	 */
-    private $_last_query_result = null;
-
-    /**
+	private $_last_query_result = null;
+	
+	/**
 	 * PDO TYPE MAP
 	 * @var array
 	 */
@@ -37,12 +37,12 @@ class DriverPDO extends DBAbstract {
 		'double'  => PDO::PARAM_INT,
 		'string'  => PDO::PARAM_STR,
 	);
-
+	
 	/**
 	 * @var PDO pdo connect resource
 	 */
 	private $conn = null;
-
+	
 	/**
 	 * @param array $config
 	 * @param bool $re_connect
@@ -72,13 +72,13 @@ class DriverPDO extends DBAbstract {
 		$opt = [
 			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 		];
-
+		
 		//PHP进程最大执行时间
 		$max_exec_time = ini_get('max_execution_time');
-
+		
 		//最大连接超时时间与PHP进程超时时间差值
 		$ttf = 2;
-
+		
 		//用户设定超时时间
 		if($config['connect_timeout'] > 0){
 			$opt[PDO::ATTR_TIMEOUT] = $config['connect_timeout'];
@@ -87,7 +87,7 @@ class DriverPDO extends DBAbstract {
 		else if(!isset($config['connect_timeout']) && ($max_exec_time - $ttf > 0)){
 			$opt[PDO::ATTR_TIMEOUT] = $max_exec_time - $ttf;
 		}
-
+		
 		if($config['pconnect']){
 			$opt[PDO::ATTR_PERSISTENT] = true;
 		}
@@ -107,7 +107,7 @@ class DriverPDO extends DBAbstract {
 		$this->conn = $conn;
 		return $conn;
 	}
-
+	
 	/**
 	 * 是否切换到严格模式
 	 * @param bool $to_strict
@@ -119,11 +119,11 @@ class DriverPDO extends DBAbstract {
 		} else {
 			$sql = "set session sql_mode='NO_ENGINE_SUBSTITUTION'";
 		}
-
+		
 		$conn = $conn ?: $this->conn;
 		$conn->prepare($sql);
 	}
-
+	
 	/**
 	 * PDO判别是否为连接丢失异常
 	 * @param \Exception $exception
@@ -138,7 +138,7 @@ class DriverPDO extends DBAbstract {
 		}
 		return parent::isConnectionLost($exception);
 	}
-
+	
 	/**
 	 * last insert id
 	 * @param string $name
@@ -147,7 +147,7 @@ class DriverPDO extends DBAbstract {
 	public function getLastInsertId($name = null) {
 		return $this->conn->lastInsertId($name);
 	}
-
+	
 	/**
 	 * database query function
 	 * @param string|Query $sql
@@ -160,7 +160,7 @@ class DriverPDO extends DBAbstract {
 		$this->_last_query_result = $result;
 		return $result;
 	}
-
+	
 	/**
 	 * begin transaction
 	 * @return bool
@@ -168,7 +168,7 @@ class DriverPDO extends DBAbstract {
 	public function beginTransaction(){
 		return $this->conn->beginTransaction();
 	}
-
+	
 	/**
 	 * rollback
 	 * @return bool
@@ -176,7 +176,7 @@ class DriverPDO extends DBAbstract {
 	public function rollback(){
 		return $this->conn->rollBack();
 	}
-
+	
 	/**
 	 * commit transaction
 	 * @return bool
@@ -184,7 +184,7 @@ class DriverPDO extends DBAbstract {
 	public function commit(){
 		return $this->conn->commit();
 	}
-
+	
 	/**
 	 * cancelTransactionState
 	 * @return bool
@@ -192,7 +192,7 @@ class DriverPDO extends DBAbstract {
 	public function cancelTransactionState(){
 		return $this->conn->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
 	}
-
+	
 	/**
 	 * quote param by database connector
 	 * @param string $data
@@ -206,7 +206,7 @@ class DriverPDO extends DBAbstract {
 		$type = in_array($type, self::$PDO_TYPE_MAP) ? $type : PDO::PARAM_STR;
 		return $this->conn->quote($data, $type);
 	}
-
+	
 	/**
 	 * set SQL statement limit info
 	 * @param $sql
@@ -223,7 +223,7 @@ class DriverPDO extends DBAbstract {
 		}
 		return $sql . ' LIMIT ' . $limit;
 	}
-
+	
 	/**
 	 * fetch all row
 	 * @param PDOStatement $resource
@@ -233,7 +233,7 @@ class DriverPDO extends DBAbstract {
 		$resource->setFetchMode(PDO::FETCH_ASSOC);
 		return $resource->fetchAll();
 	}
-
+	
 	/**
 	 * fetch one column
 	 * @param PDOStatement $rs
@@ -242,7 +242,7 @@ class DriverPDO extends DBAbstract {
 	public static function fetchColumn(PDOStatement $rs) {
 		return $rs->fetchColumn();
 	}
-
+	
 	/**
 	 * 查询最近db执行影响行数
 	 * @description 该方法调用时候需要谨慎，需要避免_last_query_result被覆盖
@@ -251,7 +251,7 @@ class DriverPDO extends DBAbstract {
 	public function getAffectNum() {
 		return $this->_last_query_result ? $this->_last_query_result->rowCount() : 0;
 	}
-
+	
 	/**
 	 * 数据库数据字典
 	 * @return array
@@ -264,7 +264,7 @@ class DriverPDO extends DBAbstract {
 		}
 		return $tables;
 	}
-
+	
 	/**
 	 * 获取数据库表清单
 	 * @return array
@@ -277,7 +277,7 @@ class DriverPDO extends DBAbstract {
 		$result = $sth->fetchAll(PDO::FETCH_ASSOC);
 		return $result;
 	}
-
+	
 	/**
 	 * 获取数据库表字段清单
 	 * @param $table
