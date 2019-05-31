@@ -85,7 +85,7 @@ function file_exists_case_insensitive($file, $parent=null){
 	}
 
 	$file = str_replace('\\', '/', $file);
-	if($parent && false){
+	if($parent){
 		$parent = str_replace('\\', '/', $parent);
 		$parent = rtrim($parent, '/');
 	} else {
