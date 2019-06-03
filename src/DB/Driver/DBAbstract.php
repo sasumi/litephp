@@ -389,7 +389,6 @@ abstract class DBAbstract{
 		}
 		$query = $this->genQuery()->update()->from($table)->setData($data)->where($condition)->limit($limit);
 		$this->query($query);
-		
 		return $this->getAffectNum();
 	}
 	

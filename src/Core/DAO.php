@@ -241,9 +241,17 @@ abstract class DAO implements Iterator, ArrayAccess{
 	public function __set($key, $value){
 		$rule = $this->getPropertiesDefine($key) ?: array();
 		$setter = $rule[self::SETTER_KEY_NAME];
+
+		//setter中断
 		if($setter && call_user_func_array($setter, array($value, $this)) === false){
 			return;
 		}
+		//如果数据没有修改，则不纳入提交
+		if($this->_values[$key] === $value){
+			return;
+		}
+
+		//onBeforeSetValue事件中断
 		if($this->onBeforeSetValue($key, $value) === false){
 			return;
 		}

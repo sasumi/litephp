@@ -68,6 +68,11 @@ abstract class Model extends DAO{
 	}
 
 	/**
+	 * on after update
+	 */
+	public function onAfterUpdate(){}
+
+	/**
 	 * 记录插入之前事件
 	 * @return boolean
 	 */
@@ -78,9 +83,7 @@ abstract class Model extends DAO{
 	/**
 	 * 记录插入之后
 	 */
-	public function onAfterInsert(){
-
-	}
+	public function onAfterInsert(){}
 
 	/**
 	 * records on change event
@@ -991,7 +994,9 @@ abstract class Model extends DAO{
 		$change_keys = $this->getValueChangeKeys();
 		$data = array_clear_fields(array_keys($change_keys), $data);
 		list($data) = self::validate($data, Query::UPDATE, $this->$pk, true, $this);
-		return $this->getDbDriver(self::DB_WRITE)->update($this->getTableName(), $data, $this->getPrimaryKey().'='.$this->$pk);
+		$this->getDbDriver(self::DB_WRITE)->update($this->getTableName(), $data, $this->getPrimaryKey().'='.$this->$pk);
+		$this->onAfterUpdate();
+		return $this->{$this->getPrimaryKey()};
 	}
 	
 	/**
@@ -1350,7 +1355,7 @@ abstract class Model extends DAO{
 		if($this->onBeforeSave() === false){
 			return false;
 		}
-		
+
 		if(!$this->getValueChangeKeys()){
 			return false;
 		}
