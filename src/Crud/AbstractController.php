@@ -460,16 +460,16 @@ abstract class AbstractController extends CoreController{
 	 */
 	public function delete($get){
 		$this->checkSupport(CI::OP_DELETE);
-
-		$ins = $this->getModelInstance();
-		$pk = $ins->getPrimaryKey();
+		/** @var Model $class */
+		/** @var CI|self $this */
+		$class = $this->getModelClass();
+		$pk = $class::meta()->getPrimaryKey();
 		$pk_val = (int)$get[$pk];
 
-		if($pk_val){
-			$ins::delByPk($pk_val);
-			return new Result($ins->getModelDesc().'删除成功', true, null, $this->getBackUrl());
-		}
-		return new Result('操作失败，请刷新页面后重试');
+		/** @var Model $ins */
+		$ins = $class::findOneByPkOrFail($pk_val);
+		$ins->delete();
+		return new Result($ins->getModelDesc().'删除成功', true, null, $this->getBackUrl());
 	}
 
 	/**

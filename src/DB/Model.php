@@ -86,6 +86,19 @@ abstract class Model extends DAO{
 	public function onAfterInsert(){}
 
 	/**
+	 * 记录删除之前
+	 * @return bool
+	 */
+	public function onBeforeDelete(){
+		return true;
+	}
+
+	/**
+	 * 记录删除之后
+	 */
+	public function onAfterDelete(){}
+
+	/**
 	 * records on change event
 	 */
 	protected static function onBeforeChanged(){
@@ -105,7 +118,7 @@ abstract class Model extends DAO{
 	public function getModelDesc(){
 		return $this->getTableName();
 	}
-	
+
 	/**
 	 * 获取数据库表全名
 	 * @return string
@@ -129,7 +142,7 @@ abstract class Model extends DAO{
 		}
 		throw new Exception('no primary key found in table defines');
 	}
-	
+
 	/**
 	 * 获取db记录实例对象
 	 * @param int $operate_type
@@ -141,7 +154,7 @@ abstract class Model extends DAO{
 		$config = $this->parseConfig($operate_type, $configs);
 		return DBAbstract::instance($config);
 	}
-	
+
 	/**
 	 * 解释SQL语句
 	 * @param $query
@@ -152,7 +165,7 @@ abstract class Model extends DAO{
 		$obj = self::meta();
 		return $obj->getDbDriver(self::DB_READ)->explain($query);
 	}
-	
+
 	/**
 	 * 获取数据库配置
 	 * 该方法可以被覆盖重写
@@ -171,7 +184,7 @@ abstract class Model extends DAO{
 	protected function setDbConfig($db_config){
 		$this->db_config = $db_config;
 	}
-	
+
 	/**
 	 * 获取数据库表前缀
 	 * @param int $type
@@ -299,7 +312,7 @@ abstract class Model extends DAO{
 			throw $exception;
 		}
 	}
-	
+
 	/**
 	 * 执行当前查询
 	 * @return \PDOStatement
@@ -330,7 +343,7 @@ abstract class Model extends DAO{
 			}
 			return false;
 		};
-		
+
 		//before get list, check cache
 		Hooker::add(DBAbstract::EVENT_BEFORE_DB_GET_LIST, function($param) use ($check_table_hit, $getter){
 			$model = $check_table_hit($param['query']);
@@ -358,7 +371,7 @@ abstract class Model extends DAO{
 			}
 		});
 	}
-	
+
 	/**
 	 * 查找
 	 * @param string $statement 条件表达式
@@ -378,7 +391,7 @@ abstract class Model extends DAO{
 		$obj->query = $query;
 		return $obj;
 	}
-	
+
 	/**
 	 * 添加更多查询条件
 	 * @param array $args 查询条件
@@ -390,7 +403,7 @@ abstract class Model extends DAO{
 		$this->query->where($statement);
 		return $this;
 	}
-	
+
 	/**
 	 * 快速查询用户请求过来的信息，只有第二个参数为不为空的时候才去查询，空数组还是会去查。
 	 * @param $st
@@ -411,7 +424,7 @@ abstract class Model extends DAO{
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * 快速LIKE查询用户请求过来的信息，当LIKE内容为空时，不执行查询，如 %%。
 	 * @param $st
@@ -425,7 +438,7 @@ abstract class Model extends DAO{
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * 批量LIKE查询（whereLikeOnSet方法快捷用法）
 	 * @param array $fields
@@ -438,7 +451,7 @@ abstract class Model extends DAO{
 		array_unshift($values, $st);
 		return call_user_func_array([$this, 'whereLikeOnSet'], $values);
 	}
-	
+
 	/**
 	 * 检测字段是否处于指定范围之中
 	 * @param string $field
@@ -459,7 +472,7 @@ abstract class Model extends DAO{
 		}
 		return $this;
 	}
-	
+
 	/**
 	 * 创建新对象
 	 * @param $data
@@ -472,7 +485,7 @@ abstract class Model extends DAO{
 		$obj->setValues($data);
 		return $obj->save() ? $obj : false;
 	}
-	
+
 	/**
 	 * 由主键查询一条记录
 	 * @param string $val
@@ -484,7 +497,7 @@ abstract class Model extends DAO{
 		$obj = static::meta();
 		return static::find($obj->getPrimaryKey().'=?', $val)->one($as_array);
 	}
-	
+
 	/**
 	 * @param $val
 	 * @param bool $as_array
@@ -499,7 +512,7 @@ abstract class Model extends DAO{
 		}
 		return $data;
 	}
-	
+
 	/**
 	 * 有主键列表查询多条记录
 	 * 单主键列表为空，该方法会返回空数组结果
@@ -515,7 +528,7 @@ abstract class Model extends DAO{
 		$obj = static::meta();
 		return static::find($obj->getPrimaryKey().' IN ?', $pks)->all($as_array);
 	}
-	
+
 	/**
 	 * 根据主键值删除一条记录
 	 * @param string $val
@@ -526,7 +539,7 @@ abstract class Model extends DAO{
 		$obj = static::meta();
 		return static::deleteWhere(0, $obj->getPrimaryKey()."='$val'");
 	}
-	
+
 	/**
 	 * 根据主键值更新记录
 	 * @param string $val 主键值
@@ -552,7 +565,7 @@ abstract class Model extends DAO{
 		$pk = $obj->getPrimaryKey();
 		return static::updateWhere($data, count($pks), "$pk IN ?", $pks);
 	}
-	
+
 	/**
 	 * 根据条件更新数据
 	 * @param array $data
@@ -574,7 +587,7 @@ abstract class Model extends DAO{
 		$result = $obj->getDbDriver(self::DB_WRITE)->update($table, $data, $statement, $limit);
 		return $result;
 	}
-	
+
 	/**
 	 * 根据条件从表中删除记录
 	 * @param int $limit 为了安全，调用方必须传入具体数值，如不限制删除数量，可设置为0
@@ -592,7 +605,7 @@ abstract class Model extends DAO{
 		$result = $obj->getDbDriver(self::DB_WRITE)->delete($table, $statement, $limit);
 		return $result;
 	}
-	
+
 	/**
 	 * 获取所有记录
 	 * @param bool $as_array return as array
@@ -638,7 +651,7 @@ abstract class Model extends DAO{
 		$key = $key ?: $this->getPrimaryKey();
 		return $this->all($as_array, $key);
 	}
-	
+
 	/**
 	 * 获取一条记录
 	 * @param bool $as_array 是否以数组方式返回，默认为Model对象
@@ -657,7 +670,7 @@ abstract class Model extends DAO{
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获取一条记录，为空时抛异常
 	 * @param bool $as_array 是否以数组方式返回，默认为Model对象
@@ -672,7 +685,7 @@ abstract class Model extends DAO{
 		}
 		return $data;
 	}
-	
+
 	/**
 	 * 获取一个记录字段
 	 * @param string|null $key 如字段为空，则取第一个结果
@@ -688,7 +701,7 @@ abstract class Model extends DAO{
 		$data = $this->getDbDriver(self::DB_READ)->getOne($this->query);
 		return $data ? array_pop($data) : null;
 	}
-	
+
 	/**
 	 * 计算字段值总和
 	 * @param string|array $fields 需要计算字段名称（列表）
@@ -716,13 +729,13 @@ abstract class Model extends DAO{
 		foreach($fields as $_=>$field){
 			$str[] = "SUM($field) as $field";
 		}
-		
+
 		if($group_by){
 			$str = array_merge($str,$group_by);
 			$this->query->group(implode(',',$group_by));
 		}
 		$this->query->field(join(',', $str));
-		
+
 		$data = $this->getDbDriver(self::DB_READ)->getAll($this->query);
 		if($group_by){
 			return $data;
@@ -790,7 +803,7 @@ abstract class Model extends DAO{
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 获取指定列，作为一维数组返回
 	 * @param $key
@@ -874,7 +887,7 @@ abstract class Model extends DAO{
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 数据记录监听
 	 * @param callable $handler 处理函数，若返回false，则终端监听
@@ -892,7 +905,7 @@ abstract class Model extends DAO{
 		} else if(!$debugger || !is_callable($debugger)){
 			$debugger = function(){};
 		}
-		
+
 		$dist_status = DBAbstract::distinctQueryState();
 		DBAbstract::distinctQueryOff();
 		while(true){
@@ -931,7 +944,7 @@ abstract class Model extends DAO{
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 获取当前查询条数
 	 * @return int
@@ -942,7 +955,7 @@ abstract class Model extends DAO{
 		$count = $driver->getCount($this->query);
 		return $count;
 	}
-	
+
 	/**
 	 * 分页查询记录
 	 * @param string $page
@@ -998,7 +1011,7 @@ abstract class Model extends DAO{
 		$this->onAfterUpdate();
 		return $this->{$this->getPrimaryKey()};
 	}
-	
+
 	/**
 	 * 插入当前对象
 	 * @throws \Lite\Exception\BizException
@@ -1009,7 +1022,7 @@ abstract class Model extends DAO{
 		if($this->onBeforeInsert() === false || self::onBeforeChanged() === false){
 			return false;
 		}
-		
+
 		$this->last_operate_type = self::LAST_OP_INSERT;
 		$data = $this->getValues();
 		list($data) = self::validate($data, Query::INSERT, null, true, $this);
@@ -1023,7 +1036,7 @@ abstract class Model extends DAO{
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 替换数据
 	 * @param array $data
@@ -1041,7 +1054,7 @@ abstract class Model extends DAO{
 		$result = $obj->getDbDriver(self::DB_WRITE)->replace($table, $data, $statement, $limit);
 		return $result;
 	}
-	
+
 	/**
 	 * 增加或减少计数
 	 * @param string $field 计数使用的字段
@@ -1060,7 +1073,7 @@ abstract class Model extends DAO{
 		$result = $obj->getDbDriver(self::DB_WRITE)->increase($table, $field, $offset, $statement, $limit);
 		return $result;
 	}
-	
+
 	/**
 	 * 获取字段-别名映射表
 	 * @return array [field=>name, ...]
@@ -1074,7 +1087,7 @@ abstract class Model extends DAO{
 		}
 		return $ret;
 	}
-	
+
 	/**
 	 * 数据校验
 	 * @param array $src_data 元数据
@@ -1142,7 +1155,7 @@ abstract class Model extends DAO{
 				}
 			}
 		});
-		
+
 		//更新时，只需要处理更新数据的属性
 		if($query_type == Query::UPDATE || $query_type == Query::REPLACE){
 			foreach($pro_defines as $k => $define){
@@ -1179,7 +1192,7 @@ abstract class Model extends DAO{
 		}
 		return array($data, null);
 	}
-	
+
 	/**
 	 * 字段校验
 	 * @param $value
@@ -1299,16 +1312,21 @@ abstract class Model extends DAO{
 		$result = $obj->getDbDriver(self::DB_WRITE)->insert($obj->getTableName(), $data_list);
 		return $result;
 	}
-	
+
 	/**
 	 * 从数据库从删除当前对象对应的记录
 	 * @return bool
 	 * @throws \Lite\Exception\Exception
 	 */
 	public function delete(){
+		if($this->onBeforeDelete() === false){
+			return false;
+		}
 		$pk_val = $this[$this->getPrimaryKey()];
 		$this->last_operate_type = self::LAST_OP_DELETE;
-		return static::delByPk($pk_val);
+		$result = static::delByPk($pk_val);
+		$this->onAfterDelete();
+		return $result;
 	}
 	
 	/**
