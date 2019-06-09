@@ -23,7 +23,7 @@ abstract class AccessAdapter {
 	protected $session_name = 'uid';
 	protected $cookie_name = 'uid';
 	protected $cookie_sid_name = 'sid';
-	protected $cookie_expired = 3600;
+	protected $cookie_expired = 0;
 	protected $cookie_path = '/';
 	protected $cookie_domain = null;
 
@@ -141,6 +141,7 @@ abstract class AccessAdapter {
 		session_start();
 		$uid = $this->getIdFromUserInfo($user_info);
 		$this->loginById($uid);
+		return true;
 	}
 
 	/**
@@ -148,7 +149,9 @@ abstract class AccessAdapter {
 	 * @param $user_info
 	 */
 	protected function updateCookieInfo($user_info){
-		if($this->cookie_expired){
+		static $sent;
+		if(!$sent && $this->cookie_expired){
+			$sent = true;
 			$uid = $this->getIdFromUserInfo($user_info);
 			$now = time();
 			if(!headers_sent()){
@@ -178,7 +181,7 @@ abstract class AccessAdapter {
 	 * 检测是否登录
 	 * @return bool
 	 */
-	public function isLogin(){
+	public static function isLogin(){
 		$ins = static::instance();
 		return $ins->getLoginUserId();
 	}
