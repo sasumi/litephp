@@ -16,6 +16,9 @@ class Process{
 
 	/** @var resource */
 	protected $process;
+	
+	/** @var int current process id */
+	private $pid;
 
 	/** @var resource */
 	protected $stdout;
