@@ -36,7 +36,9 @@ trait Html{
 	/**
 	 * 构建select节点，支持optgroup模式
 	 * @param $name
-	 * @param array $options 选项数据，如果是分组模式，为[group_name=>options, ...]格式
+	 * @param array $options 选项数据，
+	 * 如果是分组模式，格式为：[group_name=>options, ...]，
+	 * 如果是普通模式，格式为：options: [value1=>text, value2=>text,...]
 	 * @param string|array $current_value
 	 * @param string $placeholder
 	 * @param array $attributes
@@ -48,28 +50,24 @@ trait Html{
 			'placeholder' => $placeholder ?: null
 		]);
 
-		if($placeholder){
-			array_unshift_assoc($options, '', $placeholder);
-		}
-
 		//多选
 		if(is_array($current_value)){
 			$attributes['multiple'] = 'multiple';
 		}
 
+		$option_html = $placeholder ? static::htmlOption($placeholder, '') : '';
+
 		//单层option
 		if(count($options, COUNT_RECURSIVE) == count($options, COUNT_NORMAL)){
-			$option_html = static::htmlOptions($options, $current_value);
+			$option_html .= static::htmlOptions($options, $current_value);
 		}
 
 		//optgroup支持
 		else{
-			$option_html = '';
 			foreach($options as $group_name => $opts){
 				$option_html .= static::htmlOptionGroup($group_name, $opts, $current_value);
 			}
 		}
-
 		return static::htmlElement('select', $attributes, $option_html);
 	}
 
