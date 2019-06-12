@@ -95,6 +95,30 @@ function dump_enable(){
 }
 
 /**
+ * 输出最后调用堆栈
+ */
+function dump_last_exit_trace(){
+	declare(ticks = 1);
+	$GLOBALS['___LAST_RUN___'] = null;
+	register_tick_function(function(){
+		$GLOBALS['___LAST_RUN___'] = debug_backtrace();
+	});
+	register_shutdown_function(function(){
+		dump($GLOBALS['___LAST_RUN___'], 1);
+	});
+}
+
+/**
+ * 步进方式调试
+ * @param int $step 步长
+ * @param string $fun 调试函数，默认使用dump
+ */
+function tick_dump($step = 1, $fun = '\Lite\func\dump'){
+	register_tick_function($fun);
+	eval("declare(ticks = $step);");
+}
+
+/**
  * 打印trace信息
  * @param $trace
  * @param bool $with_callee
@@ -121,18 +145,31 @@ function print_trace($trace, $with_callee = false, $with_index = false){
 	}
 }
 
-function var_export_min($var, $return = false) {
-	if (is_array($var)) {
-		$toImplode = array();
-		foreach ($var as $key => $value) {
-			$toImplode[] = var_export($key, true).'=>'.var_export_min($value, true);
+/**
+ * 打印系统错误及trace跟踪信息
+ * @param $code
+ * @param $msg
+ * @param $file
+ * @param $line
+ * @param string $trace_string
+ */
+function print_sys_error($code, $msg, $file = null, $line = null, $trace_string = ''){
+	echo "<pre>";
+	$code = error2string($code);
+	echo "[$code] $msg\n\n";
+	echo "* $file #$line\n\n";
+	
+	if(!$trace_string){
+		$bs = debug_backtrace();
+		array_shift($bs);
+		foreach($bs as $k => $b){
+			echo count($bs)-$k." {$b['class']}{$b['type']}{$b['function']}\n";
+			echo "  {$b['file']}  #{$b['line']} \n\n";
 		}
-		$code = 'array('.implode(',', $toImplode).')';
-		if ($return) return $code;
-		else echo $code;
-	} else {
-		return var_export($var, $return);
+	} else{
+		echo $trace_string;
 	}
+	die;
 }
 
 /**
@@ -203,47 +240,6 @@ function string2error($string){
 		}
 	}
 	return $value;
-}
-
-/**
- * print system error & debug info
- * @param $code
- * @param $msg
- * @param $file
- * @param $line
- * @param string $trace_string
- */
-function print_sys_error($code, $msg, $file = null, $line = null, $trace_string = ''){
-	echo "<pre>";
-	$code = error2string($code);
-	echo "[$code] $msg\n\n";
-	echo "* $file #$line\n\n";
-	
-	if(!$trace_string){
-		$bs = debug_backtrace();
-		array_shift($bs);
-		foreach($bs as $k => $b){
-			echo count($bs)-$k." {$b['class']}{$b['type']}{$b['function']}\n";
-			echo "  {$b['file']}  #{$b['line']} \n\n";
-		}
-	} else{
-		echo $trace_string;
-	}
-	die;
-}
-
-/**
- * 输出最后调用堆栈
- */
-function dump_last_exit_trace(){
-	declare(ticks = 1);
-	$GLOBALS['___LAST_RUN___'] = null;
-	register_tick_function(function(){
-		$GLOBALS['___LAST_RUN___'] = debug_backtrace();
-	});
-	register_shutdown_function(function(){
-		dump($GLOBALS['___LAST_RUN___'], 1);
-	});
 }
 
 /**
@@ -388,16 +384,6 @@ function is_function($f){
 }
 
 /**
- * tick debug
- * @param int $step
- * @param string $fun
- */
-function tick_dump($step = 1, $fun = 'dump'){
-	register_tick_function($fun);
-	eval("declare(ticks = $step);");
-}
-
-/**
  * pdog
  * @param $fun
  * @param $handler
@@ -421,4 +407,26 @@ function pdog($fun, $handler){
 function guid(){
 	global $__guid__;
 	return $__guid__++;
+}
+
+/**
+ * var_export in minimal format
+ * @param $var
+ * @param bool $return
+ * @return mixed|string
+ */
+function var_export_min($var, $return = false) {
+	if (is_array($var)) {
+		$toImplode = array();
+		foreach ($var as $key => $value) {
+			$toImplode[] = var_export($key, true).'=>'.var_export_min($value, true);
+		}
+		$code = 'array('.implode(',', $toImplode).')';
+		if ($return){
+			return $code;
+		}
+		else echo $code;
+	} else {
+		return var_export($var, $return);
+	}
 }

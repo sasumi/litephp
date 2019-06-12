@@ -3,10 +3,8 @@ namespace Lite\Component;
 use Lite\Core\Hooker;
 
 /**
- * 权限控制基类
+ * 权限控制适配器
  * User: sasumi
- * Date: 14-8-28
- * Time: 上午11:25
  */
 abstract class AccessAdapter {
 	const EVENT_BEFORE_LOGIN = 'EVENT_BEFORE_LOGIN';
@@ -147,7 +145,7 @@ abstract class AccessAdapter {
 	 */
 	private function updateCookieInfo($user_info){
 		//确保单次请求只发送一次setcookie，
-		//避免nginx处理setcookie的header数据量过大
+		//避免nginx处理setcookie的header数据量过大导致502发生
 		static $sent;
 		if($sent){
 			return;
