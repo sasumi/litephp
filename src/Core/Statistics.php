@@ -149,7 +149,7 @@ class Statistics {
 				"\t\tDB QUERY COST MEM:".format_size($data['DB_QUERY_MEM'])."\n\n";
 
 			$msg .= "[PROCESS USED TIME] ".microtime_diff($_SERVER['REQUEST_TIME_FLOAT'])."s";
-			$this->mark($msg, str_repeat('=', 120)."\nAPP SHUTDOWN");
+			$this->mark($msg, "APP SHUTDOWN");
 			$finish_handler($this->time_track_list, $data);
 		});
 	}

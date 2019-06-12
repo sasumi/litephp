@@ -1398,12 +1398,13 @@ abstract class Model extends DAO{
 	}
 
 	/**
+	 * 获取最后操作类型
 	 * @return string
 	 */
 	public function getLastOperateType(){
 		return $this->last_operate_type;
 	}
-	
+
 	/**
 	 * 对象克隆，支持查询对象克隆
 	 */

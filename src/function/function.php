@@ -11,16 +11,28 @@ use Lite\Core\Hooker;
 use Lite\Core\Router;
 use Lite\DB\Driver\DBAbstract;
 
+//dump函数控制标记
+$GLOBALS['DUMP_ENABLE_FLAG'] = true;
+
+//dump函数trace偏移量，默认为1（表示忽略dump函数自身trace信息）
+$GLOBALS['DUMP_ENTRANCE_LEVEL'] = 1;
+
+//dump函数是否同时输出trace信息，默认仅输出文件定位
+$GLOBALS['DUMP_WITH_TRACE'] = false;
+
 /**
  * 变量调试函数，并输出当前调试点所在位置
  * 用法：dump($var1, $var2, ..., 1)，当最后一个变量为1时，程序退出
  */
 function dump(){
+	if(!$GLOBALS['DUMP_ENABLE_FLAG']){
+		return;
+	}
 	$params = func_get_args();
 	$cli = Client::inCli();
 	$exit = false;
 	echo !$cli ? PHP_EOL.'<pre style="color:green;">'.PHP_EOL : PHP_EOL;
-	
+
 	if(count($params)){
 		$tmp = $params;
 		$exit = array_pop($tmp) === 1;
@@ -32,14 +44,95 @@ function dump(){
 			$comma = str_repeat('-',80).PHP_EOL;
 		}
 	}
-	
+
 	//remove closure calling & print out location.
 	$trace = debug_backtrace();
-	$trace = array_slice($trace, defined('DUMP_ENTRANCE_LEVEL') ? DUMP_ENTRANCE_LEVEL+1 : 1);
-	$last_stack = $trace[0];
-	echo "[ {$last_stack['file']} #{$last_stack['line']}]", PHP_EOL, str_repeat('=', 80), PHP_EOL;
-	echo !$cli ? '</pre>' : '';
+	$trace = array_slice($trace, dump_trace_entrance_offset());
+	if($GLOBALS['DUMP_WITH_TRACE']){
+		echo "[trace]",PHP_EOL;
+		print_trace($trace, true, true);
+	} else {
+		print_trace([$trace[0]]);
+	}
+	echo str_repeat('=', 80), PHP_EOL, (!$cli ? '</pre>' : '');
 	$exit && exit();
+}
+
+/**
+ * dump函数trace取值偏移
+ * @param null $level 偏移量
+ * @return null
+ */
+function dump_trace_entrance_offset($level = null){
+	if(isset($level)){
+		$GLOBALS['DUMP_ENTRANCE_LEVEL'] = $level;
+	}
+	return $GLOBALS['DUMP_ENTRANCE_LEVEL'];
+}
+
+/**
+ * dump并输出trace信息
+ * @return mixed
+ */
+function dump_with_trace(){
+	$GLOBALS['DUMP_WITH_TRACE'] = true;
+	dump_trace_entrance_offset(2);
+	return call_user_func_array('\Lite\func\dump', func_get_args());
+}
+
+/**
+ * 禁用dump函数
+ */
+function dump_disable(){
+	$GLOBALS['DUMP_ENABLE_FLAG'] = false;
+}
+
+/**
+ * 启用dump函数
+ */
+function dump_enable(){
+	$GLOBALS['DUMP_ENABLE_FLAG'] = true;
+}
+
+/**
+ * 打印trace信息
+ * @param $trace
+ * @param bool $with_callee
+ * @param bool $with_index
+ */
+function print_trace($trace, $with_callee = false, $with_index = false){
+	$ct = count($trace);
+	foreach($trace as $k=>$item){
+		$callee = '';
+		if($with_callee){
+			$vs = [];
+			foreach($item['args'] as $arg){
+				$vs[] = var_export_min($arg, true);
+			}
+			$arg_statement = join(',', $vs);
+			$arg_statement = substr(str_replace("\n", '', $arg_statement), 0, 50);
+			$callee = $item['class'] ? "\t{$item['class']}{$item['type']}{$item['function']}($arg_statement)" : "\t{$item['function']}($arg_statement)";
+		}
+		if($with_index){
+			echo "[", ($ct - $k), "] ";
+		}
+		$loc = $item['file'] ? "{$item['file']} #{$item['line']} " : '';
+		echo "{$loc}{$callee}", PHP_EOL;
+	}
+}
+
+function var_export_min($var, $return = false) {
+	if (is_array($var)) {
+		$toImplode = array();
+		foreach ($var as $key => $value) {
+			$toImplode[] = var_export($key, true).'=>'.var_export_min($value, true);
+		}
+		$code = 'array('.implode(',', $toImplode).')';
+		if ($return) return $code;
+		else echo $code;
+	} else {
+		return var_export($var, $return);
+	}
 }
 
 /**
