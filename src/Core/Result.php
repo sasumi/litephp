@@ -52,6 +52,14 @@ class Result {
 	}
 
 	/**
+	 * 获取编码
+	 * @return int
+	 */
+	public function getCode(){
+		return $this->code;
+	}
+
+	/**
 	 * 检测是否成功
 	 * @return boolean
 	 */

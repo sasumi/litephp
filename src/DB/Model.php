@@ -990,11 +990,10 @@ abstract class Model extends DAO{
 
 	/**
 	 * 更新当前对象
-	 * @throws \Lite\Exception\BizException
-	 * @throws \Lite\Exception\Exception
-	 * @return number|bool
+	 * @param bool $flush_all 是否刷新全部数据，包含readonly数据
+	 * @return bool|number
 	 */
-	public function update(){
+	public function update($flush_all = false){
 		if($this->onBeforeUpdate() === false || self::onBeforeChanged() === false){
 			return false;
 		}
@@ -1006,7 +1005,7 @@ abstract class Model extends DAO{
 		//只更新改变的值
 		$change_keys = $this->getValueChangeKeys();
 		$data = array_clear_fields(array_keys($change_keys), $data);
-		list($data) = self::validate($data, Query::UPDATE, $this->$pk, true, $this);
+		$data = $this->validate($data, Query::UPDATE, $flush_all);
 		$this->getDbDriver(self::DB_WRITE)->update($this->getTableName(), $data, $this->getPrimaryKey().'='.$this->$pk);
 		$this->onAfterUpdate();
 		return $this->{$this->getPrimaryKey()};
@@ -1014,18 +1013,16 @@ abstract class Model extends DAO{
 
 	/**
 	 * 插入当前对象
-	 * @throws \Lite\Exception\BizException
+	 * @param bool $flush_all 是否刷新全部数据，包含readonly数据
 	 * @return string|bool 返回插入的id，或者失败(false)
-	 * @throws \Lite\Exception\Exception
 	 */
-	public function insert(){
+	public function insert($flush_all = false){
 		if($this->onBeforeInsert() === false || self::onBeforeChanged() === false){
 			return false;
 		}
-
 		$this->last_operate_type = self::LAST_OP_INSERT;
 		$data = $this->getValues();
-		list($data) = self::validate($data, Query::INSERT, null, true, $this);
+		$data = $this->validate($data, Query::INSERT, $flush_all);
 
 		$result = $this->getDbDriver(self::DB_WRITE)->insert($this->getTableName(), $data);
 		if($result){
@@ -1092,17 +1089,12 @@ abstract class Model extends DAO{
 	 * 数据校验
 	 * @param array $src_data 元数据
 	 * @param string $query_type 数据库操作类型
-	 * @param null $pk_val 主键值
-	 * @param bool $throw_exception 是否在校验失败时抛出异常
-	 * @param null $model 元模型
-	 * @return array [data,error_message]
-	 * @throws BizException
-	 * @throws Exception
+	 * @param bool $flush_all 是否校验全部数据，包含readonly数据
+	 * @return array $data
 	 */
-	private static function validate($src_data = array(), $query_type = Query::INSERT, $pk_val = null, $throw_exception = true, $model = null){
-		$obj = self::meta();
-		$pro_defines = $obj->getEntityPropertiesDefine();
-		$pk = $obj->getPrimaryKey();
+	private function validate($src_data = array(), $query_type = Query::INSERT, $flush_all = false){
+		$pro_defines = $this->getEntityPropertiesDefine();
+		$pk = $this->getPrimaryKey();
 
 		//转换set数据
 		foreach($src_data as $k => $d){
@@ -1121,24 +1113,22 @@ abstract class Model extends DAO{
 			$def = $pro_defines[$field];
 			if($def['unique']){
 				if($query_type == Query::INSERT){
-					$count = $obj->find("`$field`=?", $data[$field])->count();
+					$count = $this::find("`$field`=?", $data[$field])->count();
 				} else{
-					$count = $obj->find("`$field`=? AND `$pk` <> ?", $data[$field], $pk_val)->count();
+					$count = $this::find("`$field`=? AND `$pk` <> ?", $data[$field], $this->$pk)->count();
 				}
 				if($count){
-					$msg = "{$def['alias']}：{$data[$field]}已经存在，不能重复添加";
-					if($throw_exception){
-						throw new BizException($msg);
-					}
-					return array($data, $msg);
+					throw new BizException("{$def['alias']}：{$data[$field]}已经存在，不能重复添加");
 				}
 			}
 		}
 
 		//移除readonly属性
-		$pro_defines = array_filter($pro_defines, function($def){
-			return !$def['readonly'];
-		});
+		if(!$flush_all){
+			$pro_defines = array_filter($pro_defines, function($def){
+				return !$def['readonly'];
+			});
+		}
 
 		//清理无用数据
 		$data = array_clear_fields(array_keys($pro_defines), $data);
@@ -1165,7 +1155,6 @@ abstract class Model extends DAO{
 			}
 		}
 
-
 		//处理date日期默认为NULL情况
 		foreach($data as $k => $val){
 			if(in_array($pro_defines[$k]['type'], array(
@@ -1180,36 +1169,29 @@ abstract class Model extends DAO{
 
 		//属性校验
 		foreach($pro_defines as $k => $def){
-			if(!$def['readonly']){
-				if($msg = self::validateField($data[$k], $k, $model)){
-					if($throw_exception){
-						throw new BizException($msg, null, array('field' => $k, 'value'=>$data[$k], 'row' => $data));
-					} else{
-						return array($data, $msg);
-					}
+			if(!$def['readonly'] || $flush_all){
+				if($msg = $this->validateField($data[$k], $k)){
+					throw new BizException($msg, null, array('field' => $k, 'value'=>$data[$k], 'row' => $data));
 				}
 			}
 		}
-		return array($data, null);
+		return $data;
 	}
 
 	/**
 	 * 字段校验
 	 * @param $value
 	 * @param $field
-	 * @param null $model
 	 * @return string
 	 */
-	private static function validateField(&$value, $field, $model = null){
-		/** @var Model $obj */
-		$obj = self::meta();
-		$define = $obj->getPropertiesDefine($field);
+	private function validateField(&$value, $field){
+		$define = $this->getPropertiesDefine($field);
 
 		$err = '';
 		$val = $value;
 		$name = $define['alias'];
 		if(is_callable($define['options'])){
-			$define['options'] = call_user_func($define['options'], $model);
+			$define['options'] = call_user_func($define['options'], $this);
 		}
 
 		$required = $define['required'];
@@ -1328,7 +1310,7 @@ abstract class Model extends DAO{
 		$this->onAfterDelete();
 		return $result;
 	}
-	
+
 	/**
 	 * 解析SQL查询中的条件表达式
 	 * @param array $args 参数形式可为 [""],但不可为 ["", "aa"] 这种传参
@@ -1362,14 +1344,14 @@ abstract class Model extends DAO{
 		}
 		return $statement;
 	}
-	
+
 	/**
 	 * 保存当前对象变更之后的数值
+	 * @param bool $flush_all 是否刷新全部数据，包含readonly数据
 	 * @return bool
-	 * @throws \Lite\Exception\BizException
 	 * @throws \Lite\Exception\Exception
 	 */
-	public function save(){
+	public function save($flush_all = false){
 		if($this->onBeforeSave() === false){
 			return false;
 		}
@@ -1381,9 +1363,9 @@ abstract class Model extends DAO{
 		$data = $this->getValues();
 		$has_pk = !empty($data[$this->getPrimaryKey()]);
 		if($has_pk){
-			return $this->update();
+			return $this->update($flush_all);
 		} else if(!empty($data)){
-			return $this->insert();
+			return $this->insert($flush_all);
 		}
 		return false;
 	}
