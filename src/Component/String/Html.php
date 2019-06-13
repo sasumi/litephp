@@ -234,7 +234,11 @@ trait Html{
 		if($checked){
 			$attributes['checked'] = 'checked';
 		}
-		return static::htmlElement('label', [], static::htmlElement('input', $attributes).$title);
+		$checkbox = static::htmlElement('input', $attributes);
+		if(!$title){
+			return $checkbox;
+		}
+		return static::htmlElement('label', [], $checkbox.$title);
 	}
 
 	/**
