@@ -510,7 +510,7 @@ abstract class DBAbstract{
 				return $this->query($query);
 			}
 			Hooker::fire(self::EVENT_DB_QUERY_ERROR, $ex, $query, $this->config);
-			throw new Exception($ex->getMessage().$query.'', 0, array(
+			throw new Exception($ex->getMessage(), 0, array(
 				'query' => $query.'',
 				'host'  => $this->getConfig('host')
 			));
@@ -579,7 +579,7 @@ abstract class DBAbstract{
 	public abstract function fetchAll($resource);
 	
 	/**
-	 * 设置限额
+	 * 设置SQL查询条数限制信息
 	 * @param $sql
 	 * @param $limit
 	 * @return mixed

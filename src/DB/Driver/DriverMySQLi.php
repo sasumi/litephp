@@ -6,7 +6,7 @@ use mysqli;
 use mysqli_result;
 
 /**
- * MYSQLi驱动类
+ * MySQLi驱动类
  * @package Lite\DB\Driver
  */
 class DriverMySQLi extends DBAbstract{

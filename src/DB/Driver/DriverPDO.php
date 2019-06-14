@@ -119,7 +119,6 @@ class DriverPDO extends DBAbstract {
 		} else {
 			$sql = "set session sql_mode='NO_ENGINE_SUBSTITUTION'";
 		}
-		
 		$conn = $conn ?: $this->conn;
 		$conn->prepare($sql);
 	}
@@ -129,7 +128,7 @@ class DriverPDO extends DBAbstract {
 	 * @param \Exception $exception
 	 * @return bool
 	 */
-	protected static function isConnectionLost($exception){
+	protected static function isConnectionLost(\Exception $exception){
 		if($exception instanceof \PDOException){
 			$lost_code_map = ['08S01', 'HY000'];
 			if(in_array($exception->getCode(), $lost_code_map)){
@@ -208,7 +207,7 @@ class DriverPDO extends DBAbstract {
 	}
 	
 	/**
-	 * set SQL statement limit info
+	 * 设置SQL查询条数限制信息
 	 * @param $sql
 	 * @param $limit
 	 * @return string
@@ -225,7 +224,7 @@ class DriverPDO extends DBAbstract {
 	}
 	
 	/**
-	 * fetch all row
+	 * 获取所有行
 	 * @param PDOStatement $resource
 	 * @return array | mixed
 	 */
