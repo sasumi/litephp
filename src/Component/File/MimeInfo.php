@@ -7,7 +7,6 @@ namespace Lite\Component\File;
  * User: sasumi
  * Date: 14-8-28
  * Time: 上午11:25
- *
  */
 class MimeInfo{
 	private static $mime_types = array(
@@ -1032,13 +1031,39 @@ class MimeInfo{
 	}
 	
 	/**
+	 * 根据文件（MIME）信息获取扩展名
+	 * @param $file
+	 * @param bool $use_original_as_default
+	 * @return int|mixed|null|string
+	 */
+	public static function detectExtensionByFile($file, $use_original_as_default = true){
+		$mime = static::getMimeByFile($file);
+		$ext = static::getExtensionByMime($mime);
+		if(!$ext && $use_original_as_default){
+			return end(explode('.', $file));
+		}
+		return $ext;
+	}
+	
+	/**
+	 * 通过文件获取mime信息
+	 * @param $file
+	 * @return mixed
+	 */
+	public static function getMimeByFile($file){
+		$file_info = new \finfo(FILEINFO_MIME);
+		$mime = current(explode(';', $file_info->file($file)));
+		return $mime;
+	}
+	
+	/**
 	 * 获取后缀mime信息
-	 * @param string $extensions
+	 * @param array|string $extensions
 	 * @return array
 	 */
-	public static function getMimesByExtensions($extensions = ''){
+	public static function getMimesByExtensions($extensions){
 		$result = [];
-		$es = explode(',', $extensions);
+		$es = is_string($extensions) ? explode(',', $extensions) : $extensions;
 		foreach($es as $ext){
 			if(self::$mime_types[$ext]){
 				$result[] = self::$mime_types[$ext];
