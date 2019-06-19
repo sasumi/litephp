@@ -3,11 +3,9 @@
 namespace Lite\Component\Upload;
 
 use Lite\Component\File\MimeInfo;
-use Lite\Component\Upload\Config\BaseConfig;
 use Lite\Component\Upload\Exception\UploadFileAccessException;
 use Lite\Component\Upload\Exception\UploadSizeException;
 use Lite\Component\Upload\Exception\UploadTypeException;
-use function Lite\func\restructure_files;
 
 /**
  * 文件上传基础类
@@ -17,10 +15,10 @@ abstract class Upload{
 	
 	/**
 	 * 单例
-	 * @param BaseConfig $config
+	 * @param BaseConfig|null $config
 	 * @return static
 	 */
-	public static function instance(BaseConfig $config){
+	public static function instance(BaseConfig $config = null){
 		static $instance;
 		if(!$instance){
 			$instance = new static($config);
@@ -30,9 +28,9 @@ abstract class Upload{
 	
 	/**
 	 * Upload constructor.
-	 * @param BaseConfig $config
+	 * @param BaseConfig|null $config
 	 */
-	public function __construct(BaseConfig $config){
+	public function __construct(BaseConfig $config = null){
 		$this->config = $config ?: new BaseConfig();
 	}
 	
@@ -44,11 +42,12 @@ abstract class Upload{
 	
 	/**
 	 * 单文件上传
-	 * @param $file
+	 * @param array $FILE
 	 * @return string
 	 */
-	public function uploadFile($file){
-		$file = $file ?: current($_FILES)['tmp_name'];
+	public function uploadFile(array $FILE = null){
+		$FILE = $FILE ?: current($_FILES);
+		$file = $FILE ?: $FILE['tmp_name'];
 		$this->checkFile($file);
 		return $this->saveFile($file);
 	}
@@ -60,10 +59,10 @@ abstract class Upload{
 	 * @return array|null
 	 */
 	public function uploadFiles(array $FILES = null, $break_on_error = true){
-		$fs = $FILES ? array_column($FILES, 'tmp_name') : self::plainFiles();
+		$FILES = $FILES ?: $_FILES;
 		$result = [];
-		foreach($fs as $f){
-			$rst = $this->uploadFile($f);
+		foreach($FILES as $FILE){
+			$rst = $this->uploadFile($FILE);
 			if(!$rst && $break_on_error){
 				return null;
 			}
@@ -73,18 +72,11 @@ abstract class Upload{
 	}
 	
 	/**
-	 * 整理$_FILES文件格式回正常关联数组
+	 * 扁平化 $_FILES变量
 	 * @return array
 	 */
-	protected static function plainFiles(){
-		$FILES = restructure_files($_FILES);
-		$fs = [];
-		array_walk_recursive($FILES, function($v, $k) use (&$fs){
-			if($k == 'tmp_name'){
-				$fs[] = $v;
-			}
-		});
-		return $fs;
+	protected function plainUploadFiles(){
+		return $_FILES;
 	}
 	
 	/**

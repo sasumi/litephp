@@ -1,6 +1,6 @@
 <?php
 
-namespace Lite\Component\Upload\Config;
+namespace Lite\Component\Upload;
 
 use Lite\Component\Upload\Exception\UploadDirAccessException;
 
@@ -25,6 +25,7 @@ class LocalConfig extends BaseConfig{
 	/**
 	 * @param bool $auto_create
 	 * @return string
+	 * @throws \Lite\Component\Upload\Exception\UploadDirAccessException
 	 */
 	public function getFileSavePath($auto_create = true){
 		if($auto_create && !is_dir($this->file_save_path)){
@@ -40,5 +41,25 @@ class LocalConfig extends BaseConfig{
 	 */
 	public function setFileSavePath($file_save_path){
 		$this->file_save_path = $file_save_path;
+	}
+	
+	/**
+	 * 反序列化
+	 * @param string $serialized
+	 */
+	public function unserialize($serialized){
+		$data = json_decode($serialized);
+		$this->file_save_path = $data['file_save_path'];
+		parent::unserialize($serialized);
+	}
+	
+	/**
+	 * json序列化字段
+	 * @return array
+	 */
+	public function jsonSerialize(){
+		$base = parent::jsonSerialize();
+		$base['file_save_path'] = $this->file_save_path;
+		return $base;
 	}
 }

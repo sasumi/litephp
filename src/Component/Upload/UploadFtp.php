@@ -2,7 +2,7 @@
 
 namespace Lite\Component\Upload;
 
-use Lite\Component\Upload\Config\LocalConfig;
+use Lite\Component\Upload\Exception\UploadException;
 
 /**
  * 文件上传至web服务器

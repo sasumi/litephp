@@ -2,7 +2,6 @@
 
 namespace Lite\Component\Upload;
 
-use Lite\Component\Upload\Config\LocalConfig;
 use Lite\Component\Upload\Exception\UploadException;
 
 /**
@@ -10,7 +9,10 @@ use Lite\Component\Upload\Exception\UploadException;
  * @property LocalConfig $config
  */
 class UploadLocal extends Upload{
-	public function __construct(LocalConfig $config){
+	public function __construct(LocalConfig $config = null){
+		if(!$config){
+			$config = new LocalConfig();
+		}
 		parent::__construct($config);
 	}
 	
@@ -22,15 +24,10 @@ class UploadLocal extends Upload{
 	protected function saveFile($file){
 		$dir = $this->config->getFileSavePath();
 		$file_name = $this->config->getSaveFileName($file);
-		$dir = rtrim(str_replace('\\', '/', $dir), '/').'/';
+		$dir = rtrim('/', str_replace('\\', '/', $dir));
 		$new_file = $dir.$file_name;
-		$base_dir = dirname($new_file);
-		if(!is_dir($base_dir)){
-			mkdir($base_dir, null, true);
-		}
-		$rst = move_uploaded_file($file, $new_file);
-		if(!$rst){
-			throw new UploadException("Upload file move fail:$file => $new_file");
+		if(!rename($file, $new_file)){
+			throw new UploadException('Upload fail');
 		}
 		return $file_name;
 	}

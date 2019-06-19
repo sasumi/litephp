@@ -1,6 +1,6 @@
 <?php
 
-namespace Lite\Component\Upload\Config;
+namespace Lite\Component\Upload;
 
 use Lite\Component\File\MimeInfo;
 use Lite\Component\Server;
@@ -11,7 +11,7 @@ use Lite\Component\Upload\Exception\UploadException;
  * Class UploadConfig
  * @package Lite\Component\Upload
  */
-class BaseConfig{
+class BaseConfig implements \Serializable, \JsonSerializable{
 	//允许上传文件mime
 	protected $allow_mimes = [];
 	
@@ -21,11 +21,8 @@ class BaseConfig{
 	//上传文件限制最小大小
 	protected $file_min_size = 0;
 	
-	//文件名称规则，支持以下规则：
-	//{MD5}：文件内容md5摘要
-	//{NAME}：原文件名（不包含扩展及路径）
-	//{EXT}：扩展名（经过mime检测修复}
-	//{Y}{M}{D}等日期占位符，规则与date函数一致
+	//文件名称规则
+	//支持{MD5}、{EXT}、或{YMD}等日期占位符
 	protected $file_name_rule = '';
 	
 	//是否自动修正错误扩展名
@@ -105,27 +102,20 @@ class BaseConfig{
 	 * @return mixed|string
 	 */
 	public function getSaveFileName($org_file){
-		if(is_callable($this->file_name_rule)){
+		if(is_scalar($this->file_name_rule)){
 			return call_user_func($this->file_name_rule, $org_file);
 		} else if($this->file_name_rule){
-			$rule = $this->file_name_rule;
-			if(strpos($rule, "{MD5}") !== false){
-				$rule = str_replace('{MD5}', md5(file_get_contents($org_file)), $rule);
+			$file = $this->file_name_rule;
+			if(strpos($file, "{MD5}") !== false){
+				$file = str_replace('{MD5}', md5(file_get_contents($org_file)), $file);
 			}
-			if(strpos($rule, '{NAME}')){
-				$f = end(explode('/', str_replace('\\', '/', $org_file)));
-				$name = current(explode('.', $f));
-				$rule = str_replace('{NAME}', $name, $rule);
+			if(strpos('{EXT}', $file) !== false){
+				$file = str_replace('{EXT}', MimeInfo::detectExtensionByFile($file), $file);
 			}
-			if(strpos($rule, '{EXT}') !== false){
-				$rule = str_replace('{EXT}', MimeInfo::detectExtensionByFile($org_file), $rule);
+			if(strpos('{', $file) !== false){
+				$file = date($file);
 			}
-			if(strpos($rule, '{') !== false){
-				$rule = preg_replace_callback('/\{([^\}]+)}/', function($matches){
-					return date($matches[1]);
-				}, $rule);
-			}
-			return $rule;
+			return $file;
 		} else{
 			return end(explode('/', str_replace('\\', '/', $org_file)));
 		}
@@ -157,5 +147,61 @@ class BaseConfig{
 	 */
 	public function setAutoFixedExtension($auto_fixed_extension){
 		$this->auto_fixed_extension = $auto_fixed_extension;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function __toString(){
+		return $this->serialize();
+	}
+	
+	/**
+	 * 序列化
+	 * @return string
+	 */
+	public function serialize(){
+		return json_encode($this->jsonSerialize(), JSON_PRETTY_PRINT);
+	}
+	
+	/**
+	 * 反序列化
+	 * @param string $serialized
+	 */
+	public function unserialize($serialized){
+		$data = json_decode($serialized);
+		$this->file_max_size = $data['file_max_size'];
+	}
+	
+	/**
+	 * 数据调试接口
+	 * @return array
+	 */
+	public function __debugInfo(){
+		return $this->jsonSerialize();
+	}
+	
+	/**
+	 * json序列化字段
+	 * @return array
+	 */
+	public function jsonSerialize(){
+		return [
+			'allow_mimes'          => $this->allow_mimes,
+			'file_max_size'        => $this->file_max_size,
+			'file_min_size'        => $this->file_min_size,
+			'file_name_rule'       => $this->file_name_rule,
+			'auto_fixed_extension' => $this->auto_fixed_extension,
+		];
+	}
+	
+	/**
+	 * json反序列化
+	 * @param string $serialized
+	 * @return \Lite\Component\Upload\BaseConfig
+	 */
+	public static function jsonUnSerialize($serialized){
+		$data = json_decode($serialized, true);
+		return new self($data);
 	}
 }
