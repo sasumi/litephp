@@ -11,10 +11,13 @@ use function Lite\func\t;
 class Lang{
 	const SESSION_KEY = '_lang_session_key_';
 	
-	private $language_list = ['en', 'fr', 'it'];
+	private $language_list = [];
 	private $default_language = '';
 	private $current_language = '';
 	
+	/**
+	 * Force singleton
+	 */
 	private function __construct(){}
 	
 	/**
@@ -61,7 +64,7 @@ class Lang{
 	}
 	
 	/**
-	 * 从浏览器发送的HTTP Head中侦测支持语言
+	 * 从浏览器发送的HTTP Header中侦测支持语言
 	 * @return string
 	 */
 	public function detectLanguageFromBrowser(){
