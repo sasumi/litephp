@@ -5,25 +5,25 @@ namespace Lite\I18N;
  * Class Lang
  * @package Lite\I18N
  */
-class Lang {
+class Lang{
 	const SESSION_KEY = '_lang_session_key_';
 	
-	private $language_list = [];
+	private $language_list = ['en', 'fr', 'it'];
 	private $default_language = '';
 	private $current_language = '';
 	
 	private $domain_default_path = '';
 	private $domain_paths = [];
-//
-//	protected $config = [
-//		'language_list' => ['zh_CN', 'en_US'],
-//		'default_language' => 'zh_CN',
-//		'domain_default_path' => '',
-//		'domain_paths' => [
-//			'default' => '/',
-//			'menu' => '/'
-//		],
-//	];
+	//
+	//	protected $config = [
+	//		'language_list' => ['zh_CN', 'en_US'],
+	//		'default_language' => 'zh_CN',
+	//		'domain_default_path' => '',
+	//		'domain_paths' => [
+	//			'default' => '/',
+	//			'menu' => '/'
+	//		],
+	//	];
 	
 	private function __construct($config){
 		$this->config = $config;
@@ -40,8 +40,11 @@ class Lang {
 		}
 		return $instance;
 	}
-	
-	public function detectLanguage(){
+
+	/**
+	 * @return string
+	 */
+	public function detectLanguageFromSession(){
 		if(!headers_sent()){
 			session_start();
 		}
@@ -53,9 +56,12 @@ class Lang {
 	 * @return string
 	 */
 	public function detectLanguageFromBrowser(){
-		return 'zh_CN';
+		$accepted = Parser::parseLangAcceptString($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		$available = Parser::parseLangAcceptString('en, fr, it');
+		$matches = Parser::matches($accepted, $this->language_list);
+		dump($accepted, $available, $matches, 1);
 	}
-	
+
 	/**
 	 * @param $language
 	 */
@@ -78,6 +84,8 @@ class Lang {
 	 * @param string $default_language
 	 */
 	public function setLanguageList($language_list, $default_language = ''){
-	
+
 	}
+
+
 }

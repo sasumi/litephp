@@ -18,6 +18,11 @@ if(!function_exists('dump')){
 	}
 }
 
+$runtime_source = __DIR__.'.runtime.php';
+if(is_file($runtime_source)){
+	include_once $runtime_source;
+}
+
 //注册自动加载库文件
 spl_autoload_register(function($className) use ($LITE_PATH, $NAMESPACE){
 	if(strpos($className, $NAMESPACE.'\\') === 0){
