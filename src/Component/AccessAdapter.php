@@ -7,10 +7,10 @@ use Lite\Core\Hooker;
  * User: sasumi
  */
 abstract class AccessAdapter {
-	const EVENT_BEFORE_LOGIN = 'EVENT_BEFORE_LOGIN';
-	const EVENT_AFTER_LOGIN = 'EVENT_AFTER_LOGIN';
-	const EVENT_BEFORE_LOGOUT = 'EVENT_BEFORE_LOGOUT';
-	const EVENT_AFTER_LOGOUT = 'EVENT_AFTER_LOGOUT';
+	const EVENT_BEFORE_LOGIN = __CLASS__.'EVENT_BEFORE_LOGIN';
+	const EVENT_AFTER_LOGIN = __CLASS__.'EVENT_AFTER_LOGIN';
+	const EVENT_BEFORE_LOGOUT = __CLASS__.'EVENT_BEFORE_LOGOUT';
+	const EVENT_AFTER_LOGOUT = __CLASS__.'EVENT_AFTER_LOGOUT';
 	
 	protected static $instance = array();
 	protected $session_name = 'uid';

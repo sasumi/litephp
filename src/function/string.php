@@ -63,7 +63,7 @@ function explode_by($delimiters, $str, $clear_empty = true){
 }
 
 /**
- * do the same than parse_str without max_input_vars limitation:
+ * Do the same than parse_str without max_input_vars limitation:
  * Parses $string as if it were the query string passed via a URL and sets variables in the current scope.
  * @param string $string array string to parse (not altered like in the original parse_str(), use the second parameter!)
  * @param array $result array  If the second parameter is present, variables are stored in this variable as array elements
@@ -216,10 +216,10 @@ function t($text, $param = array(), $domain = 'default'){
 }
 
 /**
- *数字金额转换成中文大写金额的函数
- *String Int  $num  要转换的小写数字或小写字符串
- *return 大写字母
- *小数位为两位
+ * 数字金额转换成中文大写金额的函数
+ * String Int  $num  要转换的小写数字或小写字符串
+ * return 大写字母
+ * 小数位为两位
  * @param $num
  * @return string
  * @throws \Exception
@@ -384,11 +384,13 @@ function resolve_size($val){
 	return $val;
 }
 
-/*
-PHP URL encoding/decoding functions for Javascript interaction V3.0
-(C) 2006 www.captain.at - all rights reserved
-License: GPL
-*/
+/**
+ * PHP URL encoding/decoding functions for Javascript interaction V3.0
+ * (C) 2006 www.captain.at - all rights reserved
+ * License: GPL
+ * @param $string
+ * @return string
+ */
 function encodeURIComponent($string){
 	$result = "";
 	for($i = 0; $i<strlen($string); $i++){
@@ -2128,12 +2130,10 @@ function unEscapeByCharacter($str){
 	}
 }
 
-
 /**
  * Returns a GUIDv4 string
- *
  * Uses the best cryptographically secure method
- * for all supported pltforms with fallback to an older,
+ * for all supported platforms with fallback to an older,
  * less secure version.
  *
  * @param bool $trim

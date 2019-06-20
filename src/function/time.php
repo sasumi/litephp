@@ -85,11 +85,12 @@ function time_get_month_period_ranges($start_str, $end_str){
 }
 
 /**
+ * 过滤时间范围，补充上时分秒
  * @param $ranges
  * @param string $default_start
  * @param string $default_end
  * @param bool $datetime
- * @return array
+ * @return array [开始时间,结束时间]
  */
 function filter_date_range($ranges, $default_start='', $default_end='', $datetime=false){
 	list($start, $end) = $ranges ?: [];
@@ -219,6 +220,7 @@ function time_range($start, $end){
  * <pre>
  * $str = time_range_v(3601);
  * //1H 0M 1S
+ * </pre>
  * @param $time
  * @return string
  */
