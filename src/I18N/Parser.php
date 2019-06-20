@@ -6,6 +6,7 @@ use function Lite\func\explode_by;
 
 /**
  * 国际化语言解析
+ * 如果已经安装扩展intl，则使用\Locale::parseLocale()函数匹配，
  */
 abstract class Parser{
 	const LOCAL_STRUCTURE = [
@@ -49,6 +50,7 @@ abstract class Parser{
 		//restructure
 		$groups = [];
 		foreach($data as list($language_list, $quality)){
+			/** @var array $language_list */
 			$groups[(string)$quality] = array_merge($language_list, $groups[$quality] ?: []);
 		}
 		uksort($groups, function($a, $b){
@@ -102,32 +104,59 @@ abstract class Parser{
 			'private3' => $private3,
 		];
 	}
-
+	
 	/**
-	 * @param $item
-	 * @param $haystack
-	 * @return bool
+	 * 语言定义相似度计算
+	 * 全等：4，地区：2，脚本：1，其他
+	 * @param $a
+	 * @param $b
+	 * @return float 得分
 	 */
-	private static function in_array_case_insensitive($item, $haystack){
-		foreach($haystack as $d){
-			if(strcasecmp($d, $item) === 0){
-				return true;
+	private static function cmpAndCal($a, $b){
+		if($a['language'] != $b['language']){
+			return 0;
+		}
+		if(!array_diff($a, $b)){
+			return 4;
+		}
+		$p = 0;
+		$p += strcasecmp($a['region'], $b['region']) === 0 ? 2 : 0;
+		$p += strcasecmp($a['script'], $b['script']) === 0 ? 1 : 0;
+		unset($a['language'], $a['region'], $a['script']);
+		foreach($a as $field=>$val){
+			if($val && strcasecmp($val, $b[$field]) === 0){
+				$p += 0.1;
 			}
 		}
-		return false;
+		return $p;
 	}
-
+	
 	/**
+	 * 语言相似度匹对
 	 * @param array $accepted
 	 * @param array $available
-	 * @return array
+	 * @param bool $with_priority 是否返回相似度
+	 * @return array 结果格式：['zh-CN'=>8, 'de'=>4.5, ...]
 	 */
-	public static function matches(array $accepted, array $available){
+	public static function matches(array $accepted, array $available, $with_priority = false){
+		//matches format ['zh-CN'=>8, 'de'=>4.5, ...]
 		$matches = [];
-		foreach($available as $lang){
-			if(self::in_array_case_insensitive($lang, $accepted)){
-				$matches[] = $lang;
+		
+		$av_list = array_map('self::parseLocal', $available);
+		$acc_list = array_map('self:parseLocal', $accepted);
+		
+		foreach($av_list as $av){
+			foreach($acc_list as $acc){
+				if($score = self::cmpAndCal($av, $acc)){
+					$matches[$av['language']] = $score;
+				}
 			}
+		}
+		
+		sort($matches, SORT_DESC);
+		
+		if(!$with_priority){
+			return array_keys($matches);
 		}
 		return $matches;
 	}

@@ -311,7 +311,7 @@ function log($file, $content, $max_size = 10*1024*1024, $max_files = 5, $pad_str
  * log in temporary directory
  * @param $filename
  * @param $content
- * @param int $max_size
+ * @param float|int $max_size
  * @param int $max_files
  * @param null $pad_str
  * @return bool|int

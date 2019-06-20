@@ -9,7 +9,6 @@ namespace Lite\func {
 	/**
 	 * Array group by function
 	 * group array(); by by_key
-	 * @author sasumi
 	 * @param array $array
 	 * @param string $by_key
 	 * @param boolean $limit
@@ -105,7 +104,7 @@ namespace Lite\func {
 					$pointer = &$stack[count($stack)-1];
 					$pointer = &$pointer[$key];
 					$stack[] = &$pointer;
-					if(!$iterator->hasChildren()){
+					if(!$iterator->callHasChildren()){
 						$pointer[$field] = $v;
 					}
 				}
