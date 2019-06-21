@@ -87,7 +87,7 @@ trait Html{
 
 	/**
 	 * 构建option节点
-	 * @param $text
+	 * @param string $text 文本，空白将被转义成&nbsp;
 	 * @param string $value
 	 * @param bool $selected
 	 * @param array $attributes
@@ -97,7 +97,7 @@ trait Html{
 		return static::htmlElement('option', array_merge([
 			'selected' => $selected ?: null,
 			'value'    => $value
-		], $attributes), h($text));
+		], $attributes), self::htmlFromText($text));
 	}
 
 	/**

@@ -6,7 +6,7 @@ abstract class CacheAdapter implements CacheInterface{
 	private static $instances;
 	private $config;
 
-	protected function __construct($config){
+	protected function __construct($config = []){
 		$this->setConfig($config);
 	}
 
