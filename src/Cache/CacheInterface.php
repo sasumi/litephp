@@ -2,10 +2,10 @@
 namespace Lite\Cache;
 
 /**
- * User: Sasumi
- * Date: 2015/10/19
- * Time: 20:20
- */
+* User: Sasumi
+* Date: 2015/10/19
+* Time: 20:20
+*/
 interface CacheInterface {
 	/**
 	 * 设置缓存接口

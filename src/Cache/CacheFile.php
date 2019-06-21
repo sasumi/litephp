@@ -4,7 +4,6 @@ namespace Lite\Cache;
 /**
  * Class CacheFile
  * @package Lite\Cache
- * @method static CacheFile instance($param = array())
  */
 class CacheFile extends CacheAdapter{
 	protected function __construct(array $config = []){
