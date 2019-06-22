@@ -5,59 +5,52 @@ use Lite\Exception\Exception;
 use Redis as SysRedis;
 
 class CacheRedis extends CacheAdapter{
-	/** @var null|\Redis */
-	private $cache = null;        //缓存对象
+	/** @var \Redis */
+	private $redis = null;        //缓存对象
 	private $defaultHost = '127.0.0.1'; //默认服务器地址
 	private $defaultPort = 6379;       //默认端口号
 	private $queueName = 'redis_queue';
 
 	protected function __construct(array $config){
 		if(!extension_loaded('redis')){
-			throw new Exception('NO REDIS PLUGIN FOUND');
-		}
-		$servers = $config['servers'];
-		$this->cache = new SysRedis();
-		if(!empty($servers)){
-			foreach($servers as $server){
-				$this->addServe($server);
-			}
-		}else{
-			$this->addServe($this->defaultHost.':'.$this->defaultPort);
+			throw new Exception('No redis extension found');
 		}
 		parent::__construct($config);
+		$server = $config['server'] ?: ['host' => $this->defaultHost, 'port' => $this->defaultPort];
+		if(is_string($server)){
+			$server = explode(':', $server);
+		}
+		$this->redis = new SysRedis();
+		$this->connect($server['host'], $server['port']);
 	}
 
 	/**
-	 * @brief  添加服务器到连接池
-	 * @param  string $address 服务器地址
-	 * @return bool   true:成功;false:失败;
+	 * 添加服务器到连接池
+	 * @param string $host 服务地址
+	 * @param int $port 服务端口
+	 * @return bool true:成功;false:失败;
+	 * @internal param string $address 服务器地址
 	 */
-	private function addServe($address){
-		list($host, $port) = explode(':', $address);
-		$port = $port ?: $this->defaultPort;
-		return $this->cache->connect($host, $port);
+	private function connect($host, $port){
+		return $this->redis->connect($host, $port);
 	}
 
 	public function set($cache_key, $data, $expired = 60){
 		$data = serialize($data);
-		return $this->cache->setex($cache_key, $expired, $data);
+		return $this->redis->setex($cache_key, $expired, $data);
 	}
 
 	public function get($cache_key){
-		$data = $this->cache->get($cache_key);
+		$data = $this->redis->get($cache_key);
 		return unserialize($data);
 	}
 
 	public function delete($cache_key){
-		$this->cache->delete($cache_key);
+		$this->redis->delete($cache_key);
 	}
 
 	public function flush(){
-		return $this->cache->flushAll();
-	}
-
-	public function addServer($host, $port){
-		return $this->cache->connect($host, $port);
+		return $this->redis->flushAll();
 	}
 
 	/**
@@ -72,7 +65,7 @@ class CacheRedis extends CacheAdapter{
 	 * 删除队列
 	 */
 	public function del(){
-		return $this->cache->del($this->queueName);
+		return $this->redis->del($this->queueName);
 	}
 
 	/**
@@ -80,7 +73,7 @@ class CacheRedis extends CacheAdapter{
 	 * @return mixed
 	 */
 	public function lSize(){
-		$this->cache->lSize($this->queueName);
+		$this->redis->lSize($this->queueName);
 	}
 
 	/**
@@ -89,7 +82,7 @@ class CacheRedis extends CacheAdapter{
 	 * @return mixed
 	 */
 	public function lrang($num){
-		return $this->cache->lRange($this->queueName, 0, $num);
+		return $this->redis->lRange($this->queueName, 0, $num);
 	}
 
 	/**
@@ -97,14 +90,14 @@ class CacheRedis extends CacheAdapter{
 	 * @param $value
 	 */
 	public function rpush($value){
-		$this->cache->rPush($this->queueName, $value);
+		$this->redis->rPush($this->queueName, $value);
 	}
 
 	/**
 	 * 从队列中取出一个数据
 	 */
 	public function lpop(){
-		return $this->cache->lPop($this->queueName);
+		return $this->redis->lPop($this->queueName);
 	}
 
 	/**
@@ -114,6 +107,6 @@ class CacheRedis extends CacheAdapter{
 	 * @return mixed
 	 */
 	public function ltrim($start, $stop){
-		return $this->cache->lTrim($this->queueName, $start, $stop);
+		return $this->redis->lTrim($this->queueName, $start, $stop);
 	}
 }
