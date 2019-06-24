@@ -672,14 +672,15 @@ abstract class Router{
 	
 	/**
 	 * 获取当前访问url
+	 * @param array $patch_param 追加参数
 	 * @return string
-	 **/
-	public static function getCurrentPageUrl(){
-		$host = $_SERVER['HTTP_HOST'];
-		$protocol = stripos($_SERVER['SERVER_PROTOCOL'], 'https') ? 'https://' : 'http://';
-		$port = $_SERVER['SERVER_PORT'] == 80 ? null : $_SERVER['SERVER_PORT'];
-		$uri = $_SERVER['REQUEST_URI'];
-		return $protocol.$host.($port ? ':'.$port : '').$uri;
+	 */
+	public static function getCurrentPageUrl($patch_param = []){
+		$url = $_SERVER['REQUEST_URI'];
+		if($patch_param){
+			$url .= (strpos($url, '?') !== false ? '&':'?').http_build_query($patch_param);
+		}
+		return $url;
 	}
 	
 	/**
