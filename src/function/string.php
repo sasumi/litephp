@@ -52,7 +52,8 @@ function explode_by($delimiters, $str, $clear_empty = true){
 	if(is_string($delimiters)){
 		$delimiters = str_split_by_charset($delimiters);
 	}
-	if(count($delimiters)>1){$des = $delimiters;
+	if(count($delimiters)>1){
+		$des = $delimiters;
 		array_shift($des);
 		$replacements = array_fill(0, count($delimiters)-1, $delimiters[0]);
 		$str = str_replace($des, $replacements, $str);
