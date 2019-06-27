@@ -302,6 +302,10 @@ function log($file, $content, $max_size = 10*1024*1024, $max_files = 5, $pad_str
 		}
 	}
 	if(!is_file($file)){
+		$dir = dirname($file);
+		if(!is_dir($dir)){
+			mkdir($dir, null, true);
+		}
 		touch($file);
 	}
 	return file_put_contents($file, $content, FILE_APPEND);
