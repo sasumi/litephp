@@ -6,6 +6,7 @@
  * Time: 11:19
  */
 namespace Lite\func;
+use Lite\I18N\Lang;
 
 /**
  * utf-8中英文截断（两个英文一个数量单位）
@@ -192,27 +193,8 @@ function __h($str, $len = null, $tail = '...', &$over_length = false, $type){
  * @param string $domain
  * @return string
  */
-function t($text, $param = array(), $domain = 'default'){
-	if(!$param){
-		return dgettext($domain, $text);
-	}
-	$text = dgettext($domain, $text);
-	extract($param, EXTR_OVERWRITE);
-	$tmp = '';
-	$text = preg_replace('/"/', '\\"', $text);
-	$str = preg_replace_callback('/\{([^}]+)\}/', function($matches){
-		$vs = explode('.', $matches[1]);
-		list($vars) = $vs;
-		if(count($vs)>1){
-			for($i = 1; $i<count($vs); $i++){
-				$vars .= "['".$vs[$i]."']";
-			}
-		}
-		return '{$'.$vars.'}';
-	}, $text);
-	$str = "\$tmp = \"$str\";";
-	eval($str);
-	return $tmp;
+function t($text, $param = array(), $domain = Lang::DEFAULT_DOMAIN){
+	return Lang::instance()->getText($text, $param, $domain);
 }
 
 /**
