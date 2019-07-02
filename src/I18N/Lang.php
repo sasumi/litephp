@@ -2,14 +2,13 @@
 
 namespace Lite\I18N;
 
-use function Lite\func\t;
-
 /**
  * 国际化多语言支持
  * @package Lite\I18N
  */
 class Lang{
 	const SESSION_KEY = '_lang_session_key_';
+	const DEFAULT_DOMAIN = 'default';
 	
 	private $language_list = [];
 	private $default_language = '';
@@ -22,13 +21,32 @@ class Lang{
 	
 	/**
 	 * 翻译
-	 * @param $message
+	 * @param $text
 	 * @param array $param
 	 * @param string $domain
 	 * @return string
 	 */
-	public function getText($message, $param = [], $domain = ''){
-		return t($message, $param, $domain);
+	public function getText($text, $param = [], $domain = self::DEFAULT_DOMAIN){
+		if(!$param){
+			return dgettext($domain, $text);
+		}
+		$text = dgettext($domain, $text);
+		extract($param, EXTR_OVERWRITE);
+		$tmp = '';
+		$text = preg_replace('/"/', '\\"', $text);
+		$str = preg_replace_callback('/\{([^}]+)\}/', function($matches){
+			$vs = explode('.', $matches[1]);
+			list($vars) = $vs;
+			if(count($vs)>1){
+				for($i = 1; $i<count($vs); $i++){
+					$vars .= "['".$vs[$i]."']";
+				}
+			}
+			return '{$'.$vars.'}';
+		}, $text);
+		$str = "\$tmp = \"$str\";";
+		eval($str);
+		return $tmp;
 	}
 	
 	/**

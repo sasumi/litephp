@@ -70,7 +70,6 @@ class CacheRedis extends CacheAdapter{
 
 	/**
 	 * 取得队列的长度
-	 * @return mixed
 	 */
 	public function lSize(){
 		$this->redis->lSize($this->queueName);
