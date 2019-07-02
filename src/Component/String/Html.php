@@ -64,8 +64,12 @@ trait Html{
 
 		//optgroup支持
 		else{
-			foreach($options as $group_name => $opts){
-				$option_html .= static::htmlOptionGroup($group_name, $opts, $current_value);
+			foreach($options as $var1 => $var2){
+				if(is_array($var2)){
+					$option_html .= static::htmlOptionGroup($var1, $var2, $current_value);
+				} else {
+					$option_html .= static::htmlOption($var2, $var1, $current_value);
+				}
 			}
 		}
 		return static::htmlElement('select', $attributes, $option_html);
