@@ -1109,7 +1109,7 @@ abstract class Model extends DAO{
 		});
 
 		//unique校验
-		foreach($src_data as $field){
+		foreach($src_data as $field=>$_){
 			$def = $pro_defines[$field];
 			if($def['unique']){
 				if($query_type == Query::INSERT){
