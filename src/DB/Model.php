@@ -408,7 +408,7 @@ abstract class Model extends DAO{
 	 * 快速查询用户请求过来的信息，只有第二个参数为不为空的时候才去查询，空数组还是会去查。
 	 * @param $st
 	 * @param $val
-	 * @return static|Query
+	 * @return static
 	 * @throws \Lite\Exception\Exception
 	 */
 	public function whereOnSet($st, $val){
@@ -501,7 +501,7 @@ abstract class Model extends DAO{
 	/**
 	 * @param $val
 	 * @param bool $as_array
-	 * @return static|Query|array
+	 * @return static
 	 * @throws \Lite\Exception\Exception
 	 * @throws \Lite\Exception\RouterException
 	 */
@@ -655,7 +655,7 @@ abstract class Model extends DAO{
 	/**
 	 * 获取一条记录
 	 * @param bool $as_array 是否以数组方式返回，默认为Model对象
-	 * @return static|Query|array|NULL
+	 * @return static
 	 * @throws \Lite\Exception\Exception
 	 */
 	public function one($as_array = false){
@@ -961,7 +961,7 @@ abstract class Model extends DAO{
 	 * @param string $page
 	 * @param bool $as_array 是否以数组方式返回，默认为Model对象数组
 	 * @param string $unique_key 用于组成返回数组的唯一性key
-	 * @return static[]|Query[]
+	 * @return static[]
 	 * @throws \Lite\Exception\Exception
 	 */
 	public function paginate($page = null, $as_array = false, $unique_key = ''){
