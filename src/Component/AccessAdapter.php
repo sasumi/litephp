@@ -16,7 +16,7 @@ abstract class AccessAdapter {
 	protected $session_name = 'uid';
 	protected $cookie_name = 'uid';
 	protected $cookie_sid_name = 'sid';
-	protected $cookie_expired = 3600; //前台保持登录态时间
+	protected $cookie_expired = 0; //前台保持登录态时间
 	protected $cookie_path = '/';
 	protected $cookie_domain = null;
 	protected $cookie_encrypt_tail_str = 'lp_cookie_20190609';
