@@ -37,7 +37,7 @@ trait Html{
 	 * 构建select节点，支持optgroup模式
 	 * @param $name
 	 * @param array $options 选项数据，
-	 * 如果是分组模式，格式为：[group_name=>options, ...]，
+	 * 如果是分组模式，格式为：[value=>text, label=>options, ...]
 	 * 如果是普通模式，格式为：options: [value1=>text, value2=>text,...]
 	 * @param string|array $current_value
 	 * @param string $placeholder
