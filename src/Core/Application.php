@@ -29,9 +29,6 @@ class Application{
 	
 	public static $init_microtime;
 
-	//current controller(only in web mode)
-	private static $controller;
-
 	//project config include paths
 	private static $include_paths = array();
 
@@ -171,7 +168,6 @@ class Application{
 	 * @throws \Exception
 	 */
 	private function initWebMode(){
-		$result = null;
 		try {
 			//发送响应字符集
 			Http::sendCharset(Config::get('app/charset'));
@@ -180,7 +176,7 @@ class Application{
 			Router::init();
 
 			//分发请求
-			$result = self::dispatch();
+			$result = self::dispatch($controller_instance);
 			
 			//如果是字符串，直接显示
 			if(is_string($result)){
@@ -190,12 +186,9 @@ class Application{
 			
 			//自动渲染模板
 			if(Config::get('app/auto_render')){
-				//Controller有可能因为construct失败，导致没有实例化
-				$ctrl_ins = self::getController();
-				
 				$tpl_file = null;
-				if(method_exists($ctrl_ins, '__getTemplate')){
-					$tpl_file = $ctrl_ins::__getTemplate(Router::getController(), Router::getAction());
+				if(method_exists($controller_instance, '__getTemplate')){
+					$tpl_file = $controller_instance::__getTemplate(Router::getController(), Router::getAction());
 				}
 				
 				//Controller 执行结果，
@@ -213,22 +206,15 @@ class Application{
 			$this->handleWebException($ex);
 		}
 	}
-
-	/**
-	 * 获取WEB模式使用的controller对象
-	 * @return Controller
-	 */
-	public static function getController(){
-		return self::$controller;
-	}
 	
 	/**
 	 * 分发控制器
+	 * @param mixed $controller_instance
 	 * @return mixed
 	 * @throws \Lite\Exception\RouterException
 	 * @throws \ReflectionException
 	 */
-	private function dispatch(){
+	private function dispatch(&$controller_instance = null){
 		$controller = Router::getController();
 		$action = Router::getAction();
 		$get = Router::get();
@@ -238,28 +224,27 @@ class Application{
 			throw new RouterException('Controller no found: '.$controller);
 		}
 
-		/** @var Controller $ctrl_instance */
-		$ctrl_instance = new $controller($controller, $action);
-		self::$controller = $ctrl_instance;
+		/** @var Controller $controller_instance */
+		$controller_instance = new $controller($controller, $action);
 		
 		//是否为继承于Controller，支持用户自定义Controller
-		$is_ctrl_prototype = $ctrl_instance instanceof Controller;
+		$is_ctrl_prototype = $controller_instance instanceof Controller;
 
 		if($is_ctrl_prototype){
-			$cancel = $ctrl_instance->__beforeExecute($controller, $action);
+			$cancel = $controller_instance->__beforeExecute($controller, $action);
 			if($cancel === false){
 				die;
 			}
 		}
 
-		if(!method_exists($ctrl_instance, $action)){
-			if(!method_exists($ctrl_instance, '__call')){
+		if(!method_exists($controller_instance, $action)){
+			if(!method_exists($controller_instance, '__call')){
 				throw new RouterException('Method no exists: '.$controller.'/'.$action);
 			}
 			//支持__call魔术方法
-			$result = call_user_func(array($ctrl_instance, $action));
+			$result = call_user_func(array($controller_instance, $action));
 			if($is_ctrl_prototype){
-				$ctrl_instance->__afterExecute($controller, $action, $result);
+				$controller_instance->__afterExecute($controller, $action, $result);
 			}
 			return $result;
 		}
@@ -272,11 +257,11 @@ class Application{
 		}
 
 		//执行Action
-		$result = call_user_func(array($ctrl_instance, $action), $get, $post);
+		$result = call_user_func(array($controller_instance, $action), $get, $post);
 		
 		//执行后事件
 		if($is_ctrl_prototype){
-			$ctrl_instance->__afterExecute($controller, $action, $result);
+			$controller_instance->__afterExecute($controller, $action, $result);
 		}
 		return $result;
 	}
