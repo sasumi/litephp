@@ -12,7 +12,7 @@ class CacheFile extends CacheAdapter{
 			$config['dir'] = $dir.'/litephp_cache/';
 		}
 		if(!is_dir($config['dir'])){
-			mkdir($config['dir'], null, true);;
+			mkdir($config['dir'], 0777, true);;
 		}
 		parent::__construct($config);
 	}
