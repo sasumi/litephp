@@ -201,9 +201,13 @@ class Application{
 			$ctrl_ins = self::getController();
 			$tpl_file = $ctrl_ins ? $ctrl_ins::__getTemplate(Router::getController(), Router::getAction()) : null;
 
+			//controller 执行结果，如果是字符串，直接显示，
+			//其他格式重新使用View封装渲染
 			if($result instanceof View){
 				$result->render($tpl_file);
-			} else {
+			} else if(is_string($result)){
+				echo $result;
+			} else{
 				/** @var View $viewer */
 				$render = Config::get('app/render');
 				$viewer = new $render($result);

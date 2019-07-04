@@ -15,7 +15,7 @@ use Lite\DB\Driver\DBAbstract;
 $GLOBALS['DUMP_ENABLE_FLAG'] = true;
 
 //dump函数trace偏移量，默认为1（表示忽略dump函数自身trace信息）
-$GLOBALS['DUMP_ENTRANCE_LEVEL'] = 1;
+$GLOBALS['DUMP_ENTRANCE_LEVEL'] = 0;
 
 //dump函数是否同时输出trace信息，默认仅输出文件定位
 $GLOBALS['DUMP_WITH_TRACE'] = false;

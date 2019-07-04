@@ -508,7 +508,7 @@ abstract class Model extends DAO{
 	public static function findOneByPkOrFail($val, $as_array = false){
 		$data = static::findOneByPk($val, $as_array);
 		if(!$data){
-			throw new RouterException('No data found');
+			throw new RouterException('找不到相关数据(pk:'.$val.')。');
 		}
 		return $data;
 	}
@@ -681,7 +681,7 @@ abstract class Model extends DAO{
 	public function oneOrFail($as_array = false){
 		$data = $this->one($as_array);
 		if(!$data){
-			throw new RouterException('No data found');
+			throw new RouterException('找不到相关数据。');
 		}
 		return $data;
 	}
