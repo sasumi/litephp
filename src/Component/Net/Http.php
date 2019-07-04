@@ -123,6 +123,19 @@ abstract class Http{
 		}
 		return false;
 	}
+	
+	/**
+	 * 发送HTTP字符集
+	 * @param $charset
+	 * @return bool
+	 */
+	public static function sendCharset($charset){
+		if(!headers_sent()){
+			header('Content-Type:text/html; charset='.$charset);
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * 获取状态码归类

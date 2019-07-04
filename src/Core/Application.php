@@ -115,7 +115,7 @@ class Application{
 	}
 
 	/**
-	 * handle application exception
+	 * 处理Web异常
 	 * @param \Exception $ex
 	 * @throws \Exception
 	 */
@@ -165,16 +165,6 @@ class Application{
 		}
 		exit;
 	}
-	
-	/**
-	 * send http charset
-	 * @throws Exception
-	 */
-	private static function sendCharset(){
-		if(!headers_sent()){
-			header('Content-Type:text/html; charset='.Config::get('app/charset'));
-		}
-	}
 
 	/**
 	 * 初始化web模式
@@ -183,36 +173,44 @@ class Application{
 	private function initWebMode(){
 		$result = null;
 		try {
-			//init charset
-			self::sendCharset();
+			//发送响应字符集
+			Http::sendCharset(Config::get('app/charset'));
 
-			//init router
+			//初始化路由
 			Router::init();
 
-			//start controller dispatch
+			//分发请求
 			$result = self::dispatch();
+			
+			//如果是字符串，直接显示
+			if(is_string($result)){
+				echo $result;
+				return;
+			}
+			
+			//自动渲染模板
+			if(Config::get('app/auto_render')){
+				//Controller有可能因为construct失败，导致没有实例化
+				$ctrl_ins = self::getController();
+				
+				$tpl_file = null;
+				if(method_exists($ctrl_ins, '__getTemplate')){
+					$tpl_file = $ctrl_ins::__getTemplate(Router::getController(), Router::getAction());
+				}
+				
+				//Controller 执行结果，
+				//其他格式重新使用View封装渲染
+				if($result instanceof View){
+					$result->render($tpl_file);
+				} else {
+					/** @var View $viewer */
+					$render = Config::get('app/render');
+					$viewer = new $render($result);
+					$viewer->render($tpl_file);
+				}
+			}
 		} catch(\Exception $ex){
 			$this->handleWebException($ex);
-		}
-
-		//auto render
-		if(Config::get('app/auto_render')){
-			//controller有可能因为construct失败，导致没有实例化
-			$ctrl_ins = self::getController();
-			$tpl_file = $ctrl_ins ? $ctrl_ins::__getTemplate(Router::getController(), Router::getAction()) : null;
-
-			//controller 执行结果，如果是字符串，直接显示，
-			//其他格式重新使用View封装渲染
-			if($result instanceof View){
-				$result->render($tpl_file);
-			} else if(is_string($result)){
-				echo $result;
-			} else{
-				/** @var View $viewer */
-				$render = Config::get('app/render');
-				$viewer = new $render($result);
-				$viewer->render($tpl_file);
-			}
 		}
 	}
 
@@ -243,9 +241,10 @@ class Application{
 		/** @var Controller $ctrl_instance */
 		$ctrl_instance = new $controller($controller, $action);
 		self::$controller = $ctrl_instance;
+		
+		//是否为继承于Controller，支持用户自定义Controller
 		$is_ctrl_prototype = $ctrl_instance instanceof Controller;
 
-		//support some class non extends lite\controller
 		if($is_ctrl_prototype){
 			$cancel = $ctrl_instance->__beforeExecute($controller, $action);
 			if($cancel === false){
@@ -272,7 +271,10 @@ class Application{
 			throw new RouterException('Action should be public and non static');
 		}
 
+		//执行Action
 		$result = call_user_func(array($ctrl_instance, $action), $get, $post);
+		
+		//执行后事件
 		if($is_ctrl_prototype){
 			$ctrl_instance->__afterExecute($controller, $action, $result);
 		}
@@ -345,7 +347,7 @@ class Application{
 			list($path, $ns, $case_sensitive) = $item;
 			if(!$ns || stripos($class, $ns) === 0){
 				$file = $path.str_replace('\\', '/', substr($class, strlen($ns)+1)).'.php';
-
+				
 				//大小写敏感
 				if($case_sensitive){
 					$ret = file_exists_case_sensitive($file);
@@ -354,9 +356,10 @@ class Application{
 						return;
 					} else if($ret === null){
 						throw new Exception("文件名大小写不一致，将可能导致代码发布到Linux环境之后不可用：\n".$file."\n".realpath($file));
-					} else {
-						//文件不存在
 					}
+					/** else {
+					 * //文件不存在
+					 * }*/
 				}
 
 				//大小写不敏感，优先通过系统判断文件是否存在

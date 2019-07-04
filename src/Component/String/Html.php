@@ -3,11 +3,15 @@ namespace Lite\Component\String;
 
 use function Lite\func\array_clear_null;
 use function Lite\func\array_first;
-use function Lite\func\array_unshift_assoc;
 use function Lite\func\h;
 use function Lite\func\ha;
 use function Lite\func\substr_utf8;
 
+/**
+ * Trait Html
+ * HTML字符串相关操作类封装
+ * @package Lite\Component\String
+ */
 trait Html{
 	/**
 	 * html单标签节点列表
@@ -35,7 +39,7 @@ trait Html{
 
 	/**
 	 * 构建select节点，支持optgroup模式
-	 * @param $name
+	 * @param string $name
 	 * @param array $options 选项数据，
 	 * 如果是分组模式，格式为：[value=>text, label=>options, ...]
 	 * 如果是普通模式，格式为：options: [value1=>text, value2=>text,...]
@@ -106,8 +110,8 @@ trait Html{
 
 	/**
 	 * 构建optgroup节点
-	 * @param $label
-	 * @param $options
+	 * @param string $label
+	 * @param array $options
 	 * @param string|array $current_value 当前值
 	 * @return string
 	 */
@@ -118,7 +122,7 @@ trait Html{
 
 	/**
 	 * 构建textarea
-	 * @param $name
+	 * @param string $name
 	 * @param string $value
 	 * @param array $attributes
 	 * @return string
@@ -130,7 +134,7 @@ trait Html{
 
 	/**
 	 * 构建hidden表单节点
-	 * @param $name
+	 * @param string $name
 	 * @param string $value
 	 * @return string
 	 */
@@ -139,7 +143,8 @@ trait Html{
 	}
 
 	/**
-	 * @param $name
+	 * 构建Html数字输入
+	 * @param string $name
 	 * @param string $value
 	 * @param array $attributes
 	 * @return string
@@ -179,8 +184,8 @@ trait Html{
 	/**
 	 * 构建 radio按钮
 	 * 使用 label>(input:radio+{text}) 结构
-	 * @param $name
-	 * @param $value
+	 * @param string $name
+	 * @param mixed $value
 	 * @param string $title
 	 * @param bool $checked
 	 * @param array $attributes
@@ -224,8 +229,8 @@ trait Html{
 	/**
 	 * 构建 checkbox按钮
 	 * 使用 label>(input:checkbox+{text}) 结构
-	 * @param $name
-	 * @param $value
+	 * @param string $name
+	 * @param mixed $value
 	 * @param string $title
 	 * @param bool $checked
 	 * @param array $attributes
@@ -247,7 +252,7 @@ trait Html{
 
 	/**
 	 * 获取HTML摘要信息
-	 * @param $html_content
+	 * @param string $html_content
 	 * @param int $len
 	 * @return string
 	 */
@@ -266,7 +271,8 @@ trait Html{
 	}
 
 	/**
-	 * @param $name
+	 * 构建Html input:text文本输入框
+	 * @param string $name
 	 * @param string $value
 	 * @param array $attributes
 	 * @return string
@@ -277,10 +283,76 @@ trait Html{
 		$attributes['value'] = $value;
 		return static::htmlElement('input', $attributes);
 	}
+	
+	/**
+	 * 构建Html日期输入框
+	 * @param string $name
+	 * @param string $date_or_timestamp
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function htmlDate($name, $date_or_timestamp = '', $attributes = []){
+		$attributes['type'] = 'date';
+		$attributes['name'] = $name;
+		$attributes['value'] = is_numeric($date_or_timestamp) ? date('Y-m-d', $date_or_timestamp) :
+			date('Y-m-d', strtotime($date_or_timestamp));
+		return static::htmlElement('input', $attributes);
+	}
+	
+	/**
+	 * 构建Html日期+时间输入框
+	 * @param string $name
+	 * @param string $datetime_or_timestamp
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function htmlDateTime($name, $datetime_or_timestamp = '', $attributes = []){
+		$attributes['type'] = 'datetime-local';
+		$attributes['name'] = $name;
+		$attributes['value'] = is_numeric($datetime_or_timestamp) ? date('Y-m-dTH:i', $datetime_or_timestamp) :
+			date('Y-m-d', strtotime($datetime_or_timestamp));
+		return static::htmlElement('input', $attributes);
+	}
+	
+	/**
+	 * 构建Html月份选择器
+	 * @param string $name
+	 * @param int|null $current_month 当前月份，范围1~12表示
+	 * @param string $format 月份格式，与date函数接受格式一致
+	 * @param array $attributes 属性
+	 * @return string
+	 */
+	public static function htmlMonthSelect($name, $current_month = null, $format = 'm', $attributes = []){
+		$opts = [];
+		$format = $format ?: 'm';
+		for($i=1; $i<=12; $i++){
+			$opts[$i] = date($format, strtotime('1970-'.$current_month.'-01'));
+		}
+		return self::htmlSelect($name, $opts, $current_month, $attributes['placeholder'], $attributes);
+	}
+	
+	/**
+	 * 构建Html年份选择器
+	 * @param string $name
+	 * @param int|null $current_year 当前年份
+	 * @param int $start_year 开始年份（缺省为1970）
+	 * @param string $end_year 结束年份（缺省为今年）
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function htmlYearSelect($name, $current_year = null, $start_year = 1970, $end_year = '', $attributes = []){
+		$start_year = $start_year ?: 1970;
+		$end_year = $end_year ?: date('Y');
+		$opts = [];
+		for($i = $start_year; $i<=$end_year; $i++){
+			$opts[$i] = $i;
+		}
+		return self::htmlSelect($name, $opts, $current_year, $attributes['placeholder'], $attributes);
+	}
 
 	/**
 	 * 构建HTML节点
-	 * @param $tag
+	 * @param string $tag
 	 * @param array $attributes
 	 * @param string $inner_html
 	 * @return string
@@ -296,7 +368,8 @@ trait Html{
 	}
 
 	/**
-	 * @param $inner_html
+	 * 构建HTML链接
+	 * @param string $inner_html
 	 * @param string $href
 	 * @param array $attributes
 	 * @return string
@@ -308,7 +381,7 @@ trait Html{
 
 	/***
 	 * 构建css节点
-	 * @param $href
+	 * @param string $href
 	 * @param array $attributes
 	 * @return string
 	 */
@@ -323,7 +396,7 @@ trait Html{
 
 	/***
 	 * 构建js节点
-	 * @param $src
+	 * @param string $src
 	 * @param array $attributes
 	 * @return string
 	 */
@@ -336,8 +409,8 @@ trait Html{
 	}
 
 	/**
-	 * html5 date input
-	 * @param $name
+	 * 构建Html日期输入
+	 * @param string $name
 	 * @param string $value
 	 * @param array $attributes
 	 * @return string
@@ -350,8 +423,8 @@ trait Html{
 	}
 
 	/**
-	 * html5 datetime input
-	 * @param $name
+	 * 构建Html时间输入
+	 * @param string $name
 	 * @param string $value
 	 * @param array $attributes
 	 * @return string
@@ -365,7 +438,7 @@ trait Html{
 
 	/**
 	 * datalist
-	 * @param $id
+	 * @param string $id
 	 * @param array $data
 	 * @return string
 	 */
@@ -379,7 +452,7 @@ trait Html{
 
 	/**
 	 * submit input
-	 * @param $value
+	 * @param mixed $value
 	 * @param array $attributes
 	 * @return string
 	 */
@@ -391,7 +464,7 @@ trait Html{
 
 	/**
 	 * submit button
-	 * @param $inner_html
+	 * @param string $inner_html
 	 * @param array $attributes
 	 * @return string
 	 */
@@ -454,7 +527,7 @@ trait Html{
 
 	/**
 	 * 转化明文文本到HTML
-	 * @param $text
+	 * @param string $text
 	 * @param null $len
 	 * @param string $tail
 	 * @param bool $over_length
