@@ -610,7 +610,7 @@ abstract class Model extends DAO{
 	 * 获取所有记录
 	 * @param bool $as_array return as array
 	 * @param string $unique_key 用于组成返回数组的唯一性key
-	 * @return static[]|Query[]
+	 * @return static[]
 	 * @throws \Lite\Exception\Exception
 	 */
 	public function all($as_array = false, $unique_key = ''){

@@ -3,7 +3,9 @@ use function Lite\func\format_size;
 use function Lite\func\microtime_to_date;
 use Lite\Performance\Performance;
 
-/** @var array $STORE_DATA */
+/** string $type 操作类型：open、close、result*/
+/** string $ignore_rules*/
+/** @var array $data */
 ?>
 <!doctype html>
 <html lang="en">
@@ -14,7 +16,7 @@ use Lite\Performance\Performance;
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>PERFORMANCE STATICS</title>
 	<style>
-		* {font-size:14px; margin:0; padding:0; text-align:left;}
+		* {font-size:14px; margin:0; padding:0; text-align:left; font-family:"Tahoma", "Helvetica", "Microsoft YaHei New", "Microsoft YaHei", "宋体", "SimSun", "STXihei", "华文细黑", sans-serif;;}
 		ul {list-style:none;}
 		html {background-color:#aaa;}
 		body {margin:2em; padding:1em 2em 2em; background-color:#fff; color:#000; text-shadow:1px 1px 1px white; box-shadow:0 1px 20px 0 #848484; line-height:1.6}
@@ -28,8 +30,8 @@ use Lite\Performance\Performance;
 		.info-tbl th {width:8em;white-space:nowrap}
 		.info-tbl tr {border-bottom:1px solid #eee;}
 		.info-tbl tr:last-child {border-bottom:none;}
-		.info-tbl textarea {display:block; width:100%; padding:0.5em; margin:0; resize:none; line-height:1.6; font-size:12px; font-family:"Tahoma", "Helvetica", "Microsoft YaHei New", "Microsoft YaHei", "宋体", "SimSun", "STXihei", "华文细黑", sans-serif; height:2.5em; border:none; background-color:#fff; transition:all 0.1s linear}
-		.info-tbl textarea:focus {height:10em; outline:none; background-color:#eee;}
+		.info-tbl textarea[readonly] {display:block; width:100%; padding:0.5em; margin:0; resize:none; line-height:1.6; font-size:12px;  height:2.5em; border:none; background-color:#fff; transition:all 0.1s linear}
+		.info-tbl textarea[readonly]:focus {height:10em; outline:none; background-color:#eee;}
 		.data-tbl {width:100%;}
 		.data-tbl caption {padding:1em 0 0.5em; font-size:16px; color:#1276c6}
 		.data-tbl .time-cell {white-space:nowrap}
@@ -40,6 +42,10 @@ use Lite\Performance\Performance;
 		.data-tbl th, .data-tbl td {padding:5px 0.5em; border:1px solid #ccc;}
 		.data-tbl .cell-num {text-align:right;}
 		.data-tbl .cell-idx {text-align:center; width:10px; white-space:nowrap; color:gray;}
+
+		#ignore-filters {border:1px solid #ddd;  width:500px; margin-bottom:10px; border-left-color:#bbb; border-top-color:#bbb; display:block; resize:vertical; min-height:80px; padding:0.5em; box-sizing:border-box}
+		#ignore-filters-save {padding:0.3em 1em}
+
 		#lv-sel {margin-left:1em; padding:0.15em 0 0.25em 0; border-radius:3px;}
 		<?php foreach(Performance::$COLOR_MAP as $lv=>$style):?>
 		.level-<?=$lv;?> {<?=$style;?>}
@@ -48,11 +54,35 @@ use Lite\Performance\Performance;
 	<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js"></script>
 </head>
 <body>
-<?php
-	list($item_list, $db_sum, $page_sum) = $STORE_DATA;
+	<?php if($type == 'open'):?>
+	<h1>页面统计已开启</h1>
+	<script>
+		setTimeout(function(){
+			location.href = '?PFM_STAT';
+		}, 1000);
+	</script>
+	<a href="?PFM_STAT" class="switch-btn">刷新</a>
+
+	<?php elseif($type == 'close'):?>
+	<h1>页面统计已关闭</h1>
+	<a href="?PFM_STAT=open" class="switch-btn">开启页面统计</a>
+
+	<?php
+	else:
+		list($item_list, $db_sum, $page_sum) = $data;
 	?>
 	<h1>页面性能统计结果</h1>
-	<a href="?<?= PAGE_KEY.'&'.PAGE_CLOSE_KEY; ?>" class="switch-btn">关闭页面统计</a>
+	<a href="?PFM_STAT" class="switch-btn" style="margin-right:120px;">刷新结果</a>
+	<a href="?PFM_STAT=close" class="switch-btn">关闭页面统计</a>
+
+	<h2>
+		排除规则
+		<span style="color:gray;">每行一条规则，规则用于匹配请求REQUEST_URI。</span>
+	</h2>
+	<form id="ignore-filters-wrap" action="?PFM_STAT" method="POST">
+		<textarea name="ignore_rules" id="ignore-filters"><?=htmlspecialchars(isset($ignore_rules) ? $ignore_rules : '');?></textarea>
+		<input type="submit" value="保存" id="ignore-filters-save">
+	</form>
 
 	<h2>页面性能</h2>
 
@@ -124,27 +154,27 @@ use Lite\Performance\Performance;
 		<?php endforeach; ?>
 		</tbody>
 	</table>
-</body>
-<script>
-	var LEVEL_MAP = <?=json_encode(Performance::LEVEL_MAP);?>;
-	var $node_list = $('#node-list');
-	$('#lv-sel').change(function(){
-		$node_list.find('tbody tr').show();
-		var style = $(this.options[this.selectedIndex]).attr('style') || '';
-		console.log(style);
-		this.style.cssText = style;
-		if(this.value){
-			var matched = false;
-			for(var i in LEVEL_MAP){
-				if(i === this.value){
-					matched = true;
-				}
-				if(!matched){
-					$node_list.find('tbody tr.level-' + i).hide();
+	<script>
+		var LEVEL_MAP = <?=json_encode(Performance::LEVEL_MAP);?>;
+		var $node_list = $('#node-list');
+		$('#lv-sel').change(function(){
+			$node_list.find('tbody tr').show();
+			var style = $(this.options[this.selectedIndex]).attr('style') || '';
+			console.log(style);
+			this.style.cssText = style;
+			if(this.value){
+				var matched = false;
+				for(var i in LEVEL_MAP){
+					if(i === this.value){
+						matched = true;
+					}
+					if(!matched){
+						$node_list.find('tbody tr.level-' + i).hide();
+					}
 				}
 			}
-		}
-	});
-</script>
+		});
+	</script>
+	<?php endif;?>
+</body>
 </html>
-<?php exit; ?>

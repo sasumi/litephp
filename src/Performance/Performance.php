@@ -8,9 +8,10 @@ namespace Lite\Performance;
  * Time: 10:21
  */
 use Lite\Cache\CacheFile;
+use Lite\Cache\CacheSession;
 use Lite\Core\Application;
 use Lite\Core\Router;
-use Lite\Core\Statistics;
+use Lite\Performance\Statistics;
 use function Lite\func\format_size;
 use function Lite\func\h;
 use function Lite\func\microtime_diff;
@@ -19,13 +20,15 @@ use function Lite\func\session_start_once;
 use function Lite\func\session_write_once;
 
 class Performance{
-	private $saver;
-	
-	const LEVEL_IGNORE = 'ignore';
-	const LEVEL_NORMAL = 'normal';
-	const LEVEL_WARNING = 'warning';
-	const LEVEL_ERROR = 'error';
-	const LEVEL_CRITICAL = 'critical';
+	private $saver_handler;
+
+	public static $ignore_filter;
+
+	const LEVEL_IGNORE = 'IGNORE';
+	const LEVEL_NORMAL = 'NORMAL';
+	const LEVEL_WARNING = 'WARNING';
+	const LEVEL_ERROR = 'ERROR';
+	const LEVEL_CRITICAL = 'CRITICAL';
 	
 	const LEVEL_MAP = [
 		self::LEVEL_IGNORE   => '正常',
@@ -70,20 +73,19 @@ class Performance{
 		self::LEVEL_ERROR    => 'color:orange',
 		self::LEVEL_CRITICAL => 'color:red',
 	];
-	
-	private function __construct(){
-		if(!$this->saver){
-			$this->saver = function($data){
-				$cache_data_key = 'PFM_STAT_DATA';
-				$cache_adapter = CacheFile::instance();
-				if($data !== null){
-					$cache_adapter->set($cache_data_key, $data,300);
-					return true;
-				} else {
-					return $cache_adapter->get($cache_data_key);
-				}
-			};
+
+	protected static function saver($data = null){
+		$cache_data_key = 'PFM_STAT_DATA';
+		$cache_adapter = CacheFile::instance();
+		if($data !== null){
+			$cache_adapter->set($cache_data_key, $data,300);
+			return true;
+		} else {
+			return $cache_adapter->get($cache_data_key);
 		}
+	}
+
+	private function __construct(){
 	}
 	
 	/**
@@ -96,6 +98,14 @@ class Performance{
 			$instance = new self();
 		}
 		return $instance;
+	}
+
+	/**
+	 * 设置数据缓存处理器
+	 * @param callable $saver_handler
+	 */
+	public function setSaverHandler($saver_handler){
+		$this->saver_handler = $saver_handler;
 	}
 	
 	/**
@@ -130,6 +140,10 @@ class Performance{
 	 * 开始收集信息
 	 */
 	public function startCollect(){
+		if(self::$ignore_filter && is_callable(self::$ignore_filter) && call_user_func(self::$ignore_filter) === false){
+			//忽略过滤器命中
+			return;
+		}
 		$start_mem_usage = memory_get_usage(true);
 		session_start_once();
 		Statistics::instance()->autoCollect(function($time_list, $stat_data) use ($start_mem_usage){
@@ -143,20 +157,63 @@ class Performance{
 				'COOKIE'  => '<textarea readonly>'.h(json_encode($_COOKIE)).'</textarea>',
 				'SESSION' => '<textarea readonly>'.h(json_encode($_SESSION)).'</textarea>',
 			];
-			call_user_func($this->saver, [$time_list, $stat_data, $page_sum]);
+			call_user_func($this->saver_handler ?: 'self::saver', [$time_list, $stat_data, $page_sum]);
 		});
 		session_write_once();
 	}
 	
 	/**
 	 * 显示收集结果
+	 * @param $type
+	 * @param $ignore_rules
 	 */
-	public function display(){
-		$data = call_user_func($this->saver);
+	public function display($type, $ignore_rules = []){
+		$data = call_user_func($this->saver_handler ?: 'self::saver');
 		include __DIR__.DIRECTORY_SEPARATOR.'display.php';
 	}
-	
+
 	public static function auto(){
-	
+		session_start();
+		$SS_KEY = '__PFM_STATUS__';
+		$SS_RULES_KEY = '__PFM_RULES__';
+		$status = isset($_SESSION[$SS_KEY]) ? !!$_SESSION[$SS_KEY] : null;
+
+		$fpm_stat = $_GET['PFM_STAT'];
+
+		//在统计页面
+		if(isset($fpm_stat)){
+			$pfm = self::instance();
+			if($fpm_stat == 'open' || $status === null){
+				$_SESSION[$SS_KEY] = true;
+				$pfm->display('open');
+			}
+			else if($fpm_stat == 'close'){
+				$_SESSION[$SS_KEY] = false;
+				$pfm->display('close');
+			}
+			else {
+				if($_SERVER['REQUEST_METHOD'] == 'POST'){
+					$_SESSION[$SS_RULES_KEY] = $_POST['ignore_rules'];
+				}
+				$ignore_rules = $_SESSION[$SS_RULES_KEY];
+				$pfm->display('result', $ignore_rules);
+			}
+			exit;
+		}
+
+		//正常代码逻辑中（开启统计）
+		else if($status){
+			Performance::$ignore_filter = function()use($SS_RULES_KEY){
+				$rules = $_SESSION[$SS_RULES_KEY] ? explode("\n", $_SESSION[$SS_RULES_KEY]) : [];
+				foreach($rules as $rule){
+					if(stripos($_SERVER['REQUEST_URI'], $rule) !== false){
+						return false;
+					}
+				}
+				return true;
+			};
+			$pfm = self::instance();
+			$pfm->startCollect();
+		}
 	}
 }

@@ -1,5 +1,7 @@
 <?php
-namespace Lite\Core;
+namespace Lite\Performance;
+use Lite\Core\Application;
+use Lite\Core\Hooker;
 use Lite\DB\Driver\DBAbstract;
 use function Lite\func\array_last;
 use function Lite\func\format_size;
