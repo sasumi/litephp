@@ -30,6 +30,9 @@ abstract class DBAbstract{
 	
 	//重新连接间隔时间（毫秒）
 	public static $RECONNECT_INTERVAL = 1000;
+
+	//是否在更新空数据时抛异常，缺省不抛异常
+	public static $THROW_EXCEPTION_ON_UPDATE_EMPTY_DATA = false;
 	
 	// select查询去重
 	// 这部分逻辑可能针对某些业务逻辑有影响，如：做某些操作之后立即查询这种
@@ -385,7 +388,10 @@ abstract class DBAbstract{
 	 */
 	public function update($table, array $data, $condition = '', $limit = 1){
 		if(empty($data)){
-			throw new BizException('NO UPDATE DATA FOUND');
+			if(static::$THROW_EXCEPTION_ON_UPDATE_EMPTY_DATA){
+				throw new BizException('NO UPDATE DATA FOUND');
+			}
+			return false;
 		}
 		$query = $this->genQuery()->update()->from($table)->setData($data)->where($condition)->limit($limit);
 		$this->query($query);
