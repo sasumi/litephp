@@ -275,13 +275,16 @@ function get_folder_size($path){
 /**
  * log 记录到文件
  * @param string $file 文件
- * @param string $content 记录内容
+ * @param mixed $content 记录内容
  * @param float|int $max_size 单文件最大尺寸，默认
  * @param int $max_files 最大记录文件数
- * @param null $pad_str 记录文件名追加字符串
+ * @param string|null $pad_str 记录文件名追加字符串
  * @return bool|int 文件是否记录成功
  */
 function log($file, $content, $max_size = 10*1024*1024, $max_files = 5, $pad_str = null){
+	if(!is_string($content)){
+		$content = json_encode($content, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+	}
 	$content = date('Y-m-d H:i:s')."  ".$content."\n";
 	$pad_str = isset($pad_str) ? $pad_str : '-'.date('YmdHis');
 	
@@ -304,7 +307,7 @@ function log($file, $content, $max_size = 10*1024*1024, $max_files = 5, $pad_str
 	if(!is_file($file)){
 		$dir = dirname($file);
 		if(!is_dir($dir)){
-			mkdir($dir, null, true);
+			mkdir($dir, 0777, true);
 		}
 		touch($file);
 	}
@@ -313,11 +316,11 @@ function log($file, $content, $max_size = 10*1024*1024, $max_files = 5, $pad_str
 
 /**
  * log in temporary directory
- * @param $filename
- * @param $content
+ * @param string $filename
+ * @param mixed $content
  * @param float|int $max_size
  * @param int $max_files
- * @param null $pad_str
+ * @param string|null $pad_str
  * @return bool|int
  */
 function log_tmp_file($filename, $content, $max_size = 10*1024*1024, $max_files = 5, $pad_str = null){

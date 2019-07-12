@@ -164,7 +164,7 @@ class Result {
 			$p_data = json_decode(json_encode($this->getData()));
 			$data['data'] = $p_data;
 		}
-		return json_encode($data);
+		return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 	}
 
 	/**
