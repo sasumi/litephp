@@ -2,11 +2,19 @@
 namespace Lite\Cache;
 
 /**
- * Class CacheFile
+ * 文件缓存
+ * 默认缓存在system temporary临时目录中
+ * 默认开启进程内变量缓存，避免多次获取变量读取文件
  * @package Lite\Cache
  */
 class CacheFile extends CacheAdapter{
+	private $cache_in_process = true;
+	private static $cache_store = [];
+
 	protected function __construct(array $config = []){
+		if(isset($config['cache_in_process'])){
+			$this->cache_in_process = !!$config['cache_in_process'];
+		}
 		if(!$config['dir']){
 			$dir = sys_get_temp_dir();
 			$config['dir'] = $dir.'/litephp_cache/';
@@ -17,31 +25,47 @@ class CacheFile extends CacheAdapter{
 		parent::__construct($config);
 	}
 
-	public function set($cache_key, $data, $expired=60){
+	public function set($cache_key, $data, $expired = 60){
 		$file = $this->getFileName($cache_key);
 		$string = serialize(array(
-			'data' => $data,
-			'expired' => time()+$expired
+			'cache_key' => $cache_key,
+			'expired'   => date('Y-m-d H:i:s', time()+$expired),
+			'data'      => $data,
 		));
 		if($handle = fopen($file, 'w')){
 			$result = fwrite($handle, $string);
 			fclose($handle);
+			if($result && $this->cache_in_process){
+				self::$cache_store[$cache_key] = $data;
+			}
 			return $result;
 		}
 		return false;
 	}
 
+	/**
+	 * 获取缓存文件名
+	 * @param $cache_key
+	 * @return string
+	 */
 	public function getFileName($cache_key){
-		return $this->getConfig('dir') . md5($cache_key);
+		return $this->getConfig('dir').md5($cache_key);
 	}
 
+	/**
+	 * @param $cache_key
+	 * @return null
+	 */
 	public function get($cache_key){
+		if(isset(self::$cache_store[$cache_key])){
+			return self::$cache_store[$cache_key];
+		}
 		$file = $this->getFileName($cache_key);
 		if(file_exists($file)){
 			$string = file_get_contents($file);
 			if($string){
 				$data = unserialize($string);
-				if($data && $data['expired']>time()){
+				if($data && strtotime($data['expired'])>time()){
 					return $data['data'];
 				}
 			}
@@ -52,6 +76,9 @@ class CacheFile extends CacheAdapter{
 	}
 
 	public function delete($cache_key){
+		if(isset(self::$cache_store[$cache_key])){
+			unset(self::$cache_store[$cache_key]);
+		}
 		$file = $this->getFileName($cache_key);
 		if(file_exists($file)){
 			return unlink($file);
@@ -63,14 +90,10 @@ class CacheFile extends CacheAdapter{
 	 * flush cache dir
 	 */
 	public function flush(){
+		self::$cache_store = [];
 		$dir = $this->getConfig('dir');
 		if(is_dir($dir)){
-			array_map('unlink', glob($dir . '/*'));
+			array_map('unlink', glob($dir.'/*'));
 		}
-	}
-
-	public function getAll(){
-		$dir = $this->getConfig('dir');
-		return $dir;
 	}
 }
