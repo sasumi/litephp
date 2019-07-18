@@ -7,6 +7,7 @@ use Lite\Component\Upload\Config\BaseConfig;
 use Lite\Component\Upload\Exception\UploadFileAccessException;
 use Lite\Component\Upload\Exception\UploadSizeException;
 use Lite\Component\Upload\Exception\UploadTypeException;
+use function Lite\func\format_size;
 use function Lite\func\restructure_files;
 
 /**
@@ -108,7 +109,7 @@ abstract class Upload{
 		$size_max_limit = $this->config->getFileMaxSize();
 		$size_min_limit = $this->config->getFileMinSize();
 		if($size_max_limit && $fsz>$size_max_limit){
-			throw new UploadSizeException('File size overload', null, $fsz);
+			throw new UploadSizeException('File size overload,'.format_size($fsz).' > '.format_size($size_max_limit), null, $fsz);
 		}
 		if($size_min_limit){
 			throw new UploadSizeException('File size too minimum', null, $size_min_limit);

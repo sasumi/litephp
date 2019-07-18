@@ -98,12 +98,3 @@ class Mail{
 		return false;
 	}
 }
-
-class MailAttachment{
-	public $id;
-	public $name;
-	public $filePath;
-	public $disposition;
-	public $size;
-	public $dataStream;
-}

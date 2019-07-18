@@ -2,6 +2,7 @@
 namespace Lite\Component\Mail\Mail;
 
 use Lite\Component\Mail\Mail;
+use Lite\Component\Mail\MailAttachment;
 use Lite\Exception\Exception;
 use stdClass;
 
