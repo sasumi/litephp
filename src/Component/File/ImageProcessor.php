@@ -15,6 +15,9 @@ class ImageProcessor {
 	private $ori_file;
 
 	public function __construct($file){
+		if(!is_file($file)){
+			throw new Exception('Image file no exists:'.$file);
+		}
 		$this->ori_file = $file;
 		$this->image = $this->createImageFromFile($file);
 		list($this->width, $this->height) = getimagesize($file);
@@ -31,38 +34,40 @@ class ImageProcessor {
 	public function getSize(){
 		return array($this->width, $this->height);
 	}
-
+	
 	/**
 	 * resize image
 	 * @param int|number $scale_rate
 	 */
-	public function resizeByRate($scale_rate=1){
+	public function resizeByRate($scale_rate = 1){
+		if($scale_rate == 1){
+			return;
+		}
 		$new_width = $this->width*$scale_rate;
 		$new_height = $this->height*$scale_rate;
 		$new_image = imagecreatetruecolor($new_width, $new_height);
-		imagecopyresized($new_image, $this->image, 0, 0, 0, 0, $new_width, $new_height, $this->width, $this->height);
+		imagecopyresampled($new_image, $this->image, 0, 0, 0, 0, $new_width, $new_height, $this->width, $this->height);
 		imagedestroy($this->image);
 		$this->image = $new_image;
 		$this->width = $new_width;
 		$this->height = $new_height;
 	}
-
+	
 	/**
 	 * resize by specified region info
 	 * @param int $min_width
 	 * @param int $min_height
 	 */
-	public function resizeByMinRegion($min_width=0, $min_height=0){
+	public function resizeByMinRegion($min_width = 0, $min_height = 0){
 		if(!$min_width || !$min_height){
 			return;
 		}
-		if($this->width/$this->height > $min_width/$min_height){
-			$scale_rate = $min_height / $this->height;
-		} else {
-			$scale_rate = $min_width / $this->width;
+		if($this->width/$this->height>$min_width/$min_height){
+			$scale_rate = $min_height/$this->height;
+		} else{
+			$scale_rate = $min_width/$this->width;
 		}
 		$this->resizeByRate($scale_rate);
-		return;
 	}
 
 	/**
@@ -70,8 +75,14 @@ class ImageProcessor {
 	 * @param int|number $max_width
 	 * @param int|number $max_height
 	 */
-	public function resizeByMaxRegion($max_width=0, $max_height=0){
-
+	public function resizeByMaxRegion($max_width = 0, $max_height = 0){
+		if(!$max_width || !$max_height){
+			return;
+		}
+		$width_scale_rate = $max_width/$this->width;
+		$height_scale_rate = $max_height/$this->height;
+		$scale_rate = min($width_scale_rate, $height_scale_rate);
+		$this->resizeByRate($scale_rate);
 	}
 
 	/**
@@ -83,7 +94,7 @@ class ImageProcessor {
 		$new_image = imagecreatetruecolor($width, $height);
 		$src_x = max((int)($this->width - $width)/2, 0);
 		$src_y = max((int)($this->height - $height)/2, 0);
-		imagecopyresized($new_image, $this->image, 0, 0, $src_x, $src_y, $width, $height, $width, $height);
+		imagecopyresampled($new_image, $this->image, 0, 0, $src_x, $src_y, $width, $height, $width, $height);
 
 		$this->image = $new_image;
 		$this->width = $width;
@@ -165,18 +176,25 @@ class ImageProcessor {
 		}
 		return $ext;
 	}
-
-	public function saveToFile($new_file, $file_type=''){
+	
+	/**
+	 * Save to image file
+	 * @param $new_file
+	 * @param string $file_type
+	 * @param null $quality
+	 * @throws \Exception
+	 */
+	public function saveToFile($new_file, $file_type='', $quality = null){
 		if(!$file_type){
 			$file_type = $this->getImageTypeFromExt($new_file);
 		}
 
 		switch($file_type){
 			case self::TYPE_JPG:
-				imagejpeg($this->image, $new_file);
+				imagejpeg($this->image, $new_file, $quality);
 				break;
 			case self::TYPE_PNG:
-				imagepng($this->image, $new_file);
+				imagepng($this->image, $new_file, $quality);
 				break;
 			case self::TYPE_GIF:
 				imagegif($this->image, $new_file);

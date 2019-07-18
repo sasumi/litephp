@@ -24,6 +24,8 @@ class BaseConfig{
 	//文件名称规则，支持以下规则：
 	//{MD5}：文件内容md5摘要
 	//{NAME}：原文件名（不包含扩展及路径）
+	//{RAND16}：随机字符串16位
+	//{RAND32}：随机字符串32位
 	//{EXT}：扩展名（经过mime检测修复}
 	//{Y}{M}{D}等日期占位符，规则与date函数一致
 	protected $file_name_rule = '';
@@ -109,8 +111,14 @@ class BaseConfig{
 			return call_user_func($this->file_name_rule, $org_file);
 		} else if($this->file_name_rule){
 			$rule = $this->file_name_rule;
-			if(strpos($rule, "{MD5}") !== false){
+			if(strpos($rule, '{MD5}') !== false){
 				$rule = str_replace('{MD5}', md5(file_get_contents($org_file)), $rule);
+			}
+			if(strpos($rule, '{RAND16}') !== false){
+				$rule = str_replace('{RAND16}', substr(md5(mt_srand().time()), 0, 16), $rule);
+			}
+			if(strpos($rule, '{RAND32}') !== false){
+				$rule = str_replace('{RAND32}', md5(mt_srand().time()), $rule);
 			}
 			if(strpos($rule, '{NAME}')){
 				$f = end(explode('/', str_replace('\\', '/', $org_file)));

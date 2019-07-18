@@ -125,7 +125,7 @@ use Lite\Performance\Performance;
 			<select id="lv-sel">
 				<option value="" style="color:black;">所有级别记录</option>
 				<?php foreach(Performance::LEVEL_MAP as $lv => $n): ?>
-					<option value="<?= $lv; ?>" style="<?= STYLE_MAP[$lv]; ?>"><?= $n; ?>
+					<option value="<?= $lv; ?>" style="<?= Performance::$COLOR_MAP[$lv]; ?>"><?= $n; ?>
 						(&gt;<?= Performance::$QUERY_TIME_THRESHOLD[$lv]; ?>ms)
 					</option>
 				<?php endforeach; ?>

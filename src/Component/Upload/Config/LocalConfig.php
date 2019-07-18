@@ -23,11 +23,11 @@ class LocalConfig extends BaseConfig{
 	}
 	
 	/**
-	 * @param bool $auto_create
+	 * @param bool $auto_create_dir
 	 * @return string
 	 */
-	public function getFileSavePath($auto_create = true){
-		if($auto_create && !is_dir($this->file_save_path)){
+	public function getFileSavePath($auto_create_dir = true){
+		if($auto_create_dir && !is_dir($this->file_save_path)){
 			if(!mkdir($this->file_save_path)){
 				throw new UploadDirAccessException('Directory create fail:'.$this->file_save_path);
 			}
