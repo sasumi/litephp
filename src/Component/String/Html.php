@@ -509,6 +509,7 @@ trait Html{
 
 	/**
 	 * 构建HTML节点属性
+	 * 修正pattern，disabled在false情况下HTML表现
 	 * @param array $attributes
 	 * @return string
 	 */
@@ -516,6 +517,9 @@ trait Html{
 		$attributes = array_clear_null($attributes);
 		$html = [];
 		foreach($attributes as $k => $v){
+			if($k == 'disabled' && $v === false){
+				continue;
+			}
 			if($k == 'pattern'){
 				$html[] = "$k=\"".$v."\"";
 			} else{
