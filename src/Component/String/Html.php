@@ -206,15 +206,14 @@ trait Html{
 	 * @param array $options 选项[value=>title,...]格式
 	 * @param string|array $current_value
 	 * @param string $wrapper_tag 每个选项外部包裹标签，例如li、div等
-	 * @param array $radio_extra_attributes 每个radio额外定制属性
+	 * @param array $checkbox_extra_attributes 每个checkbox额外定制属性
 	 * @return string
 	 */
-	public static function htmlCheckboxGroup($name, $options, $current_value = null, $wrapper_tag = '', $radio_extra_attributes = []){
+	public static function htmlCheckboxGroup($name, $options, $current_value = null, $wrapper_tag = '', $checkbox_extra_attributes = []){
 		$html = [];
 		foreach($options as $val=>$ti){
-			$html[] = static::htmlCheckbox($name, $val, $ti, self::htmlValueCompare($val, $current_value), $radio_extra_attributes);
+			$html[] = static::htmlCheckbox($name, $val, $ti, self::htmlValueCompare($val, $current_value), $checkbox_extra_attributes);
 		}
-
 		if($wrapper_tag){
 			$rst = '';
 			foreach($html as $h){
