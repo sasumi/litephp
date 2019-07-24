@@ -996,7 +996,7 @@ class MimeInfo{
 		'zirz'        => 'application/vnd.zul',
 		'zmm'         => 'application/vnd.handheld-entertainment+xml'
 	);
-	
+
 	/**
 	 * 检测文件mime信息是否符合
 	 * @param  string $extensions
@@ -1006,7 +1006,7 @@ class MimeInfo{
 	public static function checkByExtensions($extensions, $mime){
 		$extensions = strtolower($extensions);
 		$extensions = explode(',', $extensions);
-		
+
 		foreach($extensions as $ext){
 			if($mime == self::$mime_types[$ext]){
 				return true;
@@ -1029,7 +1029,7 @@ class MimeInfo{
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 根据文件（MIME）信息获取扩展名
 	 * @param $file
@@ -1044,7 +1044,7 @@ class MimeInfo{
 		}
 		return $ext;
 	}
-	
+
 	/**
 	 * 通过文件获取mime信息
 	 * @param $file
@@ -1055,7 +1055,7 @@ class MimeInfo{
 		$mime = current(explode(';', $file_info->file($file)));
 		return $mime;
 	}
-	
+
 	/**
 	 * 获取后缀mime信息
 	 * @param array|string $extensions
@@ -1070,6 +1070,10 @@ class MimeInfo{
 			}
 		}
 		return $result;
+	}
+
+	public static function isImage($mime_content_type){
+		return stripos($mime_content_type, 'image/') === 0;
 	}
 }
 
