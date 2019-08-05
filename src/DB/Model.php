@@ -518,7 +518,7 @@ abstract class Model extends DAO{
 	 * 单主键列表为空，该方法会返回空数组结果
 	 * @param array $pks
 	 * @param bool $as_array
-	 * @return static[]|Query[]
+	 * @return static[]
 	 * @throws \Lite\Exception\Exception
 	 */
 	public static function findByPks(array $pks, $as_array = false){
@@ -674,7 +674,7 @@ abstract class Model extends DAO{
 	/**
 	 * 获取一条记录，为空时抛异常
 	 * @param bool $as_array 是否以数组方式返回，默认为Model对象
-	 * @return array|static|Query|NULL
+	 * @return static
 	 * @throws \Lite\Exception\Exception
 	 * @throws \Lite\Exception\RouterException
 	 */
