@@ -43,6 +43,23 @@ class Query {
 	}
 
 	/**
+	 * 产生字段多重LIKE
+	 * @param array $fields
+	 * @param array $likes
+	 * @return string
+	 */
+	public static function generateLikes(array $fields, array $likes){
+		$query = [];
+		foreach($fields as $field){
+			foreach($likes as $like){
+				$like = addslashes($like);
+				$query[] = "$field LIKE '$like'";
+			}
+		}
+		return join(' OR ', $query);
+	}
+
+	/**
 	 * 设置查询语句
 	 * @param $sql
 	 * @return $this
