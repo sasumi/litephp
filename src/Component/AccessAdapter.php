@@ -1,6 +1,7 @@
 <?php
 namespace Lite\Component;
 use Lite\Core\Hooker;
+use function Lite\func\session_start_once;
 
 /**
  * 权限控制适配器
@@ -85,7 +86,7 @@ abstract class AccessAdapter {
 	 * @return mixed
 	 */
 	public function getLoginInfo(){
-		\Lite\func\session_start_once();
+		session_start_once();
 		$session_uid = isset($_SESSION[$this->session_name]) ? $_SESSION[$this->session_name] : null;
 		$user_info = null;
 		if($session_uid){
