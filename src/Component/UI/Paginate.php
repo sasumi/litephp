@@ -139,7 +139,7 @@ class Paginate implements PaginateInterface {
 		$page_index = $page_index > 0 ? $page_index : 1;
 
 		$page_size = (int)Router::get($this->config['page_size_key']);
-		if($page_size){
+		if($page_size && in_array('page_size', explode(',',$this->getConfig('mode')))){
 			$this->page_size_flag = true;
 		} else {
 			$page_size = $this->getConfig('page_size');
@@ -207,6 +207,14 @@ class Paginate implements PaginateInterface {
 			}
 		}
 		$form_action = Router::getUrl(Router::getCurrentUri(), $gets);
+
+		$page_size_form_html = '<form action="'.$form_action.'" method="get" class="page_size_form">';
+		$page_size_form_html .= Html::htmlSelect($this->config['page_size_key'],
+			['10'=>'10', '15'=>'15', '50'=>'50', '100'=>'100',],
+			$page_info['page_size'], $lang['page_size'],
+			['class'=>'page_size_select','onchange'=>'this.parentNode.submit();']);
+		$page_size_form_html .= ' '.Html::htmlInputSubmit('提交', ['class'=>'page_size_submit']);
+		$page_size_form_html .= '</form>';
 
 		foreach($page_modes as $mode){
 			//first page
@@ -280,7 +288,13 @@ class Paginate implements PaginateInterface {
 				$tmp = str_replace('%s', $page_info['item_total'], $tmp);
 				$tmp = str_replace('%d', $page_info['page_total'], $tmp);
 				$tmp = str_replace('%k', $page_info['page_index'], $tmp);
-				$tmp = str_replace('%i', $page_info['page_size'], $tmp);
+
+				if(in_array('page_size', $page_modes)){
+					$tmp = str_replace('%i', $page_size_form_html, $tmp);
+				} else {
+					$tmp = str_replace('%i', $page_info['page_size'], $tmp);
+				}
+
 				$tmp = str_replace('%p', htmlspecialchars($this->getUrl(1, '_ppp_')), $tmp);
 				$html .= $tmp;
 				$html .= '</span>';
@@ -314,18 +328,9 @@ class Paginate implements PaginateInterface {
 			}
 
 			else if($mode == 'page_size'){
-				$html .= '<form action="'.$form_action.'" method="get" class="page_size_form">';
-				$html .= '<label>'.$lang['page_size'];
-				$html .= Html::htmlNumber($this->config['page_size_key'], $page_info['page_size'], [
-					'list'  => 'page_number_list_'.$this->guid,
-					'class' => 'page_size_input',
-					'size'  => 2,
-					'min'   => 1
-				]);
-				$html .= Html::htmlDataList('page_number_list_'.$this->guid, ['10', '20', '50', '100']);
-				$html .= '</label>';
-				$html .= Html::htmlInputSubmit('提交', ['class'=>'page_size_submit']);
-				$html .= '</form>';
+				if(!in_array('info', $page_modes)){
+					$html .= $page_size_form_html;
+				}
 			}
 		}
 		return '<span class="pagination '.'pagination-'.$page_info['page_total'].'">'.$html.'</span>';
