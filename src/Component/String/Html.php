@@ -436,15 +436,15 @@ trait Html{
 	}
 
 	/**
-	 * datalist
+	 * 构建DataList
 	 * @param string $id
-	 * @param array $data
+	 * @param array $data [val=>title,...]
 	 * @return string
 	 */
 	public static function htmlDataList($id, $data = []){
 		$opts = '';
-		foreach($data as $item){
-			$opts .= '<option value="'.ha($item).'">';
+		foreach($data as $value=>$label){
+			$opts .= '<option value="'.ha($value).'" label="'.ha($label).'">';
 		}
 		return static::htmlElement('datalist', ['id' => $id], $opts);
 	}
