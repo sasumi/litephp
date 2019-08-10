@@ -91,7 +91,7 @@ use Lite\Performance\Performance;
 		<?php foreach($page_sum ?: [] as $k => $v): ?>
 			<tr>
 				<th><?= $k; ?>：</th>
-				<td><?= $v; ?></td>
+				<td style="word-break:break-all"><?= $v; ?></td>
 			</tr>
 		<?php endforeach; ?>
 		</tbody>
