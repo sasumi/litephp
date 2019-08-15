@@ -4,7 +4,7 @@ namespace Lite\Component\Net;
 /**
  * Http协议辅助类
  */
-abstract class Http{
+abstract class Http extends CSP{
 	//HTTP状态码类型归类
 	const TYPE_INFO = 'information'; //信息(1xx系列)
 	const TYPE_SUCCESS = 'success'; //成功(2xx系列)
@@ -123,7 +123,7 @@ abstract class Http{
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 发送HTTP字符集
 	 * @param $charset
