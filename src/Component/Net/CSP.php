@@ -39,8 +39,8 @@ abstract class CSP{
 	 * <p>Example:
 	 * sendCSPPolicies([
 	 *      [self::CSP_DIRECTIVE_DEFAULT_SRC, self::CSP_PATTERN_SELF],
-	 *      [self::CSP_DIRECTIVE_IMAGE_SRC, [self::CSP_PATTERN_SELF, '*.google.com'],
-	 *      [self::CSP_DIRECTIVE_STYLE_SRC, [self::CSP_PATTERN_SELF, self::CSP_PATTERN_UNSAFE_INLINE],
+	 *      [self::CSP_DIRECTIVE_IMAGE_SRC, [self::CSP_PATTERN_SELF, '*.google.com']],
+	 *      [self::CSP_DIRECTIVE_STYLE_SRC, [self::CSP_PATTERN_SELF, self::CSP_PATTERN_UNSAFE_INLINE]],
 	 * ]);
 	 * </p>
 	 */
