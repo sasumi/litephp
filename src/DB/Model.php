@@ -426,6 +426,24 @@ abstract class Model extends DAO{
 	}
 
 	/**
+	 * 自动检测变量类型、变量值设置匹对记录
+	 * 当前操作仅做“等于”，“包含”比对，不做其他比对
+	 * @param $fields
+	 * @param $param
+	 * @return $this
+	 */
+	public function whereEqualOnSetViaFields(array $fields, array $param = []){
+		foreach($fields as $field){
+			$val = $param[$field];
+			if(is_array($val) || strlen($val)){
+				$comparison =  is_array($val) ? 'IN' : '=';
+				$this->whereOnSet("$field $comparison ?", $val);
+			}
+		}
+		return $this;
+	}
+
+	/**
 	 * 快速LIKE查询用户请求过来的信息，当LIKE内容为空时，不执行查询，如 %%。
 	 * @param $st
 	 * @param $val
