@@ -439,7 +439,8 @@ abstract class CodeGenerator{
 				//忽略掉enum不是字符串情况
 				$tmp = '';
 				foreach($ks as $idx => $k){
-					if(is_numeric($k)){
+					//key 不满足组成 CONST_{$k}变量名形式，忽略
+					if(!preg_match('/^[a-zA-Z0-9]+$/', $k)){
 						continue 2;
 					}
 					$const_key = strtoupper($meta['Field'] . '_' . $k);
