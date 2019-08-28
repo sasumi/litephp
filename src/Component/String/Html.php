@@ -359,8 +359,10 @@ trait Html{
 	public static function htmlElement($tag, $attributes = [], $inner_html = ''){
 		$tag = strtolower($tag);
 		$single_tag = in_array($tag, static::$SELF_CLOSING_TAGS);
-
 		$html = "<$tag ";
+		if(!$single_tag){
+			unset($attributes['value']);
+		}
 		$html .= static::htmlAttributes($attributes);
 		$html .= $single_tag ? "/>" : ">".$inner_html."</$tag>";
 		return $html;
