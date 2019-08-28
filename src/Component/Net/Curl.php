@@ -53,20 +53,21 @@ abstract class Curl {
 		//设置缺省参数
 		$curl_option = self::arrayMergeKeepKeys($opt, $curl_option);
 
-		if($curl_option[CURLOPT_TIMEOUT] && $curl_option[CURLOPT_TIMEOUT] > ini_get('max_execution_time')){
-			throw new Exception('curl timeout setting larger than php.ini setting');
+		$sys_max_exe_time = ini_get('max_execution_time');
+		if($sys_max_exe_time && $curl_option[CURLOPT_TIMEOUT] && $curl_option[CURLOPT_TIMEOUT]>$sys_max_exe_time){
+			throw new Exception('curl timeout setting larger than php.ini setting: '.$curl_option[CURLOPT_TIMEOUT].' > '.$sys_max_exe_time);
 		}
 
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, $url);
 
-		$a[CURLOPT_URL]=$url;
-		foreach($curl_option as $k=>$val){
+		$a[CURLOPT_URL] = $url;
+		foreach($curl_option as $k => $val){
 			if($k == 'USE_COOKIE'){
 				curl_setopt($curl, CURLOPT_COOKIEJAR, $val);    //连接结束后保存cookie信息的文件。
 				curl_setopt($curl, CURLOPT_COOKIEFILE, $val);   //包含cookie数据的文件名，cookie文件的格式可以是Netscape格式，或者只是纯HTTP头部信息存入文件。
-			} else {
-				$a[$k]=$val;
+			} else{
+				$a[$k] = $val;
 				curl_setopt($curl, $k, $val);
 			}
 		}
@@ -81,11 +82,10 @@ abstract class Curl {
 	 * @throws Exception
 	 * @return bool|mixed
 	 */
-	public static function get($url, $timeout = self::DEFAULT_TIMEOUT, $curl_option=array()) {
-		$opt = array(
+	public static function get($url, $timeout = self::DEFAULT_TIMEOUT, $curl_option = []){
+		$opt = [
 			CURLOPT_TIMEOUT => $timeout,
-		);
-
+		];
 		$curl_option = self::arrayMergeKeepKeys($opt, $curl_option);
 		$curl = self::getCurlInstance($url, $curl_option);
 		$content = curl_exec($curl);
@@ -100,28 +100,31 @@ abstract class Curl {
 	/**
 	 * CURL-post方式获取数据
 	 * @param string $url URL
-	 * @param String $data POST数据
+	 * @param mixed $data POST数据
 	 * @param int $timeout 请求时间
 	 * @param array $curl_option
 	 * @throws Exception
 	 * @return bool|mixed
 	 */
 	public static function post($url, $data, $timeout = self::DEFAULT_TIMEOUT, $curl_option=array()) {
+		if($data && !is_string($data)){
+			$data = http_build_query($data);
+		}
 		$opt = array(
-			CURLOPT_POST => true,
-			CURLOPT_POSTFIELDS => $data,
-			CURLOPT_TIMEOUT => $timeout,
-			CURLOPT_RETURNTRANSFER=> 1
+			CURLOPT_POST           => true,
+			CURLOPT_POSTFIELDS     => $data,
+			CURLOPT_TIMEOUT        => $timeout,
+			CURLOPT_RETURNTRANSFER => 1,
 		);
-
 		$curl_option = self::arrayMergeKeepKeys($opt, $curl_option);
 		$curl = self::getCurlInstance($url, $curl_option);
 		$content = curl_exec($curl);
 		$curl_errno = curl_errno($curl);
-		$curl_msg=curl_error($curl);
-		if($curl_errno > 0){
+		$curl_msg = curl_error($curl);
+		if($curl_errno>0){
 			throw new Exception($curl_msg);
 		}
+
 		curl_close($curl);
 		return $content;
 	}
@@ -136,11 +139,11 @@ abstract class Curl {
 	 * @throws \Lite\Exception\Exception
 	 * @return mixed
 	 */
-	public static function postFiles($url, $data=array(), array $files, $timeout = self::DEFAULT_TIMEOUT, $curl_option=array()) {
+	public static function postFiles($url, $data=array(), array $files, $timeout = self::DEFAULT_TIMEOUT, $curl_option = array()){
 		$opt = array(
-			CURLOPT_POST => true,
-			CURLOPT_TIMEOUT => $timeout,
-			CURLOPT_RETURNTRANSFER=> 1
+			CURLOPT_POST           => true,
+			CURLOPT_TIMEOUT        => $timeout,
+			CURLOPT_RETURNTRANSFER => 1,
 		);
 
 		$curl_option = self::arrayMergeKeepKeys($opt, $curl_option);

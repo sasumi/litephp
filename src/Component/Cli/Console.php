@@ -325,4 +325,12 @@ abstract class Console {
 		ob_flush();
 		flush();
 	}
+
+	public static function log($string, $time_preset='Y-m-d H:i:s'){
+		echo "\n", ($time_preset ? date($time_preset)."\t " : '')."$string";
+	}
+
+	public static function error($string, $time_preset='Y-m-d H:i:s'){
+		echo "\n", ($time_preset ? date($time_preset)."\t " : '').self::getColorString("[ERROR] $string", self::FORE_COLOR_RED);
+	}
 }
