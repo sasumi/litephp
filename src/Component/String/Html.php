@@ -360,9 +360,13 @@ trait Html{
 		$tag = strtolower($tag);
 		$single_tag = in_array($tag, static::$SELF_CLOSING_TAGS);
 		$html = "<$tag ";
-		if(!$single_tag){
+
+		//针对textarea标签，识别value填充到inner_html中
+		if($tag === 'textarea' && isset($attributes['value'])){
+			$inner_html = $inner_html ?: h($attributes['value']);
 			unset($attributes['value']);
 		}
+
 		$html .= static::htmlAttributes($attributes);
 		$html .= $single_tag ? "/>" : ">".$inner_html."</$tag>";
 		return $html;
