@@ -2,6 +2,7 @@
 namespace Lite\Component\File;
 
 use Exception;
+use Lite\Component\Net\Http;
 use Lite\DB\Model;
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -206,23 +207,24 @@ abstract class DataExport{
 	/**
 	 * 分块输出CSV文件
 	 * 该方法会记录上次调用文件句柄，因此仅允许单个进程执行单个输出。
+	 * @see self::exportCSVPlainChunk
 	 * @param $data
 	 * @param array $fields 字段列表，格式如：['id','name'] 或  ['id'=>'编号', 'name'=>'名称'] 暂不支持其他方式
 	 * @param $file_name
 	 * @return bool
 	 */
 	public static function exportCSVChunk($data, $fields, $file_name){
-		static $_csv_chunk_fp;
+		static $csv_file_fp;
 		$fields = is_assoc_array($fields) ? $fields : array_combine($fields, $fields);
-		if(!isset($_csv_chunk_fp)){
+		if(!isset($csv_file_fp)){
 			header('Content-Type: application/csv');
 			header('Content-Disposition: attachment; filename='.$file_name);
-			$_csv_chunk_fp = fopen('php://output', 'a');
+			$csv_file_fp = fopen('php://output', 'a');
 			$head = [];
 			foreach($fields as $i => $v){
 				$head[$i] = iconv('utf-8', 'gbk', $v);
 			}
-			fputcsv($_csv_chunk_fp, $head);
+			fputcsv($csv_file_fp, $head);
 		}
 
 		$cnt = 0;   // 计数器
@@ -240,7 +242,48 @@ abstract class DataExport{
 			foreach($fields as $f => $n){
 				$row[] = mb_convert_encoding($data[$t][$f], 'gbk', 'utf-8');
 			}
-			fputcsv($_csv_chunk_fp, $row);
+			fputcsv($csv_file_fp, $row);
+			unset($row);
+		}
+		return true;
+	}
+
+	/**
+	 * 动态平铺输出CSV文件，动态列，表头与数据不需要一一对应
+	 * @see self::exportCSVChunk
+	 * @param array $data 二维数据
+	 * @param array $headers 头部列名，格式如：['姓名','性别','年龄','编号',...]
+	 * @param $file_name
+	 * @return bool
+	 */
+	public static function exportCSVPlainChunk($data, $headers = [], $file_name = ''){
+		$file_name = $file_name ?: date('YmdHi').'.csv';
+		static $csv_file_fp;
+		if(!isset($csv_file_fp)){
+			header('Content-Type: application/csv');
+			header('Content-Disposition: attachment; filename='.$file_name);
+			$csv_file_fp = fopen('php://output', 'a');
+			if($headers){
+				fputcsv($csv_file_fp, $headers);
+			}
+		}
+
+		$cnt = 0;               //计数器
+		$limit = 1000;          //每隔$limit行，刷新一下输出buffer，不要太大，也不要太小
+		$count = count($data);  // 逐行取出数据，不浪费内存
+
+		for($t = 0; $t<$count; $t++){
+			$cnt++;
+			if($limit == $cnt){ //刷新一下输出buffer，防止由于数据过多造成问题
+				ob_flush();
+				flush();
+				$cnt = 0;
+			}
+			$row = [];
+			foreach($data[$t] as $val){
+				$row[] = mb_convert_encoding($val, 'gbk', 'utf-8');
+			}
+			fputcsv($csv_file_fp, $row);
 			unset($row);
 		}
 		return true;
