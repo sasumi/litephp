@@ -24,7 +24,10 @@ abstract class DBAbstract{
 	const EVENT_ON_DB_CONNECT = __CLASS__.'EVENT_ON_DB_CONNECT';
 	const EVENT_ON_DB_QUERY_DISTINCT = __CLASS__.'EVENT_ON_DB_QUERY_DISTINCT';
 	const EVENT_ON_DB_RECONNECT = __CLASS__.'EVENT_ON_DB_RECONNECT';
-	
+
+	//LIKE 保留字符
+	const LIKE_RESERVED_CHARS = ['%', '_'];
+
 	//最大重试次数，如果该数据配置为0，将不进行重试
 	public static $MAX_RECONNECT_COUNT = 10;
 	
@@ -570,7 +573,17 @@ abstract class DBAbstract{
 		}
 		return 0;
 	}
-	
+
+	/**
+	 * Like操作语句转义
+	 * @param $statement
+	 * @param string $escape_char
+	 * @return string
+	 */
+	public function quoteLike($statement, $escape_char = '\\'){
+		return $this->quote($statement)." ESCAPE '$escape_char'";
+	}
+
 	/**
 	 * 获取操作影响条数
 	 * @return integer

@@ -451,7 +451,7 @@ abstract class Model extends DAO{
 	 */
 	public function whereLikeOnSet($st, $val){
 		$args = func_get_args();
-		if(strlen(trim(str_replace('%','',$val)))){
+		if(strlen(trim(str_replace(DBAbstract::LIKE_RESERVED_CHARS, '', $val)))){
 			return call_user_func_array(array($this, 'whereOnSet'), $args);
 		}
 		return $this;

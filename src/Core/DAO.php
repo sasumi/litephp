@@ -1,15 +1,12 @@
 <?php
 namespace Lite\Core;
-use ArrayAccess as ArrayAccess;
-use Iterator as Iterator;
-
 /**
  * 数据库元数据抽象类
  * User: sasumi
  * Date: 2015/01/06
  * Time: 9:49
  */
-abstract class DAO implements Iterator, ArrayAccess{
+abstract class DAO implements \Iterator, \ArrayAccess{
 	const SETTER_KEY_NAME = 'setter';
 	const GETTER_KEY_NAME = 'getter';
 
