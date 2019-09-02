@@ -115,7 +115,7 @@ abstract class DBAbstract{
 	public function setCharset($charset){
 		$this->query("SET NAMES '".$charset."'");
 	}
-	
+
 	/**
 	 * 修正MySQL数据库驱动编码问题
 	 * @param $charset

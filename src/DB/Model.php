@@ -555,7 +555,24 @@ abstract class Model extends DAO{
 	 */
 	public static function delByPk($val){
 		$obj = static::meta();
-		return static::deleteWhere(0, $obj->getPrimaryKey()."='$val'");
+		$pk = $obj->getPrimaryKey();
+		static::deleteWhere(0, "$pk=?", $val);
+		return static::meta()->getAffectNum();
+	}
+
+	/**
+	 * 根据主键删除记录
+	 * @param $val
+	 * @return bool
+	 * @throws \Lite\Exception\RouterException
+	 */
+	public static function delByPkOrFail($val){
+		static::delByPk($val);
+		$count = static::meta()->getAffectNum();;
+		if(!$count){
+			throw new RouterException('记录已被删除');
+		}
+		return $count;
 	}
 
 	/**
