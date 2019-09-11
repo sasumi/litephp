@@ -461,7 +461,7 @@ abstract class Model extends DAO{
 	 * 批量LIKE查询（whereLikeOnSet方法快捷用法）
 	 * @param array $fields
 	 * @param $val
-	 * @return static|Query
+	 * @return static
 	 */
 	public function whereLikeOnSetBatch(array $fields, $val){
 		$st = join(' LIKE ? OR ', $fields).' LIKE ?';

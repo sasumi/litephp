@@ -287,6 +287,7 @@ namespace Lite\func {
 
 	/**
 	 * trim数组
+	 * @deprecated 请使用 array_trim_fields
 	 * @param $data
 	 * @param bool $recursive
 	 * @return mixed
@@ -303,6 +304,30 @@ namespace Lite\func {
 			}
 		}
 		return $data;
+	}
+
+	/**
+	 * 对数组进行去空白
+	 * @param array $data 数据
+	 * @param array $fields 指定字段，为空表示所有字段
+	 * @param bool $recursive 是否递归处理，如果递归，则data允许为任意维数组
+	 * @return array
+	 */
+	function array_trim_fields(array $data, array $fields = [], $recursive = true){
+		if(!$data || !is_array($data)){
+			return $data;
+		}
+
+		$copy = [];
+		foreach($data as $k => $item){
+			if($recursive && is_array($item)){
+				$item = array_trim_fields($item, $fields, $recursive);
+			} else if((in_array($k, $fields) || !$fields) && is_string($item)){
+				$item = trim($item);
+			}
+			$copy[$k] = $item;
+		}
+		return $copy;
 	}
 
 	/**
