@@ -144,19 +144,18 @@ abstract class Router{
 	/**
 	 * 获取返回URL
 	 * 获取当前页面路径中的返回URL地址，若为空（或非法传入），则返回指定uri、param页面
-	 * @param $uri
-	 * @param $param
 	 * @return string
 	 */
-	public static function getReturnUrl($uri = '', $param = []){
+	public static function getReturnUrl(){
 		$return_url = Router::get(static::$RETURN_URL_KEY);
 		if($return_url){
 			$tmp = parse_url($return_url);
-			if($tmp['host'] === $_SERVER['HTTP_HOST']) {
+			//support empty host format
+			if(!$tmp['host'] || $tmp['host'] === $_SERVER['HTTP_HOST']) {
 				return $return_url;
 			}
 		}
-		return static::getUrl($uri, $param);
+		return '';
 	}
 	
 	/**
