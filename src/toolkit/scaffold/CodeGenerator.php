@@ -384,7 +384,7 @@ abstract class CodeGenerator{
 			$str .= "\n{$t}'{$meta['Field']}' => array(\n";
 			$str .= "{$t}\t'alias' => '{$alias}',\n";
 			$str .= $type ? "{$t}\t'type' => '{$type}',\n" : '';
-			$str .= isset($len) ? "{$t}\t'length' => {$len},\n" : '';
+			$str .= $len ? "{$t}\t'length' => {$len},\n" : '';
 			$str .= $pk ? "{$t}\t'primary' => true,\n" : '';
 			$str .= $required ? "{$t}\t'required' => true,\n" : '';
 			$str .= $readonly ? "{$t}\t'readonly' => true,\n" : '';
