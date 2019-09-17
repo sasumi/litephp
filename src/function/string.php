@@ -46,10 +46,10 @@ function substr_utf8($string, $length, $tail = '...', &$over_length = false){
  * 按照指定边界字符列表，拆分字符串
  * @param array|string $delimiters eg: [',', '-'] or ",-"
  * @param $str
- * @param bool $clear_empty 是否清除空值
+ * @param bool $trim_and_clear 去除空白及空值
  * @return array
  */
-function explode_by($delimiters, $str, $clear_empty = true){
+function explode_by($delimiters, $str, $trim_and_clear = true){
 	if(is_string($delimiters)){
 		$delimiters = str_split_by_charset($delimiters);
 	}
@@ -61,7 +61,7 @@ function explode_by($delimiters, $str, $clear_empty = true){
 	}
 	
 	$tmp = explode($delimiters[0], $str);
-	return $clear_empty ? array_clear_empty($tmp) : $tmp;
+	return $trim_and_clear ? array_clear_empty(array_trim_fields($tmp)) : $tmp;
 }
 
 /**
