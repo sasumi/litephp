@@ -1235,7 +1235,7 @@ abstract class Model extends DAO{
 		if(!$err){
 			switch($define['type']){
 				case 'int':
-					if(!is_numeric($val)){
+					if(strlen($val) && !is_numeric($val)){
 						$err = $name.'格式不正确';
 					}
 					break;
