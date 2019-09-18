@@ -244,14 +244,6 @@ abstract class Router{
 			throw new RouterException('PARAMETER ILLEGAL', null, array('controller'=>$controller, 'action' => $action));
 		}
 
-		//自动decode
-		if(!empty($get)){
-			array_walk_recursive($get, function(&$item){
-				if(is_string($item)){
-					$item = urldecode($item);
-				}
-			});
-		}
 		return array($controller, $action, $get);
 	}
 	
