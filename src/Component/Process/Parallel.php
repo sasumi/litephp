@@ -38,9 +38,6 @@ class Parallel{
 	//当前状态
 	private $state;
 
-	//是否开启调试输出
-	private $debug = false;
-
 	//总进程执行时间
 	private $total_max_execution_time = 0;
 
@@ -71,6 +68,9 @@ class Parallel{
 	//回调列表
 	private $callback_list = [];
 
+	//debugger
+	private $debugger = null;
+
 	/**
 	 * Parallel constructor.
 	 * @param $cmd
@@ -89,28 +89,6 @@ class Parallel{
 		$this->total_task_count = count($params);
 		$this->state = self::STATE_INIT;
 		$this->bindDebug();
-	}
-
-	/**
-	 * 检测是否在调试过程中
-	 * @return boolean
-	 */
-	public function isDebug(){
-		return $this->debug;
-	}
-
-	/**
-	 * 开启调试信息输出
-	 */
-	public function debugOn(){
-		$this->debug = true;
-	}
-
-	/**
-	 * 关闭调试信息
-	 */
-	public function debugOff(){
-		$this->debug = false;
 	}
 
 	/**
@@ -319,30 +297,56 @@ class Parallel{
 	}
 
 	/**
+	 * 设置调试器
+	 * @param callable|null $debugger
+	 */
+	public function setDebugger(callable $debugger = null){
+		$this->debugger = $debugger;
+	}
+
+	/**
+	 * 使用默认调试器
+	 */
+	public function useConsoleDebugger(){
+		$console_color_map = [
+			'starting'  => Console::FORE_COLOR_PURPLE,
+			'add'       => Console::FORE_COLOR_PURPLE,
+			'running'   => Console::FORE_COLOR_CYAN,
+			'interrupt' => Console::FORE_COLOR_RED,
+			'failure'   => Console::FORE_COLOR_RED,
+			'finished'  => Console::FORE_COLOR_GREEN,
+		];
+		$this->setDebugger(function(...$messages) use ($console_color_map){
+			$messages[0] = Console::getColorString($messages[0], $console_color_map[$messages[0]]);
+			return call_user_func_array([Console::class, 'debug'], $messages);
+		});
+	}
+
+	/**
 	 * 绑定调试输出
 	 * （仅在开启调试时有效）
 	 */
 	private function bindDebug(){
 		$this->listen(self::EVENT_ON_START, function(){
-			$this->debug(Console::getColorString('starting', Console::FORE_COLOR_PURPLE), date('Y-m-d H:i:s'));
+			$this->debug('starting', date('Y-m-d H:i:s'));
 		});
 		$this->listen(self::EVENT_ON_PROCESS_ADD, function($index, Process $process){
-			$this->debug(Console::getColorString('add', Console::FORE_COLOR_PURPLE), "#$index/$this->total_task_count", "PID:{$process->getPid()}", $process->getCommand());
+			$this->debug('add', "#$index/$this->total_task_count", "PID:{$process->getPid()}", $process->getCommand());
 		});
 		$this->listen(self::EVENT_ON_PROCESS_RUNNING, function($index, Process $process){
-			$this->debug(Console::getColorString('running', Console::FORE_COLOR_CYAN), "#$index/$this->total_task_count", "PID:{$process->getPid()}", $process->getCommand());
+			$this->debug('running', "#$index/$this->total_task_count", "PID:{$process->getPid()}", $process->getCommand());
 		});
 		$this->listen(self::EVENT_ON_PROCESS_INTERRUPT, function($index, Process $process){
 			$output = $this->result_list[$index][2];
-			$this->debug(Console::getColorString('interrupt', Console::FORE_COLOR_RED), "#$index/$this->total_task_count", "PID:{$process->getPid()}", $process->getCommand(), $output);
+			$this->debug('interrupt', "#$index/$this->total_task_count", "PID:{$process->getPid()}", $process->getCommand(), $output);
 		});
 		$this->listen(self::EVENT_ON_PROCESS_ERROR, function($index, Process $process){
 			$output = $this->result_list[$index][2];
-			$this->debug(Console::getColorString('failure', Console::FORE_COLOR_RED), "#$index/$this->total_task_count", "PID:{$process->getPid()}", $process->getCommand(), $output);
+			$this->debug('failure', "#$index/$this->total_task_count", "PID:{$process->getPid()}", $process->getCommand(), $output);
 		});
 		$this->listen(self::EVENT_ON_PROCESS_FINISH, function($index, Process $process){
 			$output = $this->result_list[$index][2];
-			$this->debug(Console::getColorString('finished', Console::FORE_COLOR_GREEN), "#$index/$this->total_task_count", "PID:{$process->getPid()}", $process->getCommand(), $output);
+			$this->debug('finished', "#$index/$this->total_task_count", "PID:{$process->getPid()}", $process->getCommand(), $output);
 		});
 	}
 
@@ -350,10 +354,10 @@ class Parallel{
 	 * 输出调试信息
 	 */
 	private function debug(){
-		if(!$this->isDebug()){
+		if(!$this->debugger){
 			return;
 		}
 		$args = func_get_args();
-		call_user_func_array([Console::class, 'debug'], $args);
+		call_user_func_array($this->debugger, $args);
 	}
 }
