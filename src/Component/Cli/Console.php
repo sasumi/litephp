@@ -186,16 +186,15 @@ abstract class Console {
 
 		//handle error
 		if($error){
-			echo "<PRE>";
 			echo "\n[ERROR]:\n", join("\n", $error), "\n";
-			echo "\n[Parameter]:\n";
+			echo "\n[ALL PARAMETERS]:\n";
 			foreach($param as $k => $define){
 				list($required, $desc) = $define;
 				echo "$k\t[$required] $desc\n";
 			}
 
 			if($description){
-				echo "\n[Description]:\n";
+				echo "\n[DESCRIPTION]:\n";
 				$call = debug_backtrace(null, 1);
 				$f = basename($call[0]['file']);
 				echo "$f $description\n";
