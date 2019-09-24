@@ -440,7 +440,7 @@ abstract class CodeGenerator{
 				$tmp = '';
 				foreach($ks as $idx => $k){
 					//key 不满足组成 CONST_{$k}变量名形式，忽略
-					if(!preg_match('/^[a-zA-Z0-9]+$/', $k)){
+					if(!preg_match('/^[a-zA-Z0-9][a-zA-Z0-9_]*$/', $k)){
 						continue 2;
 					}
 					$const_key = strtoupper($meta['Field'] . '_' . $k);
