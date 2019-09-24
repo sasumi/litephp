@@ -296,17 +296,18 @@ abstract class Model extends DAO{
 	/**
 	 * 事务处理
 	 * @param callable $handler 处理函数，若函数返回false或抛出Exception，将停止提交，执行事务回滚
-	 * @throws Exception
-	 * @throws null
+	 * @return mixed 闭包函数返回值透传
 	 */
 	public static function transaction($handler){
 		$driver = self::meta()->getDbDriver(Model::DB_WRITE);
 		try{
 			$driver->beginTransaction();
-			if(call_user_func($handler) === false){
+			$ret = call_user_func($handler);
+			if($ret === false){
 				throw new Exception('database transaction interrupt');
 			}
 			$driver->commit();
+			return $ret;
 		} catch(\Exception $exception){
 			$driver->rollback();
 			throw $exception;
