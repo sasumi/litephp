@@ -498,7 +498,7 @@ namespace Lite\func {
 	 * array_filter_by_keys($data, 'key1', 'key2');
 	 * @param $arr
 	 * @param $keys
-	 * @return array 
+	 * @return array
 	 */
 	function array_filter_by_keys($arr, $keys) {
 		$args = is_array($keys) ? $keys : array_slice(func_get_args(), 1);
@@ -527,6 +527,23 @@ namespace Lite\func {
 			$ret[] = $str;
 		}
 		return $ret;
+	}
+
+	/**
+	 * 根据xpath，将数据压入数组
+	 * @param array $data
+	 * @param string $path
+	 * @param $value
+	 * @param string $glue
+	 */
+	function array_push_by_path(&$data, $path, $value, $glue = '.'){
+		$path = $path[0] == $glue ? $path : $glue.$path;
+		$path = preg_replace_callback('/'.preg_quote($glue).'(\w+)?/', function($matches){
+			return "['$matches[1]']";
+		}, $path);
+		$val = var_export($value, true);
+		$statement = "\$data{$path} = $val;";
+		eval($statement);
 	}
 
 	/**
