@@ -122,7 +122,6 @@ abstract class Model extends DAO{
 	/**
 	 * 获取数据库表全名
 	 * @return string
-	 * @throws \Lite\Exception\Exception
 	 */
 	public function getTableFullName(){
 		return $this->getDbTablePrefix().$this->getTableName();
@@ -131,7 +130,6 @@ abstract class Model extends DAO{
 	/**
 	 * 获取数据库表主键
 	 * @return string
-	 * @throws \Lite\Exception\Exception
 	 */
 	public function getPrimaryKey(){
 		$defines = $this->getEntityPropertiesDefine();
@@ -140,14 +138,13 @@ abstract class Model extends DAO{
 				return $k;
 			}
 		}
-		throw new Exception('no primary key found in table defines');
+		throw new Exception('No primary key found in table defines');
 	}
 
 	/**
 	 * 获取db记录实例对象
 	 * @param int $operate_type
 	 * @return DBAbstract
-	 * @throws \Lite\Exception\Exception
 	 */
 	protected function getDbDriver($operate_type = self::DB_WRITE){
 		$configs = $this->getDbConfig();
@@ -159,7 +156,6 @@ abstract class Model extends DAO{
 	 * 解释SQL语句
 	 * @param $query
 	 * @return array
-	 * @throws \Lite\Exception\Exception
 	 */
 	public static function explainQuery($query){
 		$obj = self::meta();
@@ -170,7 +166,6 @@ abstract class Model extends DAO{
 	 * 获取数据库配置
 	 * 该方法可以被覆盖重写
 	 * @return array
-	 * @throws \Lite\Exception\Exception
 	 */
 	protected function getDbConfig(){
 		return $this->db_config ?: Config::get('db');
@@ -189,7 +184,6 @@ abstract class Model extends DAO{
 	 * 获取数据库表前缀
 	 * @param int $type
 	 * @return string
-	 * @throws \Lite\Exception\Exception
 	 */
 	public static function getDbTablePrefix($type = self::DB_READ){
 		/** @var Model $obj */
@@ -204,8 +198,6 @@ abstract class Model extends DAO{
 	 * 分析出配置中的读、写配置
 	 * @param string $operate_type
 	 * @param array $all_config
-	 * @throws Exception
-	 * @internal param array $all
 	 * @return array
 	 */
 	private function parseConfig($operate_type, array $all_config){
@@ -260,7 +252,7 @@ abstract class Model extends DAO{
 		), $all_config);
 
 		if(empty($host_config[$depKey])){
-			throw new Exception('DB CONFIG ERROR FOR DRIVER TYPE:'.$operate_type);
+			throw new Exception('DB config error for driver type:'.$operate_type);
 		}
 		return $host_config;
 	}
@@ -268,7 +260,6 @@ abstract class Model extends DAO{
 	/**
 	 * 设置查询SQL语句
 	 * @param string|Query $query
-	 * @throws Exception
 	 * @return static|Query
 	 */
 	public static function setQuery($query){
@@ -282,7 +273,7 @@ abstract class Model extends DAO{
 			$obj->query = $query;
 			return $obj;
 		}
-		throw new Exception('QUERY STRING REQUIRED');
+		throw new Exception('Query string required');
 	}
 
 	/**
@@ -304,7 +295,7 @@ abstract class Model extends DAO{
 			$driver->beginTransaction();
 			$ret = call_user_func($handler);
 			if($ret === false){
-				throw new Exception('database transaction interrupt');
+				throw new Exception('Database transaction interrupt');
 			}
 			$driver->commit();
 			return $ret;
@@ -317,7 +308,6 @@ abstract class Model extends DAO{
 	/**
 	 * 执行当前查询
 	 * @return \PDOStatement
-	 * @throws \Lite\Exception\Exception
 	 */
 	public function execute(){
 		$type = Query::isWriteOperation($this->query) ? self::DB_WRITE : self::DB_READ;
@@ -378,7 +368,6 @@ abstract class Model extends DAO{
 	 * @param string $statement 条件表达式
 	 * @param string $var,... 条件表达式扩展
 	 * @return static|Query
-	 * @throws \Lite\Exception\Exception
 	 */
 	public static function find($statement = '', $var = null){
 		$obj = static::meta();
@@ -397,7 +386,6 @@ abstract class Model extends DAO{
 	 * 添加更多查询条件
 	 * @param array $args 查询条件
 	 * @return static|Query
-	 * @throws \Lite\Exception\Exception
 	 */
 	public function where(...$args){
 		$statement = self::parseConditionStatement($args, $this);
@@ -410,7 +398,6 @@ abstract class Model extends DAO{
 	 * @param $st
 	 * @param $val
 	 * @return static
-	 * @throws \Lite\Exception\Exception
 	 */
 	public function whereOnSet($st, $val){
 		$args = func_get_args();
@@ -496,8 +483,6 @@ abstract class Model extends DAO{
 	 * 创建新对象
 	 * @param $data
 	 * @return bool|static|Query
-	 * @throws \Lite\Exception\BizException
-	 * @throws \Lite\Exception\Exception
 	 */
 	public static function create($data){
 		$obj = static::meta();
@@ -510,7 +495,6 @@ abstract class Model extends DAO{
 	 * @param string $val
 	 * @param bool $as_array
 	 * @return static|Query|array
-	 * @throws \Lite\Exception\Exception
 	 */
 	public static function findOneByPk($val, $as_array = false){
 		$obj = static::meta();
@@ -521,8 +505,6 @@ abstract class Model extends DAO{
 	 * @param $val
 	 * @param bool $as_array
 	 * @return static
-	 * @throws \Lite\Exception\Exception
-	 * @throws \Lite\Exception\RouterException
 	 */
 	public static function findOneByPkOrFail($val, $as_array = false){
 		$data = static::findOneByPk($val, $as_array);
@@ -538,7 +520,7 @@ abstract class Model extends DAO{
 	 * @param array $pks
 	 * @param bool $as_array
 	 * @return static[]
-	 * @throws \Lite\Exception\Exception
+
 	 */
 	public static function findByPks(array $pks, $as_array = false){
 		if(empty($pks)){
@@ -552,7 +534,7 @@ abstract class Model extends DAO{
 	 * 根据主键值删除一条记录
 	 * @param string $val
 	 * @return bool
-	 * @throws \Lite\Exception\Exception
+
 	 */
 	public static function delByPk($val){
 		$obj = static::meta();
@@ -565,7 +547,6 @@ abstract class Model extends DAO{
 	 * 根据主键删除记录
 	 * @param $val
 	 * @return bool
-	 * @throws \Lite\Exception\RouterException
 	 */
 	public static function delByPkOrFail($val){
 		static::delByPk($val);
@@ -581,7 +562,7 @@ abstract class Model extends DAO{
 	 * @param string $val 主键值
 	 * @param array $data
 	 * @return bool
-	 * @throws \Lite\Exception\Exception
+
 	 */
 	public static function updateByPk($val, array $data){
 		$obj = static::meta();
@@ -594,7 +575,7 @@ abstract class Model extends DAO{
 	 * @param $pks
 	 * @param array $data
 	 * @return bool
-	 * @throws \Lite\Exception\Exception
+
 	 */
 	public static function updateByPks($pks, array $data){
 		$obj = static::meta();
@@ -608,7 +589,7 @@ abstract class Model extends DAO{
 	 * @param int $limit 为了安全，调用方必须传入具体数值，如不限制删除数量，可设置为0
 	 * @param string $statement 为了安全，调用方必须传入具体条件，如不限制，可设置为空字符串
 	 * @return bool;
-	 * @throws \Lite\Exception\Exception
+
 	 */
 	public static function updateWhere(array $data, $limit, $statement){
 		if(self::onBeforeChanged() === false){
@@ -629,7 +610,7 @@ abstract class Model extends DAO{
 	 * @param int $limit 为了安全，调用方必须传入具体数值，如不限制删除数量，可设置为0
 	 * @param string $statement 为了安全，调用方必须传入具体条件，如不限制，可设置为空字符串
 	 * @return bool
-	 * @throws \Lite\Exception\Exception
+
 	 */
 	public static function deleteWhere($limit, $statement){
 		$args = func_get_args();
@@ -647,7 +628,7 @@ abstract class Model extends DAO{
 	 * @param bool $as_array return as array
 	 * @param string $unique_key 用于组成返回数组的唯一性key
 	 * @return static[]
-	 * @throws \Lite\Exception\Exception
+
 	 */
 	public function all($as_array = false, $unique_key = ''){
 		$list = $this->getDbDriver(self::DB_READ)->getAll($this->query);
@@ -677,11 +658,11 @@ abstract class Model extends DAO{
 
 	/**
 	 * 以关联数组方式返回
-	 * @deprecated 请使用 all，第二个参数已经支持
+	 * @deprecated 请使用 all()，第二个参数已经支持
 	 * @param bool $as_array 是否以数组方式返回，默认为Model对象
 	 * @param null $key 唯一性下标，如id，默认为自然索引数组
 	 * @return static[]|Query[]
-	 * @throws \Lite\Exception\Exception
+
 	 */
 	public function allAsAssoc($as_array = false, $key = null){
 		$key = $key ?: $this->getPrimaryKey();
@@ -691,8 +672,7 @@ abstract class Model extends DAO{
 	/**
 	 * 获取一条记录
 	 * @param bool $as_array 是否以数组方式返回，默认为Model对象
-	 * @return static
-	 * @throws \Lite\Exception\Exception
+	 * @return static|array
 	 */
 	public function one($as_array = false){
 		$data = $this->getDbDriver(self::DB_READ)->getOne($this->query);
@@ -711,8 +691,6 @@ abstract class Model extends DAO{
 	 * 获取一条记录，为空时抛异常
 	 * @param bool $as_array 是否以数组方式返回，默认为Model对象
 	 * @return static
-	 * @throws \Lite\Exception\Exception
-	 * @throws \Lite\Exception\RouterException
 	 */
 	public function oneOrFail($as_array = false){
 		$data = $this->one($as_array);
@@ -726,7 +704,6 @@ abstract class Model extends DAO{
 	 * 获取一个记录字段
 	 * @param string|null $key 如字段为空，则取第一个结果
 	 * @return mixed|null
-	 * @throws \Lite\Exception\Exception
 	 */
 	public function ceil($key = ''){
 		$obj = self::meta();
@@ -844,7 +821,6 @@ abstract class Model extends DAO{
 	 * 获取指定列，作为一维数组返回
 	 * @param $key
 	 * @return array
-	 * @throws \Lite\Exception\Exception
 	 */
 	public function column($key){
 		$obj = self::meta();
@@ -859,14 +835,13 @@ abstract class Model extends DAO{
 	/**
 	 * 以映射数组方式返回
 	 * <pre>
-	 * $query->map('id', 'name'); //返回 [[id_val=>name_val],...] 格式数据
-	 * $query->map('id', ['name']); //返回 [[id_val=>[name=>name_val],...] 格式数据
-	 * $query->map('id', ['name', 'gender']); //返回 [[id_val=>[name=>name_val, gender=>gender_val],...] 格式数据
+	 * $query->map('id', 'name'); //返回： [[id_val=>name_val],...] 格式数据
+	 * $query->map('id', ['name']); //返回： [[id_val=>[name=>name_val],...] 格式数据
+	 * $query->map('id', ['name', 'gender']); //返回： [[id_val=>[name=>name_val, gender=>gender_val],...] 格式数据
 	 * </pre>
 	 * @param $key
 	 * @param $val
 	 * @return array
-	 * @throws Exception
 	 */
 	public function map($key, $val){
 		if(is_string($val)){
@@ -887,7 +862,7 @@ abstract class Model extends DAO{
 			}
 			return $ret;
 		}
-		throw new Exception('map parameter error', null, [$key, $val]);
+		throw new Exception('Mapping parameter error', null, [$key, $val]);
 	}
 
 	/**
@@ -896,7 +871,6 @@ abstract class Model extends DAO{
 	 * @param callable $handler 回调函数
 	 * @param bool $as_array 查询结果作为数组格式回调
 	 * @return bool 是否执行了分块动作
-	 * @throws Exception
 	 */
 	public function chunk($size, $handler, $as_array = false){
 		$total = $this->count();
@@ -931,7 +905,6 @@ abstract class Model extends DAO{
 	 * @param int $sleep_interval_sec 无数据时睡眠时长（秒）
 	 * @param bool|callable|null $debugger 数据信息调试器
 	 * @return bool 是否正常执行
-	 * @throws \Lite\Exception\Exception
 	 */
 	public function watch(callable $handler, $chunk_size = 50, $sleep_interval_sec = 3, $debugger = true){
 		if($debugger === true) {
@@ -984,7 +957,6 @@ abstract class Model extends DAO{
 	/**
 	 * 获取当前查询条数
 	 * @return int
-	 * @throws \Lite\Exception\Exception
 	 */
 	public function count(){
 		$driver = $this->getDbDriver(self::DB_READ);
@@ -998,7 +970,6 @@ abstract class Model extends DAO{
 	 * @param bool $as_array 是否以数组方式返回，默认为Model对象数组
 	 * @param string $unique_key 用于组成返回数组的唯一性key
 	 * @return static[]
-	 * @throws \Lite\Exception\Exception
 	 */
 	public function paginate($page = null, $as_array = false, $unique_key = ''){
 		$list = $this->getDbDriver(self::DB_READ)->getPage($this->query, $page);
@@ -1076,8 +1047,6 @@ abstract class Model extends DAO{
 	 * @param int $limit
 	 * @param array ...$args 查询条件
 	 * @return mixed
-	 * @throws \Lite\Exception\BizException
-	 * @throws \Lite\Exception\Exception
 	 */
 	public static function replace(array $data, $limit = 0, ...$args){
 		$obj = self::meta();
@@ -1095,7 +1064,6 @@ abstract class Model extends DAO{
 	 * @param int $limit 条数限制，默认为0表示不限制更新条数
 	 * @param array ...$args 查询条件
 	 * @return int
-	 * @throws \Lite\Exception\Exception
 	 */
 	public static function increase($field, $offset, $limit = 0, ...$args){
 		$obj = self::meta();
@@ -1289,12 +1257,10 @@ abstract class Model extends DAO{
 	 * @param $data_list
 	 * @param bool $break_on_fail
 	 * @return array|bool
-	 * @throws \Exception
-	 * @throws \Lite\Exception\Exception
 	 */
 	public static function insertMany($data_list, $break_on_fail = true){
 		if(count($data_list, COUNT_RECURSIVE) == count($data_list)){
-			throw new Exception('2 dimension array needed');
+			throw new Exception('Two dimension array needed');
 		}
 		$obj = static::meta();
 		$return_list = array();
@@ -1320,7 +1286,7 @@ abstract class Model extends DAO{
 	 * 快速批量插入数据，不进行ORM检查
 	 * @param $data_list
 	 * @return mixed
-	 * @throws \Lite\Exception\Exception
+
 	 */
 	public static function insertManyQuick($data_list){
 		if(self::onBeforeChanged() === false){
@@ -1334,7 +1300,7 @@ abstract class Model extends DAO{
 	/**
 	 * 从数据库从删除当前对象对应的记录
 	 * @return bool
-	 * @throws \Lite\Exception\Exception
+
 	 */
 	public function delete(){
 		if($this->onBeforeDelete() === false){
@@ -1352,7 +1318,7 @@ abstract class Model extends DAO{
 	 * @param array $args 参数形式可为 [""],但不可为 ["", "aa"] 这种传参
 	 * @param \Lite\DB\Model $obj
 	 * @return string
-	 * @throws \Lite\Exception\Exception
+
 	 */
 	private static function parseConditionStatement($args, Model $obj){
 		$statement = $args[0];
@@ -1385,7 +1351,7 @@ abstract class Model extends DAO{
 	 * 保存当前对象变更之后的数值
 	 * @param bool $flush_all 是否刷新全部数据，包含readonly数据
 	 * @return bool
-	 * @throws \Lite\Exception\Exception
+
 	 */
 	public function save($flush_all = false){
 		if($this->onBeforeSave() === false){
@@ -1437,7 +1403,6 @@ abstract class Model extends DAO{
 	 * @param $method_name
 	 * @param $params
 	 * @return static|Query
-	 * @throws Exception
 	 */
 	final public function __call($method_name, $params){
 		if(method_exists($this->query, $method_name)){
@@ -1445,7 +1410,7 @@ abstract class Model extends DAO{
 			return $this;
 		}
 
-		throw new Exception("METHOD NO EXIST:".$method_name);
+		throw new Exception("Method no exist:".$method_name);
 	}
 
 	/**
@@ -1484,7 +1449,7 @@ abstract class Model extends DAO{
 	 *      )
 	 * </p>
 	 * @param $key
-	 * @throws \Lite\Exception\Exception
+
 	 * @return mixed
 	 */
 	public function __get($key){
@@ -1499,7 +1464,7 @@ abstract class Model extends DAO{
 
 				if($define['has_one']){
 					if(!$target_key && !$source_key){
-						throw new Exception('has one config must define target key or source key');
+						throw new Exception('Has one config must define target key or source key');
 					}
 					$match_val = $this->getValue($source_key ?: $this->getPrimaryKey());
 					/** @var Model $class */
@@ -1512,7 +1477,7 @@ abstract class Model extends DAO{
 				}
 				if($define['has_many']){
 					if(!$target_key){
-						throw new Exception('has many config must define target key');
+						throw new Exception('Has many config must define target key');
 					}
 					/** @var Model $class */
 					$class = $define['has_many'];

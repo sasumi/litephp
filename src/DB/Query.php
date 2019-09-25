@@ -104,7 +104,7 @@ class Query {
 	 * @param mixed $type join type
 	 * @return $this
 	 */
-	public function join($table, $on=null, $type){
+	public function join($table, $on, $type){
 		$this->joins[] = array($table, $on, $type);
 		return $this;
 	}
@@ -221,7 +221,8 @@ class Query {
 	 * @param null $operator
 	 * @param null $compare
 	 */
-	public function addWhere($arg1=self::OP_AND, $field, $operator=null, $compare=null){
+	public function addWhere($arg1, $field, $operator = null, $compare = null){
+		$arg1 = $arg1 ?: self::OP_AND;
 		//嵌套子语句模式
 		if(is_callable($field)){
 			$ws = call_user_func($field);
@@ -424,7 +425,6 @@ class Query {
 	/**
 	 * 输出SQL查询语句
 	 * @return string
-	 * @throws Exception
 	 */
 	public function __toString(){
 		if($this->sql){
@@ -448,7 +448,7 @@ class Query {
 
 			case self::INSERT:
 				if(!$this->data){
-					throw new Exception("NO DATA IN DB.INSERT");
+					throw new Exception("No data in database insert operation");
 				}
 				$data_list = count($this->data) == count($this->data, 1) ? array($this->data) : $this->data;
 				$key_str = implode(",", self::escapeKey(array_keys($data_list[0])));
@@ -468,7 +468,7 @@ class Query {
 			case self::REPLACE:
 			case self::UPDATE:
 				if(!$this->data){
-					throw new Exception("NO DATA IN DB.UPDATE");
+					throw new Exception("No data in database update operation");
 				}
 				$data_list = count($this->data) == count($this->data, 1) ? array($this->data) : $this->data;
 				$sets = array();
@@ -488,7 +488,7 @@ class Query {
 				break;
 
 			default:
-				throw new Exception("NO DB OPERATE SET");
+				throw new Exception("No database operation type set");
 		}
 		if($this->limit && stripos(' LIMIT ', $sql) === false){
 			if(!$this->limit[0]){
