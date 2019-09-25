@@ -509,6 +509,32 @@ namespace Lite\func {
 		return $data;
 	}
 
+	/**
+	 * 创建Excel等电子表格里面的表头序列
+	 * @param $column_size
+	 * @return array
+	 */
+	function array_make_spreadsheet_columns($column_size){
+		$ret = [];
+		$az_len = 26;
+		$as = 65;
+		for($i = 0; $i < $column_size; $i++){
+			$str = '';
+			if($i >= $az_len){
+				$str .= chr($as + intval($i/$az_len) - 1);
+			}
+			$str .= chr($as + $i%$az_len);
+			$ret[] = $str;
+		}
+		return $ret;
+	}
+
+	/**
+	 * 断言数组是否用拥有指定键名
+	 * @param $arr
+	 * @param $keys
+	 * @throws \Exception
+	 */
 	function assert_array_has_keys($arr, $keys){
 		foreach($keys as $key){
 			if(!array_key_exists($key, $arr)){
