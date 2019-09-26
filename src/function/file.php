@@ -119,10 +119,6 @@ function file_exists_case_insensitive($file, $parent=null){
 	return false;
 }
 
-function file_path_compare_case_insensitive($f1, $f2){
-	return strcasecmp($f1, $f2) == 0;
-}
-
 /**
  * 递归拷贝目录
  * @param $src
