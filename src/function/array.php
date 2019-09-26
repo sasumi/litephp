@@ -286,27 +286,6 @@ namespace Lite\func {
 	}
 
 	/**
-	 * trim数组
-	 * @deprecated 请使用 array_trim_fields
-	 * @param $data
-	 * @param bool $recursive
-	 * @return mixed
-	 */
-	function array_trim($data, $recursive = true) {
-		if(empty($data) || !is_array($data)) {
-			return $data;
-		}
-		foreach ($data as $k => $item) {
-			if(is_scalar($item)) {
-				$data[$k] = trim($item);
-			} else if(is_array($item) && $recursive) {
-				$data[$k] = array_trim($item);
-			}
-		}
-		return $data;
-	}
-
-	/**
 	 * 对数组进行去空白
 	 * @param array $data 数据
 	 * @param array $fields 指定字段，为空表示所有字段
