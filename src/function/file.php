@@ -74,6 +74,19 @@ function resolve_absolute_path($path) {
 }
 
 /**
+ * 解析文件扩展名
+ * @param $filename
+ * @return string
+ */
+function resolve_file_extension($filename){
+	if(strpos($filename, '.') <= 0){
+		return '';
+	}
+	$tmp = explode('.', $filename);
+	return strtolower(end($tmp));
+}
+
+/**
  * 检查文件是否存在，且名称允许大小写混淆
  * @param $file
  * @param null $parent
