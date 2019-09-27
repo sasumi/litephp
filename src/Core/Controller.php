@@ -18,7 +18,7 @@ abstract class Controller{
 	}
 
 	/**
-	 * 获取当前controller、action配置的模板
+	 * 获取当前controller action配置的模板
 	 * 返回空表示由view来指定模板
 	 * @param $controller
 	 * @param $action

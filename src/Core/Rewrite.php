@@ -1,7 +1,6 @@
 <?php
 namespace Lite\Core;
 
-
 use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
 use function Lite\func\array_keys_exists;

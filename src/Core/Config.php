@@ -210,7 +210,6 @@ abstract class Config {
 	/**
 	 * 框架配置初始化，检测配置目录是否存在
 	 * @param string $app_root application root
-	 * @throws \Lite\Exception\Exception
 	 */
 	public static function init($app_root = null){
 		if(!$app_root){

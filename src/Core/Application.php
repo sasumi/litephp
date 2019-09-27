@@ -38,12 +38,12 @@ class Application{
 	/**
 	 * 框架初始化方法
 	 * @param $namespace
-	 * @param null $app_root
+	 * @param $app_root
 	 * @param $mode
 	 * @throws \Exception
 	 * @internal param null $app_root
 	 */
-	private function __construct($namespace, $app_root = null, $mode){
+	private function __construct($namespace, $app_root, $mode){
 		self::$namespace = $namespace;
 
 		//注册项目文件自动加载逻辑
