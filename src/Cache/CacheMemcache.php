@@ -12,7 +12,7 @@ class CacheMemcache extends CacheAdapter{
 
 	public function __construct(array $config){
 		if(!extension_loaded('memcache')){
-			throw new Exception('can not find the memcache extension', 403);
+			throw new Exception('Can not find the memcache extension', 403);
 		}
 
 		$servers = $config['servers'];

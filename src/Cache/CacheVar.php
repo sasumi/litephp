@@ -2,8 +2,9 @@
 namespace Lite\Cache;
 
 /**
- * 运行时内存变量缓存（共享）
- * Class VarCache
+ * 运行时内存变量缓存（进程内共享）
+ * Class CacheVar
+ * @package Lite\Cache
  */
 class CacheVar extends CacheAdapter {
 	private static $DATA_STORE = array();

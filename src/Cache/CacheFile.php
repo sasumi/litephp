@@ -4,7 +4,7 @@ namespace Lite\Cache;
 /**
  * 文件缓存
  * 默认缓存在system temporary临时目录中
- * 默认开启进程内变量缓存，避免多次获取变量读取文件
+ * 默认开启进程内变量缓存，避免多次获取变量读取文件 config:cache_in_process
  * @package Lite\Cache
  */
 class CacheFile extends CacheAdapter{
@@ -12,8 +12,8 @@ class CacheFile extends CacheAdapter{
 	private static $cache_store = [];
 
 	protected function __construct(array $config = []){
-		if(isset($config['cache_in_process'])){
-			$this->cache_in_process = !!$config['cache_in_process'];
+		if(!isset($config['cache_in_process'])){
+			$this->cache_in_process = true;
 		}
 		if(!$config['dir']){
 			$dir = sys_get_temp_dir();
@@ -25,6 +25,13 @@ class CacheFile extends CacheAdapter{
 		parent::__construct($config);
 	}
 
+	/**
+	 * 设置缓存
+	 * @param $cache_key
+	 * @param $data
+	 * @param int $expired
+	 * @return bool|int|mixed
+	 */
 	public function set($cache_key, $data, $expired = 60){
 		$file = $this->getFileName($cache_key);
 		$string = serialize(array(
@@ -53,6 +60,7 @@ class CacheFile extends CacheAdapter{
 	}
 
 	/**
+	 * 获取缓存
 	 * @param $cache_key
 	 * @return null
 	 */
@@ -69,12 +77,17 @@ class CacheFile extends CacheAdapter{
 					return $data['data'];
 				}
 			}
-			//清空cache，防止cache膨胀
+			//清空无效缓存，防止缓存文件膨胀
 			$this->delete($cache_key);
 		}
 		return null;
 	}
 
+	/**
+	 * 删除缓存
+	 * @param $cache_key
+	 * @return bool|mixed
+	 */
 	public function delete($cache_key){
 		if(isset(self::$cache_store[$cache_key])){
 			unset(self::$cache_store[$cache_key]);
@@ -87,6 +100,7 @@ class CacheFile extends CacheAdapter{
 	}
 
 	/**
+	 * 清空缓存
 	 * flush cache dir
 	 */
 	public function flush(){

@@ -2,6 +2,10 @@
 namespace Lite\Cache;
 use Lite\Exception\Exception;
 
+/**
+ * Class CacheAdapter
+ * @package Lite\Cache
+ */
 abstract class CacheAdapter implements CacheInterface{
 	private static $instances;
 	private $config;
@@ -39,7 +43,7 @@ abstract class CacheAdapter implements CacheInterface{
 	final public function cache($key, callable $fetcher, $expired_seconds = 60){
 		$cache_class = get_called_class();
 		if($cache_class == self::class){
-			throw new Exception('cache method not callable in '.self::class);
+			throw new Exception('Cache method not callable in '.self::class);
 		}
 		$key .= ':'.$expired_seconds;
 		$data = $this->get($key);
