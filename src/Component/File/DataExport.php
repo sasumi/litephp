@@ -299,7 +299,7 @@ abstract class DataExport{
 	 * DataExport::exportCSVChunkByModel(User::find('status=1'), [], 'user.csv');
 	 * </p>
 	 */
-	public static function exportCSVChunkByModel(Model $query_model, $fields = [], $file_name, $on_exporting = null){
+	public static function exportCSVChunkByModel(Model $query_model, $fields, $file_name, $on_exporting = null){
 		$entity_fields = $query_model->getEntityFieldAliasMap();
 		$spec_fields = [];
 		if(!$fields){
@@ -330,10 +330,10 @@ abstract class DataExport{
 	 * @param $name
 	 * @param string $file
 	 * @param int $sheet
-	 * @param bool $ignoreTitle
+	 * @param bool $ignore_title
 	 * @return array
 	 */
-	public static function parseExcel($file, $name, $sheet = 0, $ignoreTitle = false){
+	public static function parseExcel($file, $name, $sheet = 0, $ignore_title = false){
 		$Spreadsheet = new SpreadsheetReader($file, $name, mime_content_type($file));
 		$data = [];
 		$Spreadsheet->Sheets();
@@ -353,7 +353,7 @@ abstract class DataExport{
 		array_walk($data, function(&$row) use ($max_length){
 			$row = array_pad($row, $max_length, "");
 		});
-		if($ignoreTitle){
+		if($ignore_title){
 			return $data;
 		}
 		//第一行作为标题时取第一行非false的数据作为数组长度
