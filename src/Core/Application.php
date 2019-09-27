@@ -133,7 +133,7 @@ class Application{
 
 		//调试模式
 		else if(Config::get('app/debug')){
-			Exception::convertExceptionToArray($ex);
+			Exception::prettyPrint($ex);
 		}
 
 		//路由错误，重定向到404页面

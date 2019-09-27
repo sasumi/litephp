@@ -2,6 +2,7 @@
 namespace Lite\Exception;
 
 use Exception as OrgException;
+use Lite\Component\Server;
 use function Lite\func\var_export_min;
 
 /**
@@ -25,7 +26,7 @@ class Exception extends OrgException implements \Serializable{
 		parent::__construct($message, $code, $prev_exception);
 		$this->data = $data;
 	}
-	
+
 	/**
 	 * 获取数据
 	 * @return mixed
@@ -33,7 +34,7 @@ class Exception extends OrgException implements \Serializable{
 	public function getData(){
 		return $this->data;
 	}
-	
+
 	/**
 	 * 转化exception到数组
 	 * @param $e
@@ -54,7 +55,7 @@ class Exception extends OrgException implements \Serializable{
 		);
 		return $ret;
 	}
-	
+
 	/**
 	 * 数组格式输出
 	 * @return array
@@ -62,7 +63,7 @@ class Exception extends OrgException implements \Serializable{
 	public function toArray(){
 		return self::convertExceptionToArray($this);
 	}
-	
+
 	/**
 	 * 优化打印输出
 	 * @param \Exception $e
@@ -70,7 +71,8 @@ class Exception extends OrgException implements \Serializable{
 	 * @return string | null
 	 */
 	public static function prettyPrint(\Exception $e, $return = false){
-		$text = $e->getMessage()." [{$e->code}]".PHP_EOL;
+		$text = PHP_SAPI != 'cli' ? '<PRE>' : '';
+		$text .= $e->getMessage()." [{$e->code}]".PHP_EOL;
 		$text .= str_repeat('-', 80).PHP_EOL;
 		$text .= "[Locate]:".$e->getFile()." #".$e->getLine().PHP_EOL;
 		if($e instanceof Exception){
@@ -78,6 +80,7 @@ class Exception extends OrgException implements \Serializable{
 		}
 		$text .= "[Trace]:".PHP_EOL;
 		$text .= $e->getTraceAsString();
+		$text .= PHP_SAPI != 'cli' ? '</PRE>' : '';
 		if(!$return){
 			echo $text;
 			return null;
