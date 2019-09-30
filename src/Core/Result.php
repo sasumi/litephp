@@ -213,7 +213,7 @@ class Result {
 					}
 				};
 				</script>'.
-			"<script>frame.$callback(".json_encode($data).");</script>".
+			"<script>frame.$callback(".json_encode($data, JSON_UNESCAPED_UNICODE).");</script>".
 			'</head><body></body></html>';
 		return $html;
 	}
