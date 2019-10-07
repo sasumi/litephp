@@ -1228,7 +1228,7 @@ abstract class Model extends DAO{
 		}
 
 		//required
-		if(!$err && $define['required'] && strlen($val) == 0){
+		if(!$err && $define['required'] && !isset($val)){
 			$err = "请输入{$name}";
 		}
 
