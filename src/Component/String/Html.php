@@ -468,6 +468,15 @@ trait Html{
 	}
 
 	/**
+	 * no script support html
+	 * @param $html
+	 * @return string
+	 */
+	public static function htmlNoScript($html){
+		return '<noscript>'.$html.'</noscript>';
+	}
+
+	/**
 	 * submit button
 	 * @param string $inner_html
 	 * @param array $attributes
