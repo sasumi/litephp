@@ -468,13 +468,19 @@ abstract class Model extends DAO{
 	 */
 	public function between($field, $min = null, $max = null, $equal_cmp = true){
 		$cmp = $equal_cmp ? '=' : '';
-		if(isset($min)){
+		$hit = false;
+		if(strlen($min)){
 			$min = addslashes($min);
 			$this->query->where($field, ">$cmp", $min);
+			$hit = true;
 		}
-		if(isset($max)){
+		if(strlen($max)){
 			$max = addslashes($max);
 			$this->query->where($field, "<$cmp", $max);
+			$hit = true;
+		}
+		if($hit){
+			$this->query->where("`$field` IS NOT NULL");
 		}
 		return $this;
 	}
