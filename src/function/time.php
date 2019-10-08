@@ -221,7 +221,7 @@ function time_range($start, $end){
  * $str = time_range_v(3601);
  * //1H 0M 1S
  * </pre>
- * @param $time
+ * @param int $time
  * @return string
  */
 function time_range_v($time){
