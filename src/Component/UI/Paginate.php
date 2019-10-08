@@ -312,7 +312,7 @@ class Paginate implements PaginateInterface {
 				if($page_size_form_html){
 					$tmp = str_replace('%i', $page_size_form_html, $tmp);
 				} else {
-					$tmp = str_replace('%i', $page_info['sizes'], $tmp);
+					$tmp = str_replace('%i', $page_info['page_size'], $tmp);
 				}
 
 				$tmp = str_replace('%p', htmlspecialchars($this->getUrl(1, '_ppp_')), $tmp);
