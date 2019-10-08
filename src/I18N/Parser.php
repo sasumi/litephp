@@ -76,14 +76,14 @@ abstract class Parser{
 		$split = explode('-', $local_str);
 		if(method_exists('\Locale', 'parseLocale')){
 			$ret = \Locale::parseLocale($local_str);
-			return self::LOCAL_STRUCTURE+$ret;
+			return self::LOCAL_STRUCTURE + $ret;
 		}
 
 		//init
 		$language = $script = $region = $variant1 = $variant2 = $variant3 = $private1 = $private2 = $private3 = '';
 
 		array_unshift($split, $language);
-		if($split && strlen($split[0])>2){
+		if($split && strlen($split[0]) > 2){
 			array_unshift($split, $script);
 		}
 		if($split){
@@ -92,17 +92,17 @@ abstract class Parser{
 		if($split){
 			list($variant1, $variant2, $variant3, $private1, $private2, $private3) = $split;
 		}
-		return self::LOCAL_STRUCTURE+[
-			'language' => $language,
-			'script'   => $script,
-			'region'   => $region,
-			'variant1' => $variant1,
-			'variant2' => $variant2,
-			'variant3' => $variant3,
-			'private1' => $private1,
-			'private2' => $private2,
-			'private3' => $private3,
-		];
+		return self::LOCAL_STRUCTURE + [
+				'language' => $language,
+				'script'   => $script,
+				'region'   => $region,
+				'variant1' => $variant1,
+				'variant2' => $variant2,
+				'variant3' => $variant3,
+				'private1' => $private1,
+				'private2' => $private2,
+				'private3' => $private3,
+			];
 	}
 	
 	/**
@@ -141,10 +141,12 @@ abstract class Parser{
 	public static function matches(array $accepted, array $available, $with_priority = false){
 		//matches format ['zh-CN'=>8, 'de'=>4.5, ...]
 		$matches = [];
-		
-		$av_list = array_map('self::parseLocal', $available);
-		$acc_list = array_map('self:parseLocal', $accepted);
-		
+
+		$parser = 'self::parseLocal';
+
+		$av_list = array_map($parser, $available);
+		$acc_list = array_map($parser, $accepted);
+
 		foreach($av_list as $av){
 			foreach($acc_list as $acc){
 				if($score = self::cmpAndCal($av, $acc)){

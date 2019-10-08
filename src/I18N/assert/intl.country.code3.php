@@ -1,4 +1,5 @@
 <?php
+//国家地区三位字母代码
 //数据来源于：https://zh.wikipedia.org/zh-cn/ISO_3166-1
 return [
 	[
@@ -8,7 +9,7 @@ return [
 		'numeric_code' => '4',
 		'iso3166_2'    => 'ISO 3166-2:AF',
 		'cn_title'     => '阿富汗',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Åland Islands',
@@ -17,7 +18,7 @@ return [
 		'numeric_code' => '248',
 		'iso3166_2'    => 'ISO 3166-2:AX',
 		'cn_title'     => '奥兰',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Albania',
@@ -26,7 +27,7 @@ return [
 		'numeric_code' => '8',
 		'iso3166_2'    => 'ISO 3166-2:AL',
 		'cn_title'     => '阿尔巴尼亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Algeria',
@@ -35,7 +36,7 @@ return [
 		'numeric_code' => '12',
 		'iso3166_2'    => 'ISO 3166-2:DZ',
 		'cn_title'     => '阿尔及利亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'American Samoa',
@@ -44,7 +45,7 @@ return [
 		'numeric_code' => '16',
 		'iso3166_2'    => 'ISO 3166-2:AS',
 		'cn_title'     => '美属萨摩亚',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Andorra',
@@ -53,7 +54,7 @@ return [
 		'numeric_code' => '20',
 		'iso3166_2'    => 'ISO 3166-2:AD',
 		'cn_title'     => '安道尔',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Angola',
@@ -62,7 +63,7 @@ return [
 		'numeric_code' => '24',
 		'iso3166_2'    => 'ISO 3166-2:AO',
 		'cn_title'     => '安哥拉',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Anguilla',
@@ -71,7 +72,7 @@ return [
 		'numeric_code' => '660',
 		'iso3166_2'    => 'ISO 3166-2:AI',
 		'cn_title'     => '安圭拉',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Antarctica',
@@ -80,7 +81,7 @@ return [
 		'numeric_code' => '10',
 		'iso3166_2'    => 'ISO 3166-2:AQ',
 		'cn_title'     => '南极洲',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Antigua and Barbuda',
@@ -89,7 +90,7 @@ return [
 		'numeric_code' => '28',
 		'iso3166_2'    => 'ISO 3166-2:AG',
 		'cn_title'     => '安提瓜和巴布达',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Argentina',
@@ -98,7 +99,7 @@ return [
 		'numeric_code' => '32',
 		'iso3166_2'    => 'ISO 3166-2:AR',
 		'cn_title'     => '阿根廷',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Armenia',
@@ -107,7 +108,7 @@ return [
 		'numeric_code' => '51',
 		'iso3166_2'    => 'ISO 3166-2:AM',
 		'cn_title'     => '亚美尼亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Aruba',
@@ -116,7 +117,7 @@ return [
 		'numeric_code' => '533',
 		'iso3166_2'    => 'ISO 3166-2:AW',
 		'cn_title'     => '阿鲁巴',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Australia',
@@ -125,7 +126,7 @@ return [
 		'numeric_code' => '36',
 		'iso3166_2'    => 'ISO 3166-2:AU',
 		'cn_title'     => '澳大利亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Austria',
@@ -134,7 +135,7 @@ return [
 		'numeric_code' => '40',
 		'iso3166_2'    => 'ISO 3166-2:AT',
 		'cn_title'     => '奥地利',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Azerbaijan',
@@ -143,7 +144,7 @@ return [
 		'numeric_code' => '31',
 		'iso3166_2'    => 'ISO 3166-2:AZ',
 		'cn_title'     => '阿塞拜疆',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Bahamas',
@@ -152,7 +153,7 @@ return [
 		'numeric_code' => '44',
 		'iso3166_2'    => 'ISO 3166-2:BS',
 		'cn_title'     => '巴哈马',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Bahrain',
@@ -161,7 +162,7 @@ return [
 		'numeric_code' => '48',
 		'iso3166_2'    => 'ISO 3166-2:BH',
 		'cn_title'     => '巴林',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Bangladesh',
@@ -170,7 +171,7 @@ return [
 		'numeric_code' => '50',
 		'iso3166_2'    => 'ISO 3166-2:BD',
 		'cn_title'     => '孟加拉国',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Barbados',
@@ -179,7 +180,7 @@ return [
 		'numeric_code' => '52',
 		'iso3166_2'    => 'ISO 3166-2:BB',
 		'cn_title'     => '巴巴多斯',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Belarus',
@@ -188,7 +189,7 @@ return [
 		'numeric_code' => '112',
 		'iso3166_2'    => 'ISO 3166-2:BY',
 		'cn_title'     => '白俄罗斯',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Belgium',
@@ -197,7 +198,7 @@ return [
 		'numeric_code' => '56',
 		'iso3166_2'    => 'ISO 3166-2:BE',
 		'cn_title'     => '比利时',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Belize',
@@ -206,7 +207,7 @@ return [
 		'numeric_code' => '84',
 		'iso3166_2'    => 'ISO 3166-2:BZ',
 		'cn_title'     => '伯利兹',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Benin',
@@ -215,7 +216,7 @@ return [
 		'numeric_code' => '204',
 		'iso3166_2'    => 'ISO 3166-2:BJ',
 		'cn_title'     => '贝宁',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Bermuda',
@@ -224,7 +225,7 @@ return [
 		'numeric_code' => '60',
 		'iso3166_2'    => 'ISO 3166-2:BM',
 		'cn_title'     => '百慕大',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Bhutan',
@@ -233,7 +234,7 @@ return [
 		'numeric_code' => '64',
 		'iso3166_2'    => 'ISO 3166-2:BT',
 		'cn_title'     => '不丹',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Bolivia (Plurinational State of)',
@@ -242,7 +243,7 @@ return [
 		'numeric_code' => '68',
 		'iso3166_2'    => 'ISO 3166-2:BO',
 		'cn_title'     => '玻利维亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Bonaire, Sint Eustatius and Saba',
@@ -251,7 +252,7 @@ return [
 		'numeric_code' => '535',
 		'iso3166_2'    => 'ISO 3166-2:BQ',
 		'cn_title'     => '荷兰加勒比区',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Bosnia and Herzegovina',
@@ -260,7 +261,7 @@ return [
 		'numeric_code' => '70',
 		'iso3166_2'    => 'ISO 3166-2:BA',
 		'cn_title'     => '波斯尼亚和黑塞哥维那',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Botswana',
@@ -269,7 +270,7 @@ return [
 		'numeric_code' => '72',
 		'iso3166_2'    => 'ISO 3166-2:BW',
 		'cn_title'     => '博茨瓦纳',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Bouvet Island',
@@ -278,7 +279,7 @@ return [
 		'numeric_code' => '74',
 		'iso3166_2'    => 'ISO 3166-2:BV',
 		'cn_title'     => '布韦岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Brazil',
@@ -287,7 +288,7 @@ return [
 		'numeric_code' => '76',
 		'iso3166_2'    => 'ISO 3166-2:BR',
 		'cn_title'     => '巴西',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'British Indian Ocean Territory',
@@ -296,7 +297,7 @@ return [
 		'numeric_code' => '86',
 		'iso3166_2'    => 'ISO 3166-2:IO',
 		'cn_title'     => '英属印度洋领地',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Brunei Darussalam',
@@ -305,7 +306,7 @@ return [
 		'numeric_code' => '96',
 		'iso3166_2'    => 'ISO 3166-2:BN',
 		'cn_title'     => '文莱',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Bulgaria',
@@ -314,7 +315,7 @@ return [
 		'numeric_code' => '100',
 		'iso3166_2'    => 'ISO 3166-2:BG',
 		'cn_title'     => '保加利亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Burkina Faso',
@@ -323,7 +324,7 @@ return [
 		'numeric_code' => '854',
 		'iso3166_2'    => 'ISO 3166-2:BF',
 		'cn_title'     => '布基纳法索',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Burundi',
@@ -332,7 +333,7 @@ return [
 		'numeric_code' => '108',
 		'iso3166_2'    => 'ISO 3166-2:BI',
 		'cn_title'     => '布隆迪',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Cabo Verde',
@@ -341,7 +342,7 @@ return [
 		'numeric_code' => '132',
 		'iso3166_2'    => 'ISO 3166-2:CV',
 		'cn_title'     => '佛得角',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Cambodia',
@@ -350,7 +351,7 @@ return [
 		'numeric_code' => '116',
 		'iso3166_2'    => 'ISO 3166-2:KH',
 		'cn_title'     => '柬埔寨',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Cameroon',
@@ -359,7 +360,7 @@ return [
 		'numeric_code' => '120',
 		'iso3166_2'    => 'ISO 3166-2:CM',
 		'cn_title'     => '喀麦隆',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Canada',
@@ -368,7 +369,7 @@ return [
 		'numeric_code' => '124',
 		'iso3166_2'    => 'ISO 3166-2:CA',
 		'cn_title'     => '加拿大',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Cayman Islands',
@@ -377,7 +378,7 @@ return [
 		'numeric_code' => '136',
 		'iso3166_2'    => 'ISO 3166-2:KY',
 		'cn_title'     => '开曼群岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Central African Republic',
@@ -386,7 +387,7 @@ return [
 		'numeric_code' => '140',
 		'iso3166_2'    => 'ISO 3166-2:CF',
 		'cn_title'     => '中非',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Chad',
@@ -395,7 +396,7 @@ return [
 		'numeric_code' => '148',
 		'iso3166_2'    => 'ISO 3166-2:TD',
 		'cn_title'     => '乍得',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Chile',
@@ -404,7 +405,7 @@ return [
 		'numeric_code' => '152',
 		'iso3166_2'    => 'ISO 3166-2:CL',
 		'cn_title'     => '智利',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'China',
@@ -413,7 +414,7 @@ return [
 		'numeric_code' => '156',
 		'iso3166_2'    => 'ISO 3166-2:CN',
 		'cn_title'     => '中国',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Christmas Island',
@@ -422,7 +423,7 @@ return [
 		'numeric_code' => '162',
 		'iso3166_2'    => 'ISO 3166-2:CX',
 		'cn_title'     => '圣诞岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Cocos (Keeling) Islands',
@@ -431,7 +432,7 @@ return [
 		'numeric_code' => '166',
 		'iso3166_2'    => 'ISO 3166-2:CC',
 		'cn_title'     => '科科斯（基林）群岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Colombia',
@@ -440,7 +441,7 @@ return [
 		'numeric_code' => '170',
 		'iso3166_2'    => 'ISO 3166-2:CO',
 		'cn_title'     => '哥伦比亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Comoros',
@@ -449,7 +450,7 @@ return [
 		'numeric_code' => '174',
 		'iso3166_2'    => 'ISO 3166-2:KM',
 		'cn_title'     => '科摩罗',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Congo',
@@ -458,7 +459,7 @@ return [
 		'numeric_code' => '178',
 		'iso3166_2'    => 'ISO 3166-2:CG',
 		'cn_title'     => '刚果（布）',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Congo (Democratic Republic of the)',
@@ -467,7 +468,7 @@ return [
 		'numeric_code' => '180',
 		'iso3166_2'    => 'ISO 3166-2:CD',
 		'cn_title'     => '刚果（金）',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Cook Islands',
@@ -476,7 +477,7 @@ return [
 		'numeric_code' => '184',
 		'iso3166_2'    => 'ISO 3166-2:CK',
 		'cn_title'     => '库克群岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Costa Rica',
@@ -485,7 +486,7 @@ return [
 		'numeric_code' => '188',
 		'iso3166_2'    => 'ISO 3166-2:CR',
 		'cn_title'     => '哥斯达黎加',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Côte d\'Ivoire',
@@ -494,7 +495,7 @@ return [
 		'numeric_code' => '384',
 		'iso3166_2'    => 'ISO 3166-2:CI',
 		'cn_title'     => '科特迪瓦',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Croatia',
@@ -503,7 +504,7 @@ return [
 		'numeric_code' => '191',
 		'iso3166_2'    => 'ISO 3166-2:HR',
 		'cn_title'     => '克罗地亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Cuba',
@@ -512,7 +513,7 @@ return [
 		'numeric_code' => '192',
 		'iso3166_2'    => 'ISO 3166-2:CU',
 		'cn_title'     => '古巴',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Curaçao',
@@ -521,7 +522,7 @@ return [
 		'numeric_code' => '531',
 		'iso3166_2'    => 'ISO 3166-2:CW',
 		'cn_title'     => '库拉索',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Cyprus',
@@ -530,7 +531,7 @@ return [
 		'numeric_code' => '196',
 		'iso3166_2'    => 'ISO 3166-2:CY',
 		'cn_title'     => '塞浦路斯',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Czechia',
@@ -539,7 +540,7 @@ return [
 		'numeric_code' => '203',
 		'iso3166_2'    => 'ISO 3166-2:CZ',
 		'cn_title'     => '捷克',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Denmark',
@@ -548,7 +549,7 @@ return [
 		'numeric_code' => '208',
 		'iso3166_2'    => 'ISO 3166-2:DK',
 		'cn_title'     => '丹麦',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Djibouti',
@@ -557,7 +558,7 @@ return [
 		'numeric_code' => '262',
 		'iso3166_2'    => 'ISO 3166-2:DJ',
 		'cn_title'     => '吉布提',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Dominica',
@@ -566,7 +567,7 @@ return [
 		'numeric_code' => '212',
 		'iso3166_2'    => 'ISO 3166-2:DM',
 		'cn_title'     => '多米尼克',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Dominican Republic',
@@ -575,7 +576,7 @@ return [
 		'numeric_code' => '214',
 		'iso3166_2'    => 'ISO 3166-2:DO',
 		'cn_title'     => '多米尼加',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Ecuador',
@@ -584,7 +585,7 @@ return [
 		'numeric_code' => '218',
 		'iso3166_2'    => 'ISO 3166-2:EC',
 		'cn_title'     => '厄瓜多尔',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Egypt',
@@ -593,7 +594,7 @@ return [
 		'numeric_code' => '818',
 		'iso3166_2'    => 'ISO 3166-2:EG',
 		'cn_title'     => '埃及',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'El Salvador',
@@ -602,7 +603,7 @@ return [
 		'numeric_code' => '222',
 		'iso3166_2'    => 'ISO 3166-2:SV',
 		'cn_title'     => '萨尔瓦多',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Equatorial Guinea',
@@ -611,7 +612,7 @@ return [
 		'numeric_code' => '226',
 		'iso3166_2'    => 'ISO 3166-2:GQ',
 		'cn_title'     => '赤道几内亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Eritrea',
@@ -620,7 +621,7 @@ return [
 		'numeric_code' => '232',
 		'iso3166_2'    => 'ISO 3166-2:ER',
 		'cn_title'     => '厄立特里亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Estonia',
@@ -629,7 +630,7 @@ return [
 		'numeric_code' => '233',
 		'iso3166_2'    => 'ISO 3166-2:EE',
 		'cn_title'     => '爱沙尼亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Eswatini',
@@ -638,7 +639,7 @@ return [
 		'numeric_code' => '748',
 		'iso3166_2'    => 'ISO 3166-2:SZ',
 		'cn_title'     => '斯威士兰',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Ethiopia',
@@ -647,7 +648,7 @@ return [
 		'numeric_code' => '231',
 		'iso3166_2'    => 'ISO 3166-2:ET',
 		'cn_title'     => '埃塞俄比亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Falkland Islands (Malvinas)',
@@ -656,7 +657,7 @@ return [
 		'numeric_code' => '238',
 		'iso3166_2'    => 'ISO 3166-2:FK',
 		'cn_title'     => '福克兰群岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Faroe Islands',
@@ -665,7 +666,7 @@ return [
 		'numeric_code' => '234',
 		'iso3166_2'    => 'ISO 3166-2:FO',
 		'cn_title'     => '法罗群岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Fiji',
@@ -674,7 +675,7 @@ return [
 		'numeric_code' => '242',
 		'iso3166_2'    => 'ISO 3166-2:FJ',
 		'cn_title'     => '斐济',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Finland',
@@ -683,7 +684,7 @@ return [
 		'numeric_code' => '246',
 		'iso3166_2'    => 'ISO 3166-2:FI',
 		'cn_title'     => '芬兰',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'France',
@@ -692,7 +693,7 @@ return [
 		'numeric_code' => '250',
 		'iso3166_2'    => 'ISO 3166-2:FR',
 		'cn_title'     => '法国',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'French Guiana',
@@ -701,7 +702,7 @@ return [
 		'numeric_code' => '254',
 		'iso3166_2'    => 'ISO 3166-2:GF',
 		'cn_title'     => '法属圭亚那',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'French Polynesia',
@@ -710,7 +711,7 @@ return [
 		'numeric_code' => '258',
 		'iso3166_2'    => 'ISO 3166-2:PF',
 		'cn_title'     => '法属波利尼西亚',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'French Southern Territories',
@@ -719,7 +720,7 @@ return [
 		'numeric_code' => '260',
 		'iso3166_2'    => 'ISO 3166-2:TF',
 		'cn_title'     => '法属南方和南极洲领地',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Gabon',
@@ -728,7 +729,7 @@ return [
 		'numeric_code' => '266',
 		'iso3166_2'    => 'ISO 3166-2:GA',
 		'cn_title'     => '加蓬',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Gambia',
@@ -737,7 +738,7 @@ return [
 		'numeric_code' => '270',
 		'iso3166_2'    => 'ISO 3166-2:GM',
 		'cn_title'     => '冈比亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Georgia',
@@ -746,7 +747,7 @@ return [
 		'numeric_code' => '268',
 		'iso3166_2'    => 'ISO 3166-2:GE',
 		'cn_title'     => '格鲁吉亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Germany',
@@ -755,7 +756,7 @@ return [
 		'numeric_code' => '276',
 		'iso3166_2'    => 'ISO 3166-2:DE',
 		'cn_title'     => '德国',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Ghana',
@@ -764,7 +765,7 @@ return [
 		'numeric_code' => '288',
 		'iso3166_2'    => 'ISO 3166-2:GH',
 		'cn_title'     => '加纳',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Gibraltar',
@@ -773,7 +774,7 @@ return [
 		'numeric_code' => '292',
 		'iso3166_2'    => 'ISO 3166-2:GI',
 		'cn_title'     => '直布罗陀',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Greece',
@@ -782,7 +783,7 @@ return [
 		'numeric_code' => '300',
 		'iso3166_2'    => 'ISO 3166-2:GR',
 		'cn_title'     => '希腊',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Greenland',
@@ -791,7 +792,7 @@ return [
 		'numeric_code' => '304',
 		'iso3166_2'    => 'ISO 3166-2:GL',
 		'cn_title'     => '格陵兰',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Grenada',
@@ -800,7 +801,7 @@ return [
 		'numeric_code' => '308',
 		'iso3166_2'    => 'ISO 3166-2:GD',
 		'cn_title'     => '格林纳达',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Guadeloupe',
@@ -809,7 +810,7 @@ return [
 		'numeric_code' => '312',
 		'iso3166_2'    => 'ISO 3166-2:GP',
 		'cn_title'     => '瓜德罗普',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Guam',
@@ -818,7 +819,7 @@ return [
 		'numeric_code' => '316',
 		'iso3166_2'    => 'ISO 3166-2:GU',
 		'cn_title'     => '关岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Guatemala',
@@ -827,7 +828,7 @@ return [
 		'numeric_code' => '320',
 		'iso3166_2'    => 'ISO 3166-2:GT',
 		'cn_title'     => '危地马拉',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Guernsey',
@@ -836,7 +837,7 @@ return [
 		'numeric_code' => '831',
 		'iso3166_2'    => 'ISO 3166-2:GG',
 		'cn_title'     => '根西',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Guinea',
@@ -845,7 +846,7 @@ return [
 		'numeric_code' => '324',
 		'iso3166_2'    => 'ISO 3166-2:GN',
 		'cn_title'     => '几内亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Guinea-Bissau',
@@ -854,7 +855,7 @@ return [
 		'numeric_code' => '624',
 		'iso3166_2'    => 'ISO 3166-2:GW',
 		'cn_title'     => '几内亚比绍',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Guyana',
@@ -863,7 +864,7 @@ return [
 		'numeric_code' => '328',
 		'iso3166_2'    => 'ISO 3166-2:GY',
 		'cn_title'     => '圭亚那',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Haiti',
@@ -872,7 +873,7 @@ return [
 		'numeric_code' => '332',
 		'iso3166_2'    => 'ISO 3166-2:HT',
 		'cn_title'     => '海地',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Heard Island and McDonald Islands',
@@ -881,7 +882,7 @@ return [
 		'numeric_code' => '334',
 		'iso3166_2'    => 'ISO 3166-2:HM',
 		'cn_title'     => '赫德岛和麦克唐纳群岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Holy See',
@@ -890,7 +891,7 @@ return [
 		'numeric_code' => '336',
 		'iso3166_2'    => 'ISO 3166-2:VA',
 		'cn_title'     => '梵蒂冈',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Honduras',
@@ -899,7 +900,7 @@ return [
 		'numeric_code' => '340',
 		'iso3166_2'    => 'ISO 3166-2:HN',
 		'cn_title'     => '洪都拉斯',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Hong Kong',
@@ -908,7 +909,7 @@ return [
 		'numeric_code' => '344',
 		'iso3166_2'    => 'ISO 3166-2:HK',
 		'cn_title'     => '香港',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Hungary',
@@ -917,7 +918,7 @@ return [
 		'numeric_code' => '348',
 		'iso3166_2'    => 'ISO 3166-2:HU',
 		'cn_title'     => '匈牙利',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Iceland',
@@ -926,7 +927,7 @@ return [
 		'numeric_code' => '352',
 		'iso3166_2'    => 'ISO 3166-2:IS',
 		'cn_title'     => '冰岛',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'India',
@@ -935,7 +936,7 @@ return [
 		'numeric_code' => '356',
 		'iso3166_2'    => 'ISO 3166-2:IN',
 		'cn_title'     => '印度',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Indonesia',
@@ -944,7 +945,7 @@ return [
 		'numeric_code' => '360',
 		'iso3166_2'    => 'ISO 3166-2:ID',
 		'cn_title'     => '印尼',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Iran (Islamic Republic of)',
@@ -953,7 +954,7 @@ return [
 		'numeric_code' => '364',
 		'iso3166_2'    => 'ISO 3166-2:IR',
 		'cn_title'     => '伊朗',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Iraq',
@@ -962,7 +963,7 @@ return [
 		'numeric_code' => '368',
 		'iso3166_2'    => 'ISO 3166-2:IQ',
 		'cn_title'     => '伊拉克',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Ireland',
@@ -971,7 +972,7 @@ return [
 		'numeric_code' => '372',
 		'iso3166_2'    => 'ISO 3166-2:IE',
 		'cn_title'     => '爱尔兰',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Isle of Man',
@@ -980,7 +981,7 @@ return [
 		'numeric_code' => '833',
 		'iso3166_2'    => 'ISO 3166-2:IM',
 		'cn_title'     => '马恩岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Israel',
@@ -989,7 +990,7 @@ return [
 		'numeric_code' => '376',
 		'iso3166_2'    => 'ISO 3166-2:IL',
 		'cn_title'     => '以色列',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Italy',
@@ -998,7 +999,7 @@ return [
 		'numeric_code' => '380',
 		'iso3166_2'    => 'ISO 3166-2:IT',
 		'cn_title'     => '意大利',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Jamaica',
@@ -1007,7 +1008,7 @@ return [
 		'numeric_code' => '388',
 		'iso3166_2'    => 'ISO 3166-2:JM',
 		'cn_title'     => '牙买加',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Japan',
@@ -1016,7 +1017,7 @@ return [
 		'numeric_code' => '392',
 		'iso3166_2'    => 'ISO 3166-2:JP',
 		'cn_title'     => '日本',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Jersey',
@@ -1025,7 +1026,7 @@ return [
 		'numeric_code' => '832',
 		'iso3166_2'    => 'ISO 3166-2:JE',
 		'cn_title'     => '泽西',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Jordan',
@@ -1034,7 +1035,7 @@ return [
 		'numeric_code' => '400',
 		'iso3166_2'    => 'ISO 3166-2:JO',
 		'cn_title'     => '约旦',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Kazakhstan',
@@ -1043,7 +1044,7 @@ return [
 		'numeric_code' => '398',
 		'iso3166_2'    => 'ISO 3166-2:KZ',
 		'cn_title'     => '哈萨克斯坦',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Kenya',
@@ -1052,7 +1053,7 @@ return [
 		'numeric_code' => '404',
 		'iso3166_2'    => 'ISO 3166-2:KE',
 		'cn_title'     => '肯尼亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Kiribati',
@@ -1061,7 +1062,7 @@ return [
 		'numeric_code' => '296',
 		'iso3166_2'    => 'ISO 3166-2:KI',
 		'cn_title'     => '基里巴斯',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Korea (Democratic People\'s Republic of)',
@@ -1070,7 +1071,7 @@ return [
 		'numeric_code' => '408',
 		'iso3166_2'    => 'ISO 3166-2:KP',
 		'cn_title'     => '朝鲜',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Korea (Republic of)',
@@ -1079,7 +1080,7 @@ return [
 		'numeric_code' => '410',
 		'iso3166_2'    => 'ISO 3166-2:KR',
 		'cn_title'     => '韩国',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Kuwait',
@@ -1088,7 +1089,7 @@ return [
 		'numeric_code' => '414',
 		'iso3166_2'    => 'ISO 3166-2:KW',
 		'cn_title'     => '科威特',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Kyrgyzstan',
@@ -1097,7 +1098,7 @@ return [
 		'numeric_code' => '417',
 		'iso3166_2'    => 'ISO 3166-2:KG',
 		'cn_title'     => '吉尔吉斯斯坦',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Lao People\'s Democratic Republic',
@@ -1106,7 +1107,7 @@ return [
 		'numeric_code' => '418',
 		'iso3166_2'    => 'ISO 3166-2:LA',
 		'cn_title'     => '老挝',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Latvia',
@@ -1115,7 +1116,7 @@ return [
 		'numeric_code' => '428',
 		'iso3166_2'    => 'ISO 3166-2:LV',
 		'cn_title'     => '拉脱维亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Lebanon',
@@ -1124,7 +1125,7 @@ return [
 		'numeric_code' => '422',
 		'iso3166_2'    => 'ISO 3166-2:LB',
 		'cn_title'     => '黎巴嫩',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Lesotho',
@@ -1133,7 +1134,7 @@ return [
 		'numeric_code' => '426',
 		'iso3166_2'    => 'ISO 3166-2:LS',
 		'cn_title'     => '莱索托',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Liberia',
@@ -1142,7 +1143,7 @@ return [
 		'numeric_code' => '430',
 		'iso3166_2'    => 'ISO 3166-2:LR',
 		'cn_title'     => '利比里亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Libya',
@@ -1151,7 +1152,7 @@ return [
 		'numeric_code' => '434',
 		'iso3166_2'    => 'ISO 3166-2:LY',
 		'cn_title'     => '利比亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Liechtenstein',
@@ -1160,7 +1161,7 @@ return [
 		'numeric_code' => '438',
 		'iso3166_2'    => 'ISO 3166-2:LI',
 		'cn_title'     => '列支敦士登',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Lithuania',
@@ -1169,7 +1170,7 @@ return [
 		'numeric_code' => '440',
 		'iso3166_2'    => 'ISO 3166-2:LT',
 		'cn_title'     => '立陶宛',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Luxembourg',
@@ -1178,7 +1179,7 @@ return [
 		'numeric_code' => '442',
 		'iso3166_2'    => 'ISO 3166-2:LU',
 		'cn_title'     => '卢森堡',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Macao',
@@ -1187,7 +1188,7 @@ return [
 		'numeric_code' => '446',
 		'iso3166_2'    => 'ISO 3166-2:MO',
 		'cn_title'     => '澳门',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Madagascar',
@@ -1196,7 +1197,7 @@ return [
 		'numeric_code' => '450',
 		'iso3166_2'    => 'ISO 3166-2:MG',
 		'cn_title'     => '马达加斯加',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Malawi',
@@ -1205,7 +1206,7 @@ return [
 		'numeric_code' => '454',
 		'iso3166_2'    => 'ISO 3166-2:MW',
 		'cn_title'     => '马拉维',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Malaysia',
@@ -1214,7 +1215,7 @@ return [
 		'numeric_code' => '458',
 		'iso3166_2'    => 'ISO 3166-2:MY',
 		'cn_title'     => '马来西亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Maldives',
@@ -1223,7 +1224,7 @@ return [
 		'numeric_code' => '462',
 		'iso3166_2'    => 'ISO 3166-2:MV',
 		'cn_title'     => '马尔代夫',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Mali',
@@ -1232,7 +1233,7 @@ return [
 		'numeric_code' => '466',
 		'iso3166_2'    => 'ISO 3166-2:ML',
 		'cn_title'     => '马里',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Malta',
@@ -1241,7 +1242,7 @@ return [
 		'numeric_code' => '470',
 		'iso3166_2'    => 'ISO 3166-2:MT',
 		'cn_title'     => '马耳他',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Marshall Islands',
@@ -1250,7 +1251,7 @@ return [
 		'numeric_code' => '584',
 		'iso3166_2'    => 'ISO 3166-2:MH',
 		'cn_title'     => '马绍尔群岛',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Martinique',
@@ -1259,7 +1260,7 @@ return [
 		'numeric_code' => '474',
 		'iso3166_2'    => 'ISO 3166-2:MQ',
 		'cn_title'     => '马提尼克',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Mauritania',
@@ -1268,7 +1269,7 @@ return [
 		'numeric_code' => '478',
 		'iso3166_2'    => 'ISO 3166-2:MR',
 		'cn_title'     => '毛里塔尼亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Mauritius',
@@ -1277,7 +1278,7 @@ return [
 		'numeric_code' => '480',
 		'iso3166_2'    => 'ISO 3166-2:MU',
 		'cn_title'     => '毛里求斯',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Mayotte',
@@ -1286,7 +1287,7 @@ return [
 		'numeric_code' => '175',
 		'iso3166_2'    => 'ISO 3166-2:YT',
 		'cn_title'     => '马约特',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Mexico',
@@ -1295,7 +1296,7 @@ return [
 		'numeric_code' => '484',
 		'iso3166_2'    => 'ISO 3166-2:MX',
 		'cn_title'     => '墨西哥',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Micronesia (Federated States of)',
@@ -1304,7 +1305,7 @@ return [
 		'numeric_code' => '583',
 		'iso3166_2'    => 'ISO 3166-2:FM',
 		'cn_title'     => '密克罗尼西亚联邦',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Moldova (Republic of)',
@@ -1313,7 +1314,7 @@ return [
 		'numeric_code' => '498',
 		'iso3166_2'    => 'ISO 3166-2:MD',
 		'cn_title'     => '摩尔多瓦',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Monaco',
@@ -1322,7 +1323,7 @@ return [
 		'numeric_code' => '492',
 		'iso3166_2'    => 'ISO 3166-2:MC',
 		'cn_title'     => '摩纳哥',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Mongolia',
@@ -1331,7 +1332,7 @@ return [
 		'numeric_code' => '496',
 		'iso3166_2'    => 'ISO 3166-2:MN',
 		'cn_title'     => '蒙古国',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Montenegro',
@@ -1340,7 +1341,7 @@ return [
 		'numeric_code' => '499',
 		'iso3166_2'    => 'ISO 3166-2:ME',
 		'cn_title'     => '黑山',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Montserrat',
@@ -1349,7 +1350,7 @@ return [
 		'numeric_code' => '500',
 		'iso3166_2'    => 'ISO 3166-2:MS',
 		'cn_title'     => '蒙特塞拉特',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Morocco',
@@ -1358,7 +1359,7 @@ return [
 		'numeric_code' => '504',
 		'iso3166_2'    => 'ISO 3166-2:MA',
 		'cn_title'     => '摩洛哥',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Mozambique',
@@ -1367,7 +1368,7 @@ return [
 		'numeric_code' => '508',
 		'iso3166_2'    => 'ISO 3166-2:MZ',
 		'cn_title'     => '莫桑比克',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Myanmar',
@@ -1376,7 +1377,7 @@ return [
 		'numeric_code' => '104',
 		'iso3166_2'    => 'ISO 3166-2:MM',
 		'cn_title'     => '缅甸',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Namibia',
@@ -1385,7 +1386,7 @@ return [
 		'numeric_code' => '516',
 		'iso3166_2'    => 'ISO 3166-2:NA',
 		'cn_title'     => '纳米比亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Nauru',
@@ -1394,7 +1395,7 @@ return [
 		'numeric_code' => '520',
 		'iso3166_2'    => 'ISO 3166-2:NR',
 		'cn_title'     => '瑙鲁',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Nepal',
@@ -1403,7 +1404,7 @@ return [
 		'numeric_code' => '524',
 		'iso3166_2'    => 'ISO 3166-2:NP',
 		'cn_title'     => '尼泊尔',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Netherlands',
@@ -1412,7 +1413,7 @@ return [
 		'numeric_code' => '528',
 		'iso3166_2'    => 'ISO 3166-2:NL',
 		'cn_title'     => '荷兰',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'New Caledonia',
@@ -1421,7 +1422,7 @@ return [
 		'numeric_code' => '540',
 		'iso3166_2'    => 'ISO 3166-2:NC',
 		'cn_title'     => '新喀里多尼亚',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'New Zealand',
@@ -1430,7 +1431,7 @@ return [
 		'numeric_code' => '554',
 		'iso3166_2'    => 'ISO 3166-2:NZ',
 		'cn_title'     => '新西兰',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Nicaragua',
@@ -1439,7 +1440,7 @@ return [
 		'numeric_code' => '558',
 		'iso3166_2'    => 'ISO 3166-2:NI',
 		'cn_title'     => '尼加拉瓜',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Niger',
@@ -1448,7 +1449,7 @@ return [
 		'numeric_code' => '562',
 		'iso3166_2'    => 'ISO 3166-2:NE',
 		'cn_title'     => '尼日尔',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Nigeria',
@@ -1457,7 +1458,7 @@ return [
 		'numeric_code' => '566',
 		'iso3166_2'    => 'ISO 3166-2:NG',
 		'cn_title'     => '尼日利亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Niue',
@@ -1466,7 +1467,7 @@ return [
 		'numeric_code' => '570',
 		'iso3166_2'    => 'ISO 3166-2:NU',
 		'cn_title'     => '纽埃',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Norfolk Island',
@@ -1475,7 +1476,7 @@ return [
 		'numeric_code' => '574',
 		'iso3166_2'    => 'ISO 3166-2:NF',
 		'cn_title'     => '诺福克岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'North Macedonia',
@@ -1484,7 +1485,7 @@ return [
 		'numeric_code' => '807',
 		'iso3166_2'    => 'ISO 3166-2:MK',
 		'cn_title'     => '北马其顿',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Northern Mariana Islands',
@@ -1493,7 +1494,7 @@ return [
 		'numeric_code' => '580',
 		'iso3166_2'    => 'ISO 3166-2:MP',
 		'cn_title'     => '北马里亚纳群岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Norway',
@@ -1502,7 +1503,7 @@ return [
 		'numeric_code' => '578',
 		'iso3166_2'    => 'ISO 3166-2:NO',
 		'cn_title'     => '挪威',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Oman',
@@ -1511,7 +1512,7 @@ return [
 		'numeric_code' => '512',
 		'iso3166_2'    => 'ISO 3166-2:OM',
 		'cn_title'     => '阿曼',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Pakistan',
@@ -1520,7 +1521,7 @@ return [
 		'numeric_code' => '586',
 		'iso3166_2'    => 'ISO 3166-2:PK',
 		'cn_title'     => '巴基斯坦',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Palau',
@@ -1529,7 +1530,7 @@ return [
 		'numeric_code' => '585',
 		'iso3166_2'    => 'ISO 3166-2:PW',
 		'cn_title'     => '帕劳',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Palestine, State of',
@@ -1538,7 +1539,7 @@ return [
 		'numeric_code' => '275',
 		'iso3166_2'    => 'ISO 3166-2:PS',
 		'cn_title'     => '巴勒斯坦',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Panama',
@@ -1547,7 +1548,7 @@ return [
 		'numeric_code' => '591',
 		'iso3166_2'    => 'ISO 3166-2:PA',
 		'cn_title'     => '巴拿马',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Papua New Guinea',
@@ -1556,7 +1557,7 @@ return [
 		'numeric_code' => '598',
 		'iso3166_2'    => 'ISO 3166-2:PG',
 		'cn_title'     => '巴布亚新几内亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Paraguay',
@@ -1565,7 +1566,7 @@ return [
 		'numeric_code' => '600',
 		'iso3166_2'    => 'ISO 3166-2:PY',
 		'cn_title'     => '巴拉圭',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Peru',
@@ -1574,7 +1575,7 @@ return [
 		'numeric_code' => '604',
 		'iso3166_2'    => 'ISO 3166-2:PE',
 		'cn_title'     => '秘鲁',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Philippines',
@@ -1583,7 +1584,7 @@ return [
 		'numeric_code' => '608',
 		'iso3166_2'    => 'ISO 3166-2:PH',
 		'cn_title'     => '菲律宾',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Pitcairn',
@@ -1592,7 +1593,7 @@ return [
 		'numeric_code' => '612',
 		'iso3166_2'    => 'ISO 3166-2:PN',
 		'cn_title'     => '皮特凯恩群岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Poland',
@@ -1601,7 +1602,7 @@ return [
 		'numeric_code' => '616',
 		'iso3166_2'    => 'ISO 3166-2:PL',
 		'cn_title'     => '波兰',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Portugal',
@@ -1610,7 +1611,7 @@ return [
 		'numeric_code' => '620',
 		'iso3166_2'    => 'ISO 3166-2:PT',
 		'cn_title'     => '葡萄牙',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Puerto Rico',
@@ -1619,7 +1620,7 @@ return [
 		'numeric_code' => '630',
 		'iso3166_2'    => 'ISO 3166-2:PR',
 		'cn_title'     => '波多黎各',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Qatar',
@@ -1628,7 +1629,7 @@ return [
 		'numeric_code' => '634',
 		'iso3166_2'    => 'ISO 3166-2:QA',
 		'cn_title'     => '卡塔尔',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Réunion',
@@ -1637,7 +1638,7 @@ return [
 		'numeric_code' => '638',
 		'iso3166_2'    => 'ISO 3166-2:RE',
 		'cn_title'     => '留尼汪',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Romania',
@@ -1646,7 +1647,7 @@ return [
 		'numeric_code' => '642',
 		'iso3166_2'    => 'ISO 3166-2:RO',
 		'cn_title'     => '罗马尼亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Russian Federation',
@@ -1655,7 +1656,7 @@ return [
 		'numeric_code' => '643',
 		'iso3166_2'    => 'ISO 3166-2:RU',
 		'cn_title'     => '俄罗斯',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Rwanda',
@@ -1664,7 +1665,7 @@ return [
 		'numeric_code' => '646',
 		'iso3166_2'    => 'ISO 3166-2:RW',
 		'cn_title'     => '卢旺达',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Saint Barthélemy',
@@ -1673,7 +1674,7 @@ return [
 		'numeric_code' => '652',
 		'iso3166_2'    => 'ISO 3166-2:BL',
 		'cn_title'     => '圣巴泰勒米',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Saint Helena, Ascension and Tristan da Cunha',
@@ -1682,7 +1683,7 @@ return [
 		'numeric_code' => '654',
 		'iso3166_2'    => 'ISO 3166-2:SH',
 		'cn_title'     => '圣赫勒拿、阿森松和特里斯坦-达库尼亚',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Saint Kitts and Nevis',
@@ -1691,7 +1692,7 @@ return [
 		'numeric_code' => '659',
 		'iso3166_2'    => 'ISO 3166-2:KN',
 		'cn_title'     => '圣基茨和尼维斯',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Saint Lucia',
@@ -1700,7 +1701,7 @@ return [
 		'numeric_code' => '662',
 		'iso3166_2'    => 'ISO 3166-2:LC',
 		'cn_title'     => '圣卢西亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Saint Martin (French part)',
@@ -1709,7 +1710,7 @@ return [
 		'numeric_code' => '663',
 		'iso3166_2'    => 'ISO 3166-2:MF',
 		'cn_title'     => '法属圣马丁',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Saint Pierre and Miquelon',
@@ -1718,7 +1719,7 @@ return [
 		'numeric_code' => '666',
 		'iso3166_2'    => 'ISO 3166-2:PM',
 		'cn_title'     => '圣皮埃尔和密克隆',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Saint Vincent and the Grenadines',
@@ -1727,7 +1728,7 @@ return [
 		'numeric_code' => '670',
 		'iso3166_2'    => 'ISO 3166-2:VC',
 		'cn_title'     => '圣文森特和格林纳丁斯',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Samoa',
@@ -1736,7 +1737,7 @@ return [
 		'numeric_code' => '882',
 		'iso3166_2'    => 'ISO 3166-2:WS',
 		'cn_title'     => '萨摩亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'San Marino',
@@ -1745,7 +1746,7 @@ return [
 		'numeric_code' => '674',
 		'iso3166_2'    => 'ISO 3166-2:SM',
 		'cn_title'     => '圣马力诺',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Sao Tome and Principe',
@@ -1754,7 +1755,7 @@ return [
 		'numeric_code' => '678',
 		'iso3166_2'    => 'ISO 3166-2:ST',
 		'cn_title'     => '圣多美和普林西比',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Saudi Arabia',
@@ -1763,7 +1764,7 @@ return [
 		'numeric_code' => '682',
 		'iso3166_2'    => 'ISO 3166-2:SA',
 		'cn_title'     => '沙特阿拉伯',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Senegal',
@@ -1772,7 +1773,7 @@ return [
 		'numeric_code' => '686',
 		'iso3166_2'    => 'ISO 3166-2:SN',
 		'cn_title'     => '塞内加尔',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Serbia',
@@ -1781,7 +1782,7 @@ return [
 		'numeric_code' => '688',
 		'iso3166_2'    => 'ISO 3166-2:RS',
 		'cn_title'     => '塞尔维亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Seychelles',
@@ -1790,7 +1791,7 @@ return [
 		'numeric_code' => '690',
 		'iso3166_2'    => 'ISO 3166-2:SC',
 		'cn_title'     => '塞舌尔',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Sierra Leone',
@@ -1799,7 +1800,7 @@ return [
 		'numeric_code' => '694',
 		'iso3166_2'    => 'ISO 3166-2:SL',
 		'cn_title'     => '塞拉利昂',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Singapore',
@@ -1808,7 +1809,7 @@ return [
 		'numeric_code' => '702',
 		'iso3166_2'    => 'ISO 3166-2:SG',
 		'cn_title'     => '新加坡',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Sint Maarten (Dutch part)',
@@ -1817,7 +1818,7 @@ return [
 		'numeric_code' => '534',
 		'iso3166_2'    => 'ISO 3166-2:SX',
 		'cn_title'     => '圣马丁',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Slovakia',
@@ -1826,7 +1827,7 @@ return [
 		'numeric_code' => '703',
 		'iso3166_2'    => 'ISO 3166-2:SK',
 		'cn_title'     => '斯洛伐克',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Slovenia',
@@ -1835,7 +1836,7 @@ return [
 		'numeric_code' => '705',
 		'iso3166_2'    => 'ISO 3166-2:SI',
 		'cn_title'     => '斯洛文尼亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Solomon Islands',
@@ -1844,7 +1845,7 @@ return [
 		'numeric_code' => '90',
 		'iso3166_2'    => 'ISO 3166-2:SB',
 		'cn_title'     => '所罗门群岛',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Somalia',
@@ -1853,7 +1854,7 @@ return [
 		'numeric_code' => '706',
 		'iso3166_2'    => 'ISO 3166-2:SO',
 		'cn_title'     => '索马里',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'South Africa',
@@ -1862,7 +1863,7 @@ return [
 		'numeric_code' => '710',
 		'iso3166_2'    => 'ISO 3166-2:ZA',
 		'cn_title'     => '南非',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'South Georgia and the South Sandwich Islands',
@@ -1871,7 +1872,7 @@ return [
 		'numeric_code' => '239',
 		'iso3166_2'    => 'ISO 3166-2:GS',
 		'cn_title'     => '南乔治亚和南桑威奇群岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'South Sudan',
@@ -1880,7 +1881,7 @@ return [
 		'numeric_code' => '728',
 		'iso3166_2'    => 'ISO 3166-2:SS',
 		'cn_title'     => '南苏丹',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Spain',
@@ -1889,7 +1890,7 @@ return [
 		'numeric_code' => '724',
 		'iso3166_2'    => 'ISO 3166-2:ES',
 		'cn_title'     => '西班牙',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Sri Lanka',
@@ -1898,7 +1899,7 @@ return [
 		'numeric_code' => '144',
 		'iso3166_2'    => 'ISO 3166-2:LK',
 		'cn_title'     => '斯里兰卡',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Sudan',
@@ -1907,7 +1908,7 @@ return [
 		'numeric_code' => '729',
 		'iso3166_2'    => 'ISO 3166-2:SD',
 		'cn_title'     => '苏丹',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Suriname',
@@ -1916,7 +1917,7 @@ return [
 		'numeric_code' => '740',
 		'iso3166_2'    => 'ISO 3166-2:SR',
 		'cn_title'     => '苏里南',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Svalbard and Jan Mayen',
@@ -1925,7 +1926,7 @@ return [
 		'numeric_code' => '744',
 		'iso3166_2'    => 'ISO 3166-2:SJ',
 		'cn_title'     => '斯瓦尔巴和扬马延',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Sweden',
@@ -1934,7 +1935,7 @@ return [
 		'numeric_code' => '752',
 		'iso3166_2'    => 'ISO 3166-2:SE',
 		'cn_title'     => '瑞典',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Switzerland',
@@ -1943,7 +1944,7 @@ return [
 		'numeric_code' => '756',
 		'iso3166_2'    => 'ISO 3166-2:CH',
 		'cn_title'     => '瑞士',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Syrian Arab Republic',
@@ -1952,7 +1953,7 @@ return [
 		'numeric_code' => '760',
 		'iso3166_2'    => 'ISO 3166-2:SY',
 		'cn_title'     => '叙利亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Taiwan, Province of China[note 1]',
@@ -1961,7 +1962,7 @@ return [
 		'numeric_code' => '158',
 		'iso3166_2'    => 'ISO 3166-2:TW',
 		'cn_title'     => '中国台湾省',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Tajikistan',
@@ -1970,7 +1971,7 @@ return [
 		'numeric_code' => '762',
 		'iso3166_2'    => 'ISO 3166-2:TJ',
 		'cn_title'     => '塔吉克斯坦',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Tanzania, United Republic of',
@@ -1979,7 +1980,7 @@ return [
 		'numeric_code' => '834',
 		'iso3166_2'    => 'ISO 3166-2:TZ',
 		'cn_title'     => '坦桑尼亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Thailand',
@@ -1988,7 +1989,7 @@ return [
 		'numeric_code' => '764',
 		'iso3166_2'    => 'ISO 3166-2:TH',
 		'cn_title'     => '泰国',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Timor-Leste',
@@ -1997,7 +1998,7 @@ return [
 		'numeric_code' => '626',
 		'iso3166_2'    => 'ISO 3166-2:TL',
 		'cn_title'     => '东帝汶',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Togo',
@@ -2006,7 +2007,7 @@ return [
 		'numeric_code' => '768',
 		'iso3166_2'    => 'ISO 3166-2:TG',
 		'cn_title'     => '多哥',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Tokelau',
@@ -2015,7 +2016,7 @@ return [
 		'numeric_code' => '772',
 		'iso3166_2'    => 'ISO 3166-2:TK',
 		'cn_title'     => '托克劳',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Tonga',
@@ -2024,7 +2025,7 @@ return [
 		'numeric_code' => '776',
 		'iso3166_2'    => 'ISO 3166-2:TO',
 		'cn_title'     => '汤加',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Trinidad and Tobago',
@@ -2033,7 +2034,7 @@ return [
 		'numeric_code' => '780',
 		'iso3166_2'    => 'ISO 3166-2:TT',
 		'cn_title'     => '特立尼达和多巴哥',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Tunisia',
@@ -2042,7 +2043,7 @@ return [
 		'numeric_code' => '788',
 		'iso3166_2'    => 'ISO 3166-2:TN',
 		'cn_title'     => '突尼斯',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Turkey',
@@ -2051,7 +2052,7 @@ return [
 		'numeric_code' => '792',
 		'iso3166_2'    => 'ISO 3166-2:TR',
 		'cn_title'     => '土耳其',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Turkmenistan',
@@ -2060,7 +2061,7 @@ return [
 		'numeric_code' => '795',
 		'iso3166_2'    => 'ISO 3166-2:TM',
 		'cn_title'     => '土库曼斯坦',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Turks and Caicos Islands',
@@ -2069,7 +2070,7 @@ return [
 		'numeric_code' => '796',
 		'iso3166_2'    => 'ISO 3166-2:TC',
 		'cn_title'     => '特克斯和凯科斯群岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Tuvalu',
@@ -2078,7 +2079,7 @@ return [
 		'numeric_code' => '798',
 		'iso3166_2'    => 'ISO 3166-2:TV',
 		'cn_title'     => '图瓦卢',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Uganda',
@@ -2087,7 +2088,7 @@ return [
 		'numeric_code' => '800',
 		'iso3166_2'    => 'ISO 3166-2:UG',
 		'cn_title'     => '乌干达',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Ukraine',
@@ -2096,7 +2097,7 @@ return [
 		'numeric_code' => '804',
 		'iso3166_2'    => 'ISO 3166-2:UA',
 		'cn_title'     => '乌克兰',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'United Arab Emirates',
@@ -2105,7 +2106,7 @@ return [
 		'numeric_code' => '784',
 		'iso3166_2'    => 'ISO 3166-2:AE',
 		'cn_title'     => '阿联酋',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'United Kingdom of Great Britain and Northern Ireland',
@@ -2114,7 +2115,7 @@ return [
 		'numeric_code' => '826',
 		'iso3166_2'    => 'ISO 3166-2:GB',
 		'cn_title'     => '英国',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'United States of America',
@@ -2123,7 +2124,7 @@ return [
 		'numeric_code' => '840',
 		'iso3166_2'    => 'ISO 3166-2:US',
 		'cn_title'     => '美国',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'United States Minor Outlying Islands',
@@ -2132,7 +2133,7 @@ return [
 		'numeric_code' => '581',
 		'iso3166_2'    => 'ISO 3166-2:UM',
 		'cn_title'     => '美国本土外小岛屿',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Uruguay',
@@ -2141,7 +2142,7 @@ return [
 		'numeric_code' => '858',
 		'iso3166_2'    => 'ISO 3166-2:UY',
 		'cn_title'     => '乌拉圭',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Uzbekistan',
@@ -2150,7 +2151,7 @@ return [
 		'numeric_code' => '860',
 		'iso3166_2'    => 'ISO 3166-2:UZ',
 		'cn_title'     => '乌兹别克斯坦',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Vanuatu',
@@ -2159,7 +2160,7 @@ return [
 		'numeric_code' => '548',
 		'iso3166_2'    => 'ISO 3166-2:VU',
 		'cn_title'     => '瓦努阿图',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Venezuela (Bolivarian Republic of)',
@@ -2168,7 +2169,7 @@ return [
 		'numeric_code' => '862',
 		'iso3166_2'    => 'ISO 3166-2:VE',
 		'cn_title'     => '委内瑞拉',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Viet Nam',
@@ -2177,7 +2178,7 @@ return [
 		'numeric_code' => '704',
 		'iso3166_2'    => 'ISO 3166-2:VN',
 		'cn_title'     => '越南',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Virgin Islands (British)',
@@ -2186,7 +2187,7 @@ return [
 		'numeric_code' => '92',
 		'iso3166_2'    => 'ISO 3166-2:VG',
 		'cn_title'     => '英属维尔京群岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Virgin Islands (U.S.)',
@@ -2195,7 +2196,7 @@ return [
 		'numeric_code' => '850',
 		'iso3166_2'    => 'ISO 3166-2:VI',
 		'cn_title'     => '美属维尔京群岛',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Wallis and Futuna',
@@ -2204,7 +2205,7 @@ return [
 		'numeric_code' => '876',
 		'iso3166_2'    => 'ISO 3166-2:WF',
 		'cn_title'     => '瓦利斯和富图纳',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Western Sahara',
@@ -2213,7 +2214,7 @@ return [
 		'numeric_code' => '732',
 		'iso3166_2'    => 'ISO 3166-2:EH',
 		'cn_title'     => '西撒哈拉',
-		'independent'  => false
+		'independent'  => false,
 	],
 	[
 		'en_title'     => 'Yemen',
@@ -2222,7 +2223,7 @@ return [
 		'numeric_code' => '887',
 		'iso3166_2'    => 'ISO 3166-2:YE',
 		'cn_title'     => '也门',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Zambia',
@@ -2231,7 +2232,7 @@ return [
 		'numeric_code' => '894',
 		'iso3166_2'    => 'ISO 3166-2:ZM',
 		'cn_title'     => '赞比亚',
-		'independent'  => true
+		'independent'  => true,
 	],
 	[
 		'en_title'     => 'Zimbabwe',
@@ -2240,6 +2241,6 @@ return [
 		'numeric_code' => '716',
 		'iso3166_2'    => 'ISO 3166-2:ZW',
 		'cn_title'     => '津巴布韦',
-		'independent'  => true
-	]
+		'independent'  => true,
+	],
 ];

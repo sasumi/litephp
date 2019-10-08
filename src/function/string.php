@@ -194,8 +194,8 @@ function __h($str, $len = null, $tail = '...', &$over_length = false, $type){
  * @param string $domain
  * @return string
  */
-function t($text, $param = array(), $domain = Lang::DEFAULT_DOMAIN){
-	return Lang::instance()->getText($text, $param, $domain);
+function t($text, $param = array(), $domain = Lang::DOMAIN_DEFAULT){
+	return Lang::getText($text, $param, $domain);
 }
 
 /**
