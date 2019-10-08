@@ -143,6 +143,21 @@ trait Html{
 	}
 
 	/**
+	 * 构建数据hidden列表
+	 * @param array $data_list 数据列表（可以多维数组）
+	 * @return string
+	 */
+	public static function htmlHiddenList($data_list){
+		$html = '';
+		$entries = explode('&', http_build_query($data_list));
+		foreach($entries as $entry){
+			list($key, $value) = explode('=', $entry);
+			$html .= static::htmlHidden(urldecode($key), urldecode($value)).PHP_EOL;
+		}
+		return $html;
+	}
+
+	/**
 	 * 构建Html数字输入
 	 * @param string $name
 	 * @param string $value
@@ -465,6 +480,15 @@ trait Html{
 		$attributes['type'] ='submit';
 		$attributes['value'] = $value;
 		return static::htmlElement('input', $attributes);
+	}
+
+	/**
+	 * no script support html
+	 * @param $html
+	 * @return string
+	 */
+	public static function htmlNoScript($html){
+		return '<noscript>'.$html.'</noscript>';
 	}
 
 	/**

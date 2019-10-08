@@ -9,7 +9,7 @@ namespace Lite\Cache;
  */
 class CacheFile extends CacheAdapter{
 	private $cache_in_process = true;
-	private static $cache_store = [];
+	private static $process_cache = [];
 
 	protected function __construct(array $config = []){
 		if(!isset($config['cache_in_process'])){
@@ -43,7 +43,7 @@ class CacheFile extends CacheAdapter{
 			$result = fwrite($handle, $string);
 			fclose($handle);
 			if($result && $this->cache_in_process){
-				self::$cache_store[$cache_key] = $data;
+				self::$process_cache[$cache_key] = $data;
 			}
 			return $result;
 		}
@@ -65,8 +65,8 @@ class CacheFile extends CacheAdapter{
 	 * @return null
 	 */
 	public function get($cache_key){
-		if(isset(self::$cache_store[$cache_key])){
-			return self::$cache_store[$cache_key];
+		if($this->cache_in_process && isset(self::$process_cache[$cache_key])){
+			return self::$process_cache[$cache_key];
 		}
 		$file = $this->getFileName($cache_key);
 		if(file_exists($file)){
@@ -74,6 +74,9 @@ class CacheFile extends CacheAdapter{
 			if($string){
 				$data = unserialize($string);
 				if($data && strtotime($data['expired'])>time()){
+					if($this->cache_in_process){
+						self::$process_cache[$cache_key] = $data['data'];
+					}
 					return $data['data'];
 				}
 			}
@@ -89,8 +92,8 @@ class CacheFile extends CacheAdapter{
 	 * @return bool|mixed
 	 */
 	public function delete($cache_key){
-		if(isset(self::$cache_store[$cache_key])){
-			unset(self::$cache_store[$cache_key]);
+		if(isset(self::$process_cache[$cache_key])){
+			unset(self::$process_cache[$cache_key]);
 		}
 		$file = $this->getFileName($cache_key);
 		if(file_exists($file)){
@@ -104,7 +107,7 @@ class CacheFile extends CacheAdapter{
 	 * flush cache dir
 	 */
 	public function flush(){
-		self::$cache_store = [];
+		self::$process_cache = [];
 		$dir = $this->getConfig('dir');
 		if(is_dir($dir)){
 			array_map('unlink', glob($dir.'/*'));

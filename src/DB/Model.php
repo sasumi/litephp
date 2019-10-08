@@ -468,13 +468,19 @@ abstract class Model extends DAO{
 	 */
 	public function between($field, $min = null, $max = null, $equal_cmp = true){
 		$cmp = $equal_cmp ? '=' : '';
-		if(isset($min)){
+		$hit = false;
+		if(strlen($min)){
 			$min = addslashes($min);
 			$this->query->where($field, ">$cmp", $min);
+			$hit = true;
 		}
-		if(isset($max)){
+		if(strlen($max)){
 			$max = addslashes($max);
 			$this->query->where($field, "<$cmp", $max);
+			$hit = true;
+		}
+		if($hit){
+			$this->query->where("`$field` IS NOT NULL");
 		}
 		return $this;
 	}
@@ -1141,7 +1147,7 @@ abstract class Model extends DAO{
 		array_walk($pro_defines, function($def, $k) use (&$data, $query_type){
 			if(array_key_exists('default', $def)){
 				if($query_type == Query::INSERT){
-					if((!isset($data[$k]) || strlen($data[$k]) == 0)){
+					if(!isset($data[$k])){ //允许提交空字符串
 						$data[$k] = $def['default'];
 					}
 				} else if(isset($data[$k]) && !strlen($data[$k])){
@@ -1228,7 +1234,7 @@ abstract class Model extends DAO{
 		}
 
 		//required
-		if(!$err && $define['required'] && strlen($val) == 0){
+		if(!$err && $define['required'] && !isset($val)){
 			$err = "请输入{$name}";
 		}
 

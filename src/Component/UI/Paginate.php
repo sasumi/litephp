@@ -21,7 +21,19 @@ class Paginate implements PaginateInterface {
 		'page_size'     => 10,
 		'page_key'      => 'page',
 		'page_size_key' => 'page_size',
+
+		//支持模式：
+		//first：第一页
+		//prev：上一页，
+		//num：页码列表，
+		//next：下一页，
+		//last：最后一页
+		//info：分页信息
+		//sizes：分页大小选择（如果设置了info，则嵌套在info里面）
+		//input：分页大小输入
+		//select：所有页码选择
 		'mode'          => 'prev,num,next,info',
+		'sizes'         => ['10' => '10', '15' => '15', '50' => '50', '100' => '100'], //选择组列表
 
 		'lang' => array(
 			'page_first' => '首页',
@@ -29,7 +41,7 @@ class Paginate implements PaginateInterface {
 			'page_next'  => '下一页',
 			'page_last'  => '末页',
 			'page_info'  => '共 %s 条数据, 每页 %i 条',
-			'page_jump'  => '跳转',
+			'page_jump'  => '跳转到：',
 			'page_size'  => '每页条数：',
 			'page_sel'   => '第%s页',
 		),
@@ -50,8 +62,9 @@ class Paginate implements PaginateInterface {
 	 * @param array $config 配置
 	 * @return Paginate
 	 */
-	public static function instance($identify='page', $config=array()){
+	public static function instance($identify = '', $config = array()){
 		static $instance_list = [];
+		$identify = $identify ?: 'page';
 		if(!isset($instance_list[$identify])){
 			$instance_list[$identify] = new self($config);
 		}
@@ -94,7 +107,7 @@ class Paginate implements PaginateInterface {
 	/**
 	 * 获取配置
 	 * @param string $key
-	 * @return array
+	 * @return array|string
 	 */
 	public function getConfig($key = ''){
 		return $key ? $this->config[$key] : $this->config;
@@ -139,7 +152,7 @@ class Paginate implements PaginateInterface {
 		$page_index = $page_index > 0 ? $page_index : 1;
 
 		$page_size = (int)Router::get($this->config['page_size_key']);
-		if($page_size && in_array('page_size', explode(',',$this->getConfig('mode')))){
+		if($page_size && in_array('sizes', explode(',',$this->getConfig('mode')))){
 			$this->page_size_flag = true;
 		} else {
 			$page_size = $this->getConfig('page_size');
@@ -206,15 +219,22 @@ class Paginate implements PaginateInterface {
 				}
 			}
 		}
-		$form_action = Router::getUrl(Router::getCurrentUri(), $gets);
 
-		$page_size_form_html = '<form action="'.$form_action.'" method="get" class="page_size_form">';
-		$page_size_form_html .= Html::htmlSelect($this->config['page_size_key'],
-			['10'=>'10', '15'=>'15', '50'=>'50', '100'=>'100',],
-			$page_info['page_size'], $lang['page_size'],
-			['class'=>'page_size_select','onchange'=>'this.parentNode.submit();']);
-		$page_size_form_html .= ' '.Html::htmlInputSubmit('提交', ['class'=>'page_size_submit']);
-		$page_size_form_html .= '</form>';
+		$form_action = Router::getUrl(Router::getCurrentUri());
+		$form_hidden_html = Html::htmlHiddenList($gets);
+
+		$page_size_form_html = '';
+		if(in_array('sizes', $page_modes) && $page_info['page_total'] > 0){
+			$page_size_form_html = '<form action="'.$form_action.'" method="get" class="page_size_form" style="display:inline-block;">';
+			$page_size_form_html .= $form_hidden_html;
+			$label = !in_array('info', $page_modes) ? $lang['page_size'] : '';
+			$page_size_form_html .= ($label ? "<label>$label" : '').Html::htmlSelect($this->config['page_size_key'], $this->config['sizes'], $page_info['page_size'], $lang['page_size'], [
+				'style'    => 'width:55px; min-width:0;',
+				'onchange' => 'this.parentNode.submit();',
+			]).($label ? '</label>':'');
+			$page_size_form_html .= ' '.Html::htmlNoScript(Html::htmlInputSubmit(null, ['class'=>'page_size_submit']));
+			$page_size_form_html .= '</form>';
+		}
 
 		foreach($page_modes as $mode){
 			//first page
@@ -289,7 +309,7 @@ class Paginate implements PaginateInterface {
 				$tmp = str_replace('%d', $page_info['page_total'], $tmp);
 				$tmp = str_replace('%k', $page_info['page_index'], $tmp);
 
-				if(in_array('page_size', $page_modes)){
+				if($page_size_form_html){
 					$tmp = str_replace('%i', $page_size_form_html, $tmp);
 				} else {
 					$tmp = str_replace('%i', $page_info['page_size'], $tmp);
@@ -300,37 +320,41 @@ class Paginate implements PaginateInterface {
 				$html .= '</span>';
 			}
 
-			//page input
-			//need javascript enabled supporting
-			else if($mode == 'input' && $page_info['page_total'] > 0){
-				$html .= '<form action="'.$form_action.'" method="get" class="page_input_form">';
-				$html .= Html::htmlNumber($this->config['page_key'], '', [
-					'class'    => 'page_input',
-					'size'     => 2,
-					'step'     => 1,
-					'min'      => 1,
-					'required' => 'required'
-				]);
+			else if($mode == 'select'){
+				$html .= '<form action="'.$form_action.'" method="get" class="page_select_form" style="display:inline-block;">';
+				$html .= $form_hidden_html;
 				$html .= $this->page_size_flag ? Html::htmlHidden($this->config['page_size_key'], $page_info['page_size']) : '';
-				$html .= Html::htmlInputSubmit($lang['page_jump'], ['class'=>'page_jump_btn']);
-				$html .= '</form>';
-			}
-
-			else if($mode == 'select' && $page_info['page_total'] > 0){
-				$html .= '<form action="'.$form_action.'" method="get" class="page_select_form">';
-				$html .= $this->page_size_flag ? Html::htmlHidden($this->config['page_size_key'], $page_info['page_size']) : '';
-				$html .= '<select onchange="this.parentNode.submit()" name="'.$this->config['page_key'].'" required="required">';
+				$html .= "<label>{$lang['page_jump']}";
+				$html .= '<select onchange="this.parentNode.parentNode.submit()" name="'.$this->config['page_key'].'" required="required">';
 				for($i=1; $i<=$page_info['page_total']; $i++){
 					$html .= Html::htmlOption(str_replace('%s', $i, $lang['page_sel']), $i, $page_info['page_index']  == $i);
 				}
-				$html .= '</select>';
+				$html .= '</select></label>';
+				$html .= Html::htmlNoScript(Html::htmlInputSubmit(null, ['class'=>'page_jump_btn']));
 				$html .= '</form>';
 			}
 
-			else if($mode == 'page_size'){
-				if(!in_array('info', $page_modes)){
-					$html .= $page_size_form_html;
-				}
+			//分页跳转输入
+			else if($mode == 'input'){
+				$html .= '<form action="'.$form_action.'" method="get" class="page_input_form" style="display:inline-block;">';
+				$html .= $form_hidden_html;
+				$html .= "<label>{$lang['page_jump']}".Html::htmlNumber($this->config['page_key'], '', [
+					'class'    => 'page_input',
+					'style' => 'width:65px; min-width:0;',
+					'size'     => 2,
+					'step'     => 1,
+					'min'      => 1,
+					'required' => 'required',
+					'onkeydown'=>'(function(e){e = e || window.event; if(e.keyCode == 13){this.parentNode.submit();}})(this)'
+				]).'</label>';
+				$html .= $this->page_size_flag ? Html::htmlHidden($this->config['page_size_key'], $page_info['page_size']) : '';
+				$html .= Html::htmlNoScript(Html::htmlInputSubmit(null, ['class'=>'page_jump_btn']));
+				$html .= '</form>';
+			}
+
+			//分组选择，如果已经提供了info，则内嵌在info中
+			else if($mode == 'sizes' && !in_array('info', $page_modes)){
+				$html .= $page_size_form_html;
 			}
 		}
 		return '<span class="pagination '.'pagination-'.$page_info['page_total'].'">'.$html.'</span>';
