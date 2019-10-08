@@ -219,11 +219,14 @@ class Paginate implements PaginateInterface {
 				}
 			}
 		}
-		$form_action = Router::getUrl(Router::getCurrentUri(), $gets);
+
+		$form_action = Router::getUrl(Router::getCurrentUri());
+		$form_hidden_html = Html::htmlHiddenList($gets);
 
 		$page_size_form_html = '';
 		if(in_array('sizes', $page_modes) && $page_info['page_total'] > 0){
 			$page_size_form_html = '<form action="'.$form_action.'" method="get" class="page_size_form" style="display:inline-block;">';
+			$page_size_form_html .= $form_hidden_html;
 			$label = !in_array('info', $page_modes) ? $lang['page_size'] : '';
 			$page_size_form_html .= ($label ? "<label>$label" : '').Html::htmlSelect($this->config['page_size_key'], $this->config['sizes'], $page_info['page_size'], $lang['page_size'], [
 				'style'    => 'width:55px; min-width:0;',
@@ -319,6 +322,7 @@ class Paginate implements PaginateInterface {
 
 			else if($mode == 'select'){
 				$html .= '<form action="'.$form_action.'" method="get" class="page_select_form" style="display:inline-block;">';
+				$html .= $form_hidden_html;
 				$html .= $this->page_size_flag ? Html::htmlHidden($this->config['page_size_key'], $page_info['page_size']) : '';
 				$html .= "<label>{$lang['page_jump']}";
 				$html .= '<select onchange="this.parentNode.parentNode.submit()" name="'.$this->config['page_key'].'" required="required">';
@@ -333,6 +337,7 @@ class Paginate implements PaginateInterface {
 			//分页跳转输入
 			else if($mode == 'input'){
 				$html .= '<form action="'.$form_action.'" method="get" class="page_input_form" style="display:inline-block;">';
+				$html .= $form_hidden_html;
 				$html .= "<label>{$lang['page_jump']}".Html::htmlNumber($this->config['page_key'], '', [
 					'class'    => 'page_input',
 					'style' => 'width:65px; min-width:0;',
