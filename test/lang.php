@@ -1,22 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2019/06/20
- * Time: 09:24
- */
-
 use function Lite\func\t;
 use Lite\I18N\Lang as Lang;
 
 include '../bootstrap.php';
-Lang::setSupportLanguageList(['zh_CN', 'en_US']);
-Lang::bindDomain(Lang::DOMAIN_DEFAULT, __DIR__);
-Lang::bindDomain('menu', __DIR__);
-$lang = $_SESSION['lang'] ?: Lang::detectLanguageListFromBrowser()[0] ?: 'zh_CN';
-$lang = 'en_US';
-Lang::setCurrentLanguage($lang);
+Lang::addDomain(Lang::DOMAIN_LITEPHP, dirname(__DIR__).'/src/I18N/litephp_lang', ['zh_CN', 'en_US'], 'en_US');
+//$lang = $_SESSION['lang'] ?: Lang::detectLanguageListFromBrowser()[0] ?: 'zh_CN';
+Lang::setCurrentLanguage('zh_CN');
 
-t('hello world');
+echo t('hello world', [], Lang::DOMAIN_LITEPHP);
 
 dump(Lang::getCurrentLanguage(), 1);
