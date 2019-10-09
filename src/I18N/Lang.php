@@ -172,8 +172,6 @@ abstract class Lang {
 	 * @param string $codeset 编码，缺省为UTF-8（windows暂不支持设定）
 	 */
 	public static function addDomain($domain, $path, array $support_language_list, $default_language = '', $codeset = 'UTF-8'){
-		debug_print_backtrace();
-		dump('x', 1);
 		if(!bindtextdomain($domain, $path)){
 			throw new Exception("Bind text domain fail, domain:$domain, path:$path");
 		}
