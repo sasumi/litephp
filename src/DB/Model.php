@@ -1115,7 +1115,7 @@ abstract class Model extends DAO{
 
 		//移除矢量数值
 		$data = array_filter($src_data, function($item){
-			return is_scalar($item);
+			return is_scalar($item) || is_null($item);
 		});
 
 		//unique校验
