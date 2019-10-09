@@ -17,6 +17,9 @@ use Lite\Exception\Exception;
  * @package Lite\I18N
  */
 abstract class Lang {
+	//是否在无扩展时支持
+	public static $SUPPORT_IN_NO_GETTEXT = true;
+
 	//框架指定域
 	const DOMAIN_LITEPHP = 'litephp';
 
@@ -38,6 +41,18 @@ abstract class Lang {
 	 */
 	public static function getCurrentDomain(){
 		return textdomain(null);
+	}
+
+	/**
+	 * 检测语言扩展是否可用
+	 * @return bool
+	 */
+	private static function getTextSupport(){
+		$s = function_exists('gettext');
+		if(!self::$SUPPORT_IN_NO_GETTEXT && !$s){
+			throw new Exception('GETTEXT no support in current environment');
+		}
+		return $s;
 	}
 
 	/**
@@ -157,6 +172,8 @@ abstract class Lang {
 	 * @param string $codeset 编码，缺省为UTF-8（windows暂不支持设定）
 	 */
 	public static function addDomain($domain, $path, array $support_language_list, $default_language = '', $codeset = 'UTF-8'){
+		debug_print_backtrace();
+		dump('x', 1);
 		if(!bindtextdomain($domain, $path)){
 			throw new Exception("Bind text domain fail, domain:$domain, path:$path");
 		}
@@ -177,6 +194,9 @@ abstract class Lang {
 	 * @return string
 	 */
 	public static function getTextSoft($text, $param, $domain = ''){
+		if(!self::getTextSupport()){
+			return self::mixUpParam($text, $param);
+		}
 		$current_language = self::getCurrentLanguage();
 		$domain = $domain ?: self::getCurrentDomain();
 		if(!in_array($current_language, self::$domain_list[$domain][0])){
@@ -195,6 +215,9 @@ abstract class Lang {
 	 * @return string
 	 */
 	public static function getTextInLanguageTemporary($text, $param, $language, $domain = ''){
+		if(!self::getTextSupport()){
+			return self::mixUpParam($text, $param);
+		}
 		$old_language = self::getCurrentLanguage();
 		self::setCurrentLanguage($language);
 		$text = self::getText($text, $param, $domain);
@@ -211,10 +234,18 @@ abstract class Lang {
 	 */
 	public static function getText($text, $param = [], $domain = ''){
 		$text = $domain ? dgettext($domain, $text) : gettext($text);
+		return self::mixUpParam($text, $param);
+	}
+
+	/**
+	 * @param $text
+	 * @param $param
+	 * @return string|string[]|null
+	 */
+	private static function mixUpParam($text, $param = []){
 		if(!$param){
 			return $text;
 		}
-
 		extract($param, EXTR_OVERWRITE);
 		$tmp = '';
 		$text = preg_replace('/"/', '\\"', $text);

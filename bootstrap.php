@@ -1,7 +1,10 @@
 <?php
+use Lite\I18N\Lang;
+use function Lite\func\dump_trace_entrance_offset;
+
 //php version limiting
-if(version_compare(PHP_VERSION, '5.5.0')<0){
-	throw new \Exception("Required PHP 5.5 or above", 1);
+if(version_compare(PHP_VERSION, '5.5.0') < 0){
+	throw new Exception("Required PHP 5.5 or above", 1);
 }
 
 $LITE_PATH = __DIR__.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR;
@@ -13,7 +16,7 @@ require_once __DIR__.'/src/function/autoload.php';
 //dump function shortcut
 if(!function_exists('dump')){
 	function dump(){
-		\Lite\func\dump_trace_entrance_offset(2);
+		dump_trace_entrance_offset(2);
 		return call_user_func_array('Lite\func\dump', func_get_args());
 	}
 }
@@ -34,3 +37,8 @@ spl_autoload_register(function($className) use ($LITE_PATH, $NAMESPACE){
 		}
 	}
 });
+
+//绑定LitePHP翻译
+if(function_exists('gettext')){
+	Lang::addDomain(Lang::DOMAIN_LITEPHP, $LITE_PATH.'/I18N/litephp_lang', ['en_US', 'zh_CN'], 'en_US');
+}
