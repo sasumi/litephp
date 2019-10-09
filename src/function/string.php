@@ -195,7 +195,7 @@ function __h($str, $len = null, $tail = '...', &$over_length = false, $type){
  * @return string
  */
 function t($text, $param = array(), $domain = ''){
-	return Lang::getText($text, $param, $domain);
+	return Lang::getTextSoft($text, $param, $domain);
 }
 
 /**

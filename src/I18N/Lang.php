@@ -7,6 +7,13 @@ use Lite\Exception\Exception;
 
 /**
  * 国际化多语言支持
+ * <pre>使用方法：
+ * Lang::addDomain(Lang::DOMAIN_LITEPHP, dirname(__DIR__).'/src/I18N/litephp_lang', ['zh_CN', 'en_US'], 'en_US'); //添加域
+ * Lang::setCurrentLanguage('zh_CN'); //设置当前语言
+ * Lang::setCurrentDomain(Lang::DOMAIN_LITEPHP); //设置当前域，如果没有设置，可以在getText中直接指定
+ * //以上步骤可以任意顺序
+ * echo Lang::getTextSoft('hello world', [], Lang::DOMAIN_LITEPHP); //翻译
+ * </pre>
  * @package Lite\I18N
  */
 abstract class Lang {
@@ -18,24 +25,32 @@ abstract class Lang {
 	private static $domain_list = [];
 
 	/**
+	 * 设置当前域
+	 * @param string $domain
+	 */
+	public static function setCurrentDomain($domain){
+		textdomain($domain);
+	}
+
+	/**
+	 * 获取当前域
+	 * @return string
+	 */
+	public static function getCurrentDomain(){
+		return textdomain(null);
+	}
+
+	/**
 	 * 获取当前设置语言
 	 * @param int $category 类目
 	 * @return string
 	 */
 	public static function getCurrentLanguage($category = LC_ALL){
-		return setlocale($category, 0);
-	}
-
-	/**
-	 * 检查语言是否被所有域支持
-	 * @param $language
-	 */
-	public static function checkLanguageSupportAll($language){
-		foreach(self::$domain_list as $domain => list($language_list)){
-			if(!in_array($language, $language_list)){
-				throw new Exception('Language no support in domain:'.$domain);
-			}
+		$lang = setlocale($category, 0);
+		if(Server::inWindows()){
+			return str_replace('-', '_', $lang);
 		}
+		return $lang;
 	}
 
 	/**
@@ -62,7 +77,7 @@ abstract class Lang {
 
 	/**
 	 * 设置Windows环境语言
-	 * @param $language
+	 * @param string $language
 	 * @param int $category
 	 * @param bool $force_check_all_domain_support 是否强制检查所有域必须支持
 	 * @return string
@@ -97,6 +112,18 @@ abstract class Lang {
 			throw new Exception(sprintf('Language set %s failure:%s, return:%s', $category, $language, $locale_set));
 		}
 		return $locale_set;
+	}
+
+	/**
+	 * 检查语言是否被所有域支持
+	 * @param string $language
+	 */
+	public static function checkLanguageSupportAll($language){
+		foreach(self::$domain_list as $domain => list($language_list)){
+			if(!in_array($language, $language_list)){
+				throw new Exception('Language no support in domain:'.$domain);
+			}
+		}
 	}
 
 	/**
@@ -143,48 +170,36 @@ abstract class Lang {
 	}
 
 	/**
-	 * 设置默认域
-	 * @param $domain
-	 */
-	public static function setDefaultDomain($domain){
-		textdomain($domain);
-	}
-
-	/**
-	 * 获取当前设定默认域
-	 * @return string
-	 */
-	public static function getDefaultDomain(){
-		return textdomain(null);
-	}
-
-	/**
 	 * 翻译，如果当前域不支持当前语言，则使用缺省语言
-	 * @param $text
+	 * @param string $text
 	 * @param array $param
-	 * @param $domain
+	 * @param string $domain
 	 * @return string
 	 */
 	public static function getTextSoft($text, $param, $domain = ''){
-		$old_locale = self::getCurrentLanguage();
-		$domain = $domain ?: self::getDefaultDomain();
-		$domain_default_language = self::$domain_list[$domain][1];
-		self::setCurrentLanguage($domain_default_language);
-		$text = self::getText($text, $param, $domain);
-		setlocale(LC_ALL, $old_locale);
-		return $text;
+		$current_language = self::getCurrentLanguage();
+		$domain = $domain ?: self::getCurrentDomain();
+		if(!in_array($current_language, self::$domain_list[$domain][0])){
+			$current_language = self::$domain_list[$domain][1];
+			return self::getTextInLanguageTemporary($text, $param, $current_language, $domain);
+		}
+		return self::getText($text, $param, $domain);
 	}
 
 	/**
 	 * 临时以指定语种翻译翻译
 	 * @param $text
 	 * @param array $param
-	 * @param $language
+	 * @param string $language
 	 * @param string $domain
 	 * @return string
 	 */
 	public static function getTextInLanguageTemporary($text, $param, $language, $domain = ''){
-		return '';
+		$old_language = self::getCurrentLanguage();
+		self::setCurrentLanguage($language);
+		$text = self::getText($text, $param, $domain);
+		self::setCurrentLanguage($old_language);
+		return $text;
 	}
 
 	/**
