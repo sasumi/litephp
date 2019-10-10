@@ -131,11 +131,6 @@ class Application{
 			$tmp->render();
 		}
 
-		//调试模式
-		else if(Config::get('app/debug')){
-			Exception::prettyPrint($ex);
-		}
-
 		//路由错误，重定向到404页面
 		else if($ex instanceof RouterException){
 			Http::sendHttpStatus(404);
@@ -146,6 +141,11 @@ class Application{
 					Http::redirect($page404, 301);
 				}
 			}
+		}
+
+		//调试模式
+		else if(Config::get('app/debug')){
+			Exception::prettyPrint($ex);
 		}
 
 		//其他类型错误，重定向到错误页
