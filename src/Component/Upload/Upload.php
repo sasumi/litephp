@@ -15,7 +15,7 @@ use function Lite\func\restructure_files;
  */
 abstract class Upload{
 	protected $config;
-	
+
 	/**
 	 * 单例
 	 * @param BaseConfig $config
@@ -28,7 +28,7 @@ abstract class Upload{
 		}
 		return $instance;
 	}
-	
+
 	/**
 	 * Upload constructor.
 	 * @param BaseConfig $config
@@ -36,13 +36,13 @@ abstract class Upload{
 	public function __construct(BaseConfig $config){
 		$this->config = $config ?: new BaseConfig();
 	}
-	
+
 	/**
 	 * @param $file
 	 * @return string file path
 	 */
 	abstract protected function saveFile($file);
-	
+
 	/**
 	 * 单文件上传
 	 * @param $file
@@ -57,7 +57,7 @@ abstract class Upload{
 		]);
 		return $this->saveFile($file);
 	}
-	
+
 	/**
 	 * 多文件上传
 	 * @param array $FILES
@@ -76,7 +76,7 @@ abstract class Upload{
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * 整理$_FILES文件格式回正常关联数组
 	 * @return array
@@ -113,12 +113,12 @@ abstract class Upload{
 		], $rules);
 
 		if(!is_uploaded_file($file)){
-			throw new UploadFileAccessException(_tl('没有检测到上传文件'), null, $file);
+			throw new UploadFileAccessException(_tl('No upload file detected'), null, $file);
 		}
 
 		$fsz = filesize($file);
 		if(!$fsz){
-			throw new UploadFileAccessException(_tl('上传文件内容为空'));
+			throw new UploadFileAccessException(_tl('Upload file content is empty'));
 		}
 
 		if($rules['max_size'] && $fsz > $rules['max_size']){
@@ -126,24 +126,33 @@ abstract class Upload{
 				'file_size' => format_size($fsz),
 				'max_size'  => format_size($rules['max_size']),
 			];
-			throw new UploadSizeException(_tl('上传文件大小超出设置, {file_size} > {max_size}', $p), null, $p);
+			throw new UploadSizeException(_tl('Upload file size bigger than config, {file_size} > {max_size}', $p), null, $p);
 		}
 
 		if($rules['min_size'] && $fsz < $rules['min_size']){
-			throw new UploadSizeException(_tl('上传文件尺寸过小'), null, $rules['min_size']);
+			throw new UploadSizeException(_tl('Upload file size smaller than config {file_size} < {min_size}', [
+				'file_size' => format_size($fsz),
+				'max_size'  => format_size($rules['min_size']),
+			]), null, $rules['min_size']);
 		}
 
 		if($rules['mime_list']){
-			$mime = MimeInfo::getMimeByFile($file);
-			if(!in_array($mime, $rules['mime_list'])){
-				throw new UploadTypeException(_tl('上传文件类型不符合（MIME：{mime}）', ['mime' => $mime]), 0, $rules['mime_list']);
+			$file_mime = MimeInfo::getMimeByFile($file);
+			if(!in_array($file_mime, $rules['mime_list'])){
+				throw new UploadTypeException(_tl('Upload file type(mime：{file_mime}) no support by config mime list:{mime_list}', [
+					'file_mime' => $file_mime,
+					'mime_list' => join(',', $rules['mime_list']),
+				]), 0, $rules['mime_list']);
 			}
 		}
 
 		if($rules['ext_list']){
-			$mime = MimeInfo::getMimeByFile($file);
-			if(!MimeInfo::checkByExtensions($rules['ext_list'], $mime)){
-				throw new UploadTypeException(_tl('上传文件({mime}) 类型不符合', ['mime' => $mime]), 0, $rules['ext_list']);
+			$file_mime = MimeInfo::getMimeByFile($file);
+			if(!MimeInfo::checkByExtensions($rules['ext_list'], $file_mime)){
+				throw new UploadTypeException(_tl('Upload file type(mime：{file_mime}) no support by config extension list:{ext_list}', [
+					'file_mime' => $file_mime,
+					'ext_list'  => join(',', $rules['ext_list']),
+				]), 0, $rules['ext_list']);
 			}
 		}
 	}

@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-08 22:45+0800\n"
+"POT-Creation-Date: 2019-10-10 17:06+0800\n"
 "PO-Revision-Date: 2019-10-08 22:45+0800\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2.4\n"
-"X-Poedit-KeywordsList: t\n"
+"X-Poedit-KeywordsList: t;_tl\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "Last-Translator: sasumi <cnsasumi@gmail.com>\n"
@@ -23,6 +23,30 @@ msgstr ""
 "Language: zh_CN\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: test/lang.php:20
+#: src/Component/Upload/Upload.php:116
+msgid "No upload file detected"
+msgstr ""
+
+#: src/Component/Upload/Upload.php:121
+msgid "Upload file content is empty"
+msgstr ""
+
+#: src/Component/Upload/Upload.php:129
+msgid "Upload file size bigger than config, {file_size} > {max_size}"
+msgstr ""
+
+#: src/Component/Upload/Upload.php:133
+msgid "Upload file size smaller than config {file_size} < {min_size}"
+msgstr ""
+
+#: src/Component/Upload/Upload.php:142
+msgid "Upload file type(mime：{file_mime}) no support by config mime list:{mime_list}"
+msgstr ""
+
+#: src/Component/Upload/Upload.php:152
+msgid "Upload file type(mime：{file_mime}) no support by config extension list:{ext_list}"
+msgstr ""
+
+#: test/lang.php:11
 msgid "hello world"
 msgstr ""
