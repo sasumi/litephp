@@ -113,16 +113,12 @@ abstract class Upload{
 		], $rules);
 
 		if(!is_uploaded_file($file)){
-			throw new UploadFileAccessException(_tl('No upload file detected'), null, $file);
-		}
-
-		if(!is_file($file)){
-			throw new UploadFileAccessException(_tl('No file detected'), null, $file);
+			throw new UploadFileAccessException(_tl('没有检测到上传文件'), null, $file);
 		}
 
 		$fsz = filesize($file);
 		if(!$fsz){
-			throw new UploadFileAccessException(_tl('File content empty'));
+			throw new UploadFileAccessException(_tl('上传文件内容为空'));
 		}
 
 		if($rules['max_size'] && $fsz > $rules['max_size']){
@@ -130,24 +126,24 @@ abstract class Upload{
 				'file_size' => format_size($fsz),
 				'max_size'  => format_size($rules['max_size']),
 			];
-			throw new UploadSizeException(_tl('File size overload, {file_size} > {max_size}', $p), null, $p);
+			throw new UploadSizeException(_tl('上传文件大小超出设置, {file_size} > {max_size}', $p), null, $p);
 		}
 
 		if($rules['min_size'] && $fsz < $rules['min_size']){
-			throw new UploadSizeException(_tl('File size too small'), null, $rules['min_size']);
+			throw new UploadSizeException(_tl('上传文件尺寸过小'), null, $rules['min_size']);
 		}
 
 		if($rules['mime_list']){
 			$mime = MimeInfo::getMimeByFile($file);
 			if(!in_array($mime, $rules['mime_list'])){
-				throw new UploadTypeException(_tl('Update file type miss match:{mime}', ['mime' => $mime]), 0, $rules['mime_list']);
+				throw new UploadTypeException(_tl('上传文件类型不符合（MIME：{mime}）', ['mime' => $mime]), 0, $rules['mime_list']);
 			}
 		}
 
 		if($rules['ext_list']){
 			$mime = MimeInfo::getMimeByFile($file);
 			if(!MimeInfo::checkByExtensions($rules['ext_list'], $mime)){
-				throw new UploadTypeException(_tl('Update file({mime}) extension miss match.', ['mime' => $mime]), 0, $rules['ext_list']);
+				throw new UploadTypeException(_tl('上传文件({mime}) 类型不符合', ['mime' => $mime]), 0, $rules['ext_list']);
 			}
 		}
 	}

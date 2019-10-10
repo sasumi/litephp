@@ -27,6 +27,10 @@ abstract class Lang {
 	//[domain => [lang_list, default_lang], ...]
 	private static $domain_list = [];
 
+	//当前语言列表，不通过setlocal读取，避免与设置不尽符合情况。
+	//缺省使用第一次addDomain时的语言。
+	private static $current_language = '';
+
 	/**
 	 * 设置当前域
 	 * @param string $domain
@@ -57,15 +61,10 @@ abstract class Lang {
 
 	/**
 	 * 获取当前设置语言
-	 * @param int $category 类目
 	 * @return string
 	 */
-	public static function getCurrentLanguage($category = LC_ALL){
-		$lang = setlocale($category, 0);
-		if(Server::inWindows()){
-			return str_replace('-', '_', $lang);
-		}
-		return $lang;
+	public static function getCurrentLanguage(){
+		return self::$current_language;
 	}
 
 	/**
@@ -87,6 +86,7 @@ abstract class Lang {
 		if($language && $locale_set != $language){
 			throw new Exception(sprintf('Language set %s failure:%s, return:%s', $category, $language, $locale_set));
 		}
+		self::$current_language = $language;
 		return $locale_set;
 	}
 
@@ -100,7 +100,7 @@ abstract class Lang {
 	public static function setCurrentLanguageInWindows($language, $category = LC_ALL, $force_check_all_domain_support = false){
 		$force_check_all_domain_support && self::checkLanguageSupportAll($language);
 
-		$language = str_replace('_', '-', $language);
+		$win_lang = str_replace('_', '-', $language);
 
 		static $win_lang_list;
 		if(!$win_lang_list){
@@ -108,24 +108,25 @@ abstract class Lang {
 			$win_lang_list = array_map('strtolower', $win_lang_list);
 		}
 
-		if(!in_array(strtolower($language), $win_lang_list)){
+		if(!in_array(strtolower($win_lang), $win_lang_list)){
 			throw new Exception('Language no support in windows');
 		}
 
-		if(false == putenv("LANGUAGE=".$language)){
-			throw new Exception(sprintf("Could not set the ENV variable LANGUAGE = $language"));
+		if(false == putenv("LANGUAGE=".$win_lang)){
+			throw new Exception(sprintf("Could not set the ENV variable LANGUAGE = $win_lang"));
 		}
 
 		// set the LANG environmental variable
-		if(false == putenv("LANG=".$language)){
-			throw new Exception(sprintf("Could not set the ENV variable LANG = $language"));
+		if(false == putenv("LANG=".$win_lang)){
+			throw new Exception(sprintf("Could not set the ENV variable LANG = $win_lang"));
 		}
 
 		//try difference language case ...
-		$locale_set = setlocale($category, $language);
-		if($language && $locale_set != $language){
+		$locale_set = setlocale($category, $win_lang);
+		if($win_lang && $locale_set != $win_lang){
 			throw new Exception(sprintf('Language set %s failure:%s, return:%s', $category, $language, $locale_set));
 		}
+		self::$current_language = $language;
 		return $locale_set;
 	}
 
@@ -182,6 +183,9 @@ abstract class Lang {
 			$default_language = current($support_language_list);
 		}
 		self::$domain_list[$domain] = [$support_language_list, $default_language];
+		if(!self::$current_language){
+			self::$current_language = $default_language;
+		}
 	}
 
 	/**
