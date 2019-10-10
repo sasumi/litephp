@@ -1,5 +1,4 @@
 <?php
-
 namespace Lite\Component\Upload;
 
 use Lite\Component\File\MimeInfo;
@@ -7,6 +6,7 @@ use Lite\Component\Upload\Config\BaseConfig;
 use Lite\Component\Upload\Exception\UploadFileAccessException;
 use Lite\Component\Upload\Exception\UploadSizeException;
 use Lite\Component\Upload\Exception\UploadTypeException;
+use function Lite\func\_tl;
 use function Lite\func\format_size;
 use function Lite\func\restructure_files;
 
@@ -50,7 +50,11 @@ abstract class Upload{
 	 */
 	public function uploadFile($file){
 		$file = $file ?: current($_FILES)['tmp_name'];
-		$this->checkFile($file);
+		self::checkUploadFile($file, [
+			'max_size'  => $this->config->getFileMaxSize(),
+			'min_size'  => $this->config->getFileMinSize(),
+			'mime_list' => $this->config->getAllowMimes(),
+		]);
 		return $this->saveFile($file);
 	}
 	
@@ -87,39 +91,64 @@ abstract class Upload{
 		});
 		return $fs;
 	}
-	
+
 	/**
-	 * 文件检查
-	 * @param $file
-	 * @param bool $upload_file_only
-	 * @return bool
+	 * 检测上传文件是否符合规则
+	 * @param string $file 上传文件路径（$_FILE['tmp_name']）
+	 * @param array $rules 规则配置
+	 * <pre>
+	 * 规则配置
+	 * max_size:最大尺寸，由于文件已经上传，缺省为空,
+	 * min_size:最小文件尺寸,
+	 * mime_list: 允许mime清单,
+	 * ext_list: 扩展列表（会与mime_list组合使用，由扩展反向检测mime）
+	 * </pre>
 	 */
-	protected function checkFile($file, $upload_file_only = true){
-		if($upload_file_only && !is_uploaded_file($file)){
-			throw new UploadFileAccessException('No upload file detected', null, $file);
-		} else if(!is_file($file)){
-			throw new UploadFileAccessException('No file detected', null, $file);
+	public static function checkUploadFile($file, $rules = []){
+		$rules = array_merge([
+			'max_size'  => 0,
+			'min_size'  => 1,
+			'mime_list' => [],
+			'ext_list'  => [],
+		], $rules);
+
+		if(!is_uploaded_file($file)){
+			throw new UploadFileAccessException(_tl('No upload file detected'), null, $file);
 		}
-		
+
+		if(!is_file($file)){
+			throw new UploadFileAccessException(_tl('No file detected'), null, $file);
+		}
+
 		$fsz = filesize($file);
 		if(!$fsz){
-			throw new UploadFileAccessException('File content empty');
+			throw new UploadFileAccessException(_tl('File content empty'));
 		}
-		
-		$size_max_limit = $this->config->getFileMaxSize();
-		$size_min_limit = $this->config->getFileMinSize();
-		if($size_max_limit && $fsz>$size_max_limit){
-			throw new UploadSizeException('File size overload,'.format_size($fsz).' > '.format_size($size_max_limit), null, $fsz);
+
+		if($rules['max_size'] && $fsz > $rules['max_size']){
+			$p = [
+				'file_size' => format_size($fsz),
+				'max_size'  => format_size($rules['max_size']),
+			];
+			throw new UploadSizeException(_tl('File size overload, {file_size} > {max_size}', $p), null, $p);
 		}
-		if($size_min_limit){
-			throw new UploadSizeException('File size too minimum', null, $size_min_limit);
+
+		if($rules['min_size'] && $fsz < $rules['min_size']){
+			throw new UploadSizeException(_tl('File size too small'), null, $rules['min_size']);
 		}
-		if($allow_mimes = $this->config->getAllowMimes()){
+
+		if($rules['mime_list']){
 			$mime = MimeInfo::getMimeByFile($file);
-			if(!in_array($mime, $allow_mimes)){
-				throw new UploadTypeException('Update file type miss match:'.$mime, 0, $allow_mimes);
+			if(!in_array($mime, $rules['mime_list'])){
+				throw new UploadTypeException(_tl('Update file type miss match:{mime}', ['mime' => $mime]), 0, $rules['mime_list']);
 			}
 		}
-		return true;
+
+		if($rules['ext_list']){
+			$mime = MimeInfo::getMimeByFile($file);
+			if(!MimeInfo::checkByExtensions($rules['ext_list'], $mime)){
+				throw new UploadTypeException(_tl('Update file({mime}) extension miss match.', ['mime' => $mime]), 0, $rules['ext_list']);
+			}
+		}
 	}
 }

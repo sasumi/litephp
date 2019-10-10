@@ -556,13 +556,17 @@ abstract class DBAbstract{
 	public function getCount($sql){
 		$sql .= '';
 		$sql = str_replace(array("\n", "\r"), '', trim($sql));
+
+		//为了避免order中出现field，在select里面定义，select里面被删除了，导致order里面的field未定义。
+		//同时提升Count性能
+		$sql = preg_replace('/\sorder\s+by\s.*$/i', '', $sql);
+
 		if(preg_match('/^\s*SELECT.*?\s+FROM\s+/i', $sql)){
 			if(preg_match('/\sGROUP\s+by\s/i', $sql) ||
 				preg_match('/^\s*SELECT\s+DISTINCT\s/i', $sql)){
 				$sql = "SELECT COUNT(*) AS __NUM_COUNT__ FROM ($sql) AS cnt_";
 			} else {
 				$sql = preg_replace('/^\s*select.*?\s+from/i', 'SELECT COUNT(*) AS __NUM_COUNT__ FROM', $sql);
-				$sql = preg_replace('/\sorder\s+by\s.*$/i', '', $sql); //为了避免order中出现field，在select里面定义，select里面被删除了，导致order里面的field未定义。
 			}
 			$result = $this->getOne(new Query($sql));
 			if($result){

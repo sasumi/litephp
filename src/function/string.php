@@ -194,8 +194,18 @@ function __h($str, $len = null, $tail = '...', &$over_length = false, $type){
  * @param string $domain
  * @return string
  */
-function t($text, $param = array(), $domain = ''){
+function t($text, $param = [], $domain = ''){
 	return Lang::getTextSoft($text, $param, $domain);
+}
+
+/**
+ * Translate litephp library
+ * @param $text
+ * @param $param
+ * @return string
+ */
+function _tl($text, $param = []){
+	return Lang::getTextSoft($text, $param, Lang::DOMAIN_LITEPHP);
 }
 
 /**

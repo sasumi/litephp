@@ -999,16 +999,13 @@ class MimeInfo{
 
 	/**
 	 * 检测文件mime信息是否符合
-	 * @param  string $extensions
-	 * @param  string $mime
+	 * @param array $extensions
+	 * @param string $mime
 	 * @return boolean
 	 */
-	public static function checkByExtensions($extensions, $mime){
-		$extensions = strtolower($extensions);
-		$extensions = explode(',', $extensions);
-
+	public static function checkByExtensions(array $extensions, $mime){
 		foreach($extensions as $ext){
-			if($mime == self::$mime_types[$ext]){
+			if(strcasecmp($mime, self::$mime_types[$ext]) === 0){
 				return true;
 			}
 		}

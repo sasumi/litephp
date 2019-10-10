@@ -10,5 +10,5 @@ namespace Lite\Component\Upload\Exception;
 
 use Lite\Exception\Exception;
 
-class UploadException extends Exception{
+class UploadException extends Exception {
 }
