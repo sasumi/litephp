@@ -123,8 +123,11 @@ class Application{
 		Logger::instance('LITE')->log($log_level, new CommonMessage('APP EX:'.$ex->getMessage(),
 			array('referer'=> $_SERVER['HTTP_REFERER'], 'exception'=>$ex->__toString())));
 
+		$req_type = View::parseRequestType();
+
 		//business exception
-		if(($ex instanceof BizException)){
+		//no handle page & iframe request
+		if($ex instanceof BizException && !in_array($req_type, [View::REQ_PAGE, View::REQ_IFRAME])){
 			$result = new Result($ex->getMessage());
 			/** @var View $tmp */
 			$tmp = new $render($result);
