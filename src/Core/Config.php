@@ -169,8 +169,6 @@ abstract class Config {
 			$config = include $file;
 		}
 
-		$config = !is_array($config) ? array() : $config;
-
 		switch($key){
 			case 'app':
 				self::assignConfig($config['root'], self::$app_root);
