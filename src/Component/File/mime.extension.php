@@ -149,7 +149,10 @@ return [
 	'csp'         => ['application/vnd.commonspace'],
 	'css'         => ['text/css'],
 	'cst'         => ['application/x-director'],
-	'csv'         => ['text/csv'],
+	'csv'         => [
+		'text/csv',
+		'text/plain',
+	],
 	'cu'          => ['application/cu-seeme'],
 	'curl'        => ['text/vnd.curl'],
 	'cww'         => ['application/prs.cww'],
