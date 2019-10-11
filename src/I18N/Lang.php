@@ -83,7 +83,7 @@ abstract class Lang {
 
 		//try difference language case ...
 		$locale_set = setlocale($category, $language.'.utf8', $language.'.UTF8', $language.'.utf-8', $language.'.UTF-8');
-		if($language && $locale_set != $language){
+		if($language && stripos($locale_set,$language) === false){
 			throw new Exception(sprintf('Language set %s failure:%s, return:%s', $category, $language, $locale_set));
 		}
 		self::$current_language = $language;
@@ -123,7 +123,7 @@ abstract class Lang {
 
 		//try difference language case ...
 		$locale_set = setlocale($category, $win_lang);
-		if($win_lang && $locale_set != $win_lang){
+		if($win_lang && stripos($locale_set,$win_lang) === false){
 			throw new Exception(sprintf('Language set %s failure:%s, return:%s', $category, $language, $locale_set));
 		}
 		self::$current_language = $language;
