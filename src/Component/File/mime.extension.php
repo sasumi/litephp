@@ -953,10 +953,16 @@ return [
 	'xlc'         => ['application/vnd.ms-excel'],
 	'xlf'         => ['application/x-xliff+xml'],
 	'xlm'         => ['application/vnd.ms-excel'],
-	'xls'         => ['application/vnd.ms-excel'],
+	'xls'         => [
+		'application/vnd.ms-excel',
+		'application/zip', //WPS电子表格
+	],
 	'xlsb'        => ['application/vnd.ms-excel.sheet.binary.macroenabled.12'],
 	'xlsm'        => ['application/vnd.ms-excel.sheet.macroenabled.12'],
-	'xlsx'        => ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+	'xlsx'        => [
+		'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		'application/zip', //WPS电子表格
+	],
 	'xlt'         => ['application/vnd.ms-excel'],
 	'xltm'        => ['application/vnd.ms-excel.template.macroenabled.12'],
 	'xltx'        => ['application/vnd.openxmlformats-officedocument.spreadsheetml.template'],
