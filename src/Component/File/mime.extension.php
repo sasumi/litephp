@@ -959,12 +959,14 @@ return [
 	'xls'         => [
 		'application/vnd.ms-excel',
 		'application/zip', //WPS电子表格
+		'application/vnd.ms-office',
 	],
 	'xlsb'        => ['application/vnd.ms-excel.sheet.binary.macroenabled.12'],
 	'xlsm'        => ['application/vnd.ms-excel.sheet.macroenabled.12'],
 	'xlsx'        => [
 		'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 		'application/zip', //WPS电子表格
+		'application/vnd.ms-office',
 	],
 	'xlt'         => ['application/vnd.ms-excel'],
 	'xltm'        => ['application/vnd.ms-excel.template.macroenabled.12'],
