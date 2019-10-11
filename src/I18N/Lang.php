@@ -149,7 +149,7 @@ abstract class Lang {
 	private static function getAllLanguageList(){
 		$ls = [];
 		foreach(self::$domain_list as $domain => list($language_list)){
-			$ls += $language_list;
+			$ls = array_merge($ls, $language_list);
 		}
 		return array_unique($ls);
 	}

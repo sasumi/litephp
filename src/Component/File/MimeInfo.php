@@ -89,7 +89,7 @@ class MimeInfo{
 
 		foreach($extensions as $ext){
 			if($mime_maps[$ext]){
-				$result += $mime_maps[$ext];
+				$result = array_merge($result, $mime_maps[$ext]);
 			}
 		}
 		return array_unique($result);
