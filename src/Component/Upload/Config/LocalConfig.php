@@ -3,6 +3,7 @@
 namespace Lite\Component\Upload\Config;
 
 use Lite\Component\Upload\Exception\UploadDirAccessException;
+use function Lite\func\_tl;
 
 /**
  * 本地文件上传配置
@@ -29,7 +30,7 @@ class LocalConfig extends BaseConfig{
 	public function getFileSavePath($auto_create_dir = true){
 		if($auto_create_dir && !is_dir($this->file_save_path)){
 			if(!mkdir($this->file_save_path)){
-				throw new UploadDirAccessException('Directory create fail:'.$this->file_save_path);
+				throw new UploadDirAccessException(_tl('Directory create fail:').$this->file_save_path);
 			}
 		}
 		return $this->file_save_path;

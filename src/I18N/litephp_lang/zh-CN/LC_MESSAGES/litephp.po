@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-10 17:06+0800\n"
-"PO-Revision-Date: 2019-10-10 18:21+0800\n"
+"POT-Creation-Date: 2019-10-11 11:23+0800\n"
+"PO-Revision-Date: 2019-10-11 11:27+0800\n"
 "Last-Translator: sasumi <cnsasumi@outlook.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -21,6 +21,46 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SearchPath-0: .\n"
+
+#: src/Component/Upload/Config/BaseConfig.php:86
+msgid "Server allow max upload size in-conformity"
+msgstr "服务器允许上传文件大小与程序配置不一致"
+
+#: src/Component/Upload/Config/LocalConfig.php:33
+msgid "Directory create fail:"
+msgstr "上传目录创建失败："
+
+#: src/Component/Upload/Exception/UploadException.php:11
+msgid "UPLOAD_ERR_INI_SIZE"
+msgstr "文件上传INI配置大小错误"
+
+#: src/Component/Upload/Exception/UploadException.php:12
+msgid "UPLOAD_ERR_FORM_SIZE"
+msgstr "文件上传表单"
+
+#: src/Component/Upload/Exception/UploadException.php:13
+msgid "UPLOAD_ERR_PARTIAL"
+msgstr "上传文件发生部分错误"
+
+#: src/Component/Upload/Exception/UploadException.php:14
+msgid "UPLOAD_ERR_NO_FILE"
+msgstr "上传文件丢失"
+
+#: src/Component/Upload/Exception/UploadException.php:15
+msgid "UPLOAD_ERR_NO_TMP_DIR"
+msgstr "上传文件未能找到TMP临时目录"
+
+#: src/Component/Upload/Exception/UploadException.php:16
+msgid "UPLOAD_ERR_CANT_WRITE"
+msgstr "上传文件写入失败"
+
+#: src/Component/Upload/Exception/UploadException.php:17
+msgid "UPLOAD_ERR_EXTENSION"
+msgstr "系统上传文件扩展错误"
+
+#: src/Component/Upload/Exception/UploadException.php:19
+msgid "UPLOAD_UNKNOWN_ERROR({code})"
+msgstr "上传文件系统未知错误（{code}）"
 
 #: src/Component/Upload/Upload.php:116
 msgid "No upload file detected"
@@ -39,12 +79,20 @@ msgid "Upload file size smaller than config {file_size} < {min_size}"
 msgstr "上传文件大小小于配置，{file_size} < {min_size}"
 
 #: src/Component/Upload/Upload.php:142
-msgid "Upload file type(mime：{file_mime}) no support by config mime list:{mime_list}"
+msgid ""
+"Upload file type(mime：{file_mime}) no support by config mime list:"
+"{mime_list}"
 msgstr "上传文件类型（mime：{file_mime}）不在系统配置列表中：{mime_list}"
 
 #: src/Component/Upload/Upload.php:152
-msgid "Upload file type(mime：{file_mime}) no support by config extension list:{ext_list}"
+msgid ""
+"Upload file type(mime：{file_mime}) no support by config extension "
+"list:{ext_list}"
 msgstr "上传文件类型（mime：{file_mime}）不在系统配置列表中：{ext_list}"
+
+#: src/Component/Upload/UploadLocal.php:34
+msgid "Upload file move fail: {org_file} => {new_file}"
+msgstr "上传文件移动失败：{org_file} => {new_file}"
 
 #: test/lang.php:11
 msgid "hello world"

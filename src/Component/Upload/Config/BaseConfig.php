@@ -5,6 +5,7 @@ namespace Lite\Component\Upload\Config;
 use Lite\Component\File\MimeInfo;
 use Lite\Component\Server;
 use Lite\Component\Upload\Exception\UploadException;
+use function Lite\func\_tl;
 
 /**
  * 文件上传配置
@@ -82,7 +83,7 @@ class BaseConfig{
 		if($check_server_config){
 			$server_max_size = Server::getUploadMaxSize();
 			if($server_max_size<$file_max_size){
-				throw new UploadException('Server allow max upload size in-conformity');
+				throw new UploadException(_tl('Server allow max upload size in-conformity'));
 			}
 		}
 		$this->file_max_size = $file_max_size;

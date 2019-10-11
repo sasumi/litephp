@@ -4,6 +4,7 @@ namespace Lite\Component\Upload;
 
 use Lite\Component\Upload\Config\LocalConfig;
 use Lite\Component\Upload\Exception\UploadException;
+use function Lite\func\_tl;
 
 /**
  * 文件上传至web服务器
@@ -30,7 +31,10 @@ class UploadLocal extends Upload{
 		}
 		$rst = move_uploaded_file($file, $new_file);
 		if(!$rst){
-			throw new UploadException("Upload file move fail:$file => $new_file");
+			throw new UploadException(_tl("Upload file move fail: {org_file} => {new_file}", [
+				'org_file' => $file,
+				'new_file' => $new_file,
+			]));
 		}
 		return $file_name;
 	}
