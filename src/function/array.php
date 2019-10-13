@@ -489,21 +489,14 @@ namespace Lite\func {
 	}
 
 	/**
-	 * 创建Excel等电子表格里面的表头序列
-	 * @param $column_size
+	 * 创建Excel等电子表格里面的表头序列列表
+	 * @param int $column_size
 	 * @return array
 	 */
 	function array_make_spreadsheet_columns($column_size){
 		$ret = [];
-		$az_len = 26;
-		$as = 65;
-		for($i = 0; $i < $column_size; $i++){
-			$str = '';
-			if($i >= $az_len){
-				$str .= chr($as + intval($i/$az_len) - 1);
-			}
-			$str .= chr($as + $i%$az_len);
-			$ret[] = $str;
+		for($column = 1; $column <= $column_size; $column++){
+			$ret[] = get_spreadsheet_column($column);
 		}
 		return $ret;
 	}

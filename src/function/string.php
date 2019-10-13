@@ -5,7 +5,9 @@
  * Date: 2015/3/30
  * Time: 11:19
  */
+
 namespace Lite\func;
+
 use Lite\I18N\Lang;
 
 /**
@@ -24,14 +26,14 @@ function substr_utf8($string, $length, $tail = '...', &$over_length = false){
 	do{
 		if(preg_match("/[0-9a-zA-Z]/", $chars[$i])){
 			$m++;
-		} else{
+		}else{
 			$n++;
 		}
 		//非英文字节,
-		$k = $n/3+$m/2;
-		$l = $n/3+$m;
+		$k = $n/3 + $m/2;
+		$l = $n/3 + $m;
 		$i++;
-	} while($k<$length);
+	} while($k < $length);
 	$str1 = mb_substr($string, 0, $l, 'utf-8');
 	if($str1 != $string){
 		$over_length = true;
@@ -53,13 +55,13 @@ function explode_by($delimiters, $str, $trim_and_clear = true){
 	if(is_string($delimiters)){
 		$delimiters = str_split_by_charset($delimiters);
 	}
-	if(count($delimiters)>1){
+	if(count($delimiters) > 1){
 		$des = $delimiters;
 		array_shift($des);
-		$replacements = array_fill(0, count($delimiters)-1, $delimiters[0]);
+		$replacements = array_fill(0, count($delimiters) - 1, $delimiters[0]);
 		$str = str_replace($des, $replacements, $str);
 	}
-	
+
 	$tmp = explode($delimiters[0], $str);
 	return $trim_and_clear ? array_clear_empty(array_trim_fields($tmp)) : $tmp;
 }
@@ -83,7 +85,7 @@ function parse_str_without_limitation($string, &$result){
 		$k = key($params);
 		if(!isset($result[$k])){
 			$result += $params;
-		} else {
+		}else{
 			$result[$k] = array_merge_recursive_distinct($result[$k], $params[$k]);
 		};
 	}
@@ -100,7 +102,7 @@ function parse_str_without_limitation($string, &$result){
 function str_split_by_charset($str, $len = 1, $charset = 'UTF-8'){
 	$arr = array();
 	$strLen = mb_strlen($str, $charset);
-	for($i = 0; $i<$strLen; $i++){
+	for($i = 0; $i < $strLen; $i++){
 		$arr[] = mb_substr($str, $i, $len, $charset);
 	}
 	return $arr;
@@ -136,7 +138,7 @@ function int2str($data){
 		foreach($data as $k => $item){
 			$data[$k] = int2str($item);
 		}
-	} else{
+	}else{
 		return (string)$data;
 	}
 	return $data;
@@ -209,6 +211,22 @@ function _tl($text, $param = []){
 }
 
 /**
+ * 获取Excel等电子表格中列名
+ * @param string $column 列序号，由1开始
+ * @return string
+ */
+function get_spreadsheet_column($column){
+	$numeric = ($column - 1)%26;
+	$letter = chr(65 + $numeric);
+	$num2 = intval(($column - 1)/26);
+	if($num2 > 0){
+		return get_spreadsheet_column($num2).$letter;
+	}else{
+		return $letter;
+	}
+}
+
+/**
  * 数字金额转换成中文大写金额的函数
  * String Int  $num  要转换的小写数字或小写字符串
  * return 大写字母
@@ -222,25 +240,25 @@ function get_traditional_currency($num){
 	$c2 = "分角元拾佰仟万拾佰仟亿";
 	$num = round($num, 2);
 	$num = $num*100;
-	if(strlen($num)>10){
+	if(strlen($num) > 10){
 		throw new \Exception('currency number overflow');
 	}
 	$i = 0;
 	$c = "";
 	while(1){
 		if($i == 0){
-			$n = substr($num, strlen($num)-1, 1);
-		} else{
+			$n = substr($num, strlen($num) - 1, 1);
+		}else{
 			$n = $num%10;
 		}
 		$p1 = substr($c1, 3*$n, 3);
 		$p2 = substr($c2, 3*$i, 3);
 		if($n != '0' || ($n == '0' && ($p2 == '亿' || $p2 == '万' || $p2 == '元'))){
 			$c = $p1.$p2.$c;
-		} else{
+		}else{
 			$c = $p1.$c;
 		}
-		$i = $i+1;
+		$i = $i + 1;
 		$num = $num/10;
 		$num = (int)$num;
 		if($num == 0){
@@ -249,24 +267,24 @@ function get_traditional_currency($num){
 	}
 	$j = 0;
 	$s_len = strlen($c);
-	while($j<$s_len){
+	while($j < $s_len){
 		$m = substr($c, $j, 6);
 		if($m == '零元' || $m == '零万' || $m == '零亿' || $m == '零零'){
 			$left = substr($c, 0, $j);
-			$right = substr($c, $j+3);
+			$right = substr($c, $j + 3);
 			$c = $left.$right;
-			$j = $j-3;
-			$s_len = $s_len-3;
+			$j = $j - 3;
+			$s_len = $s_len - 3;
 		}
-		$j = $j+3;
+		$j = $j + 3;
 	}
 
-	if(substr($c, strlen($c)-3, 3) == '零'){
-		$c = substr($c, 0, strlen($c)-3);
+	if(substr($c, strlen($c) - 3, 3) == '零'){
+		$c = substr($c, 0, strlen($c) - 3);
 	}
 	if(empty($c)){
 		return "零元整";
-	} else{
+	}else{
 		return $c."整";
 	}
 }
@@ -295,7 +313,7 @@ function password_check($password, $rules = array()){
 		'SPC' => [' ', '空格'],
 	);
 
-	if($rules['MIN_LEN'] && strlen($password)<$rules['MIN_LEN']){
+	if($rules['MIN_LEN'] && strlen($password) < $rules['MIN_LEN']){
 		throw new \Exception("密码长度至少{$rules['MIN_LEN']}位");
 	}
 	unset($rules['MIN_LEN']);
@@ -317,7 +335,7 @@ function password_check($password, $rules = array()){
  * @return bool
  */
 function str_contains($str, $char_list){
-	for($i = 0; $i<strlen($char_list); $i++){
+	for($i = 0; $i < strlen($char_list); $i++){
 		if(strrchr($str, $char_list[$i]) !== false){
 			return true;
 		}
@@ -333,8 +351,8 @@ function str_contains($str, $char_list){
  */
 function rand_string($len = 6, $source = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ23456789'){
 	$randCode = '';
-	for($i = 0; $i<$len; $i++){
-		$randCode .= substr($source, mt_rand(0, strlen($source)-1), 1);
+	for($i = 0; $i < $len; $i++){
+		$randCode .= substr($source, mt_rand(0, strlen($source) - 1), 1);
 	}
 	return $randCode;
 }
@@ -347,13 +365,13 @@ function rand_string($len = 6, $source = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPR
  */
 function format_size($size, $dot = 2){
 	$obs = '';
-	if($size<0){
+	if($size < 0){
 		$obs = '-';
 		$size = abs($size);
 	}
 	$mod = 1024;
 	$units = explode(' ', 'B KB MB GB TB PB');
-	for($i = 0; $size>$mod; $i++){
+	for($i = 0; $size > $mod; $i++){
 		$size /= $mod;
 	}
 	return $obs.round($size, $dot).''.$units[$i];
@@ -365,7 +383,7 @@ function format_size($size, $dot = 2){
  * @return int
  */
 function resolve_size($val){
-	$last = strtolower($val{strlen($val)-1});
+	$last = strtolower($val{strlen($val) - 1});
 	switch($last){
 		case 'g':
 			$val *= 1024;
@@ -386,7 +404,7 @@ function resolve_size($val){
  */
 function encodeURIComponent($string){
 	$result = "";
-	for($i = 0; $i<strlen($string); $i++){
+	for($i = 0; $i < strlen($string); $i++){
 		$result .= encodeURIComponentByCharacter(urlencode($string[$i]));
 	}
 	return $result;
@@ -528,17 +546,17 @@ function encodeURIComponentByCharacter($char){
 		"%FC" => "%C3%BC",
 		"%FD" => "%C3%BD",
 		"%FE" => "%C3%BE",
-		"%FF" => "%C3%BF"
+		"%FF" => "%C3%BF",
 	);
 	return $map[$char] ?: $char;
 }
 
 function decodeURIComponent($string){
 	$result = "";
-	for($i = 0; $i<strlen($string); $i++){
+	for($i = 0; $i < strlen($string); $i++){
 		$decstr = "";
-		for($p = 0; $p<=8; $p++){
-			$decstr .= $string[$i+$p];
+		for($p = 0; $p <= 8; $p++){
+			$decstr .= $string[$i + $p];
 		}
 		list($decodedstr, $num) = decodeURIComponentByCharacter($decstr);
 		$result .= urldecode($decodedstr);
@@ -965,14 +983,14 @@ function decodeURIComponentByCharacter($str){
 
 	if($char == "%"){
 		return array(substr($str, 0, 3), 2);
-	} else{
+	}else{
 		return array($char, 0);
 	}
 }
 
 function encodeURI($string){
 	$result = "";
-	for($i = 0; $i<strlen($string); $i++){
+	for($i = 0; $i < strlen($string); $i++){
 		$result .= encodeURIByCharacter(urlencode($string[$i]));
 	}
 	return $result;
@@ -1422,10 +1440,10 @@ function encodeURIByCharacter($char){
 
 function decodeURI($string){
 	$result = "";
-	for($i = 0; $i<strlen($string); $i++){
+	for($i = 0; $i < strlen($string); $i++){
 		$decstr = "";
-		for($p = 0; $p<=8; $p++){
-			$decstr .= $string[$i+$p];
+		for($p = 0; $p <= 8; $p++){
+			$decstr .= $string[$i + $p];
 		}
 		list($decodedstr, $num) = decodeURIByCharacter($decstr);
 		$result .= urldecode($decodedstr);
@@ -1885,14 +1903,14 @@ function decodeURIByCharacter($str){
 
 	if($char == "%"){
 		return array(substr($str, 0, 3), 2);
-	} else{
+	}else{
 		return array($char, 0);
 	}
 }
 
 function escape($string){
 	$result = "";
-	for($i = 0; $i<strlen($string); $i++){
+	for($i = 0; $i < strlen($string); $i++){
 		$result .= escapeByCharacter(urlencode($string[$i]));
 	}
 	return $result;
@@ -2000,10 +2018,10 @@ function escapeByCharacter($char){
 
 function unescape($string){
 	$result = "";
-	for($i = 0; $i<strlen($string); $i++){
+	for($i = 0; $i < strlen($string); $i++){
 		$decstr = "";
-		for($p = 0; $p<=5; $p++){
-			$decstr .= $string[$i+$p];
+		for($p = 0; $p <= 5; $p++){
+			$decstr .= $string[$i + $p];
 		}
 		list($decodedstr, $num) = unEscapeByCharacter($decstr);
 		$result .= urldecode($decodedstr);
@@ -2118,7 +2136,7 @@ function unEscapeByCharacter($str){
 
 	if($char == "%"){
 		return array(substr($str, 0, 3), 2);
-	} else{
+	}else{
 		return array($char, 0);
 	}
 }
@@ -2128,7 +2146,6 @@ function unEscapeByCharacter($str){
  * Uses the best cryptographically secure method
  * for all supported platforms with fallback to an older,
  * less secure version.
- *
  * @param bool $trim
  * @return string
  */
@@ -2136,7 +2153,7 @@ function generate_guid($trim = true){
 	// Windows
 	if(function_exists('com_create_guid') === true){
 		if($trim === true)
-			return trim(com_create_guid(), '{}'); else
+			return trim(com_create_guid(), '{}');else
 			return com_create_guid();
 	}
 
@@ -2154,11 +2171,6 @@ function generate_guid($trim = true){
 	$hyphen = chr(45);                  // "-"
 	$lbrace = $trim ? "" : chr(123);    // "{"
 	$rbrace = $trim ? "" : chr(125);    // "}"
-	$guidv4 = $lbrace .
-		substr($charid, 0, 8) . $hyphen .
-		substr($charid, 8, 4) . $hyphen .
-		substr($charid, 12, 4) . $hyphen .
-		substr($charid, 16, 4) . $hyphen .
-		substr($charid, 20, 12) . $rbrace;
+	$guidv4 = $lbrace.substr($charid, 0, 8).$hyphen.substr($charid, 8, 4).$hyphen.substr($charid, 12, 4).$hyphen.substr($charid, 16, 4).$hyphen.substr($charid, 20, 12).$rbrace;
 	return $guidv4;
 }
