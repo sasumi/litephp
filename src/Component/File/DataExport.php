@@ -1,13 +1,12 @@
 <?php
 namespace Lite\Component\File;
 
-use Exception;
-use Lite\Component\Net\Http;
 use Lite\DB\Model;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use PHPExcel_Style_NumberFormat;
 use SpreadsheetReader;
+use function Lite\func\get_spreadsheet_column;
 use function Lite\func\is_assoc_array;
 
 /**
@@ -127,28 +126,6 @@ abstract class DataExport{
 	}
 
 	/**
-	 * 取得$i列,$j行的对应单元格,如A1,B2,AA1,CC3
-	 * cell(1,1) ==> A1 为了容易理解这里从1开始
-	 * @param int $i 对应的列数 从第0格开始
-	 * @param int $j 对应的行数 从第0行开始
-	 * @return string
-	 * @throws Exception $e
-	 */
-	private static function getCell($i = 1, $j = 1){
-		if($i == 0 || $j == 0){
-			throw new Exception("Excel Cell Begin from 1");
-		}
-		if($i>26){
-			$num1 = floor(($i-1)/26)+64;
-			$num2 = ceil(($i-1)%26)+65;
-			$num = chr($num1).chr($num2);
-		} else{
-			$num = chr(64+$i);
-		}
-		return $num.$j;
-	}
-
-	/**
 	 * 导出excel并下载
 	 * @param array $data 数据
 	 * @param array $header 头部
@@ -180,13 +157,13 @@ abstract class DataExport{
 		$sheet = $excel->setActiveSheetIndex(0);
 		//设置头部
 		foreach($header as $key => $head_name){
-			$cell = self::getCell($key+1, 1);
+			$cell = get_spreadsheet_column($key+1).'1';
 			$sheet->setCellValue($cell, $head_name);
 		}
 		//设置数据
 		foreach($data as $j => $row){
 			foreach($row as $x => $val){
-				$cell = self::getCell($x+1, $j+2);
+				$cell = get_spreadsheet_column($x+1).($j+2);
 				if(is_numeric($val) && strlen($val.'')>8){
 					$val = " ".$val;
 				}

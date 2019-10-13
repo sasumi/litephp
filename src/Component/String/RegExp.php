@@ -1,17 +1,12 @@
 <?php
-namespace Lite\Component\String;
 
-/**
- * 常用正则表达式
- */
-abstract class RegExp {
-	const REG_MOBILE = '';
-	const REG_PHONE = '/^[0-9]{7,13}$/';
-	const REG_AREA_CODE = '/^0[1-2][0-9]$|^0[1-9][0-9]{2}$/';
-	const REG_POSTCODE = '/^[0-9]{6}$/';
-	const REG_EMAIL = '/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/';
-	const REG_CHINESE_ID = '/^\d{14}(\d{1}|\d{4}|(\d{3}[xX]))$/';
-	const REG_REQUIRE = '/^[\s|\S]+$/';
-	const REG_QQ = '/^\d{5,13}$/';
-	const REG_VAR_NAME = '/^\w+$/';
-}
+namespace Lite\Component\String\RegExp;
+
+const EMAIL_SIMPLE = '/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/';
+const CHINA_AREA_CODE = '/^0[1-2][0-9]$|^0[1-9][0-9]{2}$/';
+const CHINA_POSTCODE = '/^[0-9]{6}$/';
+const CHINA_MOBILE_NUMBER = '/^[1][0-9]{10}$/';
+const CHINESE_ID = '/^\d{14}(\d{1}|\d{4}|(\d{3}[xX]))$/';
+const REQUIRE_ANYTHING = '/^[\s|\S]+$/';
+const QQ = '/^\d{5,13}$/';
+const VAR_NAME = '/^[a-zA-Z][a-zA-Z0-9_]*$/';

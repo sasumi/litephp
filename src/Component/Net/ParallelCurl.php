@@ -2,7 +2,7 @@
 namespace Lite\Component\Net;
 
 /**
- * ??CURL?????curl_multi_*??????
+ * Multiple curl request
  */
 abstract class ParallelCurl {
 	public static $SINGLE_DEFAULT_TIMEOUT = 10;
@@ -16,19 +16,18 @@ abstract class ParallelCurl {
 	 */
 	public static function addRequest($param, $callback){
 		self::$requests[] = array_merge(array(
-			'url' => '',
-			'data' => null,
-			'method' => 'get',
-			'max_redirect' => 2, //最大302次数
-			'timeout' => self::$SINGLE_DEFAULT_TIMEOUT,
-			'user_agent' => self::$DEFAULT_USER_AGENT,
-			'callback' => $callback,
+			'url'          => '',
+			'data'         => null,
+			'method'       => 'get',
+			'max_redirect' => 2, //max redirect count for HTTP 302 status
+			'timeout'      => self::$SINGLE_DEFAULT_TIMEOUT,
+			'user_agent'   => self::$DEFAULT_USER_AGENT,
+			'callback'     => $callback,
 		), $param);
 	}
 
 	/**
 	 * send all request
-	 * @return mixed
 	 */
 	public static function send(){
 		$mh = curl_multi_init();
