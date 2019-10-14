@@ -207,8 +207,8 @@ function calc_actual_date($start, $days){
 
 /**
  * 计算时间差到文本
- * @param $start
- * @param $end
+ * @param string $start
+ * @param string $end
  * @return string
  */
 function time_range($start, $end){
