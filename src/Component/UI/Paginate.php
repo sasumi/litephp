@@ -77,6 +77,10 @@ class Paginate implements PaginateInterface {
 	 * @return $this
 	 */
 	public function setConfig($config){
+		if($config['sizes']){
+			$this->config['sizes'] = $config['sizes'];
+			unset($config['sizes']);
+		}
 		$this->config = array_merge_recursive_distinct($this->config, $config);
 		return $this;
 	}
