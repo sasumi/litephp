@@ -630,6 +630,16 @@ abstract class Model extends DAO{
 	}
 
 	/**
+	 * 清空数据
+	 * @return bool
+	 */
+	public static function truncate(){
+		$obj = static::meta();
+		$table = $obj->getTableFullName();
+		return $obj->getDbDriver(self::DB_WRITE)->delete($table, '', 0);
+	}
+
+	/**
 	 * 获取所有记录
 	 * @param bool $as_array return as array
 	 * @param string $unique_key 用于组成返回数组的唯一性key
