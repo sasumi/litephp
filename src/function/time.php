@@ -137,6 +137,15 @@ function microtime_to_date($microtime, $format='Y-m-d H:i:s'){
 }
 
 /**
+ * check time string is empty (cmp to 1970)
+ * @param $time_str
+ * @return bool
+ */
+function time_empty($time_str){
+	return !$time_str || date('Ymd', strtotime($time_str)) === '19700101';
+}
+
+/**
  * 格式化友好显示时间
  * @param $timestamp
  * @param bool $as_html 是否使用span包裹
