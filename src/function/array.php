@@ -6,6 +6,10 @@
  * Time: 14:35
  */
 namespace Lite\func {
+	use Exception;
+	use RecursiveArrayIterator;
+	use RecursiveIteratorIterator;
+
 	/**
 	 * Array group by function
 	 * group array(); by by_key
@@ -108,6 +112,7 @@ namespace Lite\func {
 
 	/**
 	 * 重新组织PHP $_FILES数组格式
+	 * 以正确name维度返回数组
 	 * @param array $input
 	 * @return array
 	 */
@@ -121,7 +126,7 @@ namespace Lite\func {
 					continue;
 				}
 				$stack = [&$pointer];
-				$iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($value), \RecursiveIteratorIterator::SELF_FIRST);
+				$iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($value), RecursiveIteratorIterator::SELF_FIRST);
 				foreach($iterator as $key => $v){
 					array_splice($stack, $iterator->getDepth()+1);
 					$pointer = &$stack[count($stack)-1];
@@ -527,7 +532,7 @@ namespace Lite\func {
 	function assert_array_has_keys($arr, $keys){
 		foreach($keys as $key){
 			if(!array_key_exists($key, $arr)){
-				throw new \Exception('Array key no exists:'.$key);
+				throw new Exception('Array key no exists:'.$key);
 			}
 		}
 	}
@@ -590,7 +595,7 @@ namespace Lite\func {
 	 * @param string $rel_key
 	 * @return array|int
 	 */
-	function array_insert_after(array $src_array = array(), $data, $rel_key = '') {
+	function array_insert_after(array $src_array, $data, $rel_key = '') {
 		if(!in_array($rel_key, array_keys($src_array))) {
 			return array_push($src_array, $data);
 		} else {
