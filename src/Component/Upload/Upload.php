@@ -98,21 +98,23 @@ abstract class Upload{
 	 * @param array $rules 规则配置
 	 * <pre>
 	 * 规则配置
-	 * max_size:最大尺寸，由于文件已经上传，缺省为空,
-	 * min_size:最小文件尺寸,
-	 * mime_list: 允许mime清单,
-	 * ext_list: 扩展列表（会与mime_list组合使用，由扩展反向检测mime）
+	 *   assert_upload_file:必须为PHP上传文件
+	 *   max_size:最大尺寸，由于文件已经上传，缺省为空,
+	 *   min_size:最小文件尺寸,
+	 *   mime_list: 允许mime清单,
+	 *   ext_list: 扩展列表（会与mime_list组合使用，由扩展反向检测mime）
 	 * </pre>
 	 */
 	public static function checkUploadFile($file, $rules = []){
 		$rules = array_merge([
-			'max_size'  => 0,
-			'min_size'  => 1,
-			'mime_list' => [],
-			'ext_list'  => [],
+			'assert_upload_file' => true,
+			'max_size'           => 0,
+			'min_size'           => 1,
+			'mime_list'          => [],
+			'ext_list'           => [],
 		], $rules);
 
-		if(!is_uploaded_file($file)){
+		if($rules['assert_upload_file'] && !is_uploaded_file($file)){
 			throw new UploadFileAccessException(_tl('No upload file detected'), null, $file);
 		}
 
