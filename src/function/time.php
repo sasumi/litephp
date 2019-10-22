@@ -185,6 +185,24 @@ function pretty_time($timestamp, $as_html = false){
 }
 
 /**
+ * 补充日期范围，填充中间空白天数
+ * @param $start
+ * @param $end
+ * @param string $format
+ * @return array
+ */
+function make_date_ranges($start, $end, $format = 'Y-m-d'){
+	$start = is_string($start) ? strtotime($start) : $start;
+	$end = is_string($end) ? strtotime($end) : $end;
+
+	$ret = [];
+	for($i = $start; $i <= $end; $i += ONE_DAY){
+		$ret[] = date($format, $i);
+	}
+	return $ret;
+}
+
+/**
  * 获取从$start开始经过$days个工作日后的日期
  * 实际日期 = 工作日数 + 周末天数 -1
  * @param string $start 开始日期
