@@ -86,24 +86,24 @@ function time_get_month_period_ranges($start_str, $end_str){
 
 /**
  * 过滤时间范围，补充上时分秒
- * @param $ranges
- * @param string $default_start
- * @param string $default_end
- * @param bool $datetime
+ * @param array $ranges 时间范围（开始，结束）
+ * @param string|int $default_start 默认开始时间
+ * @param string|int $default_end 默认结束时间
+ * @param bool $as_datetime 是否以日期+时间形式返回
  * @return array [开始时间,结束时间]
  */
-function filter_date_range($ranges, $default_start='', $default_end='', $datetime=false){
+function filter_date_range($ranges, $default_start = null, $default_end = null, $as_datetime = false){
 	list($start, $end) = $ranges ?: [];
 	if(!isset($start) && $default_start){
 		$start = is_numeric($default_start) ? date('Y-m-d', $default_start) : $default_start;
 	}
-	if($datetime && $start && !$default_start){
+	if($as_datetime && $start){
 		$start .= ' 00:00:00';
 	}
 	if(!isset($end) && $default_end){
 		$end = is_numeric($default_end) ? date('Y-m-d', $default_end) : $default_end;
 	}
-	if($datetime && $end && !$default_end){
+	if($as_datetime && $end){
 		$end .= ' 23:59:59';
 	}
 	return [$start, $end];
@@ -191,7 +191,8 @@ function pretty_time($timestamp, $as_html = false){
  * @param string $format
  * @return array
  */
-function make_date_ranges($start, $end, $format = 'Y-m-d'){
+function make_date_ranges($start, $end = '', $format = 'Y-m-d'){
+	$end = $end ?: time();
 	$start = is_string($start) ? strtotime($start) : $start;
 	$end = is_string($end) ? strtotime($end) : $end;
 
