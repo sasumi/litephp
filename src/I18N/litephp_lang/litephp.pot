@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-11 11:23+0800\n"
+"POT-Creation-Date: 2019-10-23 16:51+0800\n"
 "PO-Revision-Date: 2019-10-08 22:45+0800\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,28 +63,40 @@ msgstr ""
 msgid "UPLOAD_UNKNOWN_ERROR({code})"
 msgstr ""
 
-#: src/Component/Upload/Upload.php:116
+#: src/Component/Upload/Upload.php:122
 msgid "No upload file detected"
 msgstr ""
 
-#: src/Component/Upload/Upload.php:121
+#: src/Component/Upload/Upload.php:127
 msgid "Upload file content is empty"
 msgstr ""
 
-#: src/Component/Upload/Upload.php:129
+#: src/Component/Upload/Upload.php:135
 msgid "Upload file size bigger than config, {file_size} > {max_size}"
 msgstr ""
 
-#: src/Component/Upload/Upload.php:133
+#: src/Component/Upload/Upload.php:139
 msgid "Upload file size smaller than config {file_size} < {min_size}"
 msgstr ""
 
-#: src/Component/Upload/Upload.php:142
+#: src/Component/Upload/Upload.php:148
 msgid "Upload file type(mime：{file_mime}) no support by config mime list:{mime_list}"
 msgstr ""
 
-#: src/Component/Upload/Upload.php:152
+#: src/Component/Upload/Upload.php:158
 msgid "Upload file type(mime：{file_mime}) no support by config extension list:{ext_list}"
+msgstr ""
+
+#: src/Component/Upload/Upload.php:168
+msgid "Upload file type(mime：{file_mime}) must be an image"
+msgstr ""
+
+#: src/Component/Upload/Upload.php:172
+msgid "Image resolution width({width})px less than required:{require_width}px"
+msgstr ""
+
+#: src/Component/Upload/Upload.php:178
+msgid "Image resolution height({height})px less than required:{require_height}px"
 msgstr ""
 
 #: src/Component/Upload/UploadLocal.php:34

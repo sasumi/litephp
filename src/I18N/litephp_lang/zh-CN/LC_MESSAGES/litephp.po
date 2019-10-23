@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-11 11:23+0800\n"
-"PO-Revision-Date: 2019-10-11 11:27+0800\n"
+"POT-Creation-Date: 2019-10-23 16:51+0800\n"
+"PO-Revision-Date: 2019-10-23 16:52+0800\n"
 "Last-Translator: sasumi <cnsasumi@outlook.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -62,33 +62,46 @@ msgstr "系统上传文件扩展错误"
 msgid "UPLOAD_UNKNOWN_ERROR({code})"
 msgstr "上传文件系统未知错误（{code}）"
 
-#: src/Component/Upload/Upload.php:116
+#: src/Component/Upload/Upload.php:122
 msgid "No upload file detected"
 msgstr "找不到上传文件"
 
-#: src/Component/Upload/Upload.php:121
+#: src/Component/Upload/Upload.php:127
 msgid "Upload file content is empty"
 msgstr "上载文件内容为空"
 
-#: src/Component/Upload/Upload.php:129
+#: src/Component/Upload/Upload.php:135
 msgid "Upload file size bigger than config, {file_size} > {max_size}"
 msgstr "上传文件大小大于配置，{file_size} > {max_size}"
 
-#: src/Component/Upload/Upload.php:133
+#: src/Component/Upload/Upload.php:139
 msgid "Upload file size smaller than config {file_size} < {min_size}"
 msgstr "上传文件大小小于配置，{file_size} < {min_size}"
 
-#: src/Component/Upload/Upload.php:142
+#: src/Component/Upload/Upload.php:148
 msgid ""
 "Upload file type(mime：{file_mime}) no support by config mime list:"
 "{mime_list}"
 msgstr "上传文件类型（mime：{file_mime}）不在系统配置列表中：{mime_list}"
 
-#: src/Component/Upload/Upload.php:152
+#: src/Component/Upload/Upload.php:158
 msgid ""
-"Upload file type(mime：{file_mime}) no support by config extension "
-"list:{ext_list}"
+"Upload file type(mime：{file_mime}) no support by config extension list:"
+"{ext_list}"
 msgstr "上传文件类型（mime：{file_mime}）不在系统配置列表中：{ext_list}"
+
+#: src/Component/Upload/Upload.php:168
+msgid "Upload file type(mime：{file_mime}) must be an image"
+msgstr "上传文件（mime：{file_mime}）必须为图片"
+
+#: src/Component/Upload/Upload.php:172
+msgid "Image resolution width({width})px less than required:{require_width}px"
+msgstr "图片分辨宽（{width} 像素）小于系统要求：{require_width}像素"
+
+#: src/Component/Upload/Upload.php:178
+msgid ""
+"Image resolution height({height})px less than required:{require_height}px"
+msgstr "图片分辨高（{height} 像素）小于系统要求：{require_height}像素"
 
 #: src/Component/Upload/UploadLocal.php:34
 msgid "Upload file move fail: {org_file} => {new_file}"
@@ -97,3 +110,10 @@ msgstr "上传文件移动失败：{org_file} => {new_file}"
 #: test/lang.php:11
 msgid "hello world"
 msgstr "你好，码农"
+
+#~ msgid "Image resolution width({width}) less than required:{require_width}"
+#~ msgstr "图片分辨宽（{width}）小于系统要求：{require_width}"
+
+#~ msgid ""
+#~ "Image resolution height({height}) less than required:{require_height}"
+#~ msgstr "图片分辨高（{height}）小于系统要求：{require_height}"

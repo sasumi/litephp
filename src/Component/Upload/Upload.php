@@ -103,15 +103,19 @@ abstract class Upload{
 	 *   min_size:最小文件尺寸,
 	 *   mime_list: 允许mime清单,
 	 *   ext_list: 扩展列表（会与mime_list组合使用，由扩展反向检测mime）
+	 *   resolution_min_width: 最小宽度（如果文件为图片）
+	 *   resolution_min_height: 最小高度（如果文件为图片）
 	 * </pre>
 	 */
 	public static function checkUploadFile($file, $rules = []){
 		$rules = array_merge([
-			'assert_upload_file' => true,
-			'max_size'           => 0,
-			'min_size'           => 1,
-			'mime_list'          => [],
-			'ext_list'           => [],
+			'assert_upload_file'    => true,
+			'max_size'              => 0,
+			'min_size'              => 1,
+			'mime_list'             => [],
+			'ext_list'              => [],
+			'resolution_min_width'  => 0,
+			'resolution_min_height' => 0,
 		], $rules);
 
 		if($rules['assert_upload_file'] && !is_uploaded_file($file)){
@@ -155,6 +159,26 @@ abstract class Upload{
 					'file_mime' => $file_mime,
 					'ext_list'  => join(',', $rules['ext_list']),
 				]), 0, $rules['ext_list']);
+			}
+		}
+
+		if($rules['resolution_min_width'] || $rules['resolution_min_height']){
+			$file_mime = MimeInfo::getMimeByFile($file);
+			if(!MimeInfo::isImage($file_mime)){
+				throw new UploadTypeException(_tl('Upload file type(mime：{file_mime}) must be an image', ['file_mime' => $file_mime,]));
+			}
+			list($w, $h) = getimagesize($file);
+			if($rules['resolution_min_width'] && $rules['resolution_min_width'] > $w){
+				throw new UploadTypeException(_tl('Image resolution width({width})px less than required:{require_width}px', [
+					'width'         => $w,
+					'require_width' => $rules['resolution_min_width'],
+				]));
+			}
+			if($rules['resolution_min_height'] && $rules['resolution_min_height'] > $h){
+				throw new UploadTypeException(_tl('Image resolution height({height})px less than required:{require_height}px', [
+					'height'         => $h,
+					'require_height' => $rules['resolution_min_height'],
+				]));
 			}
 		}
 	}
