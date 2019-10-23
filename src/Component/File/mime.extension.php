@@ -959,6 +959,7 @@ return [
 	'xls'         => [
 		'application/vnd.ms-excel',
 		'application/zip', //WPS电子表格
+		'application/xml', //有时候会使用xml格式尝试适配Excel
 		'application/vnd.ms-office',
 	],
 	'xlsb'        => ['application/vnd.ms-excel.sheet.binary.macroenabled.12'],
