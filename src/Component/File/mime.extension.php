@@ -967,6 +967,7 @@ return [
 	'xlsx'        => [
 		'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 		'application/zip', //WPS电子表格
+		'application/xml', //有时候会使用xml格式尝试适配Excel
 		'application/vnd.ms-office',
 	],
 	'xlt'         => ['application/vnd.ms-excel'],
