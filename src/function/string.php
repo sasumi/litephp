@@ -67,29 +67,70 @@ function explode_by($delimiters, $str, $trim_and_clear = true){
 }
 
 /**
- * Do the same than parse_str without max_input_vars limitation:
- * Parses $string as if it were the query string passed via a URL and sets variables in the current scope.
- * @param string $string array string to parse (not altered like in the original parse_str(), use the second parameter!)
- * @param array $result array  If the second parameter is present, variables are stored in this variable as array elements
- * @return bool true or false if $string is an empty string
- * @author rubo77 at https://gist.github.com/rubo77/6821632
- **/
-function parse_str_without_limitation($string, &$result){
+ * 突破 max_input_vars 限制，通过解析字符串方式获取变量
+ * @param $string
+ * @param bool $extra_to_post
+ * @return array
+ */
+function parse_str_without_limitation($string, $extra_to_post = false){
+	$result = [];
 	if($string === ''){
-		return false;
+		return $result;
 	}
-	$result = array();
+	// find the pairs "name=value"
 	$pairs = explode('&', $string);
 	foreach($pairs as $pair){
+		// use the original parse_str() on each element
+		$dynamicKey = (false !== strpos($pair, '[]=')) || (false !== strpos($pair, '%5B%5D='));
 		parse_str($pair, $params);
 		$k = key($params);
 		if(!isset($result[$k])){
 			$result += $params;
 		}else{
-			$result[$k] = array_merge_recursive_distinct($result[$k], $params[$k]);
-		};
+			if(is_array($result[$k])){
+				$result[$k] = __array_merge_distinct_with_dynamic_key($result[$k], $params[$k], $dynamicKey);
+			}else{
+				$result += $params;
+			}
+		}
 	}
-	return true;
+	if($extra_to_post && $result){
+		foreach($result as $k=>$v){
+			$_POST[$k] = $v;
+		}
+	}
+	return $result;
+}
+
+/**
+ * merge data
+ * @param array $array1
+ * @param array $array2
+ * @param $dynamicKey
+ * @return array
+ */
+function __array_merge_distinct_with_dynamic_key(array &$array1, array &$array2, $dynamicKey){
+	$merged = $array1;
+	foreach($array2 as $key => &$value){
+		if(is_array($value) && isset ($merged [$key]) && is_array($merged [$key])){
+			$merged [$key] = __array_merge_distinct_with_dynamic_key($merged [$key], $value, $dynamicKey);
+		}else{
+			if($dynamicKey){
+				if(!isset($merged[$key])){
+					$merged[$key] = $value;
+				}else{
+					if(is_array($merged[$key])){
+						$merged[$key] = array_merge_recursive($merged[$key], $value);
+					}else{
+						$merged[] = $value;
+					}
+				}
+			}else{
+				$merged[$key] = $value;
+			}
+		}
+	}
+	return $merged;
 }
 
 /**
