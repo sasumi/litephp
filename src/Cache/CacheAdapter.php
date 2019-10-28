@@ -21,7 +21,7 @@ abstract class CacheAdapter implements CacheInterface{
 	/**
 	 * 单例
 	 * @param array $config
-	 * @return CacheAdapter
+	 * @return static
 	 */
 	final public static function instance(array $config = array()){
 		$class = get_called_class();
@@ -45,7 +45,6 @@ abstract class CacheAdapter implements CacheInterface{
 		if($cache_class == self::class){
 			throw new Exception('Cache method not callable in '.self::class);
 		}
-		$key .= ':'.$expired_seconds;
 		$data = $this->get($key);
 		if(!isset($data)){
 			$data = call_user_func($fetcher);
