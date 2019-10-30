@@ -1,6 +1,8 @@
 <?php
 namespace Lite\Component\String;
 
+use Lite\Exception\Exception;
+use function Lite\func\_tl;
 use function Lite\func\array_clear_null;
 use function Lite\func\array_first;
 use function Lite\func\h;
@@ -265,6 +267,63 @@ trait Html{
 	}
 
 	/**
+	 * 构建进度条（如果没有设置value，可充当loading效果使用）
+	 * @param null|number $value
+	 * @param null|number $max
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function htmlProgress($value = null, $max = null, $attributes = []){
+		//如果有max，必须大于0
+		if(isset($max) && floatval($max) <= 0){
+			throw new Exception(_tl('Progress max should bigger or equal to zero'));
+		}
+		if(isset($value)){
+			//有设置max，value范围必须在0~max
+			if(isset($max) && $value > $max){
+				throw new Exception(_tl('Progress value should less or equal than max'));
+			}
+			//没有设置max，value范围必须在0~1
+			if(!isset($value) && ($value > 1 || $value < 0)){
+				throw new Exception(_tl('Progress value should between 0 to 1'));
+			}
+		}
+		$attributes['max'] = $max;
+		$attributes['value'] = $value;
+		return static::htmlElement('progress', $attributes);
+	}
+
+	/**
+	 * Html循环滚动进度条
+	 * alias to htmlProgress
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function htmlLoadingBar($attributes = []){
+		return static::htmlProgress(null, null, $attributes);
+	}
+
+	/**
+	 * Html范围选择器
+	 * @param $name
+	 * @param string $value 当前值
+	 * @param int $min 最小值
+	 * @param int $max 最大值
+	 * @param int $step 步长
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function htmlRange($name, $value, $min = 0, $max = 100, $step = 1, $attributes = []){
+		$attributes['type'] = 'range';
+		$attributes['name'] = $name;
+		$attributes['value'] = $value;
+		$attributes['min'] = $min;
+		$attributes['max'] = $max;
+		$attributes['step'] = $step;
+		return static::htmlElement('input', $attributes);
+	}
+
+	/**
 	 * 获取HTML摘要信息
 	 * @param string $html_content
 	 * @param int $len
@@ -272,11 +331,11 @@ trait Html{
 	 */
 	public static function htmlAbstract($html_content, $len = 200){
 		$str = str_replace(array("\n", "\r"), "", $html_content);
-		$str = preg_replace('/<br([^>]*)>/i', '$_NEW_LINE_', $str);
+		$str = preg_replace('/<br([^>]*)>/i', '$L', $str);
 		$str = strip_tags($str);
 		$str = html_entity_decode($str, ENT_QUOTES);
 		$str = h($str, $len);
-		$str = str_replace('$_NEW_LINE_', '<br/>', $str);
+		$str = preg_replace('/[\\$L]+/', '<br/>', $str);
 
 		//移除头尾空白行
 		$str = preg_replace('/^(<br[^>]*>)*/i', '', $str);
