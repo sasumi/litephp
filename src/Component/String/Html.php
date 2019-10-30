@@ -272,11 +272,11 @@ trait Html{
 	 */
 	public static function htmlAbstract($html_content, $len = 200){
 		$str = str_replace(array("\n", "\r"), "", $html_content);
-		$str = preg_replace('/<br([^>]*)>/i', '$L', $str);
+		$str = preg_replace('/<br([^>]*)>/i', '$_NEW_LINE_', $str);
 		$str = strip_tags($str);
 		$str = html_entity_decode($str, ENT_QUOTES);
 		$str = h($str, $len);
-		$str = preg_replace('/[\\$L]+/', '<br/>', $str);
+		$str = str_replace('$_NEW_LINE_', '<br/>', $str);
 
 		//移除头尾空白行
 		$str = preg_replace('/^(<br[^>]*>)*/i', '', $str);
