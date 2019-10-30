@@ -105,8 +105,8 @@ trait Html{
 	 */
 	public static function htmlOption($text, $value = '', $selected = false, $attributes = []){
 		return static::htmlElement('option', array_merge([
-			'selected' => $selected ?: null,
-			'value'    => $value
+			'selected' => $selected ? 'selected' : null,
+			'value'    => $value,
 		], $attributes), self::htmlFromText($text));
 	}
 
@@ -208,7 +208,7 @@ trait Html{
 	 * @param array $attributes
 	 * @return string
 	 */
-	public static function htmlRadio($name, $value, $title='', $checked = false, $attributes = []){
+	public static function htmlRadio($name, $value, $title = '', $checked = false, $attributes = []){
 		$attributes['type'] = 'radio';
 		$attributes['name'] = $name;
 		$attributes['value'] = $value;
