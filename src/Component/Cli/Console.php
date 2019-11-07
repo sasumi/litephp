@@ -3,6 +3,8 @@ namespace Lite\Component\Cli;
 
 use Lite\Component\Net\Client;
 use function Lite\func\array_first;
+use function Lite\func\pretty_time;
+use function Lite\func\time_range_v;
 
 abstract class Console {
 	//前景色
@@ -213,6 +215,42 @@ abstract class Console {
 			}
 		}
 		return $opts;
+	}
+
+	/**
+	 * 获取任务进度描述文本，格式为：
+	 * 当前函数为独占函数
+	 * @param number $current_index 当前处理序号
+	 * @param number $total 总数
+	 * @param string $format 格式表达
+	 * @return string
+	 */
+	public static function getTasksProgressText($current_index, $total, $format = "\n%NOW_DATE %NOW_TIME [PG:%PROGRESS RT:%REMAINING_TIME]"){
+		static $start_time;
+		if(!$start_time){
+			$start_time = time();
+		}
+
+		$now_date = date('Y/m/d');
+		$now_time = date('H:i:s');
+		$progress = "$current_index/$total";
+
+		$remaining_time = '-';
+		if($current_index){
+			$rt = (time() - $start_time)*($total - $current_index)/$current_index;
+			$remaining_time = time_range_v($rt);
+		}
+		return str_replace([
+			'%NOW_DATE',
+			'%NOW_TIME',
+			'%PROGRESS',
+			'%REMAINING_TIME',
+		], [
+			$now_date,
+			$now_time,
+			$progress,
+			$remaining_time,
+		], $format);
 	}
 
 	/**

@@ -249,17 +249,17 @@ function time_range($start, $end){
  * $str = time_range_v(3601);
  * //1H 0M 1S
  * </pre>
- * @param int $time
+ * @param int $seconds
  * @return string
  */
-function time_range_v($time){
-	$d = floor($time/86400);
-	$time = $time-$d*86400;
-	$h = floor($time/3600);
-	$time = $time-$h*3600;
-	$m = floor($time/60);
-	$time = $time-$m*60;
-	$s = (int)$time;
+function time_range_v($seconds){
+	$d = floor($seconds/86400);
+	$seconds = $seconds-$d*86400;
+	$h = floor($seconds/3600);
+	$seconds = $seconds-$h*3600;
+	$m = floor($seconds/60);
+	$seconds = $seconds-$m*60;
+	$s = (int)$seconds;
 	$str = '';
 	$str .= $d ? $d.'d' : '';
 	$str .= $h ? $h.'h' : ($str ? '0h' : '');
