@@ -2,7 +2,6 @@
 namespace Lite\Component\TPService\Aliyun;
 
 use Exception;
-use function Lite\func\explode_by;
 
 /**
  * 阿里云OSS图片处理器
@@ -41,6 +40,15 @@ class OssImageProcessor {
 	];
 
 	/**
+	 * Base64 Url安全编码
+	 * @param $text
+	 * @return mixed
+	 */
+	public static function base64UrlSafeEncode($text){
+		return str_replace(['+', '/'], ['-', '_'], base64_encode($text));
+	}
+
+	/**
 	 * 判断是否存在图片处理请求
 	 * @param $image_src
 	 * @return bool
@@ -63,13 +71,13 @@ class OssImageProcessor {
 
 		$pos = stripos($image_src, self::OSS_QUERY_KEY);
 		$tail_str = substr($image_src, $pos + strlen(self::OSS_QUERY_KEY));
-		$tmp = explode_by('/', $tail_str);
+		$tmp = explode('/', $tail_str);
 		for($i = 0; $i < count($tmp); $i++){
-			$all = explode_by(',', $tmp[$i]);
+			$all = explode(',', $tmp[$i]);
 			$processor_name = array_shift($all);
 			$param = [];
 			foreach($all as $key => $item){
-				list($k, $v) = explode_by('_', $item);
+				list($k, $v) = explode('_', $item);
 				$param[$k] = $v;
 			}
 			$config[$processor_name] = $param;
@@ -236,9 +244,11 @@ class OssImageProcessor {
 			throw new Exception("图片与水印必须在同一个域名中");
 		}
 		$config = array_merge([
-			'opacity'  => 100,
-			'position' => 'nw',
-			'percent'  => 30,
+			'opacity'         => 100,
+			'position'        => 'nw',
+			'percent'         => 30,
+			'horizonPadding'  => 0, //水平内边距
+			'verticalPadding' => 0, //垂直内边距
 		], $cfg);
 
 		if(!self::WATERMARK_POSITION_MAP[$config['position']]){
@@ -266,7 +276,7 @@ class OssImageProcessor {
 	 */
 	public static function patchWatermarkWithText($image_src, $text, $cfg){
 		$config = array_merge([
-			'type'   => 'wqy-zenhei', //字体
+			'font'   => 'wqy-zenhei', //字体
 			'color'  => '000000', //颜色
 			'size'   => 40, //大小（像素）
 			'shadow' => 50, //阴影透明度（0~100）
@@ -274,14 +284,14 @@ class OssImageProcessor {
 			'fill'   => 0, //是否铺满图片（0，1）
 		], $cfg);
 
-		if(!self::FONT_TYPE_MAP[$config['type']]){
-			throw new Exception("Text type no support:".$config['type']);
+		if(!self::FONT_TYPE_MAP[$config['font']]){
+			throw new Exception("Text type no support:".$config['font']);
 		}
 		//原图
 		$image_src = self::removeWatermark($image_src);
 		return self::addImageProcessor($image_src, self::PROCESSOR_WATERMARK, [
 			'text'   => base64_encode($text),
-			'type'   => base64_encode($config['type']),
+			'type'   => base64_encode($config['font']),
 			'shadow' => $config['shadow'],
 			'rotate' => $config['rotate'],
 			'fill'   => $config['fill'],
