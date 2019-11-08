@@ -47,7 +47,7 @@ class OssImageProcessor {
 	 */
 	public static function existsProcessor($image_src){
 		$pattern = preg_quote(self::OSS_QUERY_KEY);
-		return !!preg_match($pattern, $image_src);
+		return !!preg_match("/$pattern/", $image_src);
 	}
 
 	/**
