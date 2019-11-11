@@ -197,21 +197,6 @@ class OssImageProcessor {
 	}
 
 	/**
-	 * 检测水印支持，水印必须与图片在同一个域名上
-	 * @param string $src
-	 * @param $as_return
-	 * @return bool
-	 * @throws \Exception
-	 */
-	public static function checkWatermarkSupport($src, $as_return){
-		$no_matched = stripos($src, 'ot-img.huapx.com') < 0 && stripos($src, 'prdimg.huapx.com') < 0;
-		if($no_matched && !$as_return){
-			throw new Exception("外站图片暂不支持该项功能：$src");
-		}
-		return !$no_matched;
-	}
-
-	/**
 	 * 确保两个链接在同一个域名中
 	 * @param string $url1
 	 * @param string $url2
