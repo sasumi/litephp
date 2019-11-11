@@ -277,7 +277,7 @@ class OssImageProcessor {
 	public static function patchWatermarkWithText($image_src, $text, $cfg){
 		$config = array_merge([
 			'font'   => 'wqy-zenhei', //字体
-			'color'  => '000000', //颜色
+			'color'  => '000000', //颜色，不带#
 			'size'   => 40, //大小（像素）
 			'shadow' => 50, //阴影透明度（0~100）
 			'rotate' => 0, //旋转角度 （0~360）
@@ -296,7 +296,7 @@ class OssImageProcessor {
 			'rotate' => $config['rotate'],
 			'fill'   => $config['fill'],
 			'size'   => $config['size'],
-			'color'  => $config['color'],
+			'color'  => str_replace('#', '', $config['color']),
 		]);
 	}
 }
