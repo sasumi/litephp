@@ -136,7 +136,6 @@ class Application{
 
 		//路由错误，重定向到404页面
 		else if($ex instanceof RouterException){
-//			Http::sendHttpStatus(404);
 			if($page404 = Config::get('app/page404')){
 				if(is_callable($page404)){
 					call_user_func($page404, $ex->getMessage(), $ex);
