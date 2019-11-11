@@ -117,8 +117,12 @@ abstract class Http extends CSP{
 		$messages = self::STATUS_MESSAGE;
 		$message = $messages[$code];
 		if(!headers_sent() && $message){
-			header('HTTP/1.1 ' . $code . ' ' . $message);
-			header('Status:' . $code . ' ' . $message);        //确保FastCGI模式下正常
+			$sapi_type = php_sapi_name();
+			if(substr($sapi_type, 0, 3) == 'cgi'){//CGI 模式
+				header("Status: $code $message");
+			}else{ //FastCGI模式
+				header("{$_SERVER['SERVER_PROTOCOL']} $code $message");
+			}
 			return true;
 		}
 		return false;
