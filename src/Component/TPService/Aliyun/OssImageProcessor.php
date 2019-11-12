@@ -249,6 +249,8 @@ class OssImageProcessor {
 			'image' => base64_encode($watermark_src),
 			't'     => $config['opacity'],
 			'g'     => $config['position'],
+			'x'     => $config['horizonPadding'],
+			'y'     => $config['verticalPadding'],
 		]);
 	}
 
@@ -261,12 +263,17 @@ class OssImageProcessor {
 	 */
 	public static function patchWatermarkWithText($image_src, $text, $cfg){
 		$config = array_merge([
-			'font'   => 'wqy-zenhei', //字体
-			'color'  => '000000', //颜色，不带#
-			'size'   => 40, //大小（像素）
-			'shadow' => 50, //阴影透明度（0~100）
-			'rotate' => 0, //旋转角度 （0~360）
-			'fill'   => 0, //是否铺满图片（0，1）
+			'font'            => 'wqy-zenhei', //字体
+			'color'           => '000000', //颜色，不带#
+			'size'            => 40, //大小（像素）
+			'shadow'          => 50, //阴影透明度（0~100）
+			'rotate'          => 0, //旋转角度 （0~360）
+			'fill'            => 0, //是否铺满图片（0，1）
+			'opacity'         => 100,
+			'position'        => 'se',
+			'percent'         => 30,
+			'horizonPadding'  => 0, //水平内边距
+			'verticalPadding' => 0, //垂直内边距
 		], $cfg);
 
 		if(!self::FONT_TYPE_MAP[$config['font']]){
@@ -282,6 +289,11 @@ class OssImageProcessor {
 			'fill'   => $config['fill'],
 			'size'   => $config['size'],
 			'color'  => str_replace('#', '', $config['color']),
+
+			't'     => $config['opacity'],
+			'g'     => $config['position'],
+			'x'     => $config['horizonPadding'],
+			'y'     => $config['verticalPadding'],
 		]);
 	}
 }
