@@ -331,11 +331,11 @@ trait Html{
 	 */
 	public static function htmlAbstract($html_content, $len = 200){
 		$str = str_replace(array("\n", "\r"), "", $html_content);
-		$str = preg_replace('/<br([^>]*)>/i', '$L', $str);
+		$str = preg_replace('/<br([^>]*)>/i', '$$NL', $str);
 		$str = strip_tags($str);
 		$str = html_entity_decode($str, ENT_QUOTES);
 		$str = h($str, $len);
-		$str = preg_replace('/[\\$L]+/', '<br/>', $str);
+		$str = str_replace('$$NL', '<br/>', $str);
 
 		//移除头尾空白行
 		$str = preg_replace('/^(<br[^>]*>)*/i', '', $str);
