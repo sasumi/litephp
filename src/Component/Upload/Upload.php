@@ -142,17 +142,21 @@ abstract class Upload{
 			]), null, $rules['min_size']);
 		}
 
-		if($rules['mime_list']){
+		$file_type_pass = false;
+
+		if(!$file_type_pass && $rules['mime_list']){
 			$file_mime = MimeInfo::getMimeByFile($file);
 			if(!in_array($file_mime, $rules['mime_list'])){
 				throw new UploadTypeException(_tl('Upload file type(mime：{file_mime}) no support by config mime list:{mime_list}', [
 					'file_mime' => $file_mime,
 					'mime_list' => join(',', $rules['mime_list']),
 				]), 0, $rules['mime_list']);
+			}else{
+				$file_type_pass = true;
 			}
 		}
 
-		if($rules['ext_list']){
+		if(!$file_type_pass && $rules['ext_list']){
 			$file_mime = MimeInfo::getMimeByFile($file);
 			if(!MimeInfo::checkByExtensions($rules['ext_list'], $file_mime)){
 				throw new UploadTypeException(_tl('Upload file type(mime：{file_mime}) no support by config extension list:{ext_list}', [

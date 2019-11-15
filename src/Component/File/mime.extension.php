@@ -961,6 +961,7 @@ return [
 		'application/zip', //WPS电子表格
 		'application/xml', //有时候会使用xml格式尝试适配Excel
 		'application/vnd.ms-office',
+		'application/octet-stream'
 	],
 	'xlsb'        => ['application/vnd.ms-excel.sheet.binary.macroenabled.12'],
 	'xlsm'        => ['application/vnd.ms-excel.sheet.macroenabled.12'],
@@ -969,6 +970,7 @@ return [
 		'application/zip', //WPS电子表格
 		'application/xml', //有时候会使用xml格式尝试适配Excel
 		'application/vnd.ms-office',
+		'application/octet-stream'
 	],
 	'xlt'         => ['application/vnd.ms-excel'],
 	'xltm'        => ['application/vnd.ms-excel.template.macroenabled.12'],
