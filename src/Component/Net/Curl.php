@@ -88,10 +88,19 @@ abstract class Curl {
 		];
 		$curl_option = self::arrayMergeKeepKeys($opt, $curl_option);
 		$curl = self::getCurlInstance($url, $curl_option);
+		return self::curlExec($curl, $url);
+	}
+
+	/**
+	 * @param resource $curl
+	 * @param string $url
+	 * @return bool|string
+	 */
+	private static function curlExec($curl, $url){
 		$content = curl_exec($curl);
 		$curl_errno = curl_errno($curl);
 		if($curl_errno > 0){
-			throw new Exception(curl_error($curl));
+			throw new Exception("curl error:".curl_error($curl).', request url:'.$url);
 		}
 		curl_close($curl);
 		return $content;
@@ -106,7 +115,7 @@ abstract class Curl {
 	 * @throws Exception
 	 * @return bool|mixed
 	 */
-	public static function post($url, $data, $timeout = self::DEFAULT_TIMEOUT, $curl_option=array()) {
+	public static function post($url, $data, $timeout = self::DEFAULT_TIMEOUT, $curl_option = array()){
 		if($data && !is_string($data)){
 			$data = http_build_query($data);
 		}
@@ -118,15 +127,7 @@ abstract class Curl {
 		);
 		$curl_option = self::arrayMergeKeepKeys($opt, $curl_option);
 		$curl = self::getCurlInstance($url, $curl_option);
-		$content = curl_exec($curl);
-		$curl_errno = curl_errno($curl);
-		$curl_msg = curl_error($curl);
-		if($curl_errno>0){
-			throw new Exception($curl_msg);
-		}
-
-		curl_close($curl);
-		return $content;
+		return self::curlExec($curl, $url);
 	}
 
 	/**
@@ -136,28 +137,18 @@ abstract class Curl {
 	 * @param array $files
 	 * @param int $timeout
 	 * @param array $curl_option
-	 * @throws \Lite\Exception\Exception
 	 * @return mixed
 	 */
-	public static function postFiles($url, $data=array(), array $files, $timeout = self::DEFAULT_TIMEOUT, $curl_option = array()){
+	public static function postFiles($url, $data, array $files, $timeout = self::DEFAULT_TIMEOUT, $curl_option = array()){
 		$opt = array(
 			CURLOPT_POST           => true,
 			CURLOPT_TIMEOUT        => $timeout,
 			CURLOPT_RETURNTRANSFER => 1,
 		);
-
 		$curl_option = self::arrayMergeKeepKeys($opt, $curl_option);
 		$curl = self::getCurlInstance($url, $curl_option);
 		self::setCurlPostFields($curl, $data, $files);
-
-		$content = curl_exec($curl);
-		$curl_errno = curl_errno($curl);
-		$curl_msg=curl_error($curl);
-		if($curl_errno > 0){
-			throw new Exception($curl_msg);
-		}
-		curl_close($curl);
-		return $content;
+		return self::curlExec($curl, $url);
 	}
 
 	/**
@@ -275,19 +266,13 @@ abstract class Curl {
 		}
 		$opt = array(
 			CURLOPT_CUSTOMREQUEST => 'PUT',
-			CURLOPT_POSTFIELDS => $data,
-			CURLOPT_TIMEOUT => $timeout,
-			CURLOPT_HTTPHEADER => array('Content-Length: ' . strlen($data))
+			CURLOPT_POSTFIELDS    => $data,
+			CURLOPT_TIMEOUT       => $timeout,
+			CURLOPT_HTTPHEADER    => array('Content-Length: '.strlen($data)),
 		);
 		$curl_option = self::arrayMergeKeepKeys($opt, $curl_option);
 		$curl = self::getCurlInstance($url, $curl_option);
-		$content = curl_exec($curl);
-		$curl_errno = curl_errno($curl);
-		if($curl_errno > 0){
-			throw new Exception($curl_errno);
-		}
-		curl_close($curl);
-		return $content;
+		return self::curlExec($curl, $url);
 	}
 
 	/**
@@ -305,18 +290,12 @@ abstract class Curl {
 		}
 		$opt = array(
 			CURLOPT_CUSTOMREQUEST => 'DEL',
-			CURLOPT_POSTFIELDS => $data,
-			CURLOPT_TIMEOUT => $timeout,
-			CURLOPT_HTTPHEADER => array('Content-Length: ' . strlen($data))
+			CURLOPT_POSTFIELDS    => $data,
+			CURLOPT_TIMEOUT       => $timeout,
+			CURLOPT_HTTPHEADER    => array('Content-Length: ' . strlen($data))
 		);
 		$curl_option = self::arrayMergeKeepKeys($opt, $curl_option);
 		$curl = self::getCurlInstance($url, $curl_option);
-		$content = curl_exec($curl);
-		$curl_errno = curl_errno($curl);
-		if($curl_errno > 0){
-			throw new Exception($curl_errno);
-		}
-		curl_close($curl);
-		return $content;
+		return self::curlExec($curl, $url);
 	}
 }

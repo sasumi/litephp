@@ -93,11 +93,10 @@ class OssImageProcessor {
 	public static function buildProcessorConfig(array $processor_config){
 		$str = [];
 		foreach($processor_config as $processor_name => $config){
-			$ps = [$processor_config];
+			$ps = [$processor_name];
 			foreach($config as $key => $val){
 				$ps[] = $key.'_'.$val;
 			}
-
 			$str[] = join(',', $ps);
 		}
 		return join('/', $str);
@@ -113,7 +112,7 @@ class OssImageProcessor {
 			return $image_src;
 		}
 		$idx = stripos($image_src, self::OSS_QUERY_KEY);
-		return substr($image_src, $idx);
+		return substr($image_src, 0, $idx);
 	}
 
 	/**
@@ -177,7 +176,7 @@ class OssImageProcessor {
 		}
 		$process_str = self::buildProcessorConfig($processor_config);
 		if(!$process_str){
-			return self::getOriginalImage($image_src);
+			return $image_origin_src;
 		}
 		return $image_origin_src.self::OSS_QUERY_KEY.$process_str;
 	}
