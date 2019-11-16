@@ -11,9 +11,9 @@ use Exception;
 class OssImageProcessor {
 	const OSS_QUERY_KEY = '?x-oss-process=image/';
 
-	const PROCESSOR_RESIZE = self::PROCESSOR_RESIZE;
+	const PROCESSOR_RESIZE = 'resize';
 	
-	const PROCESSOR_WATERMARK = self::PROCESSOR_WATERMARK;
+	const PROCESSOR_WATERMARK = 'watermark';
 
 	//OSS水印支持字体列表
 	const FONT_TYPE_MAP = [
