@@ -64,11 +64,11 @@ class Paginate implements PaginateInterface {
 	 */
 	public static function instance($identify = '', $config = array()){
 		static $instance_list = [];
-		$identify = $identify ?: 'page';
-		if(!isset($instance_list[$identify])){
-			$instance_list[$identify] = new self($config);
+		$key = serialize(func_get_args());
+		if(!isset($instance_list[$key])){
+			$instance_list[$key] = new self($config);
 		}
-		return $instance_list[$identify];
+		return $instance_list[$key];
 	}
 
 	/**
