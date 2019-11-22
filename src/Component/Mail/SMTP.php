@@ -315,9 +315,6 @@ class SMTP{
 			case ".htm":
 				$field_data['type'] = "text/html";
 				break;
-			case ".html":
-				$field_data['type'] = "text/html";
-				break;
 			case ".jpg":
 				$field_data['type'] = "image/jpeg";
 				break;

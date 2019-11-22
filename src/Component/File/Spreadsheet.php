@@ -6,7 +6,7 @@ use Lite\DB\Model;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use PHPExcel_Style_NumberFormat;
-use SpreadsheetReader;
+use function Lite\func\array_trim_fields;
 use function Lite\func\get_spreadsheet_column;
 use function Lite\func\is_assoc_array;
 
@@ -296,44 +296,58 @@ abstract class Spreadsheet{
 	}
 
 	/**
-	 * 解析Excel文件
-	 * @param $name
-	 * @param string $file
-	 * @param int $sheet
-	 * @param bool $ignore_title
+	 * Excel 文件读取
+	 * 代码会处理空白字符（trim），以及去除空白行
+	 * @param string $file 文件路径
+	 * @param int $sheet 工作表序号（0开始）
+	 * @param int $start_row
 	 * @return array
 	 */
-	public static function parseExcel($file, $name, $sheet = 0, $ignore_title = false){
-		$Spreadsheet = new SpreadsheetReader($file, $name, mime_content_type($file));
-		$data = [];
-		$Spreadsheet->Sheets();
-		$Spreadsheet->ChangeSheet($sheet);
-		$max_length = 0;
-		foreach($Spreadsheet as $key => $row){
-			if(!array_filter($row)){
-				continue;
+	public static function parseExcel($file, $sheet = 0, $start_row = 1){
+		$eid = PHPExcel_IOFactory::identify($file);
+		$reader = PHPExcel_IOFactory::createReader($eid);
+		$php_excel = $reader->load($file);
+		$sheet = $php_excel->getSheet($sheet);
+
+		$hr = $sheet->getHighestRow();
+		$hc = $sheet->getHighestColumn();
+		$row_data = [];
+
+		//对所有单元格trim，去除空白行
+		for($row = $start_row; $row <= $hr; $row++){
+			$tmp = $sheet->rangeToArray("A{$row}:{$hc}{$row}", NULL, TRUE, FALSE)[0];
+			$tmp = array_trim_fields($tmp);
+			$all_empty = true;
+			foreach($tmp as $val){
+				if(strlen($val)){
+					$all_empty = false;
+					break;
+				}
 			}
-			$row_len = count($row);
-			if($row_len>$max_length){
-				$max_length = $row_len;
+			if(!$all_empty){
+				$row_data[] = $tmp;
 			}
-			$data[] = $row;
 		}
-		//解析后的元数据保持每个子数组长度相同，为解析时的最长子数组长度
-		array_walk($data, function(&$row) use ($max_length){
-			$row = array_pad($row, $max_length, "");
-		});
-		if($ignore_title){
-			return $data;
+		return $row_data;
+	}
+
+	/**
+	 * Excel 文件读取，以第一行标题作为关联数组下表方式返回
+	 * @description 由于列名可能重复，该方法慎用！
+	 * @param $file
+	 * @param int $sheet
+	 * @return array
+	 */
+	public static function parseExcelAsAssoc($file, $sheet = 0){
+		$data = self::parseExcel($file, $sheet, 1);
+		if(!$data){
+			return [];
 		}
-		//第一行作为标题时取第一行非false的数据作为数组长度
-		//后续子数组取标题相同长度，不过滤false值
-		$title = array_filter(array_shift($data));
-		$title_len = count($title);
-		$result = [];
-		foreach($data as $d){
-			$result[] = array_combine($title, array_slice($d, 0, $title_len));
+		$first_row = array_shift($data);
+		$ret = [];
+		foreach($data as $k=>$row){
+			$ret[$k] = array_combine(array_values($first_row), array_values($row));
 		}
-		return $result;
+		return $ret;
 	}
 }
