@@ -1,6 +1,7 @@
 <?php
 namespace Lite\Component\File;
 
+use Lite\Component\Net\Http;
 use Lite\DB\Model;
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -34,13 +35,6 @@ abstract class Spreadsheet{
 				$headers[$val] = $val;
 			}
 		}
-
-		header("Content-type:text/csv");
-		header("Content-Disposition:attachment;filename=".$config['filename']);
-		header('Cache-Control:must-revalidate,post-check=0,pre-check=0');
-		header('Expires:0');
-		header('Pragma:public');
-
 		$str = implode($config['separator'], $headers)."\r\n";
 		foreach($data as $item){
 			$com = '';
@@ -50,6 +44,7 @@ abstract class Spreadsheet{
 			}
 			$str .= "\r\n";
 		}
+		Http::headerDownloadFile($config['filename']);
 		echo mb_convert_encoding($str, $config['to_encoding'], $config['from_encoding']);
 		exit;
 	}
@@ -118,9 +113,9 @@ abstract class Spreadsheet{
 			}
 			$xls[] = '<tr><td style="vnd.ms-excel.numberformat:@">'.implode("</td><td style=\"vnd.ms-excel.numberformat:@\">", $line).'</td></tr>';
 		}
-		$xls[] = '</table></body>< ml>';
+		$xls[] = '</table></body></html>';
 		$xls = join("\r\n", $xls);
-		header('Content-Disposition: attachment; filename="'.$config['filename'].'"');
+		Http::headerDownloadFile($config['filename']);
 		echo $xls;
 		exit;
 	}
@@ -194,8 +189,7 @@ abstract class Spreadsheet{
 		static $csv_file_fp;
 		$fields = is_assoc_array($fields) ? $fields : array_combine($fields, $fields);
 		if(!isset($csv_file_fp)){
-			header('Content-Type: application/csv');
-			header('Content-Disposition: attachment; filename='.$file_name);
+			Http::headerDownloadFile($file_name);
 			$csv_file_fp = fopen('php://output', 'a');
 			$head = [];
 			foreach($fields as $i => $v){
@@ -237,8 +231,7 @@ abstract class Spreadsheet{
 		$file_name = $file_name ?: date('YmdHi').'.csv';
 		static $csv_file_fp;
 		if(!isset($csv_file_fp)){
-			header('Content-Type: application/csv');
-			header('Content-Disposition: attachment; filename='.$file_name);
+			Http::headerDownloadFile($file_name);
 			$csv_file_fp = fopen('php://output', 'a');
 			if($headers){
 				fputcsv($csv_file_fp, $headers);
