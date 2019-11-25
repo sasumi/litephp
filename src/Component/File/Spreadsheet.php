@@ -52,36 +52,111 @@ abstract class Spreadsheet{
 	/**
 	 * 读取csv内容
 	 * @param string $content
-	 * @param array $field_name 输出字段名，array('fieldA', 'fieldB')
 	 * @param array $config
 	 * @return array
 	 */
-	public static function readCsv($content, array $field_name = array(), array $config = array()){
+	public static function readCsv($content, array $config = array()){
 		$config = array_merge(array(
-			'separator'     => ',',
-			'start_offset'  => 0,
-			'from_encoding' => 'gb2312',
-			'to_encoding'   => 'utf-8'
+			'start_offset'     => 1,        //数据开始行（如果首行为下标，start_offset必须大于0）
+			'first_row_as_key' => true,     //是否首行作为数据下标返回（如果是，start_offset必须大于0）
+			'fields'           => [],       //指定返数据下标（按顺序对应）
+			'from_encoding'    => 'gb2312',
+			'to_encoding'      => 'utf-8',
 		), $config);
 
-		$content = mb_convert_encoding($content, $config['to_encoding'], $config['from_encoding']);
-		$result = array();
-		$lines = explode("\r\n", $content) ?: array();
-		$lines = array_slice($lines, $config['start_offset']);
-
-		foreach($lines as $line){
-			$tmp = !empty($line) ? explode($config['separator'], $line) : null; //避免空行
-			if(!empty($tmp)){
-				$item = array();
-				if(!empty($field_name)){
-					foreach($field_name as $k => $field){
-						$item[$field] = $tmp[$k];
-					}
+		$data = [];
+		$header = [];
+		$raws = explode("\n", $content);
+		foreach($raws as $row_idx=>$row_str){
+			$row = str_getcsv($row_str, $config['delimiter']);
+			foreach($row as $idx => $str){
+				$row[$idx] = $str ? iconv($config['from_encoding'], $config['to_encoding'], $str) : $str;
+			}
+			if($row_idx == 0){
+				//set header from first row
+				if($config['first_row_as_key']){
+					$header = $row;
+					continue;
 				}
-				$result[] = $item;
+				//set header from config.fields
+				if($config['fields']){
+					$header = $config['fields'];
+				}
+			}
+
+			//set data
+			if($row_idx >= $config['start_offset']){
+				$data[] = $config['first_row_as_key'] ? array_combine($header, $row) : $row;
 			}
 		}
-		return $result;
+		return $data;
+	}
+
+	/**
+	 * 读取CSV格式文件
+	 * @param $file
+	 * @param array $config
+	 * @return array
+	 */
+	public static function readCsvFile($file, array $config = []){
+		$config = array_merge(array(
+			'start_offset'     => 1,        //数据开始行（如果首行为下标，start_offset必须大于0）
+			'first_row_as_key' => true,     //是否首行作为数据下标返回（如果是，start_offset必须大于0）
+			'fields'           => [],       //指定返数据下标（按顺序对应）
+			'delimiter'        => ',',      //分隔符
+			'from_encoding'    => 'gbk',    //来源编码
+			'to_encoding'      => 'utf-8',  //目标编码
+		), $config);
+
+		$data = [];
+		$header = [];
+		self::readCsvFileChunk($file, function($row, $row_idx)use(&$data, &$header, $config){
+			if($row_idx == 0){
+				//set header from first row
+				if($config['first_row_as_key']){
+					$header = $row;
+					return;
+				}
+				//set header from config.fields
+				if($config['fields']){
+					$header = $config['fields'];
+				}
+			}
+
+			//set data
+			if($row_idx >= $config['start_offset']){
+				$data[] = $config['first_row_as_key'] ? array_combine($header, $row) : $row;
+			}
+		}, $config);
+		return $data;
+	}
+
+	/**
+	 * 分块读取CSV文件
+	 * @param string $file CSV文件名
+	 * @param callable $row_handler 行处理器，传参为：(array $row, int row_index)
+	 * @param array $config 选项
+	 * @return array
+	 */
+	public static function readCsvFileChunk($file, callable $row_handler, $config = []){
+		$config = array_merge(array(
+			'delimiter'        => ',',      //分隔符
+			'from_encoding'    => 'gbk',    //来源编码
+			'to_encoding'      => 'utf-8',  //目标编码
+		), $config);
+
+		$data = [];
+		$row_idx = 0;
+		$fp = fopen($file, 'r');
+		while(($row = fgetcsv($fp, 0, $config['delimiter'])) !== false){
+			$row = array_map(function($str) use ($config){
+				$str = trim($str);
+				return $str ? iconv($config['from_encoding'], $config['to_encoding'], $str) : $str;
+			}, $row);
+			$row_handler($row, $row_idx);
+			$row_idx++;
+		}
+		return $data;
 	}
 
 	/**

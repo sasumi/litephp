@@ -958,6 +958,7 @@ return [
 	'xlm'         => ['application/vnd.ms-excel'],
 	'xls'         => [
 		'application/vnd.ms-excel',
+		'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 		'application/zip', //WPS电子表格
 		'application/xml', //有时候会使用xml格式尝试适配Excel
 		'application/vnd.ms-office',
@@ -966,6 +967,7 @@ return [
 	'xlsb'        => ['application/vnd.ms-excel.sheet.binary.macroenabled.12'],
 	'xlsm'        => ['application/vnd.ms-excel.sheet.macroenabled.12'],
 	'xlsx'        => [
+		'application/vnd.ms-excel',
 		'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 		'application/zip', //WPS电子表格
 		'application/xml', //有时候会使用xml格式尝试适配Excel
