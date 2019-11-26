@@ -209,7 +209,7 @@ function ha($str, $len = null, $tail = '...', &$over_length = false){
 	return __h($str, $len, $tail, $over_length, ENT_QUOTES);
 }
 
-function __h($str, $len = null, $tail = '...', &$over_length = false, $type){
+function __h($str, $len = null, $tail = '...', &$over_length = false, $type = null){
 	if(is_object($str)){
 		return $str;
 	}

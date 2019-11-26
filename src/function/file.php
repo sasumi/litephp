@@ -216,6 +216,54 @@ function session_write_once(){
 }
 
 /**
+ * 获取文件行数
+ * @param string|resource $file 文件路径或文件句柄
+ * @param string $line_separator 换行符
+ * @return int
+ */
+function file_lines($file, $line_separator = "\n"){
+	if(is_string($file)){
+		$fp = fopen($file, 'rb');
+	} else {
+		$fp = $file;
+	}
+	$lines = 0;
+	while(!feof($fp)){
+		$lines += substr_count(fread($fp, 8192), $line_separator);
+	}
+	if(is_string($file)){
+		fclose($fp);
+	}
+	return $lines;
+}
+
+/**
+ * 回溯读取文件
+ * @param string $file 文件
+ * @param callable $callback 行处理函数
+ * @param string $line_separator 换行符
+ */
+function tail($file, callable $callback, $line_separator = "\n"){
+	$file_size = filesize($file);
+	$fp = fopen($file, 'rb');
+	$offset = 0;
+	$text = '';
+	while(($offset++) < $file_size){
+		if(fseek($fp, -$offset, SEEK_END) === -1){
+			break;
+		}
+		$t = fgetc($fp);
+		if($t === $line_separator){
+			$callback($text);
+			$text = '';
+		} else {
+			$text = $t.$text;
+		}
+	}
+	fclose($fp);
+}
+
+/**
  * read file by line
  * @param callable $handle
  * @param string $file
