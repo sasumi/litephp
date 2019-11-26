@@ -241,22 +241,32 @@ function file_lines($file, $line_separator = "\n"){
  * 回溯读取文件
  * @param string $file 文件
  * @param callable $callback 行处理函数
+ * @param int $line_limit
  * @param string $line_separator 换行符
  */
-function tail($file, callable $callback, $line_separator = "\n"){
+function tail($file, callable $callback, $line_limit = 0, $line_separator = "\n"){
 	$file_size = filesize($file);
 	$fp = fopen($file, 'rb');
 	$offset = 0;
 	$text = '';
+	$line_count = 0;
 	while(($offset++) < $file_size){
 		if(fseek($fp, -$offset, SEEK_END) === -1){
 			break;
 		}
 		$t = fgetc($fp);
 		if($t === $line_separator){
-			$callback($text);
+			//中断支持
+			if($callback($text) === false){
+				break;
+			};
 			$text = '';
-		} else {
+
+			//行数限制
+			if($line_limit && $line_count++ > $line_limit){
+				break;
+			}
+		}else{
 			$text = $t.$text;
 		}
 	}
