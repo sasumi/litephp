@@ -31,7 +31,7 @@ abstract class Curl {
 	 * @throws Exception
 	 * @return resource
 	 */
-	private static function getCurlInstance($url, $curl_option=array()){
+	private static function getCurlInstance($url, $curl_option = array()){
 		if(!$url){
 			throw new Exception('CURL URL NEEDED');
 		}
@@ -297,5 +297,30 @@ abstract class Curl {
 		$curl_option = self::arrayMergeKeepKeys($opt, $curl_option);
 		$curl = self::getCurlInstance($url, $curl_option);
 		return self::curlExec($curl, $url);
+	}
+
+	/**
+	 * 获取远程HTTP服务状态码
+	 * @param string $url
+	 * @return int HTTP状态码
+	 */
+	public static function getRemoteHttpStatus($url){
+		$curl_option = [
+			CURLOPT_HEADER         => true,
+			CURLOPT_NOBODY         => true,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_MAXREDIRS      => 10,
+		];
+		$ch = self::getCurlInstance($url, $curl_option);
+		$data = curl_exec($ch);
+		curl_close($ch);
+		if(!$data){
+			throw new Exception("Domain could not be found");
+		}else{
+			preg_match_all("/HTTP\/1\.[1|0]\s(\d{3})/", $data, $matches);
+			$code = end($matches[1]);
+			return (int)$code;
+		}
 	}
 }
