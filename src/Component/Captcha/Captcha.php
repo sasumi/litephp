@@ -120,9 +120,10 @@ class Captcha{
 	
 	/**
 	 * Save captcha text in session
+	 * access as public for man edit in some case
 	 * @param $text
 	 */
-	private static function saveText($text){
+	public static function saveText($text){
 		if(!headers_sent()){
 			session_start();
 		}
