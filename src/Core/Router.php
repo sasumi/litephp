@@ -20,6 +20,8 @@ abstract class Router{
 	const EVENT_AFTER_ROUTER_INIT = __CLASS__ . 'EVENT_AFTER_ROUTER_INIT';
 	const EVENT_GET_STATIC_URL = __CLASS__ . 'EVENT_ROUTER_GET_STATIC_URL';
 	const EVENT_BEFORE_PARSE_CURRENT_REQUEST = __CLASS__ . 'EVENT_BEFORE_PARSE_CURRENT_REQUEST';
+	const EVENT_BEFORE_GET_URL = __CLASS__.'EVENT_BEFORE_GET_URL';
+	const EVENT_AFTER_GET_URL = __CLASS__.'EVENT_AFTER_GET_URL';
 	
 	const DEFAULT_ROUTER_KEY = 'r';
 	
@@ -508,6 +510,12 @@ abstract class Router{
 			return $uri.(stripos($uri, '?') === false ? '?' : '&').http_build_query($params);
 		}
 
+		//event hook
+		$ref = new RefParam(compact('uri', 'params'));
+		Hooker::fire(self::EVENT_BEFORE_GET_URL, $ref);
+		$uri = $ref->get('uri');
+		$params = $ref->get('params');
+
 		$app_url = Config::get('app/url');
 		$router_mode = Config::get('router/mode');
 		$lower_case_uri = Config::get('router/lower_case_uri') ?: false;
@@ -516,18 +524,18 @@ abstract class Router{
 			return '#NO_ROUTER_FOUND:'.$uri;
 		}
 
+		$ctrl_name = self::resolveNameFromController($controller);
+		$ns_ctrl_mode = strpos($ctrl_name, '/'); //controller 里面包含命名空间模式
+		$url = $app_url;
+
 		//首页
 		if(empty($params) &&
 			strcasecmp($controller, self::$DEFAULT_CONTROLLER) == 0 &&
 			strcasecmp($action, self::$DEFAULT_ACTION) == 0){
-			return $app_url;
+			//url = $app_url;
 		}
-
-		$ctrl_name = self::resolveNameFromController($controller);
-
-		$ns_ctrl_mode = strpos($ctrl_name, '/'); //controller 里面包含命名空间模式
-		$url = $app_url;
-		if($router_mode == self::MODE_NORMAL){
+		//普通模式
+		else if($router_mode == self::MODE_NORMAL){
 			if(!$params){
 				if($action == self::$DEFAULT_ACTION && !$ns_ctrl_mode){
 					$url = $app_url."?".self::$ROUTER_KEY."=".($lower_case_uri ? strtolower($ctrl_name) : $ctrl_name);
@@ -538,24 +546,31 @@ abstract class Router{
 				$params[self::$ROUTER_KEY] = $lower_case_uri ? strtolower("$ctrl_name/$action") : "$ctrl_name/$action";
 				$url .= '?'.http_build_query($params);
 			}
-			return $url;
 		}
-		if($router_mode == self::MODE_REWRITE && $rewrite_url = Rewrite::onGetUrl("$ctrl_name/$action", $params)){
-			return $rewrite_url;
+		//重写模式（且命中）
+		else if($router_mode == self::MODE_REWRITE && $rewrite_url = Rewrite::onGetUrl("$ctrl_name/$action", $params)){
+			$url = $rewrite_url;
 		}
-		//path模式，检测url中是否包含？，如果不包含，则后缀添加斜杠
-		if($router_mode == self::MODE_PATH){
-			$url .= stripos($url, '?') !== false ? '' : "/";
+		//Path或重写未命中
+		else {
+			//path模式，检测url中是否包含？，如果不包含，则后缀添加斜杠
+			if($router_mode == self::MODE_PATH){
+				$url .= stripos($url, '?') !== false ? '' : "/";
+			}
+			$p = "$ctrl_name";
+			if($params || strcasecmp($action, self::$DEFAULT_ACTION) != 0 || $ns_ctrl_mode){
+				$p .= "/$action";
+			}
+			if($lower_case_uri){
+				$p = strtolower($p);
+			}
+			$str = self::buildParam($params, $router_mode);
+			$url = $url.($str ? "$p/$str" : $p);
 		}
-		$p = "$ctrl_name";
-		if($params || strcasecmp($action, self::$DEFAULT_ACTION) != 0 || $ns_ctrl_mode){
-			$p .= "/$action";
-		}
-		if($lower_case_uri){
-			$p = strtolower($p);
-		}
-		$str = self::buildParam($params, $router_mode);
-		return $url.($str ? "$p/$str" : $p);
+
+		$ref = new RefParam(compact('url', 'uri', 'params'));
+		Hooker::fire(self::EVENT_AFTER_GET_URL, $ref);
+		return $ref->get('url');
 	}
 	
 	/**

@@ -74,11 +74,7 @@ abstract class AccessAdapter {
 	 * 获取登录用户ID
 	 */
 	public function getLoginUserId(){
-		$user_info = $this->getLoginInfo();
-		if($user_info){
-			return $this->getIdFromUserInfo($user_info);
-		}
-		return null;
+		return isset($_SESSION[$this->session_name]) ? $_SESSION[$this->session_name] : null;
 	}
 	
 	/**
@@ -87,7 +83,7 @@ abstract class AccessAdapter {
 	 */
 	public function getLoginInfo(){
 		session_start_once();
-		$session_uid = isset($_SESSION[$this->session_name]) ? $_SESSION[$this->session_name] : null;
+		$session_uid = $this->getLoginUserId();
 		$user_info = null;
 		if($session_uid){
 			$user_info = $this->getUserInfoFromId($session_uid);
