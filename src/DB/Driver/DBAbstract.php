@@ -520,7 +520,7 @@ abstract class DBAbstract{
 				return $this->query($query);
 			}
 			Hooker::fire(self::EVENT_DB_QUERY_ERROR, $ex, $query, $this->config);
-			throw new DatabaseException($ex->getMessage(), $query, $this->config, $ex);
+			throw new DatabaseException($ex->getMessage(), $query.'', $this->config, $ex);
 		}
 	}
 	
