@@ -15,37 +15,26 @@ namespace Lite\func {
 	 * group array(); by by_key
 	 * @param array $array
 	 * @param string $by_key
-	 * @param boolean $limit
+	 * @param boolean $force_unique
 	 * @return array $array handle result
 	 */
-	function array_group($array, $by_key, $limit = false) {
-		if(empty ($array) || !is_array($array)) {
+	function array_group($array, $by_key, $force_unique = false){
+		if(empty ($array) || !is_array($array)){
 			return $array;
 		}
-
-		$_result = array();
-		foreach ($array as $item) {
-			$sub_keys = array_keys($item);
-			if(in_array($by_key, $sub_keys)) {
-				$_result[$item[$by_key]][] = $item;
-			} else {
-				$_result[count($_result)][] = $item;
-			}
+		if($force_unique){
+			return array_column($array, null, $by_key);
 		}
-		if(!$limit) {
-			return $_result;
+		$_result = [];
+		foreach($array as $item){
+			$_result[$item[$by_key]][] = $item;
 		}
-
-		$result = array();
-		foreach ($_result as $key => $item) {
-			$result[$key] = $item[0];
-		}
-		return $result;
+		return $_result;
 	}
 
 	/**
 	 * shuffle objects, key original assoc key
-	 * @param $objects
+	 * @param array|object $objects
 	 * @return array
 	 */
 	function object_shuffle($objects){
