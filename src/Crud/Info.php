@@ -1,12 +1,12 @@
 <?php
-/**
- * 详情操作
- */
 
 namespace Lite\Crud;
 
 use function Lite\func\class_uses_recursive;
 
+/**
+ * 详情操作
+ */
 trait Info {
 	use CRUDInterface;
 

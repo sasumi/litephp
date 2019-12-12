@@ -1,13 +1,13 @@
 <?php
-/**
- * 编辑操作
- */
 
 namespace Lite\Crud;
 
 use Lite\Core\Result;
 use Lite\DB\Model;
 
+/**
+ * 编辑操作
+ */
 trait Update {
 	use CRUDInterface;
 

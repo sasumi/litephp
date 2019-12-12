@@ -1,6 +1,6 @@
 <?php
 /**
- * Index 列表操作
+ * CRUD公共接口，由于trait不能继承接口，只能使用trait实现
  */
 namespace Lite\Crud;
 trait CRUDInterface {

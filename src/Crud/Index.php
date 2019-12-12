@@ -1,7 +1,4 @@
 <?php
-/**
- * 列表操作
- */
 
 namespace Lite\Crud;
 
@@ -11,6 +8,9 @@ use Lite\DB\Model;
 use Lite\DB\Query;
 use function Lite\func\class_uses_recursive;
 
+/**
+ * 列表操作
+ */
 trait Index {
 	use CRUDInterface;
 
@@ -98,7 +98,7 @@ trait Index {
 		$display_fields = $this->getIndexDisplayFields();
 
 		if(!$display_fields){
-			foreach($defines as $field=>$def){
+			foreach($defines as $field => $def){
 				if($field !== $pk){
 					$display_fields[] = $field;
 				}
@@ -120,7 +120,7 @@ trait Index {
 			}
 		}
 
-		/** @var MultiLevelModelInterface|Model $model */
+		/** @var Model $model */
 		$list = $query->paginate($paginate);
 		return array(
 			'search'         => $search_fields,

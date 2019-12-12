@@ -1,11 +1,13 @@
 <?php
-/**
- * 新增操作
- */
+
 namespace Lite\Crud;
+
 use Lite\Core\Result;
 use Lite\DB\Model;
 
+/**
+ * 新增操作
+ */
 trait Create {
 	use CRUDInterface;
 
