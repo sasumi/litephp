@@ -319,19 +319,19 @@ function lite_print_performance_mark($qc_list, $config = array()){
 		"<td>$k</td>",
 		"<td>$tag</td>",
 		"<td>",
-		"<span class=\"loc\">{$trace['file']} #{$trace['line']}</span>",
-		"<span class=\"cls_fun\">{$trace['class']}{$trace['type']}{$trace['function']}()</span>",
+			"<span class=\"loc\">{$trace['file']} #{$trace['line']}</span>",
+			"<span class=\"cls_fun\">{$trace['class']}{$trace['type']}{$trace['function']}()</span>",
 		"</td>",
 		"<td class=\"brk\">$data</td>",
 		"<td>",
-		"<span class=\"pbo\">",round($pass_by_offset*1000, 2),"ms</span>",
-		"<span class=\"pb\">",round(($pass_by - $st)*1000, 2),"ms</span>",
+			"<span class=\"pbo\">",round($pass_by_offset*1000, 2),"ms</span>",
+			"<span class=\"pb\">",round(($pass_by - $st)*1000, 2),"ms</span>",
 		"</td>",
 		"<td>",
-		"<span class=\"mso\">",format_size($mem_stat_offset),"</span>",
-		"<span class=\"ms\">",format_size($mem_stat),"</span>",
+			"<span class=\"mso\">",format_size($mem_stat_offset),"</span>",
+			"<span class=\"ms\">",format_size($mem_stat),"</span>",
 		"</td>";
-		
+
 		$lst = $pass_by;
 		$lms = $mem_stat;
 	}
@@ -381,6 +381,37 @@ function lite_auto_performance_mark(){
  */
 function is_function($f){
 	return (is_string($f) && function_exists($f)) || (is_object($f) && ($f instanceof Closure));
+}
+
+/**
+ * get class(also trait) uses recursive
+ * @param $class_or_object
+ * @return array
+ */
+function class_uses_recursive($class_or_object){
+	if(is_object($class_or_object)){
+		$class = get_class($class_or_object);
+	}else{
+		$class = $class_or_object;
+	}
+	$results = [];
+	foreach(array_reverse(class_parents($class)) + [$class => $class] as $class){
+		$results += trait_uses_recursive($class);
+	}
+	return array_unique($results);
+}
+
+/**
+ * get trait uses recursive
+ * @param $trait
+ * @return array
+ */
+function trait_uses_recursive($trait){
+	$traits = class_uses($trait);
+	foreach($traits as $trait){
+		$traits += trait_uses_recursive($trait);
+	}
+	return $traits;
 }
 
 /**

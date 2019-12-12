@@ -24,7 +24,7 @@ abstract class Controller{
 	 * @param $action
 	 * @return string
 	 */
-	public static function __getTemplate($controller, $action){
+	public function __getTemplate($controller, $action){
 		return null;
 	}
 

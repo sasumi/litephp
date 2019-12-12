@@ -190,7 +190,7 @@ class Application{
 			if(Config::get('app/auto_render')){
 				$tpl_file = null;
 				if(method_exists($controller_instance, '__getTemplate')){
-					$tpl_file = $controller_instance::__getTemplate(Router::getController(), Router::getAction());
+					$tpl_file = $controller_instance->__getTemplate(Router::getController(), Router::getAction());
 				}
 				
 				//Controller 执行结果，
