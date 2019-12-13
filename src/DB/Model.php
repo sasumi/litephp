@@ -592,7 +592,7 @@ abstract class Model extends DAO{
 	/**
 	 * 根据条件更新数据
 	 * @param array $data
-	 * @param int $limit 为了安全，调用方必须传入具体数值，如不限制删除数量，可设置为0
+	 * @param int $limit 为了安全，调用方必须传入具体数值，如不限制更新数量，可设置为0
 	 * @param string $statement 为了安全，调用方必须传入具体条件，如不限制，可设置为空字符串
 	 * @return bool;
 
@@ -616,7 +616,6 @@ abstract class Model extends DAO{
 	 * @param int $limit 为了安全，调用方必须传入具体数值，如不限制删除数量，可设置为0
 	 * @param string $statement 为了安全，调用方必须传入具体条件，如不限制，可设置为空字符串
 	 * @return bool
-
 	 */
 	public static function deleteWhere($limit, $statement){
 		$args = func_get_args();

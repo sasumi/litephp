@@ -505,7 +505,7 @@ abstract class Router{
 	 * @return string
 	 * @throws \Lite\Exception\Exception
 	 */
-	public static function getUrl($uri = '', $params = array()){
+	public static function getUrl($uri = '', $params = []){
 		if(str_start_with($uri, array('http://', 'https://', '//'))){
 			return $uri.(stripos($uri, '?') === false ? '?' : '&').http_build_query($params);
 		}
@@ -735,5 +735,17 @@ abstract class Router{
 			header('Location:'.$url);
 		}
 		exit;
+	}
+
+	/**
+	 * 从 __METHOD__解析获取URL
+	 * @param $method
+	 * @param array $param
+	 * @return string
+	 */
+	public static function getUrlViaMethod($method, $param = []){
+		list($controller, $action) = explode('::', $method);
+		$ctrl = static::resolveNameFromController($controller);
+		return static::getUrl("$ctrl/$action", $param);
 	}
 }
