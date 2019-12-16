@@ -280,6 +280,17 @@ namespace Lite\func {
 	}
 
 	/**
+	 * 根据数组项值，删除数组
+	 * @param array $arr
+	 * @param mixed $del_val
+	 */
+	function array_unset_by_value(&$arr, $del_val){
+		if (($key = array_search($del_val, $arr)) !== false) {
+			unset($arr[$key]);
+		}
+	}
+
+	/**
 	 * 对数组进行去空白
 	 * @param array $data 数据
 	 * @param array $fields 指定字段，为空表示所有字段
