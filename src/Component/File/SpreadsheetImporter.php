@@ -9,9 +9,6 @@ use function Lite\func\_tl;
 use function Lite\func\array_push_by_path;
 
 class SpreadsheetImporter {
-	//全维度错误索引,用于记录当前行、当前文件错误信息
-	const FULL_DIMENSION_ERROR_INDEX = -1;
-
 	//tmp下缓存文件夹名称
 	public static $tmp_fold_name = 'upload_import';
 
@@ -33,7 +30,7 @@ class SpreadsheetImporter {
 
 		$raw_map = Spreadsheet::parseExcelAsAssoc($tmp_name);
 		if(!$raw_map){
-			throw new BizException(_tl('文件数据为空，请检查后上传'));
+			throw new BizException(_tl('File content empty, please check your file before upload again'));
 		}
 
 		if(!is_dir($tmp_fold)){
@@ -123,6 +120,7 @@ class SpreadsheetImporter {
 
 	/**
 	 * 数据处理异常封装
+	 * 该方法用于提供对二维数据批量调用，支持中断时是否退出选项
 	 * @param array $available_data
 	 * @param callable $handler
 	 * @param bool $break_on_error

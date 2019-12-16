@@ -8,13 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-23 16:51+0800\n"
+"POT-Creation-Date: 2019-12-16 10:06+0800\n"
 "PO-Revision-Date: 2019-10-08 22:45+0800\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 1.8.7\n"
 "X-Poedit-KeywordsList: t;_tl\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -22,6 +22,22 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "Language: zh_CN\n"
 "X-Poedit-SearchPath-0: .\n"
+
+#: src/Component/File/SpreadsheetImporter.php:33
+msgid "File content empty, please check your file before upload again"
+msgstr ""
+
+#: src/Component/String/Html.php:279
+msgid "Progress max should bigger or equal to zero"
+msgstr ""
+
+#: src/Component/String/Html.php:284
+msgid "Progress value should less or equal than max"
+msgstr ""
+
+#: src/Component/String/Html.php:288
+msgid "Progress value should between 0 to 1"
+msgstr ""
 
 #: src/Component/Upload/Config/BaseConfig.php:86
 msgid "Server allow max upload size in-conformity"
@@ -79,23 +95,23 @@ msgstr ""
 msgid "Upload file size smaller than config {file_size} < {min_size}"
 msgstr ""
 
-#: src/Component/Upload/Upload.php:148
+#: src/Component/Upload/Upload.php:150
 msgid "Upload file type(mime：{file_mime}) no support by config mime list:{mime_list}"
 msgstr ""
 
-#: src/Component/Upload/Upload.php:158
+#: src/Component/Upload/Upload.php:162
 msgid "Upload file type(mime：{file_mime}) no support by config extension list:{ext_list}"
 msgstr ""
 
-#: src/Component/Upload/Upload.php:168
+#: src/Component/Upload/Upload.php:172
 msgid "Upload file type(mime：{file_mime}) must be an image"
 msgstr ""
 
-#: src/Component/Upload/Upload.php:172
+#: src/Component/Upload/Upload.php:176
 msgid "Image resolution width({width})px less than required:{require_width}px"
 msgstr ""
 
-#: src/Component/Upload/Upload.php:178
+#: src/Component/Upload/Upload.php:182
 msgid "Image resolution height({height})px less than required:{require_height}px"
 msgstr ""
 

@@ -7,20 +7,36 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-23 16:51+0800\n"
-"PO-Revision-Date: 2019-10-30 17:35+0800\n"
+"POT-Creation-Date: 2019-12-16 10:06+0800\n"
+"PO-Revision-Date: 2019-12-16 10:08+0800\n"
 "Last-Translator: sasumi <cnsasumi@outlook.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 1.8.7\n"
 "X-Poedit-KeywordsList: t\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SearchPath-0: .\n"
+
+#: src/Component/File/SpreadsheetImporter.php:33
+msgid "File content empty, please check your file before upload again"
+msgstr "文件内容为空，请先检查文件，然后再上传"
+
+#: src/Component/String/Html.php:279
+msgid "Progress max should bigger or equal to zero"
+msgstr "进度最大值应大于或等于零"
+
+#: src/Component/String/Html.php:284
+msgid "Progress value should less or equal than max"
+msgstr "进度值应小于或等于最大值"
+
+#: src/Component/String/Html.php:288
+msgid "Progress value should between 0 to 1"
+msgstr "进度值应介于0到1之间"
 
 #: src/Component/Upload/Config/BaseConfig.php:86
 msgid "Server allow max upload size in-conformity"
@@ -78,27 +94,27 @@ msgstr "上传文件大小大于配置，{file_size} > {max_size}"
 msgid "Upload file size smaller than config {file_size} < {min_size}"
 msgstr "上传文件大小小于配置，{file_size} < {min_size}"
 
-#: src/Component/Upload/Upload.php:148
+#: src/Component/Upload/Upload.php:150
 msgid ""
 "Upload file type(mime：{file_mime}) no support by config mime list:"
 "{mime_list}"
 msgstr "上传文件类型（mime：{file_mime}）不在系统配置列表中：{mime_list}"
 
-#: src/Component/Upload/Upload.php:158
+#: src/Component/Upload/Upload.php:162
 msgid ""
 "Upload file type(mime：{file_mime}) no support by config extension list:"
 "{ext_list}"
 msgstr "上传文件类型（mime：{file_mime}）不在系统配置列表中：{ext_list}"
 
-#: src/Component/Upload/Upload.php:168
+#: src/Component/Upload/Upload.php:172
 msgid "Upload file type(mime：{file_mime}) must be an image"
 msgstr "上传文件（mime：{file_mime}）必须为图片"
 
-#: src/Component/Upload/Upload.php:172
+#: src/Component/Upload/Upload.php:176
 msgid "Image resolution width({width})px less than required:{require_width}px"
 msgstr "图片分辨宽（{width} 像素）小于系统要求：{require_width}像素"
 
-#: src/Component/Upload/Upload.php:178
+#: src/Component/Upload/Upload.php:182
 msgid ""
 "Image resolution height({height})px less than required:{require_height}px"
 msgstr "图片分辨高（{height} 像素）小于系统要求：{require_height}像素"
