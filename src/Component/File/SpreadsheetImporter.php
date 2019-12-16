@@ -103,7 +103,7 @@ class SpreadsheetImporter {
 					try{
 						$val = $handler($val, $row);
 					}catch(\Exception $e){
-						$errors[$row_idx][$col_name] = $e->getMessage();
+						$errors[$row_idx][$col_name] = $e->getMessage().'('.($val ?: '空').')';
 						continue;
 					}
 					//返回null，表示忽略该项数据
