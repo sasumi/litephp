@@ -89,6 +89,7 @@ class SpreadsheetImporter {
 		$available_data = [];
 		foreach($raw_map as $row_idx=>$row){
 			$row_data = [];
+			$error_happens = false;
 			foreach($row_rules as $col_name => $mixed){
 				$val = trim($row[$col_name]);
 				if(is_string($mixed)){
@@ -97,14 +98,14 @@ class SpreadsheetImporter {
 				} else {
 					list($field, $handler) = $mixed;
 				}
-
 				//对接处理函数
 				if($handler){
 					try{
 						$val = $handler($val, $row);
 					}catch(\Exception $e){
 						$errors[$row_idx][$col_name] = $e->getMessage().'('.($val ?: '空').')';
-						continue 2;
+						$error_happens = true;
+						continue;
 					}
 					//返回null，表示忽略该项数据
 					if(!isset($val)){
@@ -113,7 +114,9 @@ class SpreadsheetImporter {
 				}
 				array_push_by_path($row_data, $field, $val);
 			}
-			$available_data[$row_idx] = $row_data;
+			if(!$error_happens){
+				$available_data[$row_idx] = $row_data;
+			}
 		}
 		return $available_data;
 	}
