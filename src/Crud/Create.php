@@ -34,7 +34,7 @@ trait Create {
 		$create_fields = $this->getCreateFields();
 		if(!$create_fields){
 			foreach($defines as $field => $def){
-				if(!$def['readonly']){
+				if(!$def['readonly'] && $def['entity']){
 					$create_fields[] = $field;
 				}
 			}

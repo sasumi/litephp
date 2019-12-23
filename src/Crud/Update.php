@@ -43,7 +43,7 @@ trait Update {
 		$update_fields = $this->getUpdateFields();
 		if(!$update_fields){
 			foreach($defines as $field => $def){
-				if(!$def['readonly']){
+				if(!$def['readonly'] && $def['entity']){
 					$update_fields[] = $field;
 				}
 			}

@@ -99,7 +99,7 @@ trait Index {
 
 		if(!$display_fields){
 			foreach($defines as $field => $def){
-				if($field !== $pk){
+				if($field !== $pk && $def['entity']){
 					$display_fields[] = $field;
 				}
 			}
