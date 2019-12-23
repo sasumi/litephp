@@ -374,15 +374,23 @@ abstract class Spreadsheet{
 	 * Excel 文件读取
 	 * 代码会处理空白字符（trim），以及去除空白行
 	 * @param string $file 文件路径
-	 * @param int $sheet 工作表序号（0开始）
+	 * @param int $sheet_index 工作表序号（0开始）或工作表名称
 	 * @param int $start_row
 	 * @return array
 	 */
-	public static function parseExcel($file, $sheet = 0, $start_row = 1){
+	public static function parseExcel($file, $sheet_index = 0, $start_row = 1){
 		$eid = PHPExcel_IOFactory::identify($file);
 		$reader = PHPExcel_IOFactory::createReader($eid);
 		$php_excel = $reader->load($file);
-		$sheet = $php_excel->getSheet($sheet);
+		if(is_numeric($sheet_index)){
+			$sheet = $php_excel->getSheet($sheet_index);
+		} else {
+			$sheet = $php_excel->getSheetByName($sheet_index);
+		}
+
+		if(!$sheet){
+			return [];
+		}
 
 		$hr = $sheet->getHighestRow();
 		$hc = $sheet->getHighestColumn();
