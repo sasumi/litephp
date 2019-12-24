@@ -55,7 +55,7 @@ class AliyunSms {
 			'TemplateParam' => $template_param ? json_encode($template_param, JSON_UNESCAPED_UNICODE) : null,
 		];
 		$content = $helper->request($this->config['access_key_id'], $this->config['access_key_secret'], 'dysmsapi.aliyuncs.com', $param);
-		if(is_array($content) || $content['Code'] == 'OK'){
+		if(is_array($content) && $content['Code'] == 'OK'){
 			return $content;
 		}
 		throw new Exception($content['Message'], -1, $content);
