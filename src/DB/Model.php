@@ -142,6 +142,16 @@ abstract class Model extends DAO{
 	}
 
 	/**
+	 * 获取主键值
+	 * @return mixed
+	 * @throws \Lite\Exception\Exception
+	 */
+	public function getPrimaryKeyValue(){
+		$pk = $this->getPrimaryKey();
+		return $this->$pk;
+	}
+
+	/**
 	 * 获取db记录实例对象
 	 * @param int $operate_type
 	 * @return DBAbstract
@@ -1402,6 +1412,29 @@ abstract class Model extends DAO{
 	 */
 	public function getLastOperateType(){
 		return $this->last_operate_type;
+	}
+
+	/**
+	 * 获取可读变更项
+	 * @param array $original_data [field => [alias, value], ...]
+	 * @return array [field => [alias, before_value, after_value], ...]
+	 */
+	public function getValueChangesHumanReadable(&$original_data = array()){
+		$alias_map = self::getEntityFieldAliasMap();
+		$changes = parent::getValueChanges($value_before_change);
+		$org_values = $this->getValues();
+		$ret = [];
+
+		//组装raw数据
+		foreach($org_values as $field=>$val){
+			$original_data[$field] = [$alias_map[$field], $val];
+		}
+
+		//组变更数据
+		foreach($changes as $field=>$val){
+			$ret[$field] = [$alias_map[$field], $value_before_change[$field], $val];
+		}
+		return $ret;
 	}
 
 	/**

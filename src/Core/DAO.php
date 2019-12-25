@@ -189,11 +189,11 @@ abstract class DAO implements \Iterator, \ArrayAccess{
 	 * 重设被变更过的状态
 	 * @param string $key
 	 */
-	public function resetValueChangeState($key=''){
+	public function resetValueChangeState($key = ''){
 		if($key){
 			unset($this->_values_change_keys[$key]);
 			unset($this->_original_values_for_change[$key]);
-		} else {
+		}else{
 			$this->_values_change_keys = array();
 			$this->_original_values_for_change = array();
 		}
@@ -252,6 +252,7 @@ abstract class DAO implements \Iterator, \ArrayAccess{
 		if($this->onBeforeSetValue($key, $value) === false){
 			return;
 		}
+
 		$this->_original_values_for_change[$key] = $this->_values[$key];
 		$this->_values[$key] = $value;
 		$this->_values_change_keys[$key] = $key;

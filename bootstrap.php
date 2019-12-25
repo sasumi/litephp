@@ -16,7 +16,7 @@ require_once __DIR__.'/src/function/autoload.php';
 //dump function shortcut
 if(!function_exists('dump')){
 	function dump(){
-		dump_trace_entrance_offset(2);
+		dump_trace_entrance_offset(1);
 		return call_user_func_array('Lite\func\dump', func_get_args());
 	}
 }
