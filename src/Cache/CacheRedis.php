@@ -6,9 +6,9 @@ use Redis as SysRedis;
 
 class CacheRedis extends CacheAdapter{
 	/** @var \Redis */
-	private $redis = null;        //缓存对象
+	private $redis = null;              //缓存对象
 	private $defaultHost = '127.0.0.1'; //默认服务器地址
-	private $defaultPort = 6379;       //默认端口号
+	private $defaultPort = 6379;        //默认端口号
 	private $queueName = 'redis_queue';
 
 	protected function __construct(array $config){
@@ -16,23 +16,28 @@ class CacheRedis extends CacheAdapter{
 			throw new Exception('No redis extension found');
 		}
 		parent::__construct($config);
-		$server = $config['server'] ?: ['host' => $this->defaultHost, 'port' => $this->defaultPort];
-		if(is_string($server)){
-			$server = explode(':', $server);
-		}
+		$server = $config ?: [
+			'host'     => $this->defaultHost,
+			'port'     => $this->defaultPort,
+			'database' => '',
+			'password' => '',
+		];
 		$this->redis = new SysRedis();
-		$this->connect($server['host'], $server['port']);
+		$this->redis->connect($server['host'], $server['port']);
+		if($server['password']){
+			$this->redis->auth($server['password']);
+		}
+		if($server['database']){
+			$this->select($server['database']);
+		}
 	}
 
-	/**
-	 * 添加服务器到连接池
-	 * @param string $host 服务地址
-	 * @param int $port 服务端口
-	 * @return bool true:成功;false:失败;
-	 * @internal param string $address 服务器地址
-	 */
-	private function connect($host, $port){
-		return $this->redis->connect($host, $port);
+	public function select($db_index){
+		return $this->redis->select($db_index);
+	}
+
+	public function swapDb($from_db_index, $to_db_index){
+		return $this->redis->swapdb($from_db_index, $to_db_index);
 	}
 
 	public function set($cache_key, $data, $expired = 60){
@@ -42,7 +47,7 @@ class CacheRedis extends CacheAdapter{
 
 	public function get($cache_key){
 		$data = $this->redis->get($cache_key);
-		return unserialize($data);
+		return $data === false ? null : unserialize($data);
 	}
 
 	public function delete($cache_key){
