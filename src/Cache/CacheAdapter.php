@@ -54,6 +54,18 @@ abstract class CacheAdapter implements CacheInterface{
 	}
 
 	/**
+	 * set cache distributed
+	 * @param $cache_prefix_key
+	 * @param array $data_list
+	 * @param int $expired
+	 */
+	final public function setDistributed($cache_prefix_key, array $data_list, $expired = 60){
+		foreach($data_list as $k=>$data){
+			$this->set($cache_prefix_key.$k, $data, $expired);
+		}
+	}
+
+	/**
 	 * set config
 	 * @param string $key
 	 * @return mixed

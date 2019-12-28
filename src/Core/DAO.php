@@ -55,7 +55,7 @@ abstract class DAO implements \Iterator, \ArrayAccess{
 	 * @param null $key
 	 * @return array|null
 	 */
-	public function getPropertiesDefine($key=null){
+	public function getPropertiesDefine($key = null){
 		if(!$key){
 			return $this->_properties_define;
 		}
@@ -64,16 +64,17 @@ abstract class DAO implements \Iterator, \ArrayAccess{
 
 	/**
 	 * 获取实例属性定义
+	 * @param null $key
 	 * @return array
 	 */
-	public function getEntityPropertiesDefine(){
+	public function getEntityPropertiesDefine($key = null){
 		$ret = array();
-		foreach($this->_properties_define as $f=>$def){
+		foreach($this->_properties_define as $f => $def){
 			if($def['entity']){
 				$ret[$f] = $def;
 			}
 		}
-		return $ret;
+		return $key ? $ret[$key] : $ret;
 	}
 
 	/**
@@ -236,7 +237,12 @@ abstract class DAO implements \Iterator, \ArrayAccess{
 	 * @param $value
 	 */
 	public function __set($key, $value){
-		$rule = $this->getPropertiesDefine($key) ?: array();
+		$rule = $this->getEntityPropertiesDefine($key);
+		//非实体属性，不参与values逻辑
+		if(!$rule){
+			$this->{$key} = $value;
+			return;
+		}
 		$setter = $rule[self::SETTER_KEY_NAME];
 
 		//setter中断

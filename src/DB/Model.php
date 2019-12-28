@@ -1,6 +1,7 @@
 <?php
 namespace Lite\DB;
 
+use Lite\Cache\CacheVar;
 use Lite\Core\Config;
 use Lite\Core\DAO;
 use Lite\Core\Hooker;
@@ -8,6 +9,7 @@ use Lite\DB\Driver\DBAbstract;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
+use function Lite\func\_tl;
 use function Lite\func\array_clear_fields;
 use function Lite\func\array_first;
 use function Lite\func\array_group;
@@ -26,7 +28,7 @@ use function Lite\func\time_range_v;
 abstract class Model extends DAO{
 	const DB_READ = 1;
 	const DB_WRITE = 2;
-	
+
 	const LAST_OP_SELECT = Query::SELECT;
 	const LAST_OP_UPDATE = Query::UPDATE;
 	const LAST_OP_DELETE = Query::DELETE;
@@ -34,12 +36,18 @@ abstract class Model extends DAO{
 
 	/** @var string current model last operate type */
 	private $last_operate_type = self::LAST_OP_SELECT;
-	
+
 	/** @var array database config */
 	private $db_config = array();
 
 	/** @var Query db query object * */
 	private $query = null;
+
+	/**
+	 * @var array model prefetch fields group
+	 * @example [`db1`.`table` => ['name', 'extra'], `db2`.`table2` => ['pro1', 'pro2'],...]
+	 */
+	private static $prefetch_groups = [];
 
 	/**
 	 * 获取当前调用ORM对象
@@ -125,6 +133,19 @@ abstract class Model extends DAO{
 	 */
 	public function getTableFullName(){
 		return $this->getDbTablePrefix().$this->getTableName();
+	}
+
+	/**
+	 * @param int $op_type
+	 * @return string
+	 * @throws \Lite\Exception\Exception
+	 */
+	public function getTableFullNameWithDbName($op_type = self::DB_READ){
+		$all_configs = $this->getDbConfig();
+		$config = $this->parseConfig($op_type, $all_configs);
+		$db = $config['database'];
+		$table = $this->getTableFullName();
+		return "`$db`.`$table`";
 	}
 
 	/**
@@ -424,6 +445,32 @@ abstract class Model extends DAO{
 	}
 
 	/**
+	 * Prefetch relate fields [via foreign keys]
+	 * @param array $fields
+	 * @return $this
+	 */
+	public function prefetch(array $fields){
+		if(!$fields){
+			return $this;
+		}
+		$defines = $this->getPropertiesDefine();
+		$table_full = $this->getTableFullNameWithDbName();
+		foreach($fields as $f){
+			if(!$defines[$f]){
+				throw new Exception(_tl("Prefetch field:{field} no defined", ['field'=>$f]));
+			}
+			if(!$defines[$f]['foreign'] && !$defines[$f]['has_many'] && !$defines[$f]['has_one']){
+				throw new Exception(_tl('Prefetch field:{field} must define foreign|has_one|has_many target', ['field'=>$f]));
+			}
+			if(!self::$prefetch_groups[$table_full]){
+				self::$prefetch_groups[$table_full] = [];
+			}
+			self::$prefetch_groups[$table_full][] = $f;
+		}
+		return $this;
+	}
+
+	/**
 	 * 自动检测变量类型、变量值设置匹对记录
 	 * 当前操作仅做“等于”，“包含”比对，不做其他比对
 	 * @param $fields
@@ -514,7 +561,16 @@ abstract class Model extends DAO{
 	 */
 	public static function findOneByPk($val, $as_array = false){
 		$obj = static::meta();
-		return static::find($obj->getPrimaryKey().'=?', $val)->one($as_array);
+		$pk = $obj->getPrimaryKey();
+		//只有在开启去重查询时，cache才生效，
+		//由于可能存在多方关联到当前对象，因此这里不考虑prefetch是否启用
+		if(DBAbstract::distinctQueryState()){
+			$cache_key = $obj->getTableFullNameWithDbName()."/$pk/$val";
+			if($data = CacheVar::instance()->get($cache_key)){
+				return $as_array ? $data : new static($data);
+			}
+		}
+		return static::find($pk.'=?', $val)->one($as_array);
 	}
 
 	/**
@@ -533,17 +589,81 @@ abstract class Model extends DAO{
 	/**
 	 * 有主键列表查询多条记录
 	 * 单主键列表为空，该方法会返回空数组结果
-	 * @param array $pks
+	 * @param array $pk_values
 	 * @param bool $as_array
 	 * @return static[]
-
-	 */
-	public static function findByPks(array $pks, $as_array = false){
-		if(empty($pks)){
-			return array();
+    */
+	public static function findByPks(array $pk_values, $as_array = false){
+		if(!$pk_values){
+			return [];
 		}
+
 		$obj = static::meta();
-		return static::find($obj->getPrimaryKey().' IN ?', $pks)->all($as_array);
+		$pk = $obj->getPrimaryKey();
+
+		//只有在开启去重查询时，cache才生效
+		//由于可能存在多方关联到当前对象，因此这里不考虑prefetch是否启用
+		if(DBAbstract::distinctQueryState()){
+			$result = $obj->_getObjectCacheList($pk, $pk_values, $as_array, $miss_matches);
+			if($miss_matches){
+				$rests = static::find($obj->getPrimaryKey().' IN ?', $miss_matches)->all($as_array);
+				$result = array_merge($result, $rests);
+			}
+			return $result;
+		}
+		return static::find("$pk IN ?", $pk_values)->all($as_array);
+	}
+
+	/**
+	 * 获取对象行缓存
+	 * @param $field
+	 * @param array $field_values
+	 * @param $as_array
+	 * @param array $miss_matches
+	 * @return array
+	 * @throws \Lite\Exception\Exception
+	 */
+	private function _getObjectCacheList($field, array $field_values, $as_array = false, &$miss_matches = []){
+		$cache_prefix_key = $this->getTableFullNameWithDbName()."/$field/";
+		$result = [];
+		foreach($field_values as $k=> $val){
+			$item = CacheVar::instance()->get($cache_prefix_key."$val");
+			if(isset($item)){
+				unset($field_values[$k]);
+				$result[] = $as_array ? $item : new static($item);
+			}
+		}
+		$miss_matches = $field_values;
+		return $result;
+	}
+
+	/**
+	 * @param $field
+	 * @param $field_value
+	 * @param bool $as_array
+	 * @param bool $has_many
+	 * @return $this|mixed
+	 * @throws \Lite\Exception\Exception
+	 */
+	private function _getObjectCache($field, $field_value, $as_array = false, $has_many = false){
+		$cache_key = $this->getTableFullNameWithDbName()."/$field/$field_value";
+		$data = CacheVar::instance()->get($cache_key);
+		if($as_array){
+			return $data;
+		}
+		if($has_many){
+			$ret = [];
+			foreach($data as $item){
+				$ret[] = new static($item);
+			}
+			return $ret;
+		}
+		return new static($data);
+	}
+
+	private function _setObjectCaches($field, $data_list){
+		$cache_key = $this->getTableFullNameWithDbName()."/$field/";
+		CacheVar::instance()->setDistributed($cache_key, $data_list);
 	}
 
 	/**
@@ -660,13 +780,36 @@ abstract class Model extends DAO{
 		if(!$list){
 			return array();
 		}
+		return $this->__handleListResult($list, $as_array, $unique_key);
+	}
+
+	/**
+	 * 分页查询记录
+	 * @param string $page
+	 * @param bool $as_array 是否以数组方式返回，默认为Model对象数组
+	 * @param string $unique_key 用于组成返回数组的唯一性key
+	 * @return static[]
+	 */
+	public function paginate($page = null, $as_array = false, $unique_key = ''){
+		$list = $this->getDbDriver(self::DB_READ)->getPage($this->query, $page);
+		return $this->__handleListResult($list, $as_array, $unique_key);
+	}
+
+	/**
+	 * 格式化数据列表，预取数据
+	 * @param static[] $list
+	 * @param bool $as_array 是否作为二维数组返回，默认为对象数组
+	 * @param string $unique_key 数组下标key
+	 * @return array
+	 */
+	private function __handleListResult(array $list, $as_array = false, $unique_key = ''){
+		 $this->__doPrefetchList($list);
 		if($as_array){
 			if($unique_key){
 				$list = array_group($list, $unique_key, true);
 			}
 			return $list;
 		}
-
 		$result = array();
 		foreach($list as $item){
 			$tmp = clone $this;
@@ -682,16 +825,46 @@ abstract class Model extends DAO{
 	}
 
 	/**
-	 * 以关联数组方式返回
-	 * @deprecated 请使用 all()，第二个参数已经支持
-	 * @param bool $as_array 是否以数组方式返回，默认为Model对象
-	 * @param null $key 唯一性下标，如id，默认为自然索引数组
-	 * @return static[]|Query[]
-
+	 * Prefetch relate model list
+	 * @param $list
+	 * @throws \Lite\Exception\Exception
 	 */
-	public function allAsAssoc($as_array = false, $key = null){
-		$key = $key ?: $this->getPrimaryKey();
-		return $this->all($as_array, $key);
+	private function __doPrefetchList($list){
+		if(!$list){
+			return;
+		}
+
+		$table_full = $this->getTableFullNameWithDbName();
+		$prefetch_fields = self::$prefetch_groups[$table_full];
+		if(!$prefetch_fields){
+			return;
+		}
+
+		$defines = $this->getPropertiesDefine();
+		foreach($prefetch_fields as $field){
+			$def = $defines[$field];
+			if($def['foreign'] || $def['has_one'] || $def['has_many']){
+				if($def['foreign']){
+					/** @var Model $target_class */
+					$target_class = $def['foreign'];
+					$target_instance = $target_class::meta();
+					$target_field = $target_instance->getPrimaryKey();
+					$current_field = $field;
+				} else {
+					/** @var Model $target_class */
+					list($current_field, $target_class, $target_field) = $def['has_one'] ?: $def['has_many'];
+					$target_instance = $target_class::meta();
+					$target_field = $target_field ?: $target_instance->getPrimaryKey();
+				}
+
+				$field_columns = array_unique(array_column($list, $current_field));
+
+				/** @var array $tmp_data */
+				$tmp_data = $target_class::find("$target_field IN ?", $field_columns)->all(true);
+				$tmp_data = array_group($tmp_data, $target_field, $def['has_many'] ? false : true);
+				$target_instance->_setObjectCaches($target_field, $tmp_data);
+			}
+		}
 	}
 
 	/**
@@ -752,7 +925,6 @@ abstract class Model extends DAO{
 	 *
 	 * sum('price'); //10.00
 	 * sum(['price','count']); //[10.00, 14]
-
 	 * sum(['price', 'count'], ['platform','order_type']); //
 	 * [
 	 *  ['platform,order_type'=>'amazon', 'price'=>10.00, 'count'=>14],
@@ -987,37 +1159,6 @@ abstract class Model extends DAO{
 		$driver = $this->getDbDriver(self::DB_READ);
 		$count = $driver->getCount($this->query);
 		return $count;
-	}
-
-	/**
-	 * 分页查询记录
-	 * @param string $page
-	 * @param bool $as_array 是否以数组方式返回，默认为Model对象数组
-	 * @param string $unique_key 用于组成返回数组的唯一性key
-	 * @return static[]
-	 */
-	public function paginate($page = null, $as_array = false, $unique_key = ''){
-		$list = $this->getDbDriver(self::DB_READ)->getPage($this->query, $page);
-		if($as_array){
-			if($unique_key){
-				$list = array_group($list, $unique_key, true);
-			}
-			return $list;
-		}
-		$result = array();
-		if($list){
-			foreach($list as $item){
-				$tmp = clone $this;
-				$tmp->setValues($item);
-				$tmp->resetValueChangeState();
-				if($unique_key){
-					$result[$item[$unique_key]] = $tmp;
-				} else{
-					$result[] = $tmp;
-				}
-			}
-		}
-		return $result;
 	}
 
 	/**
@@ -1445,7 +1586,7 @@ abstract class Model extends DAO{
 			$this->query = clone $this->query;
 		}
 	}
-	
+
 	/**
 	 * 调用查询对象其他方法
 	 * @param $method_name
@@ -1468,7 +1609,7 @@ abstract class Model extends DAO{
 	 */
 	public function __set($key, $val){
 		if(is_array($val)){
-			$define = $this->getPropertiesDefine($key);
+			$define = $this->getEntityPropertiesDefine($key);
 			if($define && $define['type'] == 'set'){
 				$val = join(',', $val);
 			}
@@ -1480,62 +1621,56 @@ abstract class Model extends DAO{
 	 * 配置getter
 	 * <p>
 	 * 支持：'name' => array(
-	 *          'has_one'=>callable,
-	 *          'target_key'=>'category_id',
-	 *          'source_key'=>默认当前对象PK)
-	 * 支持：'children' => array(
-	 *          'has_many'=>callable,
-	 *          'target_key'=>'category_id',
-	 *          'source_key' => 默认当前对象PK)
+	 *      has_one'=>[current_field, target_class, target_field]
+	 * )
 	 * 支持：'name' => array(
-	 *          'getter' => function($k){
-	 *          }
-	 *      )
+	 *      has_many'=>[current_field, target_class, target_field]
+	 * )
 	 * 支持：'name' => array(
-	 *          'setter' => function($k, $v){
-	 *          }
-	 *      )
+	 *     'getter' => function($k){}
+	 * )
+	 * 支持：'name' => array(
+	 *    'setter' => function($k, $v){}
+	 * )
 	 * </p>
 	 * @param $key
-
 	 * @return mixed
 	 */
 	public function __get($key){
 		$define = $this->getPropertiesDefine($key);
+		$table_full = $this->getTableFullNameWithDbName();
 
 		if($define){
 			if($define['getter']){
-				return call_user_func($define['getter'], $this);
-			} else if($define['has_one'] || $define['has_many']){
-				$source_key = $define['source_key'];
-				$target_key = $define['target_key'];
+				$ret = call_user_func($define['getter'], $this);
+				$this->{$key} = $ret; //avoid trigger virtual property getter again
+				return $ret;
+			}
+			if($define['has_one'] || $define['has_many']){
+				/** @var static $target_class */
+				list($current_field, $target_class, $target_field) = $define['has_one'] ?: $define['has_many'];
+				$target_instance = $target_class::meta();
+				$target_field = $target_field ?: $target_instance->getPrimaryKey();
 
-				if($define['has_one']){
-					if(!$target_key && !$source_key){
-						throw new Exception('Has one config must define target key or source key');
-					}
-					$match_val = $this->getValue($source_key ?: $this->getPrimaryKey());
-					/** @var Model $class */
-					$class = $define['has_one'];
-					if(!$target_key){
-						return $class::findOneByPk($match_val);
-					} else{
-						return $class::find("$target_key = ?", $match_val)->one();
+				//id, variant, listing_id = listing.id
+				$prefetch_list = self::$prefetch_groups[$table_full];
+				if(DBAbstract::distinctQueryState() && in_array($key, $prefetch_list)){
+					$result = $target_instance->_getObjectCache($target_field, $this->{$current_field}, false, $define['has_many']);
+					if(isset($result)){
+						$this->{$key} = $result;
+						return $result;
 					}
 				}
-				if($define['has_many']){
-					if(!$target_key){
-						throw new Exception('Has many config must define target key');
-					}
-					/** @var Model $class */
-					$class = $define['has_many'];
-					$match_val = $this->getValue($source_key ?: $this->getPrimaryKey());
-					return $class::find("$target_key = ?", $match_val)->all();
-				}
+				$ret = $define['has_one'] ?
+					$target_class::find("$target_field=?", $this->{$current_field})->one() :
+					$target_class::find("$target_field=?", $this->{$current_field})->all();
+				$this->{$key} = $ret; //avoid trigger virtual property getter again
+				return $ret;
 			}
 		}
 		$v = parent::__get($key);
-		
+		$this->{$key} = $v; //avoid trigger virtual property getter again
+
 		/**
 		 * @todo 这里由于在update/add模板共用情况下，很可能使用 $model->$field 进行直接拼接action，需要重新审视这里抛出exception是否合理
 		//如果当前属性未定义，或者未从数据库中获取相应字段
