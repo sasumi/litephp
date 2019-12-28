@@ -241,7 +241,8 @@ abstract class DAO implements \Iterator, \ArrayAccess{
 		//非实体属性，不参与values逻辑
 		if(!$rule){
 			$this->{$key} = $value;
-			return;
+			//这里还需要保留连表查询结果的情况，不能强制限定当前field一定在ORM对象中
+			//return;
 		}
 		$setter = $rule[self::SETTER_KEY_NAME];
 
