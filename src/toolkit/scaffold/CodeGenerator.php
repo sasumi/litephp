@@ -34,7 +34,7 @@ abstract class CodeGenerator{
 	protected static function getModelNameSpace(){
 		return static::getNameSpace()."\\model";
 	}
-	
+
 	protected static function getTableTpl(){
 		return __DIR__.'/table.tpl';
 	}
@@ -157,6 +157,7 @@ abstract class CodeGenerator{
 
 		$properties_defines = static::getPropertiesDefines($meta_list);
 		$pk = static::get_pk($meta_list);
+		$fks = static::get_fks($meta_list);
 		$comment = static::getClassComment($class_name, $meta_list);
 		$model_desc = static::getTableDesc($table);
 		$ns = static::getNameSpace();
@@ -171,9 +172,10 @@ abstract class CodeGenerator{
 			'class_comment'      => $comment,
 			'class_name'         => $class_name,
 			'primary_key'        => $pk,
+			'foreign_keys'       => $fks,
 			'model_desc'         => $model_desc,
 			'class_const_string' => $class_const_string,
-			'properties_defines' => $properties_defines
+			'properties_defines' => $properties_defines,
 		));
 		$update = is_file($file);
 		file_put_contents($file, $str);
@@ -198,6 +200,22 @@ abstract class CodeGenerator{
 			}
 		}
 		return '';
+	}
+
+	/**
+	 * 获取外键
+	 * @todo
+	 * @param $meta_list
+	 * @return array
+	 */
+	protected static function get_fks($meta_list){
+		$fk_maps = [];
+		foreach($meta_list as $meta){
+			if($meta['Key'] == 'MUL'){
+				//TODO
+			}
+		}
+		return $fk_maps;
 	}
 
 	protected static function getClassComment($class_name, $meta_list){
