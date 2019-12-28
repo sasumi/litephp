@@ -1653,7 +1653,7 @@ abstract class Model extends DAO{
 				$target_field = $target_field ?: $target_instance->getPrimaryKey();
 
 				//id, variant, listing_id = listing.id
-				$prefetch_list = self::$prefetch_groups[$table_full];
+				$prefetch_list = self::$prefetch_groups[$table_full] ?: [];
 				if(DBAbstract::distinctQueryState() && in_array($key, $prefetch_list)){
 					$result = $target_instance->_getObjectCache($target_field, $this->{$current_field}, false, $define['has_many']);
 					if(isset($result)){
