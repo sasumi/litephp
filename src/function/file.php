@@ -382,7 +382,8 @@ function log($file, $content, $max_size = 10*1024*1024, $max_files = 5, $pad_str
 }
 
 /**
- * log in temporary directory
+ * Log in temporary directory
+ * if high performance required, support to use logrotate programme to process your log file
  * @param string $filename
  * @param mixed $content
  * @param float|int $max_size

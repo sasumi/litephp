@@ -5,9 +5,6 @@ use Lite\Component\Net\Http;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception as Exception;
 use Lite\Exception\RouterException;
-use Lite\Logger\Logger;
-use Lite\Logger\LoggerLevel;
-use Lite\Logger\Message\CommonMessage;
 use ReflectionClass;
 use function Lite\func\decodeURI;
 use function Lite\func\file_exists_case_insensitive;
@@ -118,11 +115,6 @@ class Application{
 	 */
 	private static function handleWebException(\Exception $ex){
 		$render = Config::get('app/render');
-
-		$log_level = ($ex instanceof RouterException) ? LoggerLevel::INFO : LoggerLevel::WARNING;
-		Logger::instance('LITE')->log($log_level, new CommonMessage('APP EX:'.$ex->getMessage(),
-			array('referer'=> $_SERVER['HTTP_REFERER'], 'exception'=>$ex->__toString())));
-
 		$req_type = View::parseRequestType();
 
 		//business exception

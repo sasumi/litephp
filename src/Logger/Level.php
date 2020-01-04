@@ -1,57 +1,66 @@
 <?php
 namespace Lite\Logger;
 
-/**
- * User: sasumi
- * Date: 2015/4/14
- * Time: 17:51
- */
-abstract class LoggerLevel{
+abstract class Level{
 	/**
 	 * Detailed debug information
 	 */
-	const DEBUG = 100;
+	const DEBUG = 'DEBUG';
 
 	/**
 	 * Interesting events
 	 * Examples: User logs in, SQL logs.
 	 */
-	const INFO = 200;
+	const INFO = 'INFO';
 
 	/**
 	 * Uncommon events
 	 */
-	const NOTICE = 250;
+	const NOTICE = 'NOTICE';
 
 	/**
 	 * Exceptional occurrences that are not errors
 	 * Examples: Use of deprecated APIs, poor use of an API,
 	 * undesirable things that are not necessarily wrong.
 	 */
-	const WARNING = 300;
+	const WARNING = 'WARNING';
 
 	/**
 	 * Runtime errors
 	 */
-	const ERROR = 400;
+	const ERROR = 'ERROR';
 
 	/**
 	 * Critical conditions
 	 * Example: Application component unavailable, unexpected exception.
 	 */
-	const CRITICAL = 500;
+	const CRITICAL = 'CRITICAL';
 
 	/**
 	 * Action must be taken immediately
 	 * Example: Entire website down, database unavailable, etc.
 	 * This should trigger the SMS alerts and wake you up.
 	 */
-	const ALERT = 550;
+	const ALERT = 'ALERT';
 
 	/**
 	 * Urgent alert.
 	 */
-	const EMERGENCY = 600;
+	const EMERGENCY = 'EMERGENCY';
+
+	/**
+	 * Level priority order map
+	 */
+	const LEVEL_PRIORITY_ORDER = [
+		self::DEBUG,
+		self::INFO,
+		self::NOTICE,
+		self::WARNING,
+		self::ERROR,
+		self::CRITICAL,
+		self::ALERT,
+		self::EMERGENCY,
+	];
 
 	/**
 	 * Logging levels from SysLog protocol defined in RFC 5424
@@ -69,14 +78,14 @@ abstract class LoggerLevel{
 	);
 
 	/**
-	 * get level above specified level(included)
+	 * Get level above specified level(includ current)
 	 * @param $start_level
 	 * @return array
 	 */
-	public static function getLevelAbove($start_level){
+	public static function getLevelsAbove($start_level){
 		$ret = array();
 		$found = false;
-		foreach(self::$levels as $lv => $_){
+		foreach(self::LEVEL_PRIORITY_ORDER as $lv){
 			if($lv == $start_level){
 				$found = true;
 			}
@@ -88,47 +97,24 @@ abstract class LoggerLevel{
 	}
 
 	/**
-	 * supported color set for web view
+	 * Supported color set for web view
 	 * @var array fore-color & background-color
 	 */
-	public static $log_color_set = array(
-		self::DEBUG     => array('#fafafa', 'gray'),
-		self::INFO      => array('#aaa', 'white'),
-		self::NOTICE    => array('#437cb0', 'white'),
-		self::WARNING   => array('#ffbd69', 'white'),
-		self::ERROR     => array('#ff9799', 'white'),
-		self::CRITICAL  => array('#ff5500', 'white'),
-		self::ALERT     => array('red', 'white'),
-		self::EMERGENCY => array('black', 'white'),
-	);
+	const LOG_COLOR_SET = [
+		self::DEBUG     => ['#fafafa', 'gray'],
+		self::INFO      => ['#aaa', 'white'],
+		self::NOTICE    => ['#437cb0', 'white'],
+		self::WARNING   => ['#ffbd69', 'white'],
+		self::ERROR     => ['#ff9799', 'white'],
+		self::CRITICAL  => ['#ff5500', 'white'],
+		self::ALERT     => ['red', 'white'],
+		self::EMERGENCY => ['black', 'white'],
+	];
 
 	/**
-	 * php error description map
-	 * @var array
+	 * PHP error code mapping to Logger level
 	 */
-	public static $php_error_code = array(
-		E_ERROR             => 'E_ERROR',
-		E_WARNING           => 'E_WARNING',
-		E_PARSE             => 'E_PARSE',
-		E_NOTICE            => 'E_NOTICE',
-		E_CORE_ERROR        => 'E_CORE_ERROR',
-		E_CORE_WARNING      => 'E_CORE_WARNING',
-		E_COMPILE_ERROR     => 'E_COMPILE_ERROR',
-		E_COMPILE_WARNING   => 'E_COMPILE_WARNING',
-		E_USER_ERROR        => 'E_USER_ERROR',
-		E_USER_WARNING      => 'E_USER_WARNING',
-		E_USER_NOTICE       => 'E_USER_NOTICE',
-		E_STRICT            => 'E_STRICT',
-		E_RECOVERABLE_ERROR => 'E_RECOVERABLE_ERROR',
-		E_DEPRECATED        => 'E_DEPRECATED',
-		E_USER_DEPRECATED   => 'E_USER_DEPRECATED',
-	);
-
-	/**
-	 * php error code map
-	 * @var array
-	 */
-	public static $php_error_map = array(
+	const PHP_ERROR_MAPS = array(
 		E_ERROR             => self::CRITICAL,
 		E_WARNING           => self::WARNING,
 		E_PARSE             => self::ALERT,
