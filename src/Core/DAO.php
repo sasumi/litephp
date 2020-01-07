@@ -250,8 +250,10 @@ abstract class DAO implements \Iterator, \ArrayAccess{
 		if($setter && call_user_func_array($setter, array($value, $this)) === false){
 			return;
 		}
+
 		//如果数据没有修改，则不纳入提交
-		if($this->_values[$key] === $value){
+		//这里不能直接使用类型比对，DB中 null项在HTML中被填充为空字符串
+		if($this->_values[$key] == $value){
 			return;
 		}
 

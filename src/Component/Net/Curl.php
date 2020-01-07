@@ -174,12 +174,9 @@ abstract class Curl {
 		}
 
 		// build file parameters
-		foreach ($files as $k => $v) {
-			switch (true) {
-				case false === $v = realpath(filter_var($v)):
-				case !is_file($v):
-				case !is_readable($v):
-					continue; // or return false, throw new InvalidArgumentException
+		foreach($files as $k => $v){
+			if(false === $v = realpath(filter_var($v)) || !is_file($v) || !is_readable($v)){
+				continue;
 			}
 			$data = file_get_contents($v);
 			$v = call_user_func("end", explode(DIRECTORY_SEPARATOR, $v));
