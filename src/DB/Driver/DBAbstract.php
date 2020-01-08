@@ -65,7 +65,7 @@ abstract class DBAbstract{
 			$this->config['type'] = 'mysql';
 		}
 		
-		if($this->config['charset']){
+		if(isset($this->config['charset']) && $this->config['charset']){
 			$this->config['charset'] = static::fixCharsetCode($this->config['charset'], $this->config['type']);
 		}
 		
@@ -73,12 +73,12 @@ abstract class DBAbstract{
 		$this->connect($this->config);
 		
 		//charset
-		if($this->config['charset']){
+		if(isset($this->config['charset']) && $this->config['charset']){
 			$this->setCharset($this->config['charset']);
 		}
 		
 		//timezone
-		if($this->config['timezone']){
+		if(isset($this->config['timezone']) && $this->config['timezone']){
 			$this->setTimeZone($this->config['timezone']);
 		}
 	}
@@ -161,7 +161,7 @@ abstract class DBAbstract{
 			$instance_list = [];
 		}
 		
-		if(!$instance_list[$key]){
+		if(!isset($instance_list[$key]) || !$instance_list[$key]){
 			/** @var self $class */
 			$db_type = strtolower($config['type']) ?: 'mysql';
 			$driver = strtolower($config['driver']) ?: 'pdo';
@@ -311,7 +311,7 @@ abstract class DBAbstract{
 		Hooker::fire(self::EVENT_BEFORE_DB_GET_LIST, $param);
 		if(!is_array($param['result'])){
 			if(self::$QUERY_DISTINCT){
-				$param['result'] = self::$query_cache[$query.'']; //todo 这里通过 isFRQuery 可以做全表cache
+				$param['result'] = isset(self::$query_cache[$query.'']) ? self::$query_cache[$query.''] : null; //todo 这里通过 isFRQuery 可以做全表cache
 			}
 			if(!isset($param['result'])){
 				$rs = $this->query($param['query']);

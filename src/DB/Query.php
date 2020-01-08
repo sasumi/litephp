@@ -377,7 +377,9 @@ class Query {
 	 * @return $this
 	 */
 	public function limit(/**$p1,$p2**/){
-		list($p1, $p2) = func_get_args();
+		$tmp = func_get_args();
+		$p1 = isset($tmp[0]) ? $tmp[0] : 0;
+		$p2 = isset($tmp[1]) ? $tmp[1] : 0;
 		if($p2){
 			$this->limit = array($p1,$p2);
 		} else if(is_array($p1)){

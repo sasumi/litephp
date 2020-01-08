@@ -153,7 +153,7 @@ abstract class Router{
 		if($return_url){
 			$tmp = parse_url($return_url);
 			//support empty host format
-			if(!$tmp['host'] || $tmp['host'] === $_SERVER['HTTP_HOST']) {
+			if(!isset($tmp['host']) || !$tmp['host'] || $tmp['host'] === $_SERVER['HTTP_HOST']) {
 				return $return_url;
 			}
 		}
@@ -234,7 +234,7 @@ abstract class Router{
 
 		//优先query参数
 		if((isset($get[self::$ROUTER_KEY]) && $get[self::$ROUTER_KEY]) || $router_mode == self::MODE_NORMAL){
-			list($controller, $action) = self::resolveUri($get[self::$ROUTER_KEY], true);
+			list($controller, $action) = self::resolveUri(isset($get[self::$ROUTER_KEY]) ? $get[self::$ROUTER_KEY] : '', true);
 			unset($get[self::$ROUTER_KEY]);
 		} else {
 			list($controller, $action, $param) = self::resolveCurrentRequestPath($path_info);

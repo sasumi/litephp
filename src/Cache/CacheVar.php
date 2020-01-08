@@ -21,7 +21,7 @@ class CacheVar extends CacheAdapter {
 
 	public function get($cache_key){
 		$cache_key = $this->getCacheKey($cache_key);
-		return self::$DATA_STORE[$cache_key];
+		return isset(self::$DATA_STORE[$cache_key]) ? self::$DATA_STORE[$cache_key] : null;
 	}
 
 	public function delete($cache_key){

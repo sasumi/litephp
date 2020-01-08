@@ -221,7 +221,7 @@ abstract class Model extends DAO{
 		$obj = static::meta();
 		$configs = $obj->getDbConfig();
 		$config = $obj->parseConfig($type, $configs);
-		return $config['prefix'] ?: '';
+		return (isset($config['prefix']) && $config['prefix']) ? $config['prefix'] : '';
 	}
 
 	/**
@@ -462,7 +462,7 @@ abstract class Model extends DAO{
 			if(!$defines[$f]['foreign'] && !$defines[$f]['has_many'] && !$defines[$f]['has_one']){
 				throw new Exception(_tl('Prefetch field:{field} must define foreign|has_one|has_many target', ['field'=>$f]));
 			}
-			if(!self::$prefetch_groups[$table_full]){
+			if(!isset(self::$prefetch_groups[$table_full]) || !self::$prefetch_groups[$table_full]){
 				self::$prefetch_groups[$table_full] = [];
 			}
 			self::$prefetch_groups[$table_full][] = $f;
@@ -835,7 +835,7 @@ abstract class Model extends DAO{
 		}
 
 		$table_full = $this->getTableFullNameWithDbName();
-		$prefetch_fields = self::$prefetch_groups[$table_full];
+		$prefetch_fields = isset(self::$prefetch_groups[$table_full]) ? self::$prefetch_groups[$table_full] : null;
 		if(!$prefetch_fields){
 			return;
 		}
@@ -861,7 +861,7 @@ abstract class Model extends DAO{
 
 				/** @var array $tmp_data */
 				$tmp_data = $target_class::find("$target_field IN ?", $field_columns)->all(true);
-				$tmp_data = array_group($tmp_data, $target_field, $def['has_many'] ? false : true);
+				$tmp_data = array_group($tmp_data, $target_field, isset($def['has_many']) ? !$def['has_many'] : true);
 				$target_instance->_setObjectCaches($target_field, $tmp_data);
 			}
 		}
@@ -1022,7 +1022,7 @@ abstract class Model extends DAO{
 	public function column($key){
 		$obj = self::meta();
 		$pro_defines = $obj->getEntityPropertiesDefine();
-		if($pro_defines[$key]){
+		if(isset($pro_defines[$key]) && $pro_defines[$key]){
 			$this->query->field($key);
 		}
 		$data = $this->getDbDriver(self::DB_READ)->getAll($this->query);
@@ -1487,7 +1487,7 @@ abstract class Model extends DAO{
 
 	 */
 	private static function parseConditionStatement($args, Model $obj){
-		$statement = $args[0];
+		$statement = isset($args[0]) ? $args[0] : null;
 		$args = array_slice($args, 1);
 		if(!empty($args) && $statement){
 			$arr = explode('?', $statement);
@@ -1641,12 +1641,12 @@ abstract class Model extends DAO{
 		$table_full = $this->getTableFullNameWithDbName();
 
 		if($define){
-			if($define['getter']){
+			if(isset($define['getter']) && $define['getter']){
 				$ret = call_user_func($define['getter'], $this);
 				$this->{$key} = $ret; //avoid trigger virtual property getter again
 				return $ret;
 			}
-			if($define['has_one'] || $define['has_many']){
+			if((isset($define['has_one']) && $define['has_one']) || (isset($define['has_many']) && $define['has_many'])){
 				/** @var static $target_class */
 				list($current_field, $target_class, $target_field) = $define['has_one'] ?: $define['has_many'];
 				$target_instance = $target_class::meta();

@@ -26,7 +26,7 @@ abstract class CacheAdapter implements CacheInterface{
 	final public static function instance(array $config = array()){
 		$class = get_called_class();
 		$key = $class.serialize($config);
-		if(!self::$instances[$key]){
+		if(!isset(self::$instances[$key]) || !self::$instances[$key]){
 			self::$instances[$key] = new $class($config);
 		}
 		return self::$instances[$key];

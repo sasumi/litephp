@@ -32,7 +32,7 @@ abstract class DAO implements \Iterator, \ArrayAccess{
 	 */
 	public function setPropertiesDefine(array $pro_def){
 		foreach($pro_def as $key=>$def){
-			if(!$this->_properties_define[$key]){
+			if(!isset($this->_properties_define[$key])){
 				$this->_properties_define[$key] = $def;
 			} else {
 				foreach($def as $k=>$v){
@@ -70,11 +70,11 @@ abstract class DAO implements \Iterator, \ArrayAccess{
 	public function getEntityPropertiesDefine($key = null){
 		$ret = array();
 		foreach($this->_properties_define as $f => $def){
-			if($def['entity']){
+			if(isset($def['entity']) && $def['entity']){
 				$ret[$f] = $def;
 			}
 		}
-		return $key ? $ret[$key] : $ret;
+		return $key ? (isset($ret[$key]) ? $ret[$key] : null) : $ret;
 	}
 
 	/**
@@ -244,7 +244,7 @@ abstract class DAO implements \Iterator, \ArrayAccess{
 			//这里还需要保留连表查询结果的情况，不能强制限定当前field一定在ORM对象中
 			//return;
 		}
-		$setter = $rule[self::SETTER_KEY_NAME];
+		$setter = isset($rule[self::SETTER_KEY_NAME]) ? $rule[self::SETTER_KEY_NAME] : null;
 
 		//setter中断
 		if($setter && call_user_func_array($setter, array($value, $this)) === false){
@@ -253,7 +253,7 @@ abstract class DAO implements \Iterator, \ArrayAccess{
 
 		//如果数据没有修改，则不纳入提交
 		//这里不能直接使用类型比对，DB中 null项在HTML中被填充为空字符串
-		if($this->_values[$key] == $value){
+		if(isset($this->_values[$key]) && $this->_values[$key] == $value){
 			return;
 		}
 
@@ -262,7 +262,7 @@ abstract class DAO implements \Iterator, \ArrayAccess{
 			return;
 		}
 
-		$this->_original_values_for_change[$key] = $this->_values[$key];
+		$this->_original_values_for_change[$key] = isset($this->_values[$key]) ? $this->_values[$key] : null;
 		$this->_values[$key] = $value;
 		$this->_values_change_keys[$key] = $key;
 	}
@@ -274,13 +274,13 @@ abstract class DAO implements \Iterator, \ArrayAccess{
 	 */
 	public function __get($key){
 		$rule = $this->getPropertiesDefine($key) ?: array();
-		$getter = $rule[self::GETTER_KEY_NAME];
+		$getter = isset($rule[self::GETTER_KEY_NAME]) ? $rule[self::GETTER_KEY_NAME] : null;
 		if($getter){
 			$data = call_user_func_array($getter, array($this));
 			$this->_values[$key] = $data;
 			return $data;
 		}
-		$val = $this->_values[$key];
+		$val = isset($this->_values[$key]) ? $this->_values[$key] : null;
 		$this->onBeforeGetValue($key, $val);
 		return $val;
 	}

@@ -153,7 +153,9 @@ trait Html{
 		$html = '';
 		$entries = explode('&', http_build_query($data_list));
 		foreach($entries as $entry){
-			list($key, $value) = explode('=', $entry);
+			$tmp = explode('=', $entry);
+			$key = $tmp[0];
+			$value = isset($tmp[1]) ? $tmp[1] : null;
 			$html .= static::htmlHidden(urldecode($key), urldecode($value)).PHP_EOL;
 		}
 		return $html;
@@ -643,7 +645,9 @@ trait Html{
 	 */
 	public static function htmlValueCompare($str1, $data){
 		$str1 = (string)$str1;
-
+		if(is_array($data) && !$data){
+			$data = '';
+		}
 		if(is_array($data)){
 			foreach($data as $val){
 				if((string)$val === $str1){

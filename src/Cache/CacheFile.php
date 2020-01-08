@@ -15,7 +15,7 @@ class CacheFile extends CacheAdapter{
 		if(!isset($config['cache_in_process'])){
 			$this->cache_in_process = true;
 		}
-		if(!$config['dir']){
+		if(!isset($config['dir']) || !$config['dir']){
 			$dir = sys_get_temp_dir();
 			$config['dir'] = $dir.'/litephp_cache/';
 		}

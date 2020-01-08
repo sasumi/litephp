@@ -178,7 +178,7 @@ class Performance{
 		$SS_RULES_KEY = '__PFM_RULES__';
 		$status = isset($_SESSION[$SS_KEY]) ? !!$_SESSION[$SS_KEY] : null;
 
-		$fpm_stat = $_GET['PFM_STAT'];
+		$fpm_stat = isset($_GET['PFM_STAT']) ? $_GET['PFM_STAT'] : null;
 
 		//在统计页面
 		if(isset($fpm_stat)){

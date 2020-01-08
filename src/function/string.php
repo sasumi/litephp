@@ -24,7 +24,7 @@ function substr_utf8($string, $length, $tail = '...', &$over_length = false){
 	$n = 0;
 	$m = 0;
 	do{
-		if(preg_match("/[0-9a-zA-Z]/", $chars[$i])){
+		if(isset($chars[$i]) && preg_match("/[0-9a-zA-Z]/", $chars[$i])){
 			$m++;
 		}else{
 			$n++;

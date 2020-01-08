@@ -525,14 +525,14 @@ class View extends Router{
 		$define = $model_instance->getPropertiesDefine($field);
 		$value = $model_instance->$field;
 
-		if($define['display']){
+		if(isset($define['display']) && $define['display']){
 			if(is_callable($define['display'])){
 				$define['display'] = call_user_func($define['display'], $model_instance);
 			}
 			return $define['display'];
 		}
 
-		if($define['options']){
+		if(isset($define['options']) && $define['options']){
 			if(is_callable($define['options'])){
 				$define['options'] = call_user_func($define['options'], $model_instance);
 			}

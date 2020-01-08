@@ -54,16 +54,16 @@ class DriverPDO extends DBAbstract {
 		}
 		
 		//process dns
-		if($config['dns']){
+		if(isset($config['dns']) && $config['dns']){
 			$dns = $config['dns'];
-		} else if($config['type'] == 'sqlite'){
+		}else if(isset($config['type']) && $config['type'] == 'sqlite'){
 			$dns = 'sqlite:'.$config['host'];
-		} else{
+		}else{
 			$dns = "{$config['type']}:dbname={$config['database']};host={$config['host']}";
-			if($config['port']){
+			if(isset($config['port']) && $config['port']){
 				$dns .= ";port={$config['port']}";
 			}
-			if($config['charset']){
+			if(isset($config['charset']) && $config['charset']){
 				$dns .= ";charset={$config['charset']}";
 			}
 		}
@@ -80,7 +80,7 @@ class DriverPDO extends DBAbstract {
 		$ttf = 2;
 		
 		//用户设定超时时间
-		if($config['connect_timeout'] > 0){
+		if(isset($config['connect_timeout']) && $config['connect_timeout'] > 0){
 			$opt[PDO::ATTR_TIMEOUT] = $config['connect_timeout'];
 		}
 		//用户未设定超时时间，使用系统默认超时时间
@@ -88,7 +88,7 @@ class DriverPDO extends DBAbstract {
 			$opt[PDO::ATTR_TIMEOUT] = $max_exec_time - $ttf;
 		}
 		
-		if($config['pconnect']){
+		if(isset($config['pconnect']) && $config['pconnect']){
 			$opt[PDO::ATTR_PERSISTENT] = true;
 		}
 		
@@ -103,7 +103,7 @@ class DriverPDO extends DBAbstract {
 		} else{
 			$conn = new PDO($dns, $config['user'], $config['password'], $opt);
 		}
-		$this->toggleStrictMode($config['strict'], $conn);
+		$this->toggleStrictMode(isset($config['strict']) ? !!$config['strict'] : false, $conn);
 		$this->conn = $conn;
 		return $conn;
 	}

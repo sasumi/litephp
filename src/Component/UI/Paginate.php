@@ -77,7 +77,7 @@ class Paginate implements PaginateInterface {
 	 * @return $this
 	 */
 	public function setConfig($config){
-		if($config['sizes']){
+		if(isset($config['sizes']) && $config['sizes']){
 			$this->config['sizes'] = $config['sizes'];
 			unset($config['sizes']);
 		}
