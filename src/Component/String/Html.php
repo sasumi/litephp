@@ -645,15 +645,13 @@ trait Html{
 	 */
 	public static function htmlValueCompare($str1, $data){
 		$str1 = (string)$str1;
-		if(is_array($data) && !$data){
-			$data = '';
-		}
 		if(is_array($data)){
 			foreach($data as $val){
 				if((string)$val === $str1){
 					return true;
 				}
 			}
+			return false;
 		}
 		return $str1 === (string)$data;
 	}

@@ -570,7 +570,7 @@ namespace Lite\func {
 				if(!$opt['return_as_tree']){
 					$result[] = $item;
 				}
-				if($group_by_parents[$item[$id_k]]){
+				if(isset($item[$id_k]) && isset($group_by_parents[$item[$id_k]]) && $group_by_parents[$item[$id_k]]){
 					$sub = array_filter_subtree($item[$id_k], $all, $opt, $level+1, $group_by_parents);
 					if(!empty($sub)){
 						if($as_tree){

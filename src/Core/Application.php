@@ -267,7 +267,7 @@ class Application{
 	 * 相应的参数会被转换为$_REQUEST变量
 	 */
 	private function initCLIMode(){
-		$argv = $_SERVER['argv'];
+		$argv = isset($_SERVER['argv']) ? $_SERVER['argv'] : [];
 		$params = array();
 
 		if(!empty($argv)){

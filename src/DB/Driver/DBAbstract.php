@@ -483,7 +483,7 @@ abstract class DBAbstract{
 	 * @return Query
 	 */
 	protected function genQuery(){
-		$prefix = $this->config['prefix'] ?: '';
+		$prefix = isset($this->config['prefix']) ? $this->config['prefix'] : '';
 		$ins = new Query();
 		$ins->setTablePrefix($prefix);
 		return $ins;

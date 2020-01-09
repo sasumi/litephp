@@ -58,7 +58,7 @@ trait HtmlOrder{
 	public static function getOrderLink($title, $field, $exclude_keys = array('page', 'page_size')){
 		$get = Router::get() ?: [];
 
-		if(!in_array($get[static::$order_field_key], self::$allow_order_fields)){
+		if(isset($get[static::$order_field_key]) && !in_array($get[static::$order_field_key], self::$allow_order_fields)){
 			unset($get[static::$order_field_key]);
 			unset($get[static::$order_dir_key]);
 		}
