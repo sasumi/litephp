@@ -275,12 +275,12 @@ function tail($file, callable $callback, $line_limit = 0, $line_separator = "\n"
 
 /**
  * read file by line
- * @param callable $handle
  * @param string $file
+ * @param callable $handle
  * @param int $buff_size
  * @return bool
  */
-function read_line(callable $handle, $file, $buff_size = 1024){
+function read_line($file, callable $handle, $buff_size = 1024){
 	$hd = fopen($file, 'r') or die('file open fail');
 	$stop = false;
 	$line_buff = '';
