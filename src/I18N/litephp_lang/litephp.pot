@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-16 10:06+0800\n"
+"POT-Creation-Date: 2020-01-13 11:19+0800\n"
 "PO-Revision-Date: 2019-10-08 22:45+0800\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,15 +27,15 @@ msgstr ""
 msgid "File content empty, please check your file before upload again"
 msgstr ""
 
-#: src/Component/String/Html.php:279
+#: src/Component/String/Html.php:281
 msgid "Progress max should bigger or equal to zero"
 msgstr ""
 
-#: src/Component/String/Html.php:284
+#: src/Component/String/Html.php:286
 msgid "Progress value should less or equal than max"
 msgstr ""
 
-#: src/Component/String/Html.php:288
+#: src/Component/String/Html.php:290
 msgid "Progress value should between 0 to 1"
 msgstr ""
 
@@ -117,6 +117,18 @@ msgstr ""
 
 #: src/Component/Upload/UploadLocal.php:34
 msgid "Upload file move fail: {org_file} => {new_file}"
+msgstr ""
+
+#: src/DB/Driver/DriverPDO.php:103
+msgid "Database connect failed:{error}, HOST：{host}"
+msgstr ""
+
+#: src/DB/Model.php:460
+msgid "Prefetch field:{field} no defined"
+msgstr ""
+
+#: src/DB/Model.php:463
+msgid "Prefetch field:{field} must define foreign|has_one|has_many target"
 msgstr ""
 
 #: test/lang.php:11

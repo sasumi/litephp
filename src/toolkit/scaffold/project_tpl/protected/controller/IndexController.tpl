@@ -6,7 +6,6 @@ use Lite\Component\ParallelCurl;
 use Lite\Core\Config;
 use Lite\Component\Request;
 use Lite\Core\Result;
-use function Lite\func\dump;
 use www\Auth;
 use www\model\User;
 

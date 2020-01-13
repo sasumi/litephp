@@ -1,10 +1,13 @@
 <?php
 namespace Lite\DB\Driver;
 
+use Lite\Component\Server;
+use Lite\DB\Exception\ConnectException;
 use Lite\DB\Query;
 use Lite\Exception\Exception;
 use PDO as PDO;
 use PDOStatement as PDOStatement;
+use function Lite\func\_tl;
 
 /**
  *
@@ -91,17 +94,16 @@ class DriverPDO extends DBAbstract {
 		if(isset($config['pconnect']) && $config['pconnect']){
 			$opt[PDO::ATTR_PERSISTENT] = true;
 		}
-		
+
 		//connect & process windows encode issue
-		if(stripos(PHP_OS, 'win') !== false){
-			try{
-				$conn = new PDO($dns, $config['user'], $config['password'], $opt);
-			} catch(\PDOException $e){
-				$msg = '数据库连接失败：“'.mb_convert_encoding($e->getMessage(), 'utf-8', 'gb2312').'”，HOST：'.$config['host'];
-				throw new \PDOException($msg, $e->getCode(), $e);
-			}
-		} else{
+		try{
 			$conn = new PDO($dns, $config['user'], $config['password'], $opt);
+		}catch(\PDOException $e){
+			$err = Server::inWindows() ? mb_convert_encoding($e->getMessage(), 'utf-8', 'gb2312') : $e->getMessage();
+			throw new ConnectException(_tl('Database connect failed:{error}, HOST：{host}', [
+				'error' => $err,
+				'host'  => $config['host'],
+			]), null, $config, $e->getCode(), $e);
 		}
 		$this->toggleStrictMode(isset($config['strict']) ? !!$config['strict'] : false, $conn);
 		$this->conn = $conn;

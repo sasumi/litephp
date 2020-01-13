@@ -6,9 +6,8 @@ use Lite\Core\Hooker;
 use Lite\Core\RefParam;
 use Lite\DB\Query;
 use Lite\Exception\BizException;
-use Lite\Exception\DatabaseException;
+use Lite\DB\Exception\DatabaseException;
 use Lite\Exception\Exception;
-use function Lite\func\dump;
 
 /**
  * 数据库接口抽象类
@@ -520,7 +519,7 @@ abstract class DBAbstract{
 				return $this->query($query);
 			}
 			Hooker::fire(self::EVENT_DB_QUERY_ERROR, $ex, $query, $this->config);
-			throw new DatabaseException($ex->getMessage(), $query.'', $this->config, $ex);
+			throw new DatabaseException($ex->getMessage(), $query.'', $this->config, $ex->getCode(), $ex);
 		}
 	}
 	

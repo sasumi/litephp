@@ -1,7 +1,6 @@
 <?php
 namespace www;
 use Lite\Core\View;
-use function Lite\func\dump;
 
 /**
  * User: sasumi

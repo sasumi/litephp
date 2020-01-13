@@ -5,94 +5,10 @@
 namespace Lite\func;
 
 use Closure;
-use Lite\Component\Net\Client;
 use Lite\Core\Application;
 use Lite\Core\Hooker;
 use Lite\Core\Router;
 use Lite\DB\Driver\DBAbstract;
-
-//dump函数控制标记
-$GLOBALS['DUMP_ENABLE_FLAG'] = true;
-
-//dump函数trace偏移量，默认为1（表示忽略dump函数自身trace信息）
-$GLOBALS['DUMP_ENTRANCE_LEVEL'] = 0;
-
-//dump函数是否同时输出trace信息，默认仅输出文件定位
-$GLOBALS['DUMP_WITH_TRACE'] = false;
-
-/**
- * 变量调试函数，并输出当前调试点所在位置
- * 用法：dump($var1, $var2, ..., 1)，当最后一个变量为1时，程序退出
- */
-function dump(){
-	if(!$GLOBALS['DUMP_ENABLE_FLAG']){
-		return;
-	}
-	$params = func_get_args();
-	$cli = Client::inCli();
-	$exit = false;
-	echo !$cli ? PHP_EOL.'<pre style="color:green;">'.PHP_EOL : PHP_EOL;
-
-	if(count($params)){
-		$tmp = $params;
-		$exit = array_pop($tmp) === 1;
-		$params = $exit ? array_slice($params, 0, -1) : $params;
-		$comma = '';
-		foreach($params as $var){
-			echo $comma;
-			var_dump($var);
-			$comma = str_repeat('-',80).PHP_EOL;
-		}
-	}
-
-	//remove closure calling & print out location.
-	$trace = debug_backtrace();
-	$trace = array_slice($trace, dump_trace_entrance_offset());
-	if($GLOBALS['DUMP_WITH_TRACE']){
-		echo "[trace]",PHP_EOL;
-		print_trace($trace, true, true);
-	} else {
-		print_trace([$trace[0]]);
-	}
-	echo str_repeat('=', 80), PHP_EOL, (!$cli ? '</pre>' : '');
-	$exit && exit();
-}
-
-/**
- * dump函数trace取值偏移
- * @param null $level 偏移量
- * @return null
- */
-function dump_trace_entrance_offset($level = null){
-	if(isset($level)){
-		$GLOBALS['DUMP_ENTRANCE_LEVEL'] = $level;
-	}
-	return $GLOBALS['DUMP_ENTRANCE_LEVEL'];
-}
-
-/**
- * dump并输出trace信息
- * @return mixed
- */
-function dump_with_trace(){
-	$GLOBALS['DUMP_WITH_TRACE'] = true;
-	dump_trace_entrance_offset(2);
-	return call_user_func_array('\Lite\func\dump', func_get_args());
-}
-
-/**
- * 禁用dump函数
- */
-function dump_disable(){
-	$GLOBALS['DUMP_ENABLE_FLAG'] = false;
-}
-
-/**
- * 启用dump函数
- */
-function dump_enable(){
-	$GLOBALS['DUMP_ENABLE_FLAG'] = true;
-}
 
 /**
  * 输出最后调用堆栈
@@ -113,7 +29,7 @@ function dump_last_exit_trace(){
  * @param int $step 步长
  * @param string $fun 调试函数，默认使用dump
  */
-function tick_dump($step = 1, $fun = '\Lite\func\dump'){
+function tick_dump($step = 1, $fun = '\dump'){
 	register_tick_function($fun);
 	eval("declare(ticks = $step);");
 }

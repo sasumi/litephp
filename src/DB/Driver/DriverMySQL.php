@@ -1,5 +1,6 @@
 <?php
 namespace Lite\DB\Driver;
+use Lite\DB\Exception\ConnectException;
 use Lite\Exception\Exception;
 
 /**
@@ -29,7 +30,7 @@ class DriverMySQL extends DBAbstract {
 			$this->conn = mysql_connect($config['host'], $config['user'], $config['password'], $config['port']);
 		}
 		if(!$this->conn){
-			throw new Exception(mysql_error(), null, $config);
+			throw new ConnectException(mysql_error(), null, $config, mysql_errno());
 		}
 		mysql_select_db($config['database'], $this->conn);
 	}

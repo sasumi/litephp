@@ -1,6 +1,5 @@
 <?php
 use Lite\I18N\Lang;
-use function Lite\func\dump_trace_entrance_offset;
 
 //php version limiting
 if(version_compare(PHP_VERSION, '5.5.0') < 0){
@@ -12,14 +11,6 @@ $NAMESPACE = 'Lite';
 
 //include function loader
 require_once __DIR__.'/src/function/autoload.php';
-
-//dump function shortcut
-if(!function_exists('dump')){
-	function dump(){
-		dump_trace_entrance_offset(2);
-		return call_user_func_array('Lite\func\dump', func_get_args());
-	}
-}
 
 $runtime_source = __DIR__.'.runtime.php';
 if(is_file($runtime_source)){
