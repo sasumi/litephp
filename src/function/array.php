@@ -11,6 +11,14 @@ namespace Lite\func {
 	use RecursiveIteratorIterator;
 
 	/**
+	 * 數組位置操作
+	 */
+	const ARRAY_POSING_HEAD = 0x001;
+	const ARRAY_POSING_BEFORE = 0x002;
+	const ARRAY_POSING_AFTER = 0x003;
+	const ARRAY_POSING_LAST = 0x004;
+
+	/**
 	 * Array group by function
 	 * group array(); by by_key
 	 * @param array $array
@@ -206,6 +214,53 @@ namespace Lite\func {
 			}
 		}
 		return $data;
+	}
+
+	/**
+	 * 数组元素切换（支持关联数组）
+	 * @param array $arr 数组
+	 * @param string|number $item_index_key 需要切换元素的key值（可以是关联数组的key）
+	 * @param number $dir 移动方向
+	 * @return array
+	 */
+	function array_move_item($arr, $item_index_key, $dir){
+		if($dir == ARRAY_POSING_HEAD){
+			$tmp = $arr[$item_index_key];
+			unset($arr[$item_index_key]);
+			array_unshift_assoc($arr, $item_index_key, $tmp);
+			return $arr;
+		}else if($dir == ARRAY_POSING_LAST){
+			$tmp = $arr[$item_index_key];
+			unset($arr[$item_index_key]);
+			$arr[$item_index_key] = $tmp;
+			return $arr;
+		}else if($dir == ARRAY_POSING_BEFORE){
+			$keys = array_keys($arr);
+			$values = array_values($arr);
+			$nidx = array_index($keys, $item_index_key);
+			if($nidx == 0){
+				return $arr;
+			}
+			$before = array_combine(array_slice($keys, 0, $nidx - 1), array_slice($values, 0, $nidx - 1));
+			$before[$item_index_key] = $arr[$item_index_key]; //當前
+			$before[$keys[$nidx - 1]] = $values[$nidx - 1]; //上一個
+			$after = array_combine(array_slice($keys, $nidx + 1), array_slice($values, $nidx + 1));
+			return array_merge($before, $after);
+		}else if($dir == ARRAY_POSING_AFTER){
+			$keys = array_keys($arr);
+			$values = array_values($arr);
+			$nidx = array_index($keys, $item_index_key);
+			if($nidx == count($arr) - 1){
+				return $arr;
+			}
+			$before = array_combine(array_slice($keys, 0, $nidx), array_slice($values, 0, $nidx));
+			$before[$keys[$nidx + 1]] = $values[$nidx + 1]; //下一個
+			$before[$item_index_key] = $arr[$item_index_key]; //當前
+			$after = array_combine(array_slice($keys, $nidx + 2), array_slice($values, $nidx + 2));
+			return array_merge($before, $after);
+		}else{
+			throw new \Lite\Exception\Exception('Array move direction no support:'.$dir);
+		}
 	}
 
 	/**
@@ -410,14 +465,19 @@ namespace Lite\func {
 	/**
 	 * 获取数组元素key
 	 * @param $array
-	 * @param $compare_fn
+	 * @param $compare_fn_or_value
 	 * @return bool|int|string
 	 */
-	function array_index($array, callable $compare_fn){
-		foreach($array as $k=>$v){
-			$ret = $compare_fn($v);
-			if($ret === true){
-				return $k;
+	function array_index($array, $compare_fn_or_value){
+		foreach($array as $k => $v){
+			if(is_callable($compare_fn_or_value)){
+				if($compare_fn_or_value($v) === true){
+					return $k;
+				}
+			}else{
+				if($compare_fn_or_value == $v){
+					return $k;
+				}
 			}
 		}
 		return false;
