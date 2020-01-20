@@ -20,6 +20,7 @@ class View extends Router{
 
 	private static $pre_vars = array();
 
+	const EVENT_BEFORE_VIEW_RENDER = 'EVENT_BEFORE_VIEW_RENDER';
 	const EVENT_AFTER_VIEW_RENDER = 'EVENT_AFTER_VIEW_RENDER';
 
 	const REQ_PAGE = 'page';                //普通页面访问，直接返回模板渲染结果HTML
@@ -671,6 +672,8 @@ class View extends Router{
 		$result = $this->result;
 		$jump_url = $result->getJumpUrl();
 		$html = '';
+
+		Hooker::fire(self::EVENT_BEFORE_VIEW_RENDER);
 
 		if($req_type === null || !in_array($req_type, self::REQ_LIST)){
 			$req_type = self::parseRequestType();

@@ -21,9 +21,10 @@ class Application{
 	const EVENT_BEFORE_APP_INIT = __CLASS__ . 'EVENT_BEFORE_APP_INIT';
 	const EVENT_AFTER_APP_INIT = __CLASS__ . 'EVENT_AFTER_APP_INIT';
 	const EVENT_AFTER_APP_SHUTDOWN = __CLASS__ . 'EVENT_AFTER_APP_SHUTDOWN';
-	const EVENT_ON_APP_EX = __CLASS__ . 'EVENT_ON_APP_EX';
 	const EVENT_ON_APP_ERR = __CLASS__ . 'EVENT_ON_APP_ERR';
-	
+	const EVENT_BEFORE_ACTION_EXECUTE = 'EVENT_BEFORE_ACTION_EXECUTE';
+	const EVENT_AFTER_ACTION_EXECUTE = 'EVENT_AFTER_ACTION_EXECUTE';
+
 	public static $init_microtime;
 
 	//project config include paths
@@ -75,12 +76,12 @@ class Application{
 			default:
 				throw new Exception('NO SPEC MODE');
 		}
-		
+
 		if(Hooker::exists(self::EVENT_AFTER_APP_SHUTDOWN)){
 			Hooker::fire(self::EVENT_AFTER_APP_SHUTDOWN, microtime_diff(self::$init_microtime));
 		}
 	}
-	
+
 	/**
 	 * 初始化框架逻辑
 	 * @param null $app_root 项目物理路径
@@ -94,7 +95,7 @@ class Application{
 
 		if(!$instance){
 			self::$init_microtime = microtime();
-			
+
 			//BIND APP ERROR
 			set_error_handler(function ($code, $message, $file, $line, $context){
 				Hooker::fire(Application::EVENT_ON_APP_ERR, $code, $message, $file, $line, $context);
@@ -171,20 +172,19 @@ class Application{
 
 			//分发请求
 			$result = self::dispatch($controller_instance);
-			
+
 			//如果是字符串，直接显示
 			if(is_string($result)){
 				echo $result;
 				return;
 			}
-			
+
 			//自动渲染模板
 			if(Config::get('app/auto_render')){
 				$tpl_file = null;
 				if(method_exists($controller_instance, '__getTemplate')){
 					$tpl_file = $controller_instance->__getTemplate(Router::getController(), Router::getAction());
 				}
-				
 				//Controller 执行结果，
 				//其他格式重新使用View封装渲染
 				if($result instanceof View){
@@ -200,7 +200,7 @@ class Application{
 			$this->handleWebException($ex);
 		}
 	}
-	
+
 	/**
 	 * 分发控制器
 	 * @param mixed $controller_instance
@@ -220,7 +220,7 @@ class Application{
 
 		/** @var Controller $controller_instance */
 		$controller_instance = new $controller($controller, $action);
-		
+
 		//是否为继承于Controller，支持用户自定义Controller
 		$is_ctrl_prototype = $controller_instance instanceof Controller;
 
@@ -236,7 +236,9 @@ class Application{
 				throw new RouterException('Method no exists: '.$controller.'/'.$action);
 			}
 			//支持__call魔术方法
+			Hooker::fire(self::EVENT_BEFORE_ACTION_EXECUTE, $controller_instance, $action);
 			$result = call_user_func(array($controller_instance, $action));
+			Hooker::fire(self::EVENT_AFTER_ACTION_EXECUTE, $controller_instance, $action, $result);
 			if($is_ctrl_prototype){
 				$controller_instance->__afterExecute($controller, $action, $result);
 			}
@@ -251,8 +253,10 @@ class Application{
 		}
 
 		//执行Action
+		Hooker::fire(self::EVENT_BEFORE_ACTION_EXECUTE, $controller_instance, $action);
 		$result = call_user_func(array($controller_instance, $action), $get, $post);
-		
+		Hooker::fire(self::EVENT_AFTER_ACTION_EXECUTE, $controller_instance, $action, $result);
+
 		//执行后事件
 		if($is_ctrl_prototype){
 			$controller_instance->__afterExecute($controller, $action, $result);
@@ -326,7 +330,7 @@ class Application{
 			list($path, $ns, $case_sensitive) = $item;
 			if(!$ns || stripos($class, $ns) === 0){
 				$file = $path.str_replace('\\', '/', substr($class, strlen($ns)+1)).'.php';
-				
+
 				//大小写敏感
 				if($case_sensitive){
 					$ret = file_exists_case_sensitive($file);

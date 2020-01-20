@@ -2,6 +2,7 @@
 namespace Lite\Performance;
 use Lite\Core\Application;
 use Lite\Core\Hooker;
+use Lite\Core\View;
 use Lite\DB\Driver\DBAbstract;
 use function Lite\func\array_last;
 use function Lite\func\format_size;
@@ -99,7 +100,7 @@ class Statistics {
 
 		$this->mark($msg, $tag, $file, $line, $callee);
 		$cur_item = array_pop($this->time_track_list);
-
+		$last_item['time_point_end'] = $cur_item['time_point'];
 		$last_item['time_used'] = microtime_diff($last_item['time_point'], $cur_item['time_point']);
 		$last_item['mem_used'] = $cur_item['memory'] - $last_item['memory'];
 		$last_item['tag'] .= " \n// ".$cur_item['tag'];
@@ -136,6 +137,22 @@ class Statistics {
 
 		Hooker::add(DBAbstract::EVENT_ON_DB_QUERY_DISTINCT, function()use(&$db_stat){
 			$db_stat['DB_QUERY_DEDUPLICATION_COUNT']++;
+		});
+
+		Hooker::add(Application::EVENT_BEFORE_ACTION_EXECUTE, function($controller_instance, $action){
+			$this->mark('Before action execution:'.$action, "BEFORE ACTION");
+		});
+
+		Hooker::add(Application::EVENT_AFTER_ACTION_EXECUTE, function($controller_instance, $action){
+			$this->mark('After action execution:'.$action, "AFTER ACTION");
+		});
+
+		Hooker::add(View::EVENT_BEFORE_VIEW_RENDER, function(){
+			$this->mark('Before view render', "BEFORE VIEW");
+		});
+
+		Hooker::add(View::EVENT_AFTER_VIEW_RENDER, function(){
+			$this->mark('After view render', "AFTER VIEW");
 		});
 
 		Hooker::add(Application::EVENT_AFTER_APP_SHUTDOWN, function() use (&$db_stat, $finish_handler){

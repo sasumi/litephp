@@ -55,7 +55,7 @@ function display_time_point_text($start, $end){
 		.data-tbl thead {background-color:#ddd;}
 		.data-tbl thead th {white-space:nowrap; padding:8px 0.5em;}
 		.data-tbl tbody tr:nth-child(even) {background-color:#eee;}
-		.data-tbl th, .data-tbl td {padding:5px 0.5em; border:1px solid #ccc; vertical-align:top; position:relative;}
+		.data-tbl th, .data-tbl td {padding:10px 0.5em; border:1px solid #ccc; vertical-align:top; position:relative;}
 		.data-tbl .msg {display:block; word-break:break-all;}
 		.data-tbl .msg-hide-more {max-height:100px;  overflow:hidden;}
 		.data-tbl .cell-num {text-align:right;}
@@ -236,12 +236,11 @@ function display_time_point_text($start, $end){
 			<tr>
 				<td class="cell-idx">
 					1
-					<?=display_time_point_text($page_summary['request_time_float'],$page_summary['app_init_time']);?>
 				</td>
 				<td class="time-cell">
 					<?=microtime_to_date($page_summary['app_init_time'], 'H:i:s');?>
 				</td>
-				<td class="cell-num">-</td>
+				<td class="cell-num"><?=display_time_point_text($page_summary['request_time_float'],$page_summary['app_init_time']);?></td>
 				<td class="cell-num">-</td>
 				<td style="word-break:break-all">LitePHP开始时间</td>
 				<td></td>
@@ -253,12 +252,15 @@ function display_time_point_text($start, $end){
 			<tr class="level-<?= Performance::getQueryTimeLevel($item['time_used']*1000); ?>">
 				<td class="cell-idx">
 					<?= $idx+2; ?>
-					<?=display_time_point_text($last_tm,$item['time_point']);?>
 				</td>
 				<td class="time-cell">
 					<?= microtime_to_date($item['time_point'], 'H:i:s'); ?>
+					<?=isset($item['time_point_end']) ? '<div>'.microtime_to_date($item['time_point_end'], 'H:i:s').'</div>' : '';?>
 				</td>
-				<td class="cell-num"><?= isset($item['time_used']) ? round($item['time_used']*1000, 1).'ms' : '-'; ?></td>
+				<td class="cell-num">
+					<?= isset($item['time_used']) ? round($item['time_used']*1000, 1).'ms' : '-'; ?>
+					<?=display_time_point_text($last_tm,$item['time_point']);?>
+				</td>
 				<td class="cell-num"><?= format_size($item['mem_used']); ?></td>
 				<td>
 					<span class="msg msg-hide-more"><?= nl2br($item['msg']); ?></span>
@@ -272,14 +274,14 @@ function display_time_point_text($start, $end){
 				<td class="col-tag"><?= nl2br($item['tag']); ?></td>
 			</tr>
 			<?php
-				$last_tm = $item['time_point'];
+				$last_tm = $item['time_point_end'] ?: $item['time_point'];
 			endforeach; ?>
 			<tr>
-				<td class="cell-idx"><?=$idx+3;?> <?=display_time_point_text($last_tm,$page_summary['statistics_ending_time']);?></td>
+				<td class="cell-idx"><?=$idx+3;?></td>
 				<td class="time-cell">
 					<?=microtime_to_date($page_summary['statistics_ending_time'], 'H:i:s');?>
 				</td>
-				<td class="cell-num">-</td>
+				<td class="cell-num"><?=display_time_point_text($last_tm,$page_summary['statistics_ending_time']);?></td>
 				<td class="cell-num">-</td>
 				<td style="word-break:break-all">统计结束时间</td>
 				<td></td>
