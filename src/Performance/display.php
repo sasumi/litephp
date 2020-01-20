@@ -66,11 +66,7 @@ function display_time_point_text($start, $end){
 
 		.flex {display:flex;}
 		.flex>div {flex:1}
-
-		.time-point-offset {display:block; opacity:0; z-index:1; top:-15px; right:-80px; position:absolute; box-shadow:1px 1px 10px #cccf; background-color:#fff; padding:1px 3px; border-radius:3px; transform:scale(0.8); transition:all 0.1s linear;}
-		tbody:hover .time-point-offset,
-		.time-point-offset:hover {opacity:1; right:-10px;}
-
+		.time-point-offset {display:block; z-index:1; top:-15px; right:-9px; position:absolute; background-color:#fff; padding:1px 3px; border-radius:3px; transform:scale(0.8); transition:all 0.1s linear;}
 		#ignore-filters {border:1px solid #ddd;  width:500px; margin-bottom:10px; border-left-color:#bbb; border-top-color:#bbb; display:block; resize:vertical; min-height:80px; padding:0.5em; box-sizing:border-box}
 		#ignore-filters-save {padding:0.3em 1em}
 
