@@ -5,6 +5,7 @@ use Lite\Component\Server;
 use Lite\DB\Exception\ConnectException;
 use Lite\DB\Query;
 use Lite\Exception\Exception;
+use Lite\Performance\Statistics;
 use PDO as PDO;
 use PDOStatement as PDOStatement;
 use function Lite\func\_tl;
@@ -90,7 +91,7 @@ class DriverPDO extends DBAbstract {
 		else if(!isset($config['connect_timeout']) && ($max_exec_time - $ttf > 0)){
 			$opt[PDO::ATTR_TIMEOUT] = $max_exec_time - $ttf;
 		}
-		
+
 		if(isset($config['pconnect']) && $config['pconnect']){
 			$opt[PDO::ATTR_PERSISTENT] = true;
 		}
@@ -156,8 +157,7 @@ class DriverPDO extends DBAbstract {
 	 */
 	public function dbQuery($sql){
 		$this->_last_query_result = null;
-		$sql .= '';
-		$result = $this->conn->query($sql);
+		$result = $this->conn->query($sql.'');
 		$this->_last_query_result = $result;
 		return $result;
 	}

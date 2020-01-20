@@ -34,17 +34,24 @@ abstract class CacheAdapter implements CacheInterface{
 
 	/**
 	 * 快速调用方法，不提供配置参数传入
-	 * @param $key
-	 * @param callable $fetcher
-	 * @param int $expired_seconds
+	 * @param string $key 缓存key
+	 * @param callable $fetcher 数据获取回调
+	 * @param int $expired_seconds 缓存过期时间
+	 * @param bool $refresh_cache 是否刷新缓存，默认false为仅在缓存过期时才更新
 	 * @return mixed
-	 * @throws \Lite\Exception\Exception
 	 */
-	final public function cache($key, callable $fetcher, $expired_seconds = 60){
+	final public function cache($key, callable $fetcher, $expired_seconds = 60, $refresh_cache = false){
 		$cache_class = get_called_class();
 		if($cache_class == self::class){
 			throw new Exception('Cache method not callable in '.self::class);
 		}
+
+		if($refresh_cache){
+			$data = call_user_func($fetcher);
+			$this->set($key, $data, $expired_seconds);
+			return $data;
+		}
+
 		$data = $this->get($key);
 		if(!isset($data)){
 			$data = call_user_func($fetcher);
