@@ -130,10 +130,17 @@ function microtime_diff($start, $end = null){
  * convert microtime format to date
  * @param $microtime
  * @param string $format
+ * @param int $patch_microtime_precision
  * @return false|string
  */
-function microtime_to_date($microtime, $format='Y-m-d H:i:s'){
-	return date($format, explode(' ', $microtime)[1]);
+function microtime_to_date($microtime, $format = 'Y-m-d H:i:s', $patch_microtime_precision = 3){
+	list($usec, $sec) = explode(' ', $microtime);
+	$usec_str = '';
+	if($patch_microtime_precision){
+		$usec_str = '.';
+		$usec_str .= round($usec, $patch_microtime_precision)*pow(10, $patch_microtime_precision);
+	}
+	return date($format, $sec).$usec_str;
 }
 
 /**

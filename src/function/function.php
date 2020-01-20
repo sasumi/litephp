@@ -5,6 +5,7 @@
 namespace Lite\func;
 
 use Closure;
+use Lindy\App;
 use Lite\Core\Application;
 use Lite\Core\Hooker;
 use Lite\Core\Router;
@@ -26,6 +27,7 @@ function dump_last_exit_trace(){
 
 /**
  * 步进方式调试
+ * @deprecated PHP 7.2 已被官方禁用跨文件调用
  * @param int $step 步长
  * @param string $fun 调试函数，默认使用dump
  */
@@ -59,6 +61,25 @@ function print_trace($trace, $with_callee = false, $with_index = false){
 		$loc = $item['file'] ? "{$item['file']} #{$item['line']} " : '';
 		echo "{$loc}{$callee}", PHP_EOL;
 	}
+}
+
+/**
+ * 获取项目应用最后调用信息（去除LitePHP框架调用信息）
+ * @param int $max_depth
+ * @return array
+ */
+function get_last_project_trace($max_depth = 20){
+	static $lite_root;
+	if(!$lite_root){
+		$lite_root = dirname(dirname(__DIR__));
+	}
+	$traces = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $max_depth);
+	foreach($traces as $trace){
+		if($trace['file'] && stripos($trace['file'], $lite_root) === false){
+			return $trace;
+		}
+	}
+	return [];
 }
 
 /**

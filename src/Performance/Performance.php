@@ -8,14 +8,8 @@ namespace Lite\Performance;
  * Time: 10:21
  */
 use Lite\Cache\CacheFile;
-use Lite\Cache\CacheSession;
 use Lite\Core\Application;
 use Lite\Core\Router;
-use Lite\Performance\Statistics;
-use function Lite\func\format_size;
-use function Lite\func\h;
-use function Lite\func\microtime_diff;
-use function Lite\func\microtime_to_date;
 use function Lite\func\session_start_once;
 use function Lite\func\session_write_once;
 
@@ -67,11 +61,11 @@ class Performance{
 	 * @var array
 	 */
 	public static $COLOR_MAP = [
-		self::LEVEL_IGNORE   => 'color:#aaa',
-		self::LEVEL_NORMAL   => 'color:black',
-		self::LEVEL_WARNING  => 'color:#a76ece',
-		self::LEVEL_ERROR    => 'color:orange',
-		self::LEVEL_CRITICAL => 'color:red',
+		self::LEVEL_IGNORE   => '#aaa',
+		self::LEVEL_NORMAL   => '#000',
+		self::LEVEL_WARNING  => '#a76ece',
+		self::LEVEL_ERROR    => '#ffa500',
+		self::LEVEL_CRITICAL => '#ff0000',
 	];
 
 	protected static function saver($data = null){
@@ -127,7 +121,7 @@ class Performance{
 	 * @param $tm_ms
 	 * @return mixed|string
 	 */
-	private static function getPageTimeLevel($tm_ms){
+	public static function getPageTimeLevel($tm_ms){
 		foreach(self::$PAGE_TIME_THRESHOLD as $t => $level){
 			if($tm_ms>$t){
 				return $level;
@@ -146,18 +140,23 @@ class Performance{
 		}
 		$start_mem_usage = memory_get_usage(true);
 		session_start_once();
-		Statistics::instance()->autoCollect(function($time_list, $stat_data) use ($start_mem_usage){
-			$pt = microtime_diff(Application::$init_microtime)*1000;
-			$page_sum = [
-				'访问路径'    => '<a href="'.Router::getCurrentPageUrl().'" target="_blank">'.Router::getCurrentPageUrl().'</a> ['.$_SERVER['REQUEST_METHOD'].']',
-				'开始时间'    => microtime_to_date(Application::$init_microtime, 'H:i:s'),
-				'结束时间'    => date('H:i:s'),
-				'服务器总耗时'  => '<span class="level-'.self::getPageTimeLevel($pt).'">'.number_format($pt, 2, null, '').'ms</span>',
-				'请求消耗内存'  => format_size(memory_get_usage(true)-$start_mem_usage),
-				'COOKIE'  => '<textarea readonly>'.h(json_encode($_COOKIE)).'</textarea>',
-				'SESSION' => '<textarea readonly>'.h(json_encode($_SESSION)).'</textarea>',
+		Statistics::instance()->autoCollect(function($time_list, $db_stat) use ($start_mem_usage){
+			$data = [
+				'time_list' => $time_list,
+				'database_stat' => $db_stat,
+				'page_summary' => [
+					'visit_page_url' => Router::getCurrentPageUrl(),
+					'visit_page_method' => $_SERVER['REQUEST_METHOD'],
+					'request_time_float' => $_SERVER['REQUEST_TIME_FLOAT'],
+					'app_init_time' => Application::$init_microtime,
+					'server_start_memory_usage' => $start_mem_usage,
+					'server_ending_memory_usage' => memory_get_usage(true),
+					'statistics_ending_time' => microtime(),
+					'cookie' => $_COOKIE,
+					'session' => $_SESSION,
+				],
 			];
-			call_user_func($this->saver_handler ?: 'self::saver', [$time_list, $stat_data, $page_sum]);
+			call_user_func($this->saver_handler ?: 'self::saver', $data);
 		});
 		session_write_once();
 	}
@@ -168,7 +167,7 @@ class Performance{
 	 * @param $ignore_rules
 	 */
 	public function display($type, $ignore_rules = []){
-		$data = call_user_func($this->saver_handler ?: 'self::saver');
+		$static_data = call_user_func($this->saver_handler ?: 'self::saver');
 		include __DIR__.DIRECTORY_SEPARATOR.'display.php';
 	}
 

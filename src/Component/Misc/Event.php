@@ -11,6 +11,14 @@ trait Event {
 		return true;
 	}
 
+	public static function __callStatic($method, $args){
+		if($method === 'bindEvent'){
+			self::$global_event_hooks[$args[0]] = $args[1];
+		} else {
+			throw new \Exception('Method no exists:'.$method);
+		}
+	}
+
 	/**
 	 * @param $event
 	 * @param mixed ...$args
@@ -22,19 +30,11 @@ trait Event {
 				return false;
 			}
 		}
-		return;
-	}
-
-	public static function bindEventGlobal($event, $handler){
-		self::$global_event_hooks[$event][] = $handler;
-		return true;
-	}
-
-	public static function fireEventGlobal($event, ...$args){
 		foreach(self::$global_event_hooks[$event] ?: [] as $handler){
 			if(call_user_func_array($handler, $args) === false){
 				return false;
 			}
 		}
+		return;
 	}
 }
