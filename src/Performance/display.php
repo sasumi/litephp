@@ -1,7 +1,6 @@
 <?php
 namespace Lite\Performance\display;
 
-use Lite\Core\Application;
 use function Lite\func\format_size;
 use function Lite\func\ha;
 use function Lite\func\h;
@@ -67,7 +66,7 @@ function display_time_point_text($start, $end){
 		.flex {display:flex;}
 		.flex>div {flex:1}
 		.time-point-offset {display:block; z-index:1; top:-15px; right:-9px; position:absolute; background-color:#fff; padding:1px 3px; border-radius:3px; transform:scale(0.8); transition:all 0.1s linear;}
-		#ignore-filters {border:1px solid #ddd;  width:500px; margin-bottom:10px; border-left-color:#bbb; border-top-color:#bbb; display:block; resize:vertical; min-height:80px; padding:0.5em; box-sizing:border-box}
+		#ignore-filters {border:1px solid #ddd;  width:500px; margin-bottom:10px; border-left-color:#bbb; border-top-color:#bbb; display:block; resize:vertical; min-height:40px; padding:0.5em; box-sizing:border-box}
 		#ignore-filters-save {padding:0.3em 1em}
 
 		#lv-sel {margin-left:1em; padding:0.15em 0 0.25em 0; border-radius:3px;}
@@ -167,7 +166,7 @@ function display_time_point_text($start, $end){
 			<table class="info-tbl">
 				<tbody>
 				<tr>
-					<th>总次数：</th>
+					<th>执行次数：</th>
 					<td><strong><?= $database_stat['DB_QUERY_COUNT']; ?></strong>次</td>
 				</tr>
 				<tr>
@@ -180,7 +179,9 @@ function display_time_point_text($start, $end){
 				</tr>
 				<tr>
 					<th>去重次数：</th>
-					<td><strong><?= $database_stat['DB_QUERY_DEDUPLICATION_COUNT']; ?></strong>次</td>
+					<td><strong><?= $database_stat['DB_QUERY_DEDUPLICATION_COUNT']; ?></strong>次
+						（<?=round(100*$database_stat['DB_QUERY_DEDUPLICATION_COUNT']/($database_stat['DB_QUERY_DEDUPLICATION_COUNT']+$database_stat['DB_QUERY_COUNT']), 2);?>%）
+					</td>
 				</tr>
 				</tbody>
 			</table>
