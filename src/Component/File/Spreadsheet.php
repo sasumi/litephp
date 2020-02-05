@@ -6,6 +6,7 @@ use Lite\DB\Model;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use PHPExcel_Style_NumberFormat;
+use function Lite\func\array_clear_empty;
 use function Lite\func\array_trim_fields;
 use function Lite\func\get_spreadsheet_column;
 use function Lite\func\is_assoc_array;
@@ -62,31 +63,34 @@ abstract class Spreadsheet{
 			'fields'           => [],       //指定返数据下标（按顺序对应）
 			'from_encoding'    => 'gb2312',
 			'to_encoding'      => 'utf-8',
+			'delimiter'        => ',',
 		), $config);
 
 		$data = [];
 		$header = [];
+		$content = iconv($config['from_encoding'], $config['to_encoding'], $content) ?: $content;
 		$raws = explode("\n", $content);
 		foreach($raws as $row_idx=>$row_str){
-			$row = str_getcsv($row_str, $config['delimiter']);
-			foreach($row as $idx => $str){
-				$row[$idx] = $str ? iconv($config['from_encoding'], $config['to_encoding'], $str) : $str;
-			}
+			//由于str_getcsv针对编码在不同系统环境中存在较大差异化，因此这里简单实用delimiter进行切割。
+			//切割过程未考虑转移字符问题。
+			$row = explode($config['delimiter'], $row_str);
+			$row = array_map('trim', $row);
 			if($row_idx == 0){
-				//set header from first row
 				if($config['first_row_as_key']){
 					$header = $row;
 					continue;
 				}
-				//set header from config.fields
 				if($config['fields']){
 					$header = $config['fields'];
 				}
 			}
-
-			//set data
 			if($row_idx >= $config['start_offset']){
-				$data[] = $config['first_row_as_key'] ? array_combine($header, $row) : $row;
+				self::dataSyncLen($header, $row);
+				$tmp = $config['first_row_as_key'] ? array_combine($header, $row) : $row;
+				$tmp = array_clear_empty($tmp);
+				if($tmp){
+					$data[] = $tmp;
+				}
 			}
 		}
 		return $data;
@@ -112,19 +116,16 @@ abstract class Spreadsheet{
 		$header = [];
 		self::readCsvFileChunk($file, function($row, $row_idx)use(&$data, &$header, $config){
 			if($row_idx == 0){
-				//set header from first row
 				if($config['first_row_as_key']){
 					$header = $row;
 					return;
 				}
-				//set header from config.fields
 				if($config['fields']){
 					$header = $config['fields'];
 				}
 			}
-
-			//set data
 			if($row_idx >= $config['start_offset']){
+				self::dataSyncLen($header, $row);
 				$data[] = $config['first_row_as_key'] ? array_combine($header, $row) : $row;
 			}
 		}, $config);
@@ -149,14 +150,33 @@ abstract class Spreadsheet{
 		$row_idx = 0;
 		$fp = fopen($file, 'r');
 		while(($row = fgetcsv($fp, 0, $config['delimiter'])) !== false){
+			$row = array_map('utf8_encode', $row);
 			$row = array_map(function($str) use ($config){
 				$str = trim($str);
-				return $str ? iconv($config['from_encoding'], $config['to_encoding'], $str) : $str;
+				return $str ? (iconv($config['from_encoding'], $config['to_encoding'], $str) ?: $str) : $str;
 			}, $row);
 			$row_handler($row, $row_idx);
 			$row_idx++;
 		}
 		return $data;
+	}
+
+	/**
+	 * 同步头部与数据长度
+	 * @param $header
+	 * @param $row
+	 */
+	private static function dataSyncLen(&$header, &$row){
+		$head_len = count($header);
+		$row_len = count($row);
+		if($head_len > $row_len){
+			$row = array_pad($row, $head_len, '');
+		}
+		else if($head_len < $row_len){
+			for($i=0; $i<($row_len - $head_len); $i++){
+				$header[] = 'Row'.($head_len+$i);
+			}
+		}
 	}
 
 	/**
