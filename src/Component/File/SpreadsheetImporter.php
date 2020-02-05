@@ -18,25 +18,34 @@ class SpreadsheetImporter {
 	 * @return string $file_name 根据文件内容MD5生成
 	 */
 	public static function dumpUploadExcelFile($tmp_name){
-		$tmp_fold = sys_get_temp_dir().'/'.self::$tmp_fold_name;
+		return self::dumpUploadSpreadFile($tmp_name, ['xls','xlsx']);
+	}
 
+	/**
+	 * @param $tmp_name
+	 * @param array $ext_list
+	 * @return string
+	 */
+	public static function dumpUploadSpreadFile($tmp_name, $ext_list = []){
+		$tmp_fold = sys_get_temp_dir().'/'.self::$tmp_fold_name;
 		try{
-			UploadLocal::checkUploadFile($tmp_name, [
-				'allow_mimes' => MimeInfo::getMimesByExtensions(['xls', 'xlsx']),
-			]);
+			$upload_rules = $ext_list ? ['allow_mimes' => MimeInfo::getMimesByExtensions($ext_list)] : [];
+			UploadLocal::checkUploadFile($tmp_name, $upload_rules);
 		}catch(UploadException $e){
 			throw new BizException($e->getMessage(), $e->getCode(), $e->getData(), $e->getPrevious());
 		}
-
-		$raw_map = Spreadsheet::parseExcelAsAssoc($tmp_name);
+		$mime = MimeInfo::getMimeByFile($tmp_name);
+		if(MimeInfo::checkByExtensions(['csv'], $mime)){
+			$raw_map = Spreadsheet::readCsv(file_get_contents($tmp_name));
+		}else{
+			$raw_map = Spreadsheet::parseExcelAsAssoc($tmp_name);
+		}
 		if(!$raw_map){
 			throw new BizException(_tl('File content empty, please check your file before upload again'));
 		}
-
 		if(!is_dir($tmp_fold)){
 			mkdir($tmp_fold, 0777, true);
 		}
-
 		$file_content = serialize($raw_map);
 		$file_name = md5($file_content);
 
@@ -45,6 +54,7 @@ class SpreadsheetImporter {
 		}
 		return $file_name;
 	}
+
 
 	/**
 	 * 清理缓存
