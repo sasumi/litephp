@@ -11,7 +11,7 @@ use function Lite\func\guid;
  * Date: 14-8-28
  * Time: 上午11:25
  */
-class Paginate implements PaginateInterface {
+class Paginate implements PaginateInterface, \JsonSerializable {
 	private $guid;
 	private $page_info;
 	public $page_size_flag = false;     //page_size是否来自于GET
@@ -362,5 +362,16 @@ class Paginate implements PaginateInterface {
 			}
 		}
 		return '<span class="pagination '.'pagination-'.$page_info['page_total'].'">'.$html.'</span>';
+	}
+
+	/**
+	 * Specify data which should be serialized to JSON
+	 * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+	 * @return mixed data which can be serialized by <b>json_encode</b>,
+	 * which is a value of any type other than a resource.
+	 * @since 5.4.0
+	 */
+	public function jsonSerialize(){
+		return $this->getInfo();
 	}
 }

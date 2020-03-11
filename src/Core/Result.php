@@ -9,7 +9,7 @@ use Exception;
  * Date: 2014/11/18
  * Time: 9:49
  */
-class Result {
+class Result implements \JsonSerializable {
 	private $code;
 	private $message;
 	private $data;
@@ -216,5 +216,16 @@ class Result {
 			"<script>frame.$callback(".json_encode($data, JSON_UNESCAPED_UNICODE).");</script>".
 			'</head><body></body></html>';
 		return $html;
+	}
+
+	/**
+	 * Specify data which should be serialized to JSON
+	 * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+	 * @return mixed data which can be serialized by <b>json_encode</b>,
+	 * which is a value of any type other than a resource.
+	 * @since 5.4.0
+	 */
+	public function jsonSerialize(){
+		return $this->getObject();
 	}
 }

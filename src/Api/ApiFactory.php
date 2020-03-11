@@ -43,11 +43,11 @@ abstract class ApiFactory{
 	 * @throws LException
 	 */
 	protected static function nameProtection($name){
-		$reg = '/^[\w|\/]+$/';
+		$reg = '/^[\w|\/]*$/';
 		$args = func_get_args();
 		foreach($args as $arg){
 			if(!preg_match($reg, $arg)){
-				throw new Exception('Name illegal', null, $arg);
+				throw new Exception('Name illegal:'.$name, null, $arg);
 			}
 		}
 	}
@@ -65,24 +65,24 @@ abstract class ApiFactory{
 		$action = array_pop($paths);
 		$class = ucfirst(array_pop($paths));
 		$dir = join('/', $paths);
-		
+
 		static::nameProtection($dir, $class, $action);
-		
-		$file = Config::get('app/path').static::$relative_path."$dir/$class.php";
+
+		$file = Config::get('app/path').static::$relative_path.($dir ? $dir.'/' : '')."$class.php";
 		if((Server::inWindows() && !file_exists_case_insensitive($file)) || !is_file($file)){
 			throw new RouterException('Request path no found', null, $file);
 		}
 		include_once $file;
-		
-		$class_full = Application::getNamespace().str_replace('/', '\\', static::$relative_path."$dir/$class");
+
+		$class_full = Application::getNamespace().'\\'.str_replace('/', '\\', static::$relative_path.($dir ? $dir.'/' : '')."$class");
 		if(!class_exists($class_full)){
-			throw new RouterException('Class no found', null, $class_full);
+			throw new RouterException('Class no found:'.$class_full, null, $class_full);
 		}
-		
+
 		$r = new \ReflectionClass($class_full);
 		$method = $r->getMethod($action);
 		if($method && $method->isPublic() && !$method->isStatic()){
-			return [$class_full, $method];
+			return [$class_full, $action];
 		}
 		throw new RouterException('Method no found', null, "$class_full->$action()");
 	}
