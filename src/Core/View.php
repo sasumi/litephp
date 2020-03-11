@@ -892,9 +892,7 @@ class View extends Router{
 		$rst = '';
 		foreach($args as $js){
 			if(gettype($js) == 'string'){
-				if(stripos('/', $js) === false){
-					$js = Router::getJsUrl($js);
-				}
+				$js = Router::getJsUrl($js);
 				$rst .= static::htmlJs($js);
 			} else{
 				$js['src'] = Router::getJsUrl($js['src']);

@@ -9,7 +9,7 @@ use Exception;
  * Date: 2014/11/18
  * Time: 9:49
  */
-class Result implements \JsonSerializable {
+class Result {
 	private $code;
 	private $message;
 	private $data;
@@ -182,7 +182,7 @@ class Result implements \JsonSerializable {
 	 * @param string $callback
 	 * @return string
 	 */
-	public function getIframeResponse($callback='_callback'){
+	public function getIframeResponse($callback = '_callback'){
 		$data = $this->getObject();
 
 		//avoid Exception no parse in json_encode
@@ -191,41 +191,39 @@ class Result implements \JsonSerializable {
 			$data['data'] .= '';
 		}
 
-		$html = '<!doctype html><html lang="en"><head><meta charset="UTF-8" /><title></title>'.
-			'<script>
-				var frame = null;
-				try {
-					frame = window.frameElement;
+		$data_str = json_encode($data, JSON_UNESCAPED_UNICODE);
+		$html = <<<EOT
+			<!doctype html><html lang="en"><head><meta charset="UTF-8"/><title></title>
+			<script>
+				var tryFrame = function(){
+					var frame = window.frameElement;
 					if(!frame){
-						throw("no frame 1");
+						var try_domains = function(domain){
+							console.log('Trying domain:',domain);
+							try {
+								document.domain = domain;
+								if(!window.frameElement){
+									throw("window frameElement access deny.");
+								}
+								return window.frameElement;
+							} catch (ex){
+								console.warn(ex);
+								var tmp = domain.split('.');
+								if(tmp.length > 1){
+									return try_domains(tmp.slice(1).join('.'));
+								}
+								throw("window frameElement try fail"+tmp.join('.'));
+							}
+						};
+						frame = try_domains(location.host);
 					}
-				} catch(ex){
-					try {
-						document.domain = location.host.replace(/^[\w]+\./, \'\');
-						frame = window.frameElement;
-						if(!frame){
-							throw("no frame 2");
-						}
-					} catch(ex){
-						if(window.console){
-							console.log("i try twice to cross domain. sorry, i m give up...");
-						}
-					}
+					return frame;
 				};
-				</script>'.
-			"<script>frame.$callback(".json_encode($data, JSON_UNESCAPED_UNICODE).");</script>".
-			'</head><body></body></html>';
+				var frame = tryFrame();
+			</script>
+			<script>frame.$callback($data_str);</script>
+			</head><body></body></html>;
+EOT;
 		return $html;
-	}
-
-	/**
-	 * Specify data which should be serialized to JSON
-	 * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
-	 * @return mixed data which can be serialized by <b>json_encode</b>,
-	 * which is a value of any type other than a resource.
-	 * @since 5.4.0
-	 */
-	public function jsonSerialize(){
-		return $this->getObject();
 	}
 }
