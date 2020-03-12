@@ -4,6 +4,7 @@ namespace Lite\Core;
 use Lite\Component\String\Html;
 use Lite\Component\String\HtmlOrder;
 use Lite\DB\Model;
+use Lite\Exception\Exception;
 use function Lite\func\array_unshift_assoc;
 use function Lite\func\h;
 
@@ -697,8 +698,12 @@ class View extends Router{
 			case self::REQ_IFRAME:
 			default:
 				$data = $result->getData();
-				$file = static::resolveTemplate($file);
-				if($file){
+				$resolved_file = static::resolveTemplate($file);
+				if($file && !$resolved_file){
+					throw new Exception('Template file not found:'.$file);
+				}
+
+				if($resolved_file){
 					$ob_level = ob_get_level();
 					ob_start();
 					if(is_array(self::$pre_vars)){
@@ -708,7 +713,7 @@ class View extends Router{
 						extract($data);
 					}
 					try{
-						include $file;
+						include $resolved_file;
 					} catch(\Exception $e){
 						while(ob_get_level()>$ob_level){
 							ob_end_clean();
