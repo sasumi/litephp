@@ -785,7 +785,11 @@ class View extends Router{
 		if($_parameters_){
 			extract($_parameters_);
 		}
-		include static::resolveTemplate($file_name);
+		$file = static::resolveTemplate($file_name);
+		if(!is_file($file)){
+			throw new Exception("Template file no exists:$file($file_name)");
+		}
+		include $file;
 	}
 
 	/**
