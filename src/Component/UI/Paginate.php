@@ -1,5 +1,6 @@
 <?php
 namespace Lite\Component\UI;
+use JsonSerializable;
 use Lite\Component\String\Html;
 use Lite\Core\Router;
 use function Lite\func\array_merge_recursive_distinct;
@@ -11,7 +12,7 @@ use function Lite\func\guid;
  * Date: 14-8-28
  * Time: 上午11:25
  */
-class Paginate implements PaginateInterface, \JsonSerializable {
+class Paginate implements PaginateInterface, JsonSerializable {
 	private $guid;
 	private $page_info;
 	public $page_size_flag = false;     //page_size是否来自于GET
@@ -202,7 +203,6 @@ class Paginate implements PaginateInterface, \JsonSerializable {
 	/**
 	 * 转换字符串
 	 * @return string
-	 * @throws \Lite\Exception\Exception
 	 */
 	public function __toString(){
 		$page_modes = array_map('trim', explode(',', $this->config['mode']));

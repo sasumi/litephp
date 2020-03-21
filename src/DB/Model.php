@@ -1402,15 +1402,21 @@ abstract class Model extends DAO{
 		if(!$err && $define['length'] && $define['type'] != 'datetime' && $define['type'] != 'date' && $define['type'] != 'time'){
 			if($define['precision']){
 				$int_len = strlen(substr($val, 0, strpos($val, '.')));
-				$precision_len = strpos($val, '.') !== false ? strlen(substr($val, strpos($val, '.')+1)) : 0;
+				$precision_len = strpos($val, '.') !== false ? strlen(substr($val, strpos($val, '.') + 1)) : 0;
 				if($int_len > $define['length'] || $precision_len > $define['precision']){
 					$err = "{$name}长度超出：$value";
 				}
-			} else {
-				$err = strlen($val)>$define['length'] ? "{$name}长度超出：$value" : '';
+			}else{
+				//mysql字符计算采用mb_strlen计算字符个数
+				$db_type = $this->getDbDriver(self::DB_WRITE)->getConfig('type');
+				if($define['type'] === 'string' && $db_type == 'mysql'){
+					$str_len = mb_strlen($val, 'utf-8');
+				}else{
+					$str_len = strlen($val);
+				}
+				$err = $str_len > $define['length'] ? "{$name}长度超出：$value {$str_len} > {$define['length']}" : '';
 			}
 		}
-
 		if(!$err){
 			$value = $val;
 		}
