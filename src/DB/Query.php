@@ -123,7 +123,7 @@ class Query {
 	 * right join
 	 * @param $table
 	 * @param null $on
-	 * @return \Lite\DB\Query
+	 * @return static
 	 */
 	public function rightJoin($table, $on = null){
 		return $this->join($table, $on, self::RIGHT_JOIN);
@@ -133,7 +133,7 @@ class Query {
 	 * inner join
 	 * @param $table
 	 * @param null $on
-	 * @return \Lite\DB\Query
+	 * @return static
 	 */
 	public function innerJoin($table, $on = null){
 		return $this->join($table, $on, self::INNER_JOIN);
