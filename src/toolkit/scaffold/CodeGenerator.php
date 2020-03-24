@@ -353,8 +353,6 @@ abstract class CodeGenerator{
 				return 'simple_rich_text';
 
 			case 'mediumtext':
-				return 'rich_text';
-
 			case 'longtext':
 				return 'rich_text';
 		}
