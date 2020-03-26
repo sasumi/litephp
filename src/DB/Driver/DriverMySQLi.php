@@ -56,11 +56,11 @@ class DriverMySQLi extends DBAbstract{
 	}
 
 	public function beginTransaction(){
-		$this->conn->autocommit(false);
+		$this->conn->autocommit(true);
 	}
 
 	public function cancelTransactionState(){
-		$this->conn->autocommit(true);
+		$this->conn->autocommit(false);
 	}
 	
 	/**
