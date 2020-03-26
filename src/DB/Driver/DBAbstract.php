@@ -614,13 +614,13 @@ abstract class DBAbstract{
 	
 	/**
 	 * 事务提交
-	 * @return mixed
+	 * @return bool
 	 */
 	public abstract function commit();
 	
 	/**
 	 * 事务回滚
-	 * @return mixed
+	 * @return bool
 	 */
 	public abstract function rollback();
 	

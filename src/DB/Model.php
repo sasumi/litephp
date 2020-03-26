@@ -328,11 +328,15 @@ abstract class Model extends DAO{
 			if($ret === false){
 				throw new Exception('Database transaction interrupt');
 			}
-			$driver->commit();
+			if(!$driver->commit()){
+				throw new Exception('Database commit fail');
+			}
 			return $ret;
-		} catch(\Exception $exception){
+		}catch(\Exception $exception){
 			$driver->rollback();
 			throw $exception;
+		}finally{
+			$driver->cancelTransactionState();
 		}
 	}
 

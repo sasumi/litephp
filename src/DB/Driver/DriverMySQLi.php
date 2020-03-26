@@ -48,19 +48,19 @@ class DriverMySQLi extends DBAbstract{
 	}
 
 	public function commit(){
-		$this->conn->commit();
+		return $this->conn->commit();
 	}
 
 	public function rollback(){
-		$this->conn->rollback();
+		return $this->conn->rollback();
 	}
 
 	public function beginTransaction(){
-		$this->conn->autocommit(true);
+		$this->conn->autocommit(false);
 	}
 
 	public function cancelTransactionState(){
-		$this->conn->autocommit(false);
+		$this->conn->autocommit(true);
 	}
 	
 	/**
