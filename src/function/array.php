@@ -58,13 +58,17 @@ namespace Lite\func {
 	/**
 	 * 随机返回数组元素，方便对array_rand调用
 	 * @param $arr
-	 * @param int $num 获取数量
+	 * @param int $num 获取数量,如果num大于或等于数组的长度，则返回全量数组
 	 * @param null $key_or_keys 结果元素key，如果数量>1，该项为元素key数组
 	 * @return null|array|mixed 如果数量1，则返回数组元素值，如果数量>1，则返回结果关联数组
 	 */
 	function array_random(array $arr = [], $num = 1, &$key_or_keys = null){
 		if(!$arr){
 			return null;
+		}
+		if(count($arr) <= $num){
+			$key_or_keys = array_keys($arr);
+			return $arr;
 		}
 		if($num == 1){
 			$key_or_keys = array_rand($arr, 1);
