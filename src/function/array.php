@@ -66,13 +66,13 @@ namespace Lite\func {
 		if(!$arr){
 			return null;
 		}
-		if(count($arr) <= $num){
-			$key_or_keys = array_keys($arr);
-			return $arr;
-		}
 		if($num == 1){
 			$key_or_keys = array_rand($arr, 1);
 			return $arr[$key_or_keys];
+		}
+		if(count($arr) <= $num){
+			$key_or_keys = array_keys($arr);
+			return $arr;
 		}
 		$key_or_keys = array_rand($arr, $num);
 		$ret = [];
