@@ -652,6 +652,10 @@ abstract class Model extends DAO{
 	private function _getObjectCache($field, $field_value, $as_array = false, $has_many = false){
 		$cache_key = $this->getTableFullNameWithDbName()."/$field/$field_value";
 		$data = CacheVar::instance()->get($cache_key);
+		//type adjust
+		if(!$data && ($has_many || $as_array)){
+			$data = [];
+		}
 		if($as_array){
 			return $data;
 		}
