@@ -353,14 +353,14 @@ class View extends Router{
 							$disabled = $n['disabled'];
 							$n = $n['name'];
 						}
-						$attr = array('value' => $k, 'text' => $n);
+						$attr = [];
 						if($disabled){
 							$attr['disabled'] = 'disabled';
 						}
 						if((string)$value === (string)$k || (!strlen($value) && isset($define['default']) && $define['default'] == $k)){
 							$attr['selected'] = 'selected';
 						}
-						$html .= static::buildElement('option', array_merge($attr, $extend_attr));
+						$html .= static::htmlOption($n, $k, $attr);
 					}
 				}
 				$html .= '</select>';
