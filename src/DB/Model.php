@@ -878,7 +878,7 @@ abstract class Model extends DAO{
 	/**
 	 * 获取一条记录
 	 * @param bool $as_array 是否以数组方式返回，默认为Model对象
-	 * @return static|array
+	 * @return static|array|null
 	 */
 	public function one($as_array = false){
 		$data = $this->getDbDriver(self::DB_READ)->getOne($this->query);
