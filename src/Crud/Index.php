@@ -6,7 +6,7 @@ use Lite\Component\UI\Paginate;
 use Lite\Core\View;
 use Lite\DB\Model;
 use Lite\DB\Query;
-use function Lite\func\class_uses_recursive;
+use function LFPhp\Func\class_uses_recursive;
 
 /**
  * 列表操作

@@ -3,6 +3,7 @@ namespace Lite\Component\Process;
 
 use Lite\Component\Cli\Console;
 use Lite\Exception\Exception;
+use function LFPhp\Func\console_color;
 
 /**
  * 并发进程管理
@@ -309,15 +310,15 @@ class Parallel{
 	 */
 	public function useConsoleDebugger(){
 		$console_color_map = [
-			'starting'  => Console::FORE_COLOR_PURPLE,
-			'add'       => Console::FORE_COLOR_PURPLE,
-			'running'   => Console::FORE_COLOR_CYAN,
-			'interrupt' => Console::FORE_COLOR_RED,
-			'failure'   => Console::FORE_COLOR_RED,
-			'finished'  => Console::FORE_COLOR_GREEN,
+			'starting'  => 'purple',
+			'add'       => 'purple',
+			'running'   => 'cyan',
+			'interrupt' => 'red',
+			'failure'   => 'red',
+			'finished'  => 'green',
 		];
 		$this->setDebugger(function(...$messages) use ($console_color_map){
-			$messages[0] = Console::getColorString($messages[0], $console_color_map[$messages[0]]);
+			$messages[0] = console_color($messages[0], $console_color_map[$messages[0]]);
 			return call_user_func_array([Console::class, 'debug'], $messages);
 		});
 	}

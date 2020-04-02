@@ -2,7 +2,7 @@
 
 namespace Lite\Crud;
 
-use function Lite\func\class_uses_recursive;
+use function LFPhp\Func\class_uses_recursive;
 
 /**
  * 详情操作

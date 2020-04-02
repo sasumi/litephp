@@ -6,10 +6,10 @@ use Lite\Exception\BizException;
 use Lite\Exception\Exception as Exception;
 use Lite\Exception\RouterException;
 use ReflectionClass;
-use function Lite\func\decodeURI;
-use function Lite\func\file_exists_case_insensitive;
-use function Lite\func\file_exists_case_sensitive;
-use function Lite\func\microtime_diff;
+use function LFPhp\Func\decodeURI;
+use function LFPhp\Func\file_exists_case_insensitive;
+use function LFPhp\Func\file_exists_case_sensitive;
+use function LFPhp\Func\microtime_diff;
 
 /**
  * Lite框架应用初始化处理类

@@ -4,10 +4,11 @@ namespace Lite\DB\Driver;
 use Lite\Component\UI\PaginateInterface;
 use Lite\Core\Hooker;
 use Lite\Core\RefParam;
+use Lite\DB\Exception\DatabaseException;
 use Lite\DB\Query;
 use Lite\Exception\BizException;
-use Lite\DB\Exception\DatabaseException;
 use Lite\Exception\Exception;
+use function LFPhp\Func\dump;
 
 /**
  * 数据库接口抽象类

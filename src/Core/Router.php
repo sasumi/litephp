@@ -5,9 +5,9 @@ use Lite\Component\Net\Http;
 use Lite\Component\String\Html;
 use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
-use function Lite\func\array_merge_recursive_distinct;
-use function Lite\func\decodeURIComponent;
-use function Lite\func\str_start_with;
+use function LFPhp\Func\array_merge_recursive_distinct;
+use function LFPhp\Func\decodeURIComponent;
+use function LFPhp\Func\str_start_with;
 
 /**
  * 路由基础类。当前路由路由基础类

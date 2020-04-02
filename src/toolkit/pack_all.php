@@ -15,7 +15,7 @@ include $root.DS.'bootstrap.php';
 //reset runtime file
 file_put_contents($runtime, '');
 
-$files = \Lite\func\glob_recursive($source_path.DS.'*.php');
+$files = \LFPhp\Func\glob_recursive($source_path.DS.'*.php');
 foreach($files as $file){
 	$tail = str_replace($source_path.DS, '', $file);
 	if(stripos($tail, 'toolkit') === 0){

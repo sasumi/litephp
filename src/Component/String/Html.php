@@ -3,11 +3,11 @@ namespace Lite\Component\String;
 
 use Lite\Exception\Exception;
 use function Lite\func\_tl;
-use function Lite\func\array_clear_null;
-use function Lite\func\array_first;
-use function Lite\func\h;
-use function Lite\func\ha;
-use function Lite\func\substr_utf8;
+use function LFPhp\Func\array_clear_null;
+use function LFPhp\Func\array_first;
+use function LFPhp\Func\h;
+use function LFPhp\Func\ha;
+use function LFPhp\Func\substr_utf8;
 
 /**
  * Trait Html

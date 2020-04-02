@@ -1,7 +1,7 @@
 <?php
 namespace Lite\Component;
-use function Lite\func\format_size;
-use function Lite\func\resolve_size;
+use function LFPhp\Func\format_size;
+use function LFPhp\Func\resolve_size;
 
 /**
  * 服务器环境集成类

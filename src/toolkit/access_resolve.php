@@ -4,7 +4,7 @@ namespace Lite\toolkit;
 use Lite\Core\Application;
 use Lite\Core\Config;
 use ReflectionMethod;
-use function Lite\func\glob_recursive;
+use function LFPhp\Func\glob_recursive;
 
 ini_set('include_path', dirname(dirname(dirname(__DIR__))).DIRECTORY_SEPARATOR);
 include_once 'ttlib/Litephp/bootstrap.php';

@@ -1,7 +1,7 @@
 <?php
 namespace Lite\DB;
 
-use Lite\Cache\CacheVar;
+use LFPhp\Cache\CacheVar;
 use Lite\Core\Config;
 use Lite\Core\DAO;
 use Lite\Core\Hooker;
@@ -10,12 +10,12 @@ use Lite\Exception\BizException;
 use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
 use function Lite\func\_tl;
-use function Lite\func\array_clear_fields;
-use function Lite\func\array_first;
-use function Lite\func\array_group;
-use function Lite\func\array_index;
-use function Lite\func\array_orderby;
-use function Lite\func\time_range_v;
+use function LFPhp\Func\array_clear_fields;
+use function LFPhp\Func\array_first;
+use function LFPhp\Func\array_group;
+use function LFPhp\Func\array_index;
+use function LFPhp\Func\array_orderby;
+use function LFPhp\Func\time_range_v;
 
 /**
  * 数据库结合数据模型提供的操作抽象类, 实际业务逻辑最好通过集成该类来实现

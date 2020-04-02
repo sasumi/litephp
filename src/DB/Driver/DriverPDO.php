@@ -5,7 +5,6 @@ use Lite\Component\Server;
 use Lite\DB\Exception\ConnectException;
 use Lite\DB\Query;
 use Lite\Exception\Exception;
-use Lite\Performance\Statistics;
 use PDO as PDO;
 use PDOStatement as PDOStatement;
 use function Lite\func\_tl;

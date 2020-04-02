@@ -3,8 +3,8 @@ namespace Lite\Core;
 
 use Lite\Exception\Exception;
 use Lite\Exception\RouterException;
-use function Lite\func\array_keys_exists;
-use function Lite\func\is_function;
+use function LFPhp\Func\array_keys_exists;
+use function LFPhp\Func\is_function;
 
 /**
  * Class Rewrite

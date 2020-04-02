@@ -1,9 +1,9 @@
 <?php
 namespace Lite\Component\String;
 
-use Lite\Cache\CacheFile;
+use LFPhp\Cache\CacheFile;
 use Lite\Component\Net\Curl;
-use const Lite\func\ONE_DAY;
+use const LFPhp\Func\ONE_DAY;
 
 /**
  * Class BaiduTranslate
@@ -16,7 +16,6 @@ abstract class BaiduTranslate{
 	 * @param string $from
 	 * @param string $to
 	 * @return mixed|string
-	 * @throws \Lite\Exception\Exception
 	 */
 	public static function translate($text, $from = 'zh', $to = 'en'){
 		$cache_key = __CLASS__.__METHOD__.join(',', func_get_args());

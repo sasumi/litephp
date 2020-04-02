@@ -1,12 +1,12 @@
 <?php
 namespace Lite\Performance\display;
 
-use function Lite\func\format_size;
-use function Lite\func\ha;
-use function Lite\func\h;
-use function Lite\func\microtime_diff;
-use function Lite\func\microtime_to_date;
 use Lite\Performance\Performance;
+use function LFPhp\Func\format_size;
+use function LFPhp\Func\h;
+use function LFPhp\Func\ha;
+use function LFPhp\Func\microtime_diff;
+use function LFPhp\Func\microtime_to_date;
 
 function display_time_point_text($start, $end){
 	$t1 = explode(' ', $start);

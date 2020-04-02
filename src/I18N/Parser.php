@@ -1,8 +1,8 @@
 <?php
 namespace Lite\I18N;
 
-use function Lite\func\array_clear_empty;
-use function Lite\func\explode_by;
+use function LFPhp\Func\array_clear_empty;
+use function LFPhp\Func\explode_by;
 
 /**
  * 国际化语言解析

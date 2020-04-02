@@ -7,7 +7,7 @@ use Lite\Core\Config;
 use Lite\Exception\Exception;
 use Lite\Exception\Exception as LException;
 use Lite\Exception\RouterException;
-use function Lite\func\file_exists_case_insensitive;
+use function LFPhp\Func\file_exists_case_insensitive;
 
 /**
  * Api 工厂类，定义基本Api调用规则。

@@ -1,0 +1,157 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "04f0becfcf53df7c607042e1d6f5052f",
+    "packages": [
+        {
+            "name": "lfphp/cache",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sasumi/Cache.git",
+                "reference": "87922d8e1a43ba70d0764c9d52571420fed4d35a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sasumi/Cache/zipball/87922d8e1a43ba70d0764c9d52571420fed4d35a",
+                "reference": "87922d8e1a43ba70d0764c9d52571420fed4d35a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-iconv": "*",
+                "ext-json": "*",
+                "lfphp/func": "~1.0.0",
+                "php": ">=5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "autoload.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sasumi.H",
+                    "email": "cnsasumi@outlook.com",
+                    "homepage": "http://blog.yikepi.com/"
+                }
+            ],
+            "description": "A lite cache for PHP",
+            "homepage": "http://blog.yikepi.com/",
+            "keywords": [
+                "cache",
+                "lfphp"
+            ],
+            "time": "2020-03-25T01:26:06+00:00"
+        },
+        {
+            "name": "lfphp/func",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sasumi/Func.git",
+                "reference": "6e07afba8b51f442f830d4264a70f5d94d5576b1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sasumi/Func/zipball/6e07afba8b51f442f830d4264a70f5d94d5576b1",
+                "reference": "6e07afba8b51f442f830d4264a70f5d94d5576b1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "autoload.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sasumi.H",
+                    "email": "cnsasumi@outlook.com",
+                    "homepage": "http://blog.yikepi.com/"
+                }
+            ],
+            "description": "A lite function pack for PHP.",
+            "homepage": "http://blog.yikepi.com/",
+            "keywords": [
+                "function"
+            ],
+            "time": "2020-04-01T10:43:03+00:00"
+        },
+        {
+            "name": "lfphp/logger",
+            "version": "1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sasumi/Logger.git",
+                "reference": "2bc34758f7254bb9a8f13ddcf688fa5223c4e71c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sasumi/Logger/zipball/2bc34758f7254bb9a8f13ddcf688fa5223c4e71c",
+                "reference": "2bc34758f7254bb9a8f13ddcf688fa5223c4e71c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "lfphp/func": "~1.0.0",
+                "php": ">=5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "autoload.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sasumi.H",
+                    "email": "cnsasumi@outlook.com",
+                    "homepage": "http://blog.yikepi.com/"
+                }
+            ],
+            "description": "A lite logger for PHP. make log easier to use.",
+            "homepage": "http://blog.yikepi.com/",
+            "keywords": [
+                "lite",
+                "log",
+                "logger"
+            ],
+            "time": "2020-04-01T10:44:01+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.6",
+        "ext-mbstring": "*",
+        "ext-json": "*"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
+}

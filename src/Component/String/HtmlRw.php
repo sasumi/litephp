@@ -1,7 +1,7 @@
 <?php
 namespace Lite\Component\String;
 
-use function Lite\func\h;
+use function LFPhp\Func\h;
 
 /**
  * Trait HtmlRw

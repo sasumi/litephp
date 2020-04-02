@@ -1,0 +1,36 @@
+{
+	"name": "lfphp/litephp",
+	"description": "A lite php framework for PHP.",
+	"keywords": [
+		"function"
+	],
+	"homepage": "http://blog.yikepi.com/",
+	"type": "library",
+	"license": "Apache-2.0",
+	"authors": [
+		{
+			"name": "Sasumi.H",
+			"email": "cnsasumi@outlook.com",
+			"homepage": "http://blog.yikepi.com/"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/sasumi/litephp/issues"
+	},
+	"require": {
+		"php": ">=5.6",
+		"ext-mbstring": "*",
+		"ext-json": "*",
+		"lfphp/cache": "^1.0",
+		"lfphp/func": "^1.0",
+		"lfphp/logger": "^1.0"
+	},
+	"require-dev": {},
+	"autoload": {
+		"files": [
+			"bootstrap.php",
+			"src/function/util.php",
+			"src/function/string.php"
+		]
+	}
+}

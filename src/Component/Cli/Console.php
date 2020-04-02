@@ -2,100 +2,13 @@
 namespace Lite\Component\Cli;
 
 use Lite\Component\Net\Client;
-use function Lite\func\array_first;
-use function Lite\func\pretty_time;
-use function Lite\func\time_range_v;
+use function LFPhp\Func\array_first;
+use function LFPhp\Func\console_color;
+use function LFPhp\Func\time_range_v;
 
 abstract class Console {
-	//前景色
-	const FORE_COLOR_BLACK = '0;30';
-	const FORE_COLOR_DARK_GRAY = '1;30';
-	const FORE_COLOR_BLUE = '0;34';
-	const FORE_COLOR_LIGHT_BLUE = '1;34';
-	const FORE_COLOR_GREEN = '0;32';
-	const FORE_COLOR_LIGHT_GREEN = '1;32';
-	const FORE_COLOR_CYAN = '0;36';
-	const FORE_COLOR_LIGHT_CYAN = '1;36';
-	const FORE_COLOR_RED = '0;31';
-	const FORE_COLOR_LIGHT_RED = '1;31';
-	const FORE_COLOR_PURPLE = '0;35';
-	const FORE_COLOR_LIGHT_PURPLE = '1;35';
-	const FORE_COLOR_BROWN = '0;33';
-	const FORE_COLOR_YELLOW = '1;33';
-	const FORE_COLOR_LIGHT_GRAY = '0;37';
-	const FORE_COLOR_WHITE = '1;37';
-
-	//前景色清单
-	const FORE_COLOR_MAP = [
-		self::FORE_COLOR_BLACK,
-		self::FORE_COLOR_DARK_GRAY,
-		self::FORE_COLOR_BLUE,
-		self::FORE_COLOR_LIGHT_BLUE,
-		self::FORE_COLOR_GREEN,
-		self::FORE_COLOR_LIGHT_GREEN,
-		self::FORE_COLOR_CYAN,
-		self::FORE_COLOR_LIGHT_CYAN,
-		self::FORE_COLOR_RED,
-		self::FORE_COLOR_LIGHT_RED,
-		self::FORE_COLOR_PURPLE,
-		self::FORE_COLOR_LIGHT_PURPLE,
-		self::FORE_COLOR_BROWN,
-		self::FORE_COLOR_YELLOW,
-		self::FORE_COLOR_LIGHT_GRAY,
-		self::FORE_COLOR_WHITE,
-	];
-
-	//背景色
-	const BACK_COLOR_BLACK = '40';
-	const BACK_COLOR_RED = '41';
-	const BACK_COLOR_GREEN = '42';
-	const BACK_COLOR_YELLOW = '43';
-	const BACK_COLOR_BLUE = '44';
-	const BACK_COLOR_MAGENTA = '45';
-	const BACK_COLOR_CYAN = '46';
-	const BACK_COLOR_LIGHT_GRAY = '47';
-
-	//背景色清单
-	const BACK_COLOR_MAP = [
-		self::BACK_COLOR_BLACK,
-		self::BACK_COLOR_RED,
-		self::BACK_COLOR_GREEN,
-		self::BACK_COLOR_YELLOW,
-		self::BACK_COLOR_BLUE,
-		self::BACK_COLOR_MAGENTA,
-		self::BACK_COLOR_CYAN,
-		self::BACK_COLOR_LIGHT_GRAY,
-	];
-
 	const REQUIRED = 'required';
 	const OPTIONAL = 'optional';
-
-	/**
-	 * get cli console color output string
-	 * @param $str
-	 * @param null $foreground_color
-	 * @param null $background_color
-	 * @return string
-	 */
-	public static function getColorString($str, $foreground_color = null, $background_color = null){
-		//windows console no support ansi color mode
-		if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
-			return $str;
-		}
-
-		//linux cli
-		$color_str = '';
-		if($foreground_color){
-			$color_str .= "\033[".$foreground_color."m";
-		}
-		if($background_color){
-			$color_str .= "\033[".$background_color."m";
-		}
-		if($color_str){
-			return $color_str.$str."\033[0m";
-		}
-		return $str;
-	}
 
 	/**
 	 * get options
@@ -368,6 +281,6 @@ abstract class Console {
 	}
 
 	public static function error($string, $time_preset='Y-m-d H:i:s'){
-		echo "\n", ($time_preset ? date($time_preset)."\t " : '').self::getColorString("[ERROR] $string", self::FORE_COLOR_RED);
+		echo "\n", ($time_preset ? date($time_preset)."\t " : '').console_color("[ERROR] $string", 'red');
 	}
 }
