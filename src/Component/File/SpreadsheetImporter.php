@@ -97,7 +97,7 @@ class SpreadsheetImporter {
 	public static function filterData($raw_map, array $row_rules, &$errors = []){
 		$errors = [];
 		$available_data = [];
-		foreach($raw_map as $row_idx=>$row){
+		foreach($raw_map as $row_idx => $row){
 			$row_data = [];
 			$error_happens = false;
 			foreach($row_rules as $col_name => $mixed){
@@ -105,13 +105,13 @@ class SpreadsheetImporter {
 				if(is_string($mixed)){
 					$field = $mixed;
 					$handler = null;
-				} else {
+				}else{
 					list($field, $handler) = $mixed;
 				}
 				//对接处理函数
 				if($handler){
 					try{
-						$val = $handler($val, $row);
+						$val = $handler($val, $row, $raw_map);
 					}catch(\Exception $e){
 						$errors[$row_idx][$col_name] = $e->getMessage().'('.($val ?: '空').')';
 						$error_happens = true;
