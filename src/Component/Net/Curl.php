@@ -224,7 +224,7 @@ abstract class Curl {
 	 * @return bool|mixed
 	 */
 	public static function postInJSON($url, $data=array(), $timeout = self::DEFAULT_TIMEOUT, $curl_option=array()){
-		$data = is_array($data) ? http_build_query($data) : $data;
+		$data = is_array($data) ? json_encode($data) : $data;
 		$curl_option = self::arrayMergeKeepKeys(array(
 			CURLOPT_HTTPHEADER=>array(
 				'Content-Type: application/json; charset=utf-8',

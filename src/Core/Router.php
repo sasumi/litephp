@@ -236,7 +236,8 @@ abstract class Router{
 		if((isset($get[self::$ROUTER_KEY]) && $get[self::$ROUTER_KEY]) || $router_mode == self::MODE_NORMAL){
 			list($controller, $action) = self::resolveUri(isset($get[self::$ROUTER_KEY]) ? $get[self::$ROUTER_KEY] : '', true);
 			unset($get[self::$ROUTER_KEY]);
-		} else {
+
+		}else{
 			list($controller, $action, $param) = self::resolveCurrentRequestPath($path_info);
 			$get = array_merge($param, $get);
 		}
@@ -455,7 +456,7 @@ abstract class Router{
 		$ns = Application::getNamespace();
 		$controller = str_replace('/','\\',$ns.'\\controller\\'.$ctrl_abs).'Controller';
 		if($force_class_exists && !class_exists($controller)){
-			return null;
+			throw new RouterException('controller no found:'.$ctrl_abs);
 		}
 		return $controller;
 	}

@@ -1,5 +1,6 @@
 <?php
 namespace Lite\Api;
+use Lite\Component\Net\Http;
 use Lite\Core\Router;
 
 /**
@@ -14,7 +15,7 @@ class ApiFactoryJson extends ApiFactory{
 	 */
 	protected function resolveData(){
 		$raw = Router::readInputData();
-		return $raw ?: json_decode($raw, true);
+		return $raw ? json_decode($raw, true) : null;
 	}
 	
 	/**
@@ -23,7 +24,8 @@ class ApiFactoryJson extends ApiFactory{
 	 * @return bool|string
 	 */
 	protected function onException(\Exception $ex){
-		return json_encode(['message' => $ex->getMessage()]);
+		Http::sendHttpStatus(500);
+		echo $ex->getMessage();
 	}
 	
 	/**

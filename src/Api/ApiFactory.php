@@ -15,14 +15,12 @@ use function Lite\func\file_exists_case_insensitive;
  */
 abstract class ApiFactory{
 	protected static $relative_path = 'api/';
-	public static $debug = false;
-	
+
 	/**
 	 * 私有构造器，阻止多实例调用
 	 * @param $config
 	 */
-	private function __construct($config){
-	}
+	private function __construct($config){}
 	
 	/**
 	 * singleton
@@ -63,7 +61,7 @@ abstract class ApiFactory{
 		$path = trim($_SERVER['PATH_INFO'], '/');
 		$paths = explode('/', $path);
 		$action = array_pop($paths);
-		$class = ucfirst(array_pop($paths));
+		$class = array_pop($paths);
 		$dir = join('/', $paths);
 
 		static::nameProtection($dir, $class, $action);
@@ -133,9 +131,6 @@ abstract class ApiFactory{
 			$response = $this->call($class, $method, $data);
 			return $this->formatResponse($response);
 		} catch(\Exception $e){
-			if(static::$debug){
-				LException::convertExceptionToArray($e);
-			}
 			if($this->onException($e) !== false){
 				throw $e;
 			}
