@@ -343,16 +343,17 @@ class Paginate implements PaginateInterface, JsonSerializable {
 				$html .= '<form action="'.$form_action.'" method="get" class="page_input_form" style="display:inline-block;">';
 				$html .= $form_hidden_html;
 				$html .= "<label>{$lang['page_jump']}".Html::htmlNumber($this->config['page_key'], '', [
-					'class'    => 'page_input',
-					'style' => 'width:65px; min-width:0;',
-					'size'     => 2,
-					'step'     => 1,
-					'min'      => 1,
-					'required' => 'required',
-					'onkeydown'=>'(function(e){e = e || window.event; if(e.keyCode == 13){this.parentNode.submit();}})(this)'
-				]).'</label>';
+						'class'     => 'page_input',
+						'style'     => 'width:65px; min-width:0;',
+						'size'      => 2,
+						'step'      => 1,
+						'min'       => 1,
+						'max'       => $page_info['page_total'],
+						'required'  => 'required',
+						'onkeydown' => '(function(e){e = e || window.event; if(e.keyCode == 13){this.parentNode.submit();}})(this)',
+					]).'</label>';
 				$html .= $this->page_size_flag ? Html::htmlHidden($this->config['page_size_key'], $page_info['page_size']) : '';
-				$html .= Html::htmlNoScript(Html::htmlInputSubmit(null, ['class'=>'page_jump_btn']));
+				$html .= Html::htmlNoScript(Html::htmlInputSubmit(null, ['class' => 'page_jump_btn']));
 				$html .= '</form>';
 			}
 
