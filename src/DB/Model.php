@@ -1170,6 +1170,27 @@ abstract class Model extends DAO{
 	}
 
 	/**
+	 * 裁剪属性字符串长度，使得对象属性符合定义
+	 * @return array 被裁减字段结果列表信息 [field1=> [define length, cut length], ...]
+	 */
+	public function trimPropertiesData(){
+		$match_fields = [];
+		$data = $this->getValues();
+		$defines = $this->getPropertiesDefine();
+		$cut_by_utf8 = $this->getDbDriver(self::DB_WRITE)->getConfig('type') == 'mysql';
+		foreach($defines as $field=>$def){
+			if($data[$field] && $def['length'] && $def['entity'] && !$def['readonly'] && $def['type'] == 'string'){
+				$len = $cut_by_utf8 ? mb_strlen($data[$field], 'utf-8') : strlen($data[$field]);
+				if($len > $def['length']){
+					$this->{$field} = $cut_by_utf8 ? mb_substr($data[$field], 0, $def['length'], 'utf-8') : substr($data[$field], 0, $def['length']);
+					$match_fields[$field] = [$def['length'], $len - $def['length']];
+				}
+			}
+		}
+		return $match_fields;
+	}
+
+	/**
 	 * 更新当前对象
 	 * @param bool $flush_all 是否刷新全部数据，包含readonly数据
 	 * @return bool|number
