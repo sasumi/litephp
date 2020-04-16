@@ -647,11 +647,7 @@ EOT;
 
 				echo "----- Alias -----\n";
 				foreach($meta_list as $k=>$m){
-					if(Server::inWindows()){
-						echo iconv('utf-8', 'gb2312', static::getFieldAlias($m));
-					} else {
-						echo static::getFieldAlias($m);
-					}
+					echo static::getFieldAlias($m);
 					echo "\n";
 				}
 
