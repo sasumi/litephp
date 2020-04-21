@@ -22,6 +22,7 @@ abstract class DBAbstract{
 	const EVENT_BEFORE_DB_GET_LIST = __CLASS__.'EVENT_BEFORE_DB_GET_LIST';
 	const EVENT_AFTER_DB_GET_LIST = __CLASS__.'EVENT_AFTER_DB_GET_LIST';
 	const EVENT_ON_DB_CONNECT = __CLASS__.'EVENT_ON_DB_CONNECT';
+	const EVENT_ON_DB_CONNECT_FAIL = __CLASS__.'EVENT_ON_DB_CONNECT_FAIL';
 	const EVENT_ON_DB_QUERY_DISTINCT = __CLASS__.'EVENT_ON_DB_QUERY_DISTINCT';
 	const EVENT_ON_DB_RECONNECT = __CLASS__.'EVENT_ON_DB_RECONNECT';
 
@@ -69,8 +70,13 @@ abstract class DBAbstract{
 		}
 		
 		Hooker::fire(self::EVENT_ON_DB_CONNECT, $this->config);
-		$this->connect($this->config);
-		
+		try {
+			$this->connect($this->config);
+		} catch(\Exception $ex){
+			Hooker::fire(self::EVENT_ON_DB_CONNECT_FAIL, $ex->getMessage(), $this->config);
+			throw $ex;
+		}
+
 		//charset
 		if(isset($this->config['charset']) && $this->config['charset']){
 			$this->setCharset($this->config['charset']);
@@ -501,6 +507,12 @@ abstract class DBAbstract{
 			$result = $this->dbQuery($query);
 			self::$processing_query = null;
 			Hooker::fire(self::EVENT_AFTER_DB_QUERY, $query, $result);
+
+			//由于PHP对数据库查询返回结果并非报告Exception，
+			//因此这里不会将查询结果false情况包装成为Exception，但会继续触发错误事件。
+			if($result === false){
+				Hooker::fire(self::EVENT_DB_QUERY_ERROR, '', $query.'', $this->config);
+			}
 			return $result;
 		} catch(\Exception $ex){
 			static $reconnect_count;
@@ -518,7 +530,7 @@ abstract class DBAbstract{
 				}
 				return $this->query($query);
 			}
-			Hooker::fire(self::EVENT_DB_QUERY_ERROR, $ex, $query, $this->config);
+			Hooker::fire(self::EVENT_DB_QUERY_ERROR, $ex->getMessage(), $query.'', $this->config);
 			throw new DatabaseException($ex->getMessage(), $query.'', $this->config, $ex->getCode(), $ex);
 		}
 	}
@@ -543,7 +555,7 @@ abstract class DBAbstract{
 	 * 执行查询
 	 * 规划dbQuery代替实际的数据查询主要目的是：为了统一对数据库查询动作做统一的行为监控
 	 * @param $query
-	 * @return mixed
+	 * @return mixed|false 返回查询结果，如果查询失败，则返回false
 	 */
 	public abstract function dbQuery($query);
 	
