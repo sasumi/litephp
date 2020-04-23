@@ -64,7 +64,7 @@ namespace Lite\func {
 	 */
 	function array_random(array $arr = [], $num = 1, &$key_or_keys = null){
 		if(!$arr){
-			return null;
+			return [];
 		}
 		if($num == 1){
 			$key_or_keys = array_rand($arr, 1);
