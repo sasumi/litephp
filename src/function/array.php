@@ -56,27 +56,27 @@ namespace Lite\func {
 	}
 
 	/**
-	 * 随机返回数组元素，方便对array_rand调用
-	 * @param $arr
-	 * @param int $num 获取数量,如果num大于或等于数组的长度，则返回全量数组
-	 * @param null $key_or_keys 结果元素key，如果数量>1，该项为元素key数组
-	 * @return null|array|mixed 如果数量1，则返回数组元素值，如果数量>1，则返回结果关联数组
+	 * 随机返回数组元素列表
+	 * @notice 该方法与array_rand不同，
+	 * 任何时候返回的都是数组列表，而不是key或者keys，该方法不会对结果进行混淆
+	 * @param array $arr 源数组，支持自然索引数组与关联数组
+	 * @param int $count 获取数量
+	 * @return array 返回指定数量的数组
 	 */
-	function array_random(array $arr = [], $num = 1, &$key_or_keys = null){
+	function array_random(array $arr = [], $count = 1){
 		if(!$arr){
 			return [];
 		}
-		if($num == 1){
-			$key_or_keys = array_rand($arr, 1);
-			return $arr[$key_or_keys];
+		if($count == 1){
+			$key = array_rand($arr, 1);
+			return [$key => $arr[$key]];
 		}
-		if(count($arr) <= $num){
-			$key_or_keys = array_keys($arr);
+		if(count($arr) <= $count){
 			return $arr;
 		}
-		$key_or_keys = array_rand($arr, $num);
+		$keys = array_rand($arr, $count);
 		$ret = [];
-		foreach($key_or_keys as $k){
+		foreach($keys as $k){
 			$ret[$k] = $arr[$k];
 		}
 		return $ret;
