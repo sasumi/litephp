@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-01-13 11:19+0800\n"
-"PO-Revision-Date: 2020-01-13 11:21+0800\n"
+"PO-Revision-Date: 2020-05-04 18:09+0800\n"
 "Last-Translator: sasumi <cnsasumi@outlook.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -112,12 +112,12 @@ msgstr "上传文件（mime：{file_mime}）必须为图片"
 
 #: src/Component/Upload/Upload.php:176
 msgid "Image resolution width({width})px less than required:{require_width}px"
-msgstr "图片分辨宽（{width} 像素）小于系统要求：{require_width}像素"
+msgstr "图片分辨率宽（{width} 像素）小于系统要求：{require_width}像素"
 
 #: src/Component/Upload/Upload.php:182
 msgid ""
 "Image resolution height({height})px less than required:{require_height}px"
-msgstr "图片分辨高（{height} 像素）小于系统要求：{require_height}像素"
+msgstr "图片分辨率高（{height} 像素）小于系统要求：{require_height}像素"
 
 #: src/Component/Upload/UploadLocal.php:34
 msgid "Upload file move fail: {org_file} => {new_file}"
