@@ -271,7 +271,7 @@ class Query {
 	 * @param $field
 	 * @param null $operator
 	 * @param null $compare
-	 * @return Query
+	 * @return $this
 	 */
 	public function andWhere($field, $operator=null, $compare=null){
 		$this->addWhere(self::OP_AND, $field, $operator, $compare);
