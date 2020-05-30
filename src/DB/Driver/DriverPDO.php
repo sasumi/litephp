@@ -76,20 +76,12 @@ class DriverPDO extends DBAbstract {
 		$opt = [
 			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 		];
-		
-		//PHP进程最大执行时间
-		$max_exec_time = ini_get('max_execution_time');
-		
-		//最大连接超时时间与PHP进程超时时间差值
-		$ttf = 2;
-		
-		//用户设定超时时间
-		if(isset($config['connect_timeout']) && $config['connect_timeout'] > 0){
-			$opt[PDO::ATTR_TIMEOUT] = $config['connect_timeout'];
-		}
-		//用户未设定超时时间，使用系统默认超时时间
-		else if(!isset($config['connect_timeout']) && ($max_exec_time - $ttf > 0)){
-			$opt[PDO::ATTR_TIMEOUT] = $max_exec_time - $ttf;
+
+		//最大超时时间
+		$max_connect_timeout = isset($config['connect_timeout']) ? $config['connect_timeout'] : Server::getMaxSocketTimeout(2);
+
+		if($max_connect_timeout){
+			$opt[PDO::ATTR_TIMEOUT] = $max_connect_timeout;
 		}
 
 		if(isset($config['pconnect']) && $config['pconnect']){
@@ -101,6 +93,7 @@ class DriverPDO extends DBAbstract {
 			$conn = new PDO($dns, $config['user'], $config['password'], $opt);
 		}catch(\PDOException $e){
 			$err = Server::inWindows() ? mb_convert_encoding($e->getMessage(), 'utf-8', 'gb2312') : $e->getMessage();
+			$config['password'] = $config['password'] ? '******' : 'no using password';
 			throw new ConnectException(_tl('Database connect failed:{error}, HOST：{host}', [
 				'error' => $err,
 				'host'  => $config['host'],

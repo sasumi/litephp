@@ -4,7 +4,6 @@ namespace Lite\DB\Driver;
 use Lite\Component\Server;
 use Lite\DB\Exception\ConnectException;
 use Lite\Exception\Exception;
-use mysqli;
 use mysqli_result;
 use function Lite\func\_tl;
 
@@ -70,14 +69,28 @@ class DriverMySQLi extends DBAbstract{
 	 * @return void
 	 */
 	public function connect(array $config, $re_connect = false){
-		$conn = new mysqli($config['host'], $config['user'], $config['password'], $config['database'], $config['port']);
-		if(!$conn || $conn->connect_error){
-			$err = Server::inWindows() ? mb_convert_encoding($conn->connect_error, 'utf-8', 'gb2312') : $conn->connect_error;
-			throw new ConnectException(_tl('Database connect failed:{error}, HOST：{host}', [
-				'error' => $err,
-				'host'  => $config['host'],
-			]), null, $config, $conn->connect_errno);
+		$connection = mysqli_init();
+
+		//最大超时时间
+		$max_connect_timeout = isset($config['connect_timeout']) ? $config['connect_timeout'] : Server::getMaxSocketTimeout(2);
+
+		if($max_connect_timeout){
+			mysqli_options($connection, MYSQLI_OPT_CONNECT_TIMEOUT, $max_connect_timeout);
 		}
-		$this->conn = $conn;
+
+		$ret = @mysqli_real_connect($connection, $config['host'], $config['user'], $config['password'], $config['database'], $config['port']);
+		if(!$ret){
+			$code = mysqli_connect_errno();
+			$error = mysqli_connect_error();
+			if(Server::inWindows()){
+				$error = mb_convert_encoding($error, 'utf-8', 'gb2312');
+			}
+			$config['password'] = $config['password'] ? '******' : 'no using password';
+			throw new ConnectException(_tl('Database connect failed:{error}, HOST：{host}', [
+				'error' => $error,
+				'host'  => $config['host'],
+			]), null, $config, $code);
+		}
+		$this->conn = $connection;
 	}
 }

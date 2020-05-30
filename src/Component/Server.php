@@ -51,6 +51,22 @@ class Server{
 	}
 
 	/**
+	 * 获取最大socket可用超时时间
+	 * @param int $ttf 允许提前时长
+	 * @return int 超时时间（秒），如为0，表示不限制超时时间
+	 */
+	public static function getMaxSocketTimeout($ttf = 0){
+		$max_execute_timeout = ini_get('max_execution_time') ?: 0;
+		$max_socket_timeout = ini_get('default_socket_timeout') ?: 0;
+		$max = (!$max_execute_timeout || !$max_socket_timeout) ? max($max_execute_timeout, $max_socket_timeout) :
+			min($max_execute_timeout, $max_socket_timeout);
+		if($ttf && $max){
+			return max($max - $ttf, 1); //最低保持1s，避免0值
+		}
+		return $max;
+	}
+
+	/**
 	 * get phpinfo() as array
 	 * @return array
 	 */
