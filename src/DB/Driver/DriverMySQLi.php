@@ -78,6 +78,7 @@ class DriverMySQLi extends DBAbstract{
 			mysqli_options($connection, MYSQLI_OPT_CONNECT_TIMEOUT, $max_connect_timeout);
 		}
 
+		//通过mysqli error方式获取数据库连接错误信息，转接到Exception
 		$ret = @mysqli_real_connect($connection, $config['host'], $config['user'], $config['password'], $config['database'], $config['port']);
 		if(!$ret){
 			$code = mysqli_connect_errno();

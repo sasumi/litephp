@@ -514,9 +514,9 @@ abstract class DBAbstract{
 				Hooker::fire(self::EVENT_DB_QUERY_ERROR, '', $query.'', $this->config);
 			}
 			return $result;
-		} catch(\Exception $ex){
+		}catch(\Exception $ex){
 			static $reconnect_count;
-			if($reconnect_count<static::$MAX_RECONNECT_COUNT && static::isConnectionLost($ex)){
+			if($reconnect_count < static::$MAX_RECONNECT_COUNT && static::isConnectionLost($ex)){
 				//间隔时间之后重新连接
 				if(static::$RECONNECT_INTERVAL){
 					usleep(static::$RECONNECT_INTERVAL*1000);
@@ -525,7 +525,7 @@ abstract class DBAbstract{
 				$reconnect_count++;
 				try{
 					$this->connect($this->config, true);
-				} catch(\Exception $e){
+				}catch(\Exception $e){
 					//ignore reconnect exception
 				}
 				return $this->query($query);

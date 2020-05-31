@@ -5,7 +5,7 @@ use Lite\Exception\Exception;
 
 /**
  * mysql 数据库引擎
- * @deprecated 请使用mysqli或者pdo，该扩展可能将在未来PHP版本中得不到支持
+ * @deprecated 请使用mysqli或者pdo，该扩展可能将在未来PHP版本（>7.0）中将得不到支持
  * User: sasumi
  * Date: 2016/6/11
  * Time: 17:52
