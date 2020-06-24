@@ -177,9 +177,9 @@ namespace Lite\func {
 
 	/**
 	 * 清理数组中null的元素
-	 * @param array $data
+	 * @param array|mixed $data
 	 * @param bool $recursive
-	 * @return array
+	 * @return array|mixed
 	 */
 	function array_clear_null($data, $recursive = true) {
 		if(empty($data) || !is_array($data)) {
@@ -198,9 +198,9 @@ namespace Lite\func {
 
 	/**
 	 * 清理数组中empty的元素
-	 * @param $data
+	 * @param array|mixed $data
 	 * @param bool $recursive
-	 * @return array
+	 * @return array|mixed
 	 */
 	function array_clear_empty($data, $recursive = true) {
 		if(empty($data) || !is_array($data)) {
