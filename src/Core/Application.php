@@ -6,6 +6,7 @@ use Lite\Exception\BizException;
 use Lite\Exception\Exception as Exception;
 use Lite\Exception\RouterException;
 use ReflectionClass;
+use function ApiBooker\get_classes;
 use function Lite\func\decodeURI;
 use function Lite\func\file_exists_case_insensitive;
 use function Lite\func\file_exists_case_sensitive;
@@ -262,6 +263,39 @@ class Application{
 			$controller_instance->__afterExecute($controller, $action, $result);
 		}
 		return $result;
+	}
+
+	/**
+	 * Ioc调用
+	 * @param $object
+	 * @param $method
+	 * @param bool $compatibility
+	 * @return mixed
+	 * @throws \ReflectionException
+	 */
+	private static function IocCall($object, $method, $compatibility = true){
+		$rc = new ReflectionClass($object);
+		$m = $rc->getMethod($method);
+		$ps = $m->getParameters();
+		$args = [];
+		foreach($ps as $p){
+			$p_class = $p->getClass();
+			if($p_class){
+				$p_class_name = $p_class->getName();
+				$p_rc = new ReflectionClass($p_class_name);
+				$p_interfaces = $p_rc->getInterfaceNames();
+				if(in_array(IoCPrototype::class, $p_interfaces)){
+					$args[] = call_user_func("$p_class_name::instance");
+				}
+			}
+		}
+		if($args){
+			return call_user_func_array([$object, $method], $args);
+		}
+		if(!$compatibility){
+			throw new \Exception("No IoC arguments founds");
+		}
+		return null;
 	}
 
 	/**
