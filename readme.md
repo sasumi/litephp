@@ -39,7 +39,7 @@ index.php
 namespace HelloWorld;
 
 use Lite\Core\Application;
-include_once 'Litephp/bootstrap.php';
+include_once 'vendor/autoload.php';
 Application::init(__NAMESPACE__);
 ```
 

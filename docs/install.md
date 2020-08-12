@@ -13,6 +13,7 @@ PHP 5.6 或以上，需安装以下扩展：
 - php_mysqli *[可选]*
 - php_gd2  *[图片操作、验证码之类业务需要]*
 - php_curl  *[网络请求场景需要]*
+- php_gettext  *[国际化支持需要]*
 
 PHP 需设置配置项：
 ``` ini
@@ -32,10 +33,10 @@ include_path = ".:/LitePHPDir"
 include_path = ".:/LitePHPDir"
 ```
 
-项目中可统一使用简单方法引入：
+项目中可统一使用composer引入：
 
-``` php
-include 'litephp/bootstrap.php';
+``` shell
+composer require lfphp/litephp
 ```
 
 ### WebServer环境
@@ -90,7 +91,6 @@ script.php
 
 ``` PHP
 use Lite\Cli\CodeGenerator;
-include '../../../litephp/bootstrap.php';
 CodeGenerator::Load();
 ```
 

@@ -1,6 +1,4 @@
 <?php
-
 use Lite\toolkit\scaffold\CodeGenerator;
-
-include '../../../litephp/bootstrap.php';
+include 'vendor/autoload.php';
 CodeGenerator::init();
