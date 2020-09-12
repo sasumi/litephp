@@ -4,11 +4,11 @@ use Lite\Core\Application;
 use Lite\Core\Hooker;
 use Lite\Core\View;
 use Lite\DB\Driver\DBAbstract;
-use function Lite\func\array_last;
-use function Lite\func\format_size;
-use function Lite\func\get_last_project_trace;
-use function Lite\func\microtime_diff;
-use function Lite\func\microtime_to_date;
+use function LFPhp\Func\array_last;
+use function LFPhp\Func\format_size;
+use function LFPhp\Func\microtime_diff;
+use function LFPhp\Func\microtime_to_date;
+use function Lite\Func\get_last_project_trace;
 
 /**
  * 统计类,提供基本统计方法

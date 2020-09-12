@@ -1,7 +1,7 @@
 <?php
 namespace Lite\Component;
 use Lite\Core\Hooker;
-use function Lite\func\session_start_once;
+use function LFPhp\Func\session_start_once;
 
 /**
  * 权限控制适配器

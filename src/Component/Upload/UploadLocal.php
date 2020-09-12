@@ -4,7 +4,7 @@ namespace Lite\Component\Upload;
 
 use Lite\Component\Upload\Config\LocalConfig;
 use Lite\Component\Upload\Exception\UploadException;
-use function Lite\func\_tl;
+use function Lite\Func\_tl;
 
 /**
  * 文件上传至web服务器

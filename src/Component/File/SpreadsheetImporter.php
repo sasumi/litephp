@@ -5,8 +5,8 @@ use Lite\Component\Upload\Exception\UploadException;
 use Lite\Component\Upload\UploadLocal;
 use Lite\Exception\BizException;
 use Lite\Exception\Exception;
-use function Lite\func\_tl;
-use function Lite\func\array_push_by_path;
+use function Lite\Func\_tl;
+use function LFPhp\Func\array_push_by_path;
 
 class SpreadsheetImporter {
 	//tmp下缓存文件夹名称

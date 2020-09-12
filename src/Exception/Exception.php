@@ -2,8 +2,7 @@
 namespace Lite\Exception;
 
 use Exception as OrgException;
-use Lite\Component\Server;
-use function Lite\func\var_export_min;
+use function LFPhp\Func\var_export_min;
 
 /**
  * Lite框架通用异常类

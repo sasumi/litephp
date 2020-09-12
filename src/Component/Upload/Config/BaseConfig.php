@@ -5,7 +5,7 @@ namespace Lite\Component\Upload\Config;
 use Lite\Component\File\MimeInfo;
 use Lite\Component\Server;
 use Lite\Component\Upload\Exception\UploadException;
-use function Lite\func\_tl;
+use function Lite\Func\_tl;
 
 /**
  * 文件上传配置

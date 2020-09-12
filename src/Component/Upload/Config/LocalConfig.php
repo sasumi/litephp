@@ -3,7 +3,7 @@
 namespace Lite\Component\Upload\Config;
 
 use Lite\Component\Upload\Exception\UploadDirAccessException;
-use function Lite\func\_tl;
+use function Lite\Func\_tl;
 
 /**
  * 本地文件上传配置

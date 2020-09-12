@@ -3,7 +3,7 @@ namespace Lite\Component\String;
 
 use Lite\Cache\CacheFile;
 use Lite\Component\Net\Curl;
-use const Lite\func\ONE_DAY;
+use const LFPhp\Func\ONE_DAY;
 
 /**
  * Class BaiduTranslate

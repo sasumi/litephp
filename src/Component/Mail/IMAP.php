@@ -36,16 +36,16 @@ class IMAP{
 	 * IMAP constructor.
 	 * @param $server
 	 * @param int $port
-	 * @param bool $ssl
+	 * @param bool $use_ssl
 	 * @param $login
 	 * @param $password
 	 * @param null $attachmentsDir
 	 * @param string $serverEncoding
 	 * @throws \Lite\Exception\Exception
 	 */
-	public function __construct($server, $port = 993, $ssl = true, $login, $password, $attachmentsDir = null, $serverEncoding = 'UTF-8'){
-		$port = $port ?: ($ssl ? '993' : '143');
-		$this->imapHost = '{'.$server.':'.$port.($ssl ? "/ssl" : "").'}';
+	public function __construct($server, $port, $use_ssl, $login, $password, $attachmentsDir = null, $serverEncoding = 'UTF-8'){
+		$port = $port ?: ($use_ssl ? '993' : '143');
+		$this->imapHost = '{'.$server.':'.$port.($use_ssl ? "/ssl" : "").'}';
 		$this->setImapPath($this->imapHost);
 		$this->imapLogin = $login;
 		$this->imapPassword = $password;

@@ -1,8 +1,8 @@
 <?php
 namespace Lite\Cache;
 
-use function Lite\func\session_start_once;
-use function Lite\func\session_write_once;
+use function LFPhp\Func\session_start_once;
+use function LFPhp\Func\session_write_once;
 
 class CacheSession extends CacheAdapter {
 	private $cache_prefix = 'lp_cs_';

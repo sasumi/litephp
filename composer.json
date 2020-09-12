@@ -20,19 +20,18 @@
 	"require": {
 		"php": ">=5.6",
 		"ext-mbstring": "*",
-		"ext-json": "*"
+		"ext-json": "*",
+		"lfphp/logger": "^1.0.0",
+		"lfphp/cache": "^1.0.0",
+		"lfphp/func": "^1.0.0"
 	},
 	"require-dev": {},
 	"autoload": {
 		"psr-4": {"Lite\\": "src"},
 		"files": [
 			"src/bootstrap.php",
-			"src/function/array.php",
 			"src/function/dump.php",
-			"src/function/file.php",
-			"src/function/function.php",
-			"src/function/string.php",
-			"src/function/time.php"
+			"src/function/string.php"
 		]
 	}
 }

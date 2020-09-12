@@ -6,9 +6,9 @@ use Lite\Component\Upload\Config\BaseConfig;
 use Lite\Component\Upload\Exception\UploadFileAccessException;
 use Lite\Component\Upload\Exception\UploadSizeException;
 use Lite\Component\Upload\Exception\UploadTypeException;
-use function Lite\func\_tl;
-use function Lite\func\format_size;
-use function Lite\func\restructure_files;
+use function Lite\Func\_tl;
+use function LFPhp\Func\format_size;
+use function LFPhp\Func\restructure_files;
 
 /**
  * 文件上传基础类

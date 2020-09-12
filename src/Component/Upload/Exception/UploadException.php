@@ -3,7 +3,7 @@
 namespace Lite\Component\Upload\Exception;
 
 use Lite\Exception\Exception;
-use function Lite\func\_tl;
+use function Lite\Func\_tl;
 
 class UploadException extends Exception {
 	public static function phpErrorLang($error_code){

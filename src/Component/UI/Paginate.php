@@ -3,8 +3,8 @@ namespace Lite\Component\UI;
 use JsonSerializable;
 use Lite\Component\String\Html;
 use Lite\Core\Router;
-use function Lite\func\array_merge_recursive_distinct;
-use function Lite\func\guid;
+use function LFPhp\Func\array_merge_recursive_distinct;
+use function LFPhp\Func\guid;
 
 /**
  * 分页

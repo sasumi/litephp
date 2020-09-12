@@ -6,10 +6,10 @@ use Lite\DB\Model;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use PHPExcel_Style_NumberFormat;
-use function Lite\func\array_clear_empty;
-use function Lite\func\array_trim_fields;
-use function Lite\func\get_spreadsheet_column;
-use function Lite\func\is_assoc_array;
+use function LFPhp\Func\array_clear_empty;
+use function LFPhp\Func\array_trim_fields;
+use function LFPhp\Func\get_spreadsheet_column;
+use function LFPhp\Func\is_assoc_array;
 
 /**
  * 数据文件输出处理

@@ -2,9 +2,8 @@
 namespace Lite\Component\Cli;
 
 use Lite\Component\Net\Client;
-use function Lite\func\array_first;
-use function Lite\func\pretty_time;
-use function Lite\func\time_range_v;
+use function LFPhp\Func\array_first;
+use function LFPhp\Func\time_range_v;
 
 abstract class Console {
 	//前景色

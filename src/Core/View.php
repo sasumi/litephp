@@ -5,8 +5,8 @@ use Lite\Component\String\Html;
 use Lite\Component\String\HtmlOrder;
 use Lite\DB\Model;
 use Lite\Exception\Exception;
-use function Lite\func\array_unshift_assoc;
-use function Lite\func\h;
+use function LFPhp\Func\array_unshift_assoc;
+use function LFPhp\Func\h;
 
 /**
  * 视图类，大部分方法用于在模版中直接调用

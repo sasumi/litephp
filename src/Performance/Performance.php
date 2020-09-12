@@ -10,8 +10,8 @@ namespace Lite\Performance;
 use Lite\Cache\CacheFile;
 use Lite\Core\Application;
 use Lite\Core\Router;
-use function Lite\func\session_start_once;
-use function Lite\func\session_write_once;
+use function LFPhp\Func\session_start_once;
+use function LFPhp\Func\session_write_once;
 
 class Performance{
 	private $saver_handler;

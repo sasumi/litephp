@@ -5,7 +5,7 @@ use Lite\Component\Server;
 use Lite\DB\Exception\ConnectException;
 use Lite\Exception\Exception;
 use mysqli_result;
-use function Lite\func\_tl;
+use function Lite\Func\_tl;
 
 /**
  * MySQLi驱动类

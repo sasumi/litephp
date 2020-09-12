@@ -1,7 +1,6 @@
 <?php
 namespace Lite\toolkit\scaffold;
 
-use Lite\Component\Server;
 use PDO;
 
 abstract class CodeGenerator{
@@ -39,7 +38,7 @@ abstract class CodeGenerator{
 		return __DIR__.'/table.tpl';
 	}
 
-	protected static function generateModel($table_name, $model_name = '', $overwrite){
+	protected static function generateModel($table_name, $model_name = '', $overwrite=true){
 		static::generateTable($table_name, $overwrite);
 		$model_name = $model_name ?: static::convertClassName($table_name);
 		$table_model = 'Table' . static::convertClassName($table_name);
@@ -66,7 +65,7 @@ abstract class CodeGenerator{
 		echo "[DONE] model " . ($update ? 'updated' : 'created') . " >> $file -- $model_name\n";
 	}
 
-	protected static function generateCrudModel($table_name, $model_name = '', $overwrite){
+	protected static function generateCrudModel($table_name, $model_name = '', $overwrite=true){
 		static::generateTable($table_name, $overwrite);
 		$model_name = $model_name ?: static::convertClassName($table_name);
 		$table_model = 'Table' . static::convertClassName($table_name);
