@@ -25,19 +25,57 @@
 ### 禁止在foreach循环中使用引用方式对元素进行修改
 
 ```php
+$list = [
+    ['name'=>'world'],
+    ['name'=>'jack'],
+]
 foreach ($list as $k => &$item) {
-    //
+    $item['name'] = 'hello';
 }
+
+$item = 1;
+var_dump($list);
+/**
+$list = [
+    ['name'=>'hello'],
+    1,
+]
+**/
+
+//correct
+foreach ($list as $k => $item) {
+    $list[$k]['name'] = 'hello';
+}
+
+$item = 1;
+
 ```
 
+引用方式修改数组中的变量，弱在后续代码块中继续使用该变量，将可能导致该变量值覆盖。
+
 ### 禁止在Controller、Class、Model等业务数值处理逻辑中使用 *number_format* 方法进行数字取位运算
+
+```php
+$price = number_format(2000.3333, 2);
+//$price = 2,000.33
+
+$price = $price + 1;
+//$price = 2,000.331
+
+//correct
+$price = round(2000.3333, 2);
+//$price = 2000.33
+
+
+```
+
 除非真实需要处理数字表现加上千分位分隔符，否则千分位数字精度取位必须使用 round()或其他精度处理函数
 
 ### 禁止使用空置try···catch语句，消耗代码性能，浪费代码行数
 
 ``` php
 try {
-    //....
+   
 } catch(Exception $e){
     throw $e;
 }
@@ -58,7 +96,7 @@ $a = $row['name']; //correct
 $_ids=$select_code->asArray()->getPairData("item_id", item_id); //error
 
 //场景2：类名大小写与原类名不一致
-$app = new APPlication(); //error
+$app = new APPlication(); //error Application
 
 //场景3：函数名大小写错误
 $str = str_Replace('aa','b', $source); //error
