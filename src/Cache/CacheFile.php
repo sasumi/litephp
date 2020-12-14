@@ -42,6 +42,7 @@ class CacheFile extends CacheAdapter{
 		if($handle = fopen($file, 'w')){
 			$result = fwrite($handle, $string);
 			fclose($handle);
+			chmod($file, 0777);
 			if($result && $this->cache_in_process){
 				self::$process_cache[$cache_key] = $data;
 			}
